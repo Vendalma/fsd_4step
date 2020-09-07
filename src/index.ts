@@ -1,4 +1,4 @@
 import "./styles.scss";
 import { View } from "./View";
 
-let slider = new View("app", 10, 200);
+let slider = new View("app", 0, 500);
