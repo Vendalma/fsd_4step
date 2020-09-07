@@ -3,16 +3,20 @@ import { Module } from "./Module";
 export class View {
   container: HTMLElement | null;
   id: string;
-  displayValue: boolean;
-  constructor(id: string, displayValue: boolean) {
+  min: number;
+  max: number;
+
+  constructor(id: string, min: number, max: number) {
     this.id = id;
     this.container = document.getElementById(this.id);
-    this.displayValue = displayValue;
+    this.min = min;
+    this.max = max;
+
     this.initialization();
   }
 
   initialization(): void {
     this.container?.classList.add("range-slider");
-    let thumb = new Module(this.container, this.displayValue);
+    let thumb = new Module(this.container, this.min, this.max);
   }
 }

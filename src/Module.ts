@@ -3,12 +3,17 @@ export class Module {
   thumb: HTMLElement | null;
   progressBar: HTMLElement | null;
   input: HTMLElement | null;
+  min: number;
+  max: number;
 
-  constructor(slider: HTMLElement | null, displayValue: boolean) {
+  constructor(slider: HTMLElement | null, min: number, max: number) {
     this.slider = slider;
     this.thumb = document.createElement("div");
     this.progressBar = document.createElement("div");
     this.input = document.createElement("input");
+    this.min = min;
+    this.max = max;
+
     this.init();
   }
 
@@ -25,11 +30,13 @@ export class Module {
       this.slider?.appendChild(this.thumb);
 
       this.input?.classList.add("input");
-      this.input.value = `${parseInt("0") + ""}`;
+      this.input.value = "0";
       this.slider?.parentElement?.appendChild(this.input);
-      console.log(this.input.value);
     }
     this.moveThumb();
+
+    this.setMinValue();
+    this.setMaxValue();
     this.getProgressBar();
     this.getInputValue();
   }
@@ -98,6 +105,21 @@ export class Module {
       this.thumb instanceof HTMLElement
     ) {
       this.input.value = `${parseInt(this.thumb?.style.left) + ""}`;
+    }
+  }
+
+  setMinValue() {
+    if (this.thumb instanceof HTMLElement) {
+      this.thumb.style.left = this.min + "px";
+    }
+  }
+
+  setMaxValue() {
+    if (
+      this.slider instanceof HTMLElement &&
+      this.thumb instanceof HTMLElement
+    ) {
+      this.slider.style.width = this.max + this.thumb.offsetWidth + "px";
     }
   }
 }
