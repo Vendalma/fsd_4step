@@ -28,9 +28,10 @@
 
   width: 14px;
   height: 14px;
-  position: relative;
+  position: absolute;
   top: -5px;
   cursor: pointer;
+  z-index: 100;
 
   display: flex;
   flex-direction: row-reverse;
@@ -39,7 +40,6 @@
 .progress-bar {
   background: linear-gradient(180deg, #6fcf97 0%, #66d2ea 100%);
   position: absolute;
-  width: 5px;
   height: 7px;
 }
 
