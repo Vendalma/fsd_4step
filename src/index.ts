@@ -1,4 +1,4 @@
 import "./styles.scss";
-import { View } from "./View";
+import { Presenter } from "./Presenter";
 
-let slider = new View("app", 0, 500, false, [100]);
+let slider = new Presenter();

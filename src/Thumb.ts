@@ -1,56 +1,33 @@
 import { progressBar } from "./progressBar";
-
-export class Thumb extends progressBar {
+import { Observer } from "./observer";
+export class Thumb {
   slider: HTMLElement | null;
   thumb: HTMLElement | null;
-  numberPosition: number;
   countThumbs: number;
   thumbs: string | null;
-  left: number;
-  right: number;
-  range: boolean;
+  observer: Observer;
+  value: HTMLElement | null;
 
-  constructor(
-    slider: HTMLElement | null,
-    range: boolean,
-    right: number,
-    numberPosition: number,
-    countThumbs: number
-  ) {
-    super(slider, range);
-    this.slider = slider;
+  constructor(countThumbs: number = 1, slider: HTMLElement | null) {
+    (this.slider = slider), (this.countThumbs = countThumbs);
+    this.observer = new Observer();
     this.thumb = document.createElement("div");
-    this.numberPosition = numberPosition;
-    this.countThumbs = countThumbs;
-    this.thumbs = this.thumb.getAttribute("data-num");
-    this.left = 0;
-    this.right = right;
-    this.range = range;
+    this.thumb.classList.add("thumb");
 
+    this.thumbs = this.thumb.getAttribute("data-num");
+
+    this.value = document.createElement("div");
+
+    this.slider?.append(this.thumb);
+    this.moveThumb(this.thumb);
     this.init();
-    this.setProgressBar;
   }
 
   init() {
-    if (
-      this.slider instanceof HTMLElement &&
-      this.thumb instanceof HTMLElement
-    ) {
-      this.slider.appendChild(this.thumb);
+    if (this.thumb instanceof HTMLElement) {
       this.thumb.classList.add("thumb");
       this.thumb.setAttribute("data-num", this.countThumbs + "");
     }
-    this.moveThumb(this.thumb);
-    this.getCorrectPosition();
-  }
-
-  getCorrectPosition() {
-    if (this.thumb instanceof HTMLElement)
-      if (this.countThumbs >= 0) {
-        this.thumb.style.left = this.numberPosition + "px";
-      } else {
-        this.thumb.style.left = 0 + "px";
-      }
   }
 
   moveThumb(elem: HTMLElement | null) {
@@ -62,101 +39,54 @@ export class Thumb extends progressBar {
     }
   }
 
-  mouseDown(e: MouseEvent) {
-    e = e || window.event;
-    e.preventDefault();
+  mouseDown(e: any = MouseEvent) {
+    if (e instanceof MouseEvent) {
+      e = e || window.event;
+      e.preventDefault();
 
-    document.onmousemove = (e) => this.onMouseMove(e);
-    document.onmouseup = (e) => this.onMouseUp(e);
+      document.onmousemove = (e) => this.onMouseMove(e);
+      document.onmouseup = (e) => this.onMouseUp(e);
+
+      return this.observer.broadcast("mouseDown", this.findPosition(e));
+    }
+    return false;
   }
 
-  onMouseMove = (e: MouseEvent) => {
-    e = e || window.event;
+  onMouseMove = (e: any = MouseEvent) => {
+    if (e instanceof MouseEvent) e = e || window.event;
     e.preventDefault();
     this.moveHandle(e);
   };
 
-  moveHandle(e: MouseEvent) {
-    if (this.range) {
-      if (
-        this.thumb instanceof HTMLElement &&
-        this.slider instanceof HTMLElement &&
-        this.thumb.getAttribute("data-num") == "0" &&
-        this.slider.lastElementChild instanceof HTMLElement
-      ) {
-        let sibling =
-          parseInt(this.slider.lastElementChild.style.left) -
-          this.slider.lastElementChild.offsetWidth;
-
-        let current = this.thumb.offsetWidth / 3;
-        let position =
-          e.clientX - this.slider.getBoundingClientRect().left - current;
-
-        if (position < 0) {
-          this.thumb.style.left = 0 + "px";
-        } else if (position > sibling) {
-          this.thumb.style.left = sibling + "px";
-        } else {
-          this.thumb.style.left = position + "px";
-        }
-      } else if (
-        this.thumb instanceof HTMLElement &&
-        this.slider instanceof HTMLElement &&
-        this.thumb.getAttribute("data-num") == "1" &&
-        this.slider.firstElementChild instanceof HTMLElement
-      ) {
-        let sibling =
-          parseInt(this.slider.firstElementChild.style.left) +
-          this.slider.firstElementChild.offsetWidth;
-
-        let current = this.thumb.offsetWidth / 3;
-        let position =
-          e.clientX - this.slider.getBoundingClientRect().left - current;
-
-        let right = this.slider.offsetWidth - this.thumb.offsetWidth;
-
-        if (position < sibling) {
-          this.thumb.style.left = sibling + "px";
-        } else if (position > right) {
-          this.thumb.style.left = right + "px";
-        } else {
-          this.thumb.style.left = position + "px";
-        }
-      }
-      this.getCorrectProgressBar();
-    } else if (!this.range) {
-      if (
-        this.thumb instanceof HTMLElement &&
-        this.slider instanceof HTMLElement &&
-        this.thumb.getAttribute("data-num") == "0"
-      ) {
-        let current = this.thumb.offsetWidth / 3;
-        let position =
-          e.clientX - this.slider.getBoundingClientRect().left - current;
-        let right = this.slider.offsetWidth - this.thumb.offsetWidth;
-        if (position < 0) {
-          this.thumb.style.left = 0 + "px";
-        } else if (position > right) {
-          this.thumb.style.left = right + "px";
-        } else {
-          this.thumb.style.left = position + "px";
-        }
-        this.getCorrectProgressBar();
-        //console.log(this.setProgressBar(this.range));
-      }
-    }
+  moveHandle(e: any = MouseEvent) {
+    return this.observer.broadcast("mouseDown", this.findPosition(e));
   }
 
-  onMouseUp = (e: MouseEvent) => {
+  onMouseUp = (e: any = MouseEvent) => {
     document.onmousemove = null;
     document.onmouseup = null;
+    return this.observer.broadcast("mouseDown", this.findPosition(e));
   };
 
-  drag(elem: HTMLElement | null) {
+  /*drag(elem: HTMLElement | null) {
     if (elem instanceof HTMLElement) {
       elem.ondragstart = function () {
         return false;
       };
+    }
+  }*/
+
+  findPosition(e: any) {
+    return {
+      "thumb-width": this.thumb?.offsetWidth,
+      clientX: e.clientX,
+      "slider-left-point": this.slider?.getBoundingClientRect().left,
+      "slider-width": this.slider?.offsetWidth,
+    };
+  }
+  getPosition(position: number | undefined = 0) {
+    if (this.thumb instanceof HTMLElement) {
+      this.thumb.style.left = position + "px";
     }
   }
 }

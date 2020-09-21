@@ -1,33 +1,32 @@
 import { Thumb } from "./Thumb";
 import { progressBar } from "./progressBar";
 
-export class Module {
+/*export class Module {
   slider: HTMLElement | null;
   input: HTMLElement | null;
   inputRange: HTMLInputElement | null;
-  buttonPlus: HTMLElement | null;
-  buttonMinus: HTMLElement | null;
   min: number;
   max: number;
   range: boolean;
   handlePosition: Array<number>;
+  thumbValue: boolean;
 
   constructor(
     slider: HTMLElement | null,
     min: number,
     max: number,
     range: boolean,
-    handlePosition: Array<number>
+    handlePosition: Array<number>,
+    thumbValue: boolean
   ) {
     this.slider = slider;
     this.input = document.createElement("input");
     this.inputRange = document.createElement("input");
-    this.buttonMinus = document.createElement("input");
-    this.buttonPlus = document.createElement("input");
     this.min = min;
     this.max = max;
     this.range = range;
     this.handlePosition = handlePosition;
+    this.thumbValue = thumbValue;
 
     this.init();
   }
@@ -35,9 +34,7 @@ export class Module {
   init() {
     if (
       this.input instanceof HTMLInputElement &&
-      this.inputRange instanceof HTMLInputElement &&
-      this.buttonMinus instanceof HTMLInputElement &&
-      this.buttonPlus instanceof HTMLInputElement
+      this.inputRange instanceof HTMLInputElement
     ) {
       if (
         (this.range && this.handlePosition.length == 2) ||
@@ -45,11 +42,12 @@ export class Module {
       ) {
         for (let i = 0; i < this.handlePosition.length; i++) {
           let thumb = new Thumb(
-            this.slider,
+           // this.slider,
             this.range,
-            this.max,
-            this.handlePosition[i],
-            i
+            //this.max,
+            //this.handlePosition[i],
+            //i,
+            //this.thumbValue
           );
         }
       } else if (
@@ -63,16 +61,17 @@ export class Module {
       ) {
         alert("Необходимо указать начальный интервал");
       }
-      let bar = new progressBar(this.slider, this.range);
     }
 
     this.setMaxValue();
   }
 
   setMaxValue() {
-    if (this.slider instanceof HTMLElement)
-      this.slider.style.width = this.max + "px";
+    let thumb = document.querySelector(".thumb");
+    if (this.slider instanceof HTMLElement && thumb instanceof HTMLElement)
+      this.slider.style.width = this.max + thumb.offsetWidth + "px";
   }
 
   setMinValue() {}
 }
+*/
