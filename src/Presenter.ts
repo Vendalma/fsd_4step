@@ -13,8 +13,8 @@ export class Presenter {
   }
 
   update(type: string, data: any) {
-    if (type == "mouseDown" || type == "mouseUp" || type == "clientX")
-      this.model.thumbCorrectValue(data);
-    else if (type == "thumbPosition") this.view.setPosition(data);
+    if (type == "mouseMove") this.model.thumbCorrectValue(data);
+    else if (type == "position") this.view.setPosition_1(data);
+    else if (type == "changeRange") this.model.changeRange(data);
   }
 }

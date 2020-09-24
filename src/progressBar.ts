@@ -1,91 +1,65 @@
-export class progressBar {
-  slider: HTMLElement | null;
+import config from "./config";
+interface IConfigProgressBar {
   range: boolean;
+  position_1: number;
+  position_2?: number;
+}
+export class progressBar {
+  config: IConfigProgressBar;
+  range: boolean;
+  position_1: number;
+  position_2: number;
+  slider: HTMLElement | null;
   progressBar: HTMLElement | null;
 
-  constructor(slider: HTMLElement | null, range: boolean) {
+  constructor(slider: HTMLElement | null) {
+    this.config = config;
+    this.range = config.range;
+    this.position_1 = config.position_1;
+    this.position_2 = config.position_2;
+
     this.slider = slider;
-    this.range = range;
     this.progressBar = document.createElement("div");
+    this.progressBar.classList.add("progress-bar");
 
     this.init();
   }
 
   init() {
-    let handlers: NodeListOf<HTMLElement> | null = document.querySelectorAll(
-      ".thumb"
-    );
     if (
       this.slider instanceof HTMLElement &&
       this.progressBar instanceof HTMLElement
     ) {
-      this.progressBar.classList.add("progress-bar");
-
-      if (!this.range) this.slider.prepend(this.progressBar);
+      if (!this.range) {
+        this.slider.prepend(this.progressBar);
+        this.progressBar.style.width = this.position_1 + "px";
+      }
 
       if (this.range) {
-        handlers.forEach((elem) => {
-          if (
-            elem.getAttribute("data-num") == "1" &&
-            this.progressBar &&
-            this.slider
-          ) {
-            this.slider.insertBefore(this.progressBar, elem);
-          }
-        });
+        let lastChild = this.slider.lastElementChild;
+        if (lastChild instanceof HTMLElement)
+          this.slider.insertBefore(this.progressBar, lastChild);
+        this.progressBar.style.width = this.position_2 - this.position_1 + "px";
+        this.progressBar.style.left = this.position_1 + 5 + "px";
       }
     }
-    this.setProgressBar(handlers);
   }
 
-  setProgressBar(handlers: NodeListOf<HTMLElement>) {
-    if (!this.range && handlers != null) {
-      handlers.forEach((element) => {
-        let left = parseInt(element.style.left);
-        if (this.progressBar instanceof HTMLElement) {
-          this.progressBar.style.width = left + 2 + "px";
-        }
-      });
-    } else if (this.range && handlers != null) {
-      handlers.forEach((element) => {
-        if (element.getAttribute("data-num") == "0" && this.progressBar) {
-          this.progressBar.style.left =
-            parseInt(element.style.left) + 10 + "px";
-        } else if (
-          element.getAttribute("data-num") == "1" &&
-          this.progressBar
-        ) {
+  setProgressBar(data: any) {
+    let data_num = data["data_num"];
+    let position = data["position"];
+    if (!this.range && this.progressBar) {
+      this.progressBar.style.width = position + 2 + "px";
+    } else if (this.range && this.progressBar) {
+      if (data_num == "1") {
+        let secondThumb = this.slider?.lastElementChild;
+        if (secondThumb instanceof HTMLElement)
           this.progressBar.style.width =
-            parseInt(element.style.left) -
-            parseInt(this.progressBar.style.left) +
-            8 +
-            "px";
-        }
-      });
+            parseInt(secondThumb.style.left) - position + "px";
+        this.progressBar.style.left = position + 5 + "px";
+      } else if (data_num == "2")
+        this.progressBar.style.width =
+          position - parseInt(this.progressBar.style.left) + 5 + "px";
     }
-  }
-
-  getCorrectProgressBar() {
-    let handlers = document.querySelectorAll(".thumb");
-    let bar = document.querySelector(".progress-bar");
-    if (handlers != null)
-      handlers.forEach((element) => {
-        if (element instanceof HTMLElement && bar instanceof HTMLElement) {
-          if (!this.range) {
-            let left = parseInt(element.style.left);
-            bar.style.width = left + 2 + "px";
-          } else if (this.range) {
-            if (element.getAttribute("data-num") == "0") {
-              bar.style.left = parseInt(element.style.left) + 10 + "px";
-            } else if (element.getAttribute("data-num") == "1") {
-              bar.style.width =
-                parseInt(element.style.left) -
-                parseInt(bar.style.left) +
-                8 +
-                "px";
-            }
-          }
-        }
-      });
   }
 }
