@@ -2,6 +2,11 @@ import { Observer } from "./observer";
 import config from "./config";
 interface IConfigController {
   range: boolean;
+  orientation: string;
+  label: boolean;
+  min: number;
+  max: number;
+  step: number;
   position_1: number;
   position_2?: number;
 }
@@ -25,13 +30,22 @@ export class Controller {
 
   config: IConfigController;
   range: boolean;
+  orientation: string;
+  label: boolean;
+  min: number;
+  max: number;
+  step: number;
   position_1: number;
-  position_2: number;
-
+  position_2?: number;
   constructor(panel: HTMLElement | null) {
     this.observer = new Observer();
     this.config = config;
     this.range = config.range;
+    this.orientation = config.orientation;
+    this.label = config.label;
+    this.min = config.min;
+    this.max = config.max;
+    this.step = config.step;
     this.position_1 = config.position_1;
     this.position_2 = config.position_2;
 
@@ -44,26 +58,31 @@ export class Controller {
     this.inputMinValue.id = "min";
     this.inputMinValue.classList.add("panel__input");
     this.inputMinValue.classList.add("panel__input_medium");
+    this.inputMinValue.value = this.min + "";
 
     this.inputMaxValue = document.createElement("input");
     this.inputMaxValue.id = "max";
     this.inputMaxValue.classList.add("panel__input");
     this.inputMaxValue.classList.add("panel__input_medium");
+    this.inputMaxValue.value = this.max + "";
 
     this.inputStep = document.createElement("input");
     this.inputStep.id = "step";
     this.inputStep.classList.add("panel__input");
     this.inputStep.classList.add("panel__input_medium");
+    this.inputStep.value = this.step + "";
 
     this.inputThumbPositionOne = document.createElement("input");
     this.inputThumbPositionOne.id = "thumbOnePosition";
     this.inputThumbPositionOne.classList.add("panel__input");
     this.inputThumbPositionOne.classList.add("panel__input_short");
+    this.inputThumbPositionOne.value = this.position_1 + "";
 
     this.inputThumbPositionTwo = document.createElement("input");
     this.inputThumbPositionTwo.id = "thumbTwoPosition";
     this.inputThumbPositionTwo.classList.add("panel__input");
     this.inputThumbPositionTwo.classList.add("panel__input_short");
+    this.inputThumbPositionTwo.value = this.position_2 + "";
 
     this.single = document.createElement("input");
     this.single.classList.add("panel__radio");
@@ -106,6 +125,11 @@ export class Controller {
     this.valueLabel.classList.add("panel__checkbox");
     this.valueLabel.type = "checkbox";
     this.valueLabel.id = "label";
+
+    this.range ? (this.double.checked = true) : (this.single.checked = true);
+    this.label
+      ? (this.valueLabel.checked = true)
+      : (this.valueLabel.checked = false);
 
     this.createBlockForRange();
     this.createBlockForSliderOrientation();
@@ -179,6 +203,12 @@ export class Controller {
 
       blockForVertical.append(this.vertical);
       blockForVertical.append(labelForVertical);
+
+      if (this.orientation == "horisontal") {
+        this.horisontal.checked = true;
+      } else if (this.orientation == "vertical") {
+        this.vertical.checked = true;
+      }
     }
   }
 
