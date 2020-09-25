@@ -33,7 +33,7 @@ export class View {
     this.position_1 = config.position_1;
     this.orientation = config.orientation;
 
-    this.wrapper = this.getElement(this.id);
+    this.wrapper = document.querySelector(this.id);
     this.wrapper?.classList.add("wrapper");
 
     this.panel = this.createElement("div", "panel");
@@ -62,11 +62,6 @@ export class View {
       this.slider?.classList.toggle("slider_vertical");
   }
 
-  getElement(selector: string) {
-    const element: HTMLElement | null = document.querySelector(selector);
-    return element;
-  }
-
   createElement(tag: string, className: string) {
     const element = document.createElement(tag);
     if (className) element.classList.add(className);
@@ -78,9 +73,10 @@ export class View {
     this.observer.broadcast("mouseMove", data);
 
     if (type == "range") {
-      this.range = data;
+      //.range = data;
       this.checkRange();
       this.observer.broadcast("changeRange", data);
+      console.log(this.config);
     }
   }
 
@@ -111,6 +107,6 @@ export class View {
         this.progressBar.setProgressBar(data);
       }
     }
-    this.controller.setValue(data);
+    // this.controller.setValue(data);
   }
 }
