@@ -63,7 +63,7 @@ export class Model implements IConfigModel {
         }
       } else if (this.range) {
         if (data_num == "1") {
-          let right = secondThumbPosition - thumbWidh;
+          let right = secondThumbPosition;
 
           if (position < 0) {
             this.observer.broadcast("position", {
@@ -82,7 +82,7 @@ export class Model implements IConfigModel {
             });
           }
         } else if (data_num == "2") {
-          let left = firstThumbPosition + thumbWidh;
+          let left = firstThumbPosition;
           let right = sliderWidth - thumbWidh;
 
           if (position < left) {

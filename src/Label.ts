@@ -1,23 +1,34 @@
+import config from "./config";
+interface IConfigLabel {
+  label: boolean;
+}
 export class Label {
   thumb: HTMLElement | null;
-  label: HTMLElement | null;
+  labelElem: HTMLElement | null;
+
+  config: IConfigLabel;
+  label: boolean;
 
   constructor(thumb: HTMLElement | null) {
     this.thumb = thumb;
-    this.label = document.createElement("div");
-    this.label.classList.add("thumb__label");
-    this.thumb?.append(this.label);
+    this.labelElem = document.createElement("div");
+    this.labelElem.classList.add("thumb__label");
+    this.thumb?.append(this.labelElem);
+
+    this.config = config;
+    this.label = config.label;
+
+    this.label
+      ? (this.labelElem.style.display = "block")
+      : (this.labelElem.style.display = "none");
   }
 
   setLabelValue(value: number) {
-    if (this.label) this.label.innerHTML = Math.round(value) + "";
+    if (this.labelElem) this.labelElem.innerHTML = Math.round(value) + "";
   }
 
   changeLabelPosition(orientation: string) {
     if (orientation == "vertical")
-      this.label?.classList.toggle("thumb__label_vertical");
-
-    if (orientation == "horisontal")
-      this.label?.classList.toggle("thumb__label_vertical");
+      this.labelElem?.classList.toggle("thumb__label_vertical");
   }
 }
