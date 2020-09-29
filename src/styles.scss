@@ -2,33 +2,87 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: space-around;
   box-sizing: border-box;
   padding: 15px;
 }
 
 .slider {
-  background-color: #ffffff;
-  border: 1px solid rgba(31, 32, 65, 0.25);
-  box-sizing: border-box;
-  border-radius: 3px;
-  width: 100%;
-  height: 8px;
-  cursor: pointer;
-  position: relative;
+  width: 50%;
 
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
+  &__main-block {
+    background-color: #ffffff;
+    border: 1px solid rgba(31, 32, 65, 0.25);
+    box-sizing: border-box;
+    border-radius: 3px;
+
+    height: 8px;
+    cursor: pointer;
+    position: relative;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+
   &_vertical {
     transform: rotate(90deg);
-    width: 30%;
+    width: 20%;
+  }
+
+  &__sub-block {
+    position: relative;
+    top: 5px;
+    display: flex;
+  }
+  &__step {
+    position: absolute;
+    top: 24px;
+    transform: translateX(-50%);
+
+    font-size: 14px;
+    color: rgba(31, 32, 65, 0.45);
+    &_max {
+      right: 4px;
+    }
+    &_min {
+      left: 5px;
+    }
+    &::before {
+      content: "";
+      display: block;
+      position: absolute;
+      left: 50%;
+      top: -12px;
+      width: 2px;
+      height: 12px;
+      background: rgba(31, 32, 65, 0.55);
+      box-sizing: border-box;
+      transform: translateX(-50%);
+      border-radius: 40%;
+    }
+    &_min-vertical {
+      transform: rotate(270deg) translate(10px, -5px);
+      //transform: ;
+      top: 5px;
+      left: -30px;
+      right: 350px;
+      bottom: 30px;
+    }
+    &_max-vertical {
+      transform: rotate(270deg);
+      top: 5px;
+      right: -3px;
+      left: 350px;
+      bottom: -10px;
+    }
   }
 }
 .thumb {
   background: linear-gradient(180deg, #6fcf97 0%, #66d2ea 100%);
   border: 2px solid #ffffff;
   border-radius: 10px;
-
+  transform: translateX(-50%);
   width: 14px;
   height: 14px;
   position: absolute;
@@ -41,8 +95,8 @@
     bottom: 20px;
     left: -15px;
 
-    width: 35px;
     padding: 5px;
+    box-sizing: border-box;
     background: linear-gradient(180deg, #6fcf97 0%, #66d2ea 100%);
     border-radius: 6px;
 

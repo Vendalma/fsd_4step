@@ -137,6 +137,46 @@ export class Controller {
     this.createBlockForMinMax();
     this.createBlockForStep();
     this.createBlockForThumbPosition();
+    this.checkChange();
+    this.setThumbPosition();
+    this.setMaxValue();
+    this.setMinValue();
+  }
+
+  checkChange() {
+    this.panelBlock.addEventListener("click", (e) => {
+      if (e.target == this.valueLabel) {
+        if (this.valueLabel?.checked) this.observer.broadcast("label", true);
+        else if (!this.valueLabel?.checked)
+          this.observer.broadcast("label", false);
+      }
+
+      if (e.target == this.horisontal) {
+        if (this.horisontal?.checked)
+          this.observer.broadcast("orientation", "horisontal");
+      }
+
+      if (e.target == this.vertical) {
+        if (this.vertical?.checked)
+          this.observer.broadcast("orientation", "vertical");
+      }
+
+      if (e.target == this.single) {
+        if (this.single?.checked && !this.double?.checked) {
+          this.range = false;
+          this.checkRange();
+          this.observer.broadcast("range", false);
+        }
+      }
+
+      if (e.target == this.double) {
+        if (this.double?.checked && !this.single?.checked) {
+          this.range = true;
+          this.checkRange();
+          this.observer.broadcast("range", true);
+        }
+      }
+    });
   }
 
   createBlockForRange() {
@@ -288,6 +328,7 @@ export class Controller {
 
     let blockForThumbTwo = document.createElement("div");
     blockForThumbTwo.classList.add("panel__block_row");
+    blockForThumbTwo.classList.add("hidden");
     columnBlock.append(blockForThumbTwo);
 
     let labelForThumbOne = document.createElement("label");
@@ -304,5 +345,54 @@ export class Controller {
       blockForThumbOne.append(this.inputThumbPositionOne);
       blockForThumbTwo.append(this.inputThumbPositionTwo);
     }
+  }
+
+  updateThumbPosition(data: any) {
+    let data_num = data["data_num"];
+    let value = data["value"];
+
+    if (data_num == "1" && this.inputThumbPositionOne) {
+      this.inputThumbPositionOne.value = value;
+    }
+
+    if (data_num == "2" && this.inputThumbPositionTwo) {
+      this.inputThumbPositionTwo.value = value;
+    }
+  }
+
+  checkRange() {
+    let hiddenBlock = document.querySelector(".hidden");
+    if (hiddenBlock instanceof HTMLElement)
+      this.range
+        ? (hiddenBlock.style.display = "flex")
+        : (hiddenBlock.style.display = "none");
+  }
+
+  setThumbPosition() {
+    this.inputThumbPositionOne?.addEventListener("blur", () => {
+      this.observer.broadcast(
+        "updatePositionThumbFirst",
+        this.inputThumbPositionOne?.value
+      );
+    });
+
+    this.inputThumbPositionTwo?.addEventListener("blur", () => {
+      this.observer.broadcast(
+        "updatePositionThumbSecond",
+        this.inputThumbPositionTwo?.value
+      );
+    });
+  }
+
+  setMaxValue() {
+    this.inputMaxValue?.addEventListener("blur", () => {
+      this.observer.broadcast("changeMaxValue", this.inputMaxValue?.value);
+    });
+  }
+
+  setMinValue() {
+    this.inputMinValue?.addEventListener("blur", () => {
+      this.observer.broadcast("changeMinValue", this.inputMinValue?.value);
+    });
   }
 }

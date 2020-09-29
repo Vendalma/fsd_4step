@@ -50,8 +50,8 @@ export class Thumb {
 
     this.zIndex = 1;
 
-    this.checkOrientation();
-    this.setPosition();
+    this.checkOrientation(this.orientation);
+    //this.setPosition();
     this.moveThumb(this.thumb);
   }
 
@@ -65,22 +65,26 @@ export class Thumb {
       this.moveThumb(this.thumb);
     }
   }
-
-  checkOrientation() {
-    this.label.changeLabelPosition(this.orientation);
+  checkLabel(data: boolean) {
+    this.label.checkLabelProp(data);
   }
 
-  setPosition() {
+  checkOrientation(data: string) {
+    this.orientation = data;
+    this.label.changeLabelOrientation(this.orientation);
+  }
+
+  setPosition(position: number) {
     if (!this.range && this.thumb) {
-      this.thumb.style.left = this.position_1 + "px";
-      this.label.setLabelValue(this.position_1);
+      this.thumb.style.left = position + "px";
+      //this.label.setLabelValue(this.position_1);
     } else if (this.range) {
       if (this.thumb?.classList.contains("thumb_first")) {
-        this.thumb.style.left = this.position_1 + "px";
-        this.label.setLabelValue(this.position_1);
+        this.thumb.style.left = position + "px";
+        // this.label.setLabelValue(this.position_1);
       } else if (this.thumb?.classList.contains("thumb_second")) {
-        this.thumb.style.left = this.position_2 + "px";
-        this.label.setLabelValue(this.position_2);
+        this.thumb.style.left = position + "px";
+        // this.label.setLabelValue(this.position_2);
       }
     }
   }
@@ -116,7 +120,6 @@ export class Thumb {
   };
 
   moveHandle(e: any = MouseEvent) {
-    //this.incrimentZIndex();
     return this.observer.broadcast("mouseMove", this.findPosition(e));
   }
 
@@ -125,14 +128,6 @@ export class Thumb {
     document.onmouseup = null;
     return this.observer.broadcast("mouseMove", this.findPosition(e));
   };
-
-  /* drag(elem: HTMLElement | null) {
-    if (elem instanceof HTMLElement) {
-      elem.ondragstart = function () {
-        return false;
-      };
-    }
-  }*/
 
   findPosition(e: any) {
     if (this.orientation == "horisontal") {
@@ -146,9 +141,8 @@ export class Thumb {
         };
       } else if (this.range) {
         if (this.thumb?.dataset.num == "1") {
-          let lastChild = this.slider?.lastElementChild;
-          if (lastChild instanceof HTMLElement) {
-            let lastChildPosition = lastChild.style.left;
+          let thumbSecond = this.slider?.querySelector(".thumb_second");
+          if (thumbSecond instanceof HTMLElement) {
             return {
               "thumb-width": this.thumb.offsetWidth,
               clientX: e.clientX,
@@ -156,12 +150,12 @@ export class Thumb {
               "slider-width": this.slider?.offsetWidth,
               "data-num": this.thumb.dataset.num,
 
-              positionThumbSecond: parseInt(lastChildPosition),
+              positionThumbSecond: parseInt(thumbSecond.style.left),
             };
           }
         } else if (this.thumb?.dataset.num == "2") {
-          let firstChild = this.slider?.firstElementChild;
-          if (firstChild instanceof HTMLElement)
+          let thumbFirst = this.slider?.querySelector(".thumb_first");
+          if (thumbFirst instanceof HTMLElement)
             return {
               "thumb-width": this.thumb.offsetWidth,
               clientX: e.clientX,
@@ -169,7 +163,7 @@ export class Thumb {
               "slider-width": this.slider?.offsetWidth,
               "data-num": this.thumb.dataset.num,
 
-              positionThumbFirst: parseInt(firstChild.style.left),
+              positionThumbFirst: parseInt(thumbFirst.style.left),
             };
         }
       }
@@ -219,17 +213,19 @@ export class Thumb {
   getPosition(position: number = 0) {
     if (this.thumb instanceof HTMLElement) {
       this.thumb.style.left = position + "px";
-      this.label.setLabelValue(position);
     }
   }
 
+  setLabelValue(value: string) {
+    if (value) this.label.setLabelValue(value);
+  }
+
+  setValueLabelOnload(value: number) {}
+
   removeThis() {
-    if (this.thumb != null) {
-      this.slider?.removeChild(this.thumb);
-    }
+    if (this.thumb) this.thumb.style.display = "none";
   }
   addThis() {
-    if ((this.thumb = null)) this.slider?.appendChild(this.thumb);
-    this.moveThumb(this.thumb);
+    if (this.thumb) this.thumb.style.display = "block";
   }
 }

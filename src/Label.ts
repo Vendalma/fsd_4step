@@ -1,6 +1,9 @@
 import config from "./config";
 interface IConfigLabel {
   label: boolean;
+  min: number;
+  max: number;
+  step: number;
 }
 export class Label {
   thumb: HTMLElement | null;
@@ -8,6 +11,9 @@ export class Label {
 
   config: IConfigLabel;
   label: boolean;
+  min: number;
+  max: number;
+  step: number;
 
   constructor(thumb: HTMLElement | null) {
     this.thumb = thumb;
@@ -17,18 +23,32 @@ export class Label {
 
     this.config = config;
     this.label = config.label;
+    this.min = config.min;
+    this.max = config.max;
+    this.step = config.step;
 
     this.label
       ? (this.labelElem.style.display = "block")
       : (this.labelElem.style.display = "none");
   }
 
-  setLabelValue(value: number) {
-    if (this.labelElem) this.labelElem.innerHTML = Math.round(value) + "";
+  setLabelValue(value: string) {
+    if (this.labelElem) this.labelElem.innerHTML = value;
   }
 
-  changeLabelPosition(orientation: string) {
+  changeLabelOrientation(orientation: string) {
     if (orientation == "vertical")
-      this.labelElem?.classList.toggle("thumb__label_vertical");
+      this.labelElem?.classList.add("thumb__label_vertical");
+
+    if (orientation == "horisontal")
+      this.labelElem?.classList.remove("thumb__label_vertical");
+  }
+
+  checkLabelProp(data: boolean) {
+    this.label = data;
+    if (this.labelElem)
+      this.label
+        ? (this.labelElem.style.display = "block")
+        : (this.labelElem.style.display = "none");
   }
 }

@@ -21,45 +21,65 @@ export class progressBar {
     this.slider = slider;
     this.progressBar = document.createElement("div");
     this.progressBar.classList.add("progress-bar");
-
-    this.init();
-  }
-
-  init() {
-    if (
-      this.slider instanceof HTMLElement &&
-      this.progressBar instanceof HTMLElement
-    ) {
-      if (!this.range) {
-        this.slider.prepend(this.progressBar);
-        this.progressBar.style.width = this.position_1 + "px";
-      }
-
-      if (this.range) {
-        let lastChild = this.slider.lastElementChild;
-        if (lastChild instanceof HTMLElement)
-          this.slider.insertBefore(this.progressBar, lastChild);
-        this.progressBar.style.width = this.position_2 - this.position_1 + "px";
-        this.progressBar.style.left = this.position_1 + 5 + "px";
-      }
-    }
+    this.slider?.prepend(this.progressBar);
   }
 
   setProgressBar(data: any) {
     let data_num = data["data_num"];
     let position = data["position"];
+
     if (!this.range && this.progressBar) {
       this.progressBar.style.width = position + 2 + "px";
     } else if (this.range && this.progressBar) {
       if (data_num == "1") {
-        let secondThumb = this.slider?.lastElementChild;
-        if (secondThumb instanceof HTMLElement)
+        let secondThumb = this.slider?.querySelector(".thumb_second");
+        if (secondThumb instanceof HTMLElement) {
+          this.progressBar.style.left = position + "px";
           this.progressBar.style.width =
             parseInt(secondThumb.style.left) - position + "px";
-        this.progressBar.style.left = position + 5 + "px";
+        }
       } else if (data_num == "2")
         this.progressBar.style.width =
           position - parseInt(this.progressBar.style.left) + 5 + "px";
     }
+  }
+
+  checkRange(data: boolean) {
+    this.range = data;
+    this.changeInit();
+  }
+
+  changeInit() {
+    let thumbOne = this.slider?.querySelector(".thumb_first");
+    let thumbTwo = this.slider?.querySelector(".thumb_second");
+    if (
+      thumbOne instanceof HTMLElement &&
+      thumbTwo instanceof HTMLElement &&
+      this.progressBar
+    )
+      if (!this.range) {
+        this.progressBar.style.left = "0px";
+        this.progressBar.style.width = thumbOne.style.left;
+      } else if (this.range) {
+        this.progressBar.style.left = thumbOne.style.left;
+        this.progressBar.style.width =
+          parseInt(thumbTwo.style.left) -
+          parseInt(this.progressBar.style.left) +
+          "px";
+      }
+  }
+
+  setOnloadProgressBarPosition(data: any) {
+    let onloadPositionThumbOne = data["onloadPositionThumbOne"];
+    let onloadPositionThumbTwo = data["onloadPositionThumbTwo"];
+
+    if (this.progressBar)
+      if (!this.range) {
+        this.progressBar.style.width = onloadPositionThumbOne + 2 + "px";
+      } else if (this.range) {
+        this.progressBar.style.left = onloadPositionThumbOne + "px";
+        this.progressBar.style.width =
+          onloadPositionThumbTwo - onloadPositionThumbOne + "px";
+      }
   }
 }
