@@ -1,13 +1,13 @@
 const config = {
   id: "#app",
-  range: false,
+  range: true,
   orientation: "horisontal",
   label: true,
-  min: 10000,
-  max: 100000,
-  step: 10000,
-  position_1: 20000,
-  position_2: 30000,
+  min: 1000,
+  max: 4000,
+  step: 1000,
+  position_1: 1000,
+  position_2: 3000,
 };
 
 export default config;

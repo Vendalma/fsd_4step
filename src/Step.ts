@@ -3,40 +3,30 @@ interface IconfigStep {
   min: number;
   max: number;
   step: number;
+  orientation: string;
 }
 export class Step implements IconfigStep {
   config: IconfigStep;
   min: number;
   max: number;
   step: number;
+  orientation: string;
 
   container: HTMLElement | null;
-  minBlock: HTMLElement | null;
-  maxBlock: HTMLElement | null;
 
   constructor(container: HTMLElement | null) {
     this.config = config;
     this.min = config.min;
     this.max = config.max;
     this.step = config.step;
+    this.orientation = config.orientation;
 
     this.container = container;
-
-    this.minBlock = document.createElement("div");
-    this.minBlock.classList.add("slider__step");
-    this.minBlock.classList.add("slider__step_min");
-    this.minBlock.innerHTML = this.min + "";
-    // this.container?.append(this.minBlock);
-
-    this.maxBlock = document.createElement("div");
-    this.maxBlock.classList.add("slider__step");
-    this.maxBlock.classList.add("slider__step_max");
-    this.maxBlock.innerHTML = this.max + "";
-    //this.container?.append(this.maxBlock);
   }
 
   addStepLine(data: any) {
-    if (this.container?.parentElement) {
+    let thimbHeight = this.container?.querySelector(".thumb_first");
+    if (this.container?.parentElement && thimbHeight instanceof HTMLElement) {
       let stepCount = data["stepCount"];
       let stepSize = data["stepSize"];
 
@@ -44,10 +34,21 @@ export class Step implements IconfigStep {
       let sizeCount = 0;
       for (let i = 0; i < stepCount + 1; i++) {
         let stepBlock = document.createElement("div");
-        stepBlock.classList.add("step-block");
+        stepBlock.classList.add("slider__step-block");
         this.container?.append(stepBlock);
-        stepBlock.classList.add("slider__step");
-        stepBlock.style.left = stepSize * sizeCount + "px";
+
+        if (this.orientation == "vertical") {
+          stepBlock.classList.add("slider__step-block_vertical");
+          stepBlock.style.top =
+            stepSize * sizeCount - thimbHeight.offsetHeight + "px";
+          //stepBlock.style.right = (202 / stepCount) * i + "px";//
+        }
+
+        if (this.orientation == "horisontal") {
+          stepBlock.style.left = stepSize * sizeCount + "px";
+          stepBlock.classList.remove("slider__step-block_vertical");
+        }
+
         sizeCount++;
         if (i == 0) stepBlock.innerHTML = this.min + "";
         else if (i == 1) {
@@ -64,10 +65,10 @@ export class Step implements IconfigStep {
   }
 
   changeMinValue(data: string) {
-    if (this.minBlock) this.minBlock.innerHTML = data;
+    //if (this.minBlock) this.minBlock.innerHTML = data;
   }
 
   changeMaxValue(data: string) {
-    if (this.maxBlock) this.maxBlock.innerHTML = data;
+    //if (this.maxBlock) this.maxBlock.innerHTML = data;
   }
 }

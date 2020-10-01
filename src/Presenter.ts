@@ -1,5 +1,5 @@
-import { Model } from "./model_1";
-import { View } from "./view_1";
+import { Model } from "./Model";
+import { View } from "./View";
 
 export class Presenter {
   view: View;

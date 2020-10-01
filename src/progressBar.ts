@@ -3,12 +3,15 @@ interface IConfigProgressBar {
   range: boolean;
   position_1: number;
   position_2?: number;
+  orientation: string;
 }
 export class progressBar {
   config: IConfigProgressBar;
   range: boolean;
   position_1: number;
   position_2: number;
+  orientation: string;
+
   slider: HTMLElement | null;
   progressBar: HTMLElement | null;
 
@@ -17,30 +20,52 @@ export class progressBar {
     this.range = config.range;
     this.position_1 = config.position_1;
     this.position_2 = config.position_2;
+    this.orientation = config.orientation;
 
     this.slider = slider;
     this.progressBar = document.createElement("div");
     this.progressBar.classList.add("progress-bar");
     this.slider?.prepend(this.progressBar);
+
+    this.checkOrientation(this.orientation);
   }
 
   setProgressBar(data: any) {
     let data_num = data["data_num"];
     let position = data["position"];
 
-    if (!this.range && this.progressBar) {
-      this.progressBar.style.width = position + 2 + "px";
-    } else if (this.range && this.progressBar) {
-      if (data_num == "1") {
-        let secondThumb = this.slider?.querySelector(".thumb_second");
-        if (secondThumb instanceof HTMLElement) {
-          this.progressBar.style.left = position + "px";
+    if (this.orientation == "horisontal") {
+      if (!this.range && this.progressBar) {
+        this.progressBar.style.width = position + 2 + "px";
+      } else if (this.range && this.progressBar) {
+        if (data_num == "1") {
+          let secondThumb = this.slider?.querySelector(".thumb_second");
+          if (secondThumb instanceof HTMLElement) {
+            this.progressBar.style.left = position + "px";
+            this.progressBar.style.width =
+              parseInt(secondThumb.style.left) - position + "px";
+          }
+        } else if (data_num == "2")
           this.progressBar.style.width =
-            parseInt(secondThumb.style.left) - position + "px";
-        }
-      } else if (data_num == "2")
-        this.progressBar.style.width =
-          position - parseInt(this.progressBar.style.left) + 5 + "px";
+            position - parseInt(this.progressBar.style.left) + 5 + "px";
+      }
+    }
+
+    if (this.orientation == "vertical") {
+      if (!this.range && this.progressBar) {
+        this.progressBar.style.height = position + 2 + "px";
+      } else if (this.range && this.progressBar) {
+        if (data_num == "1") {
+          let secondThumb = this.slider?.querySelector(".thumb_second");
+          if (secondThumb instanceof HTMLElement) {
+            this.progressBar.style.top = position + "px";
+            this.progressBar.style.height =
+              parseInt(secondThumb.style.top) - position + "px";
+          }
+        } else if (data_num == "2")
+          this.progressBar.style.height =
+            position - parseInt(this.progressBar.style.top) + 5 + "px";
+      }
     }
   }
 
@@ -73,13 +98,36 @@ export class progressBar {
     let onloadPositionThumbOne = data["onloadPositionThumbOne"];
     let onloadPositionThumbTwo = data["onloadPositionThumbTwo"];
 
-    if (this.progressBar)
-      if (!this.range) {
-        this.progressBar.style.width = onloadPositionThumbOne + 2 + "px";
-      } else if (this.range) {
-        this.progressBar.style.left = onloadPositionThumbOne + "px";
-        this.progressBar.style.width =
-          onloadPositionThumbTwo - onloadPositionThumbOne + "px";
-      }
+    if (this.orientation == "horisontal") {
+      if (this.progressBar)
+        if (!this.range) {
+          this.progressBar.style.width = onloadPositionThumbOne + 2 + "px";
+        } else if (this.range) {
+          this.progressBar.style.left = onloadPositionThumbOne + "px";
+          this.progressBar.style.width =
+            onloadPositionThumbTwo - onloadPositionThumbOne + "px";
+        }
+    }
+
+    if (this.orientation == "vertical") {
+      if (this.progressBar)
+        if (!this.range) {
+          this.progressBar.style.height = onloadPositionThumbOne + 2 + "px";
+        } else if (this.range) {
+          this.progressBar.style.top = onloadPositionThumbOne + "px";
+          this.progressBar.style.height =
+            onloadPositionThumbTwo - onloadPositionThumbOne + "px";
+        }
+    }
+  }
+
+  checkOrientation(data: string) {
+    this.orientation = data;
+
+    if (this.orientation == "vertical")
+      this.progressBar?.classList.add("progress-bar_vertical");
+
+    if (this.orientation == "horisontal")
+      this.progressBar?.classList.remove("progress-bar_vertical");
   }
 }

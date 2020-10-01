@@ -8,13 +8,19 @@
 }
 
 .slider {
-  width: 50%;
+  width: 100%;
+  min-height: 300px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-  &__main-block {
+  &__block {
     background-color: #ffffff;
     border: 1px solid rgba(31, 32, 65, 0.25);
     box-sizing: border-box;
     border-radius: 3px;
+    width: 100%;
 
     height: 8px;
     cursor: pointer;
@@ -23,32 +29,22 @@
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
+    &_vertical {
+      position: absolute;
+      height: 100%;
+      width: 8px;
+    }
   }
 
-  &_vertical {
-    transform: rotate(90deg);
-    width: 20%;
-  }
-
-  &__sub-block {
-    position: relative;
-    top: 5px;
-    display: flex;
-  }
-  &__step {
+  &__step-block {
     position: absolute;
     top: 24px;
     transform: translateX(-50%);
 
     font-size: 14px;
     color: rgba(31, 32, 65, 0.45);
-    &_max {
-      right: 4px;
-    }
-    &_min {
-      left: 5px;
-    }
-    &::before {
+
+    &::after {
       content: "";
       display: block;
       position: absolute;
@@ -61,20 +57,22 @@
       transform: translateX(-50%);
       border-radius: 40%;
     }
-    &_min-vertical {
-      transform: rotate(270deg) translate(10px, -5px);
-      //transform: ;
-      top: 5px;
-      left: -30px;
-      right: 350px;
-      bottom: 30px;
-    }
-    &_max-vertical {
-      transform: rotate(270deg);
-      top: 5px;
-      right: -3px;
-      left: 350px;
-      bottom: -10px;
+
+    &_vertical {
+      right: 25px;
+      transform: translateY(50%);
+
+      &::after {
+        content: "";
+        left: 110%;
+        top: 50%;
+        position: absolute;
+
+        width: 12px;
+        height: 2px;
+
+        transform: translateY(-50%);
+      }
     }
   }
 }
@@ -95,6 +93,7 @@
     bottom: 20px;
     left: -15px;
 
+    height: 30px;
     padding: 5px;
     box-sizing: border-box;
     background: linear-gradient(180deg, #6fcf97 0%, #66d2ea 100%);
@@ -103,9 +102,13 @@
     text-align: center;
     color: #ffffff;
     &_vertical {
-      transform: rotate(270deg);
-      bottom: 25px;
+      top: -10px;
+      left: 20px;
     }
+  }
+  &_vertical {
+    transform: translateY(-50%);
+    right: -5px;
   }
 }
 
@@ -113,6 +116,10 @@
   background: linear-gradient(180deg, #6fcf97 0%, #66d2ea 100%);
   position: absolute;
   height: 7px;
+
+  &_vertical {
+    width: 7px;
+  }
 }
 
 .panel {

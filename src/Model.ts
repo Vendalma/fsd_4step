@@ -1,4 +1,4 @@
-import { Observer } from "./observer";
+import { Observer } from "./Observer";
 import config from "./config";
 interface IConfigModel {
   min: number;
@@ -39,18 +39,20 @@ export class Model implements IConfigModel {
     let sliderLeftPoint = data["slider-left-point"];
     let sliderTopPoint = data["slider-top-point"];
     let sliderWidth = data["slider-width"];
+    let sliderHeight = data["slider-height"];
     let data_num = data["data-num"];
 
     let firstThumbPosition = data["positionThumbFirst"];
     let secondThumbPosition = data["positionThumbSecond"];
 
     let stepCount = (this.max - this.min) / this.step;
-    let stepSize = sliderWidth / stepCount;
+    let stepSizeHorisontal = sliderWidth / stepCount;
+    let stepSizeVertical = sliderHeight / stepCount;
 
     if (this.orientation == "horisontal") {
       let position = clientX - sliderLeftPoint;
-      let left = Math.round(position / stepSize) * stepSize;
-      let value = (left / stepSize) * this.step + this.step;
+      let left = Math.round(position / stepSizeHorisontal) * stepSizeHorisontal;
+      let value = (left / stepSizeHorisontal) * this.step + this.step;
       if (!this.range) {
         let right = sliderWidth;
         if (position < 0) {
@@ -75,7 +77,7 @@ export class Model implements IConfigModel {
       } else if (this.range) {
         if (data_num == "1") {
           let right = secondThumbPosition;
-          console.log(right);
+          // console.log(right);
           if (position < 0) {
             this.observer.broadcast("position", {
               position: 0,
@@ -121,23 +123,29 @@ export class Model implements IConfigModel {
       }
     } else if (this.orientation == "vertical") {
       let position = clientY - sliderTopPoint;
+      let left = Math.round(position / stepSizeVertical) * stepSizeVertical;
+      console.log(left);
+      let value = (left / stepSizeVertical) * this.step + this.step;
       if (!this.range) {
-        let right = sliderWidth - thumbWidh;
+        let right = sliderHeight;
 
         if (position < 0) {
           this.observer.broadcast("position", {
             position: 0,
             data_num: data_num,
+            value: this.min,
           });
         } else if (position > right) {
           this.observer.broadcast("position", {
             position: right,
             data_num: data_num,
+            value: this.max,
           });
         } else {
           this.observer.broadcast("position", {
-            position: position,
+            position: left,
             data_num: data_num,
+            value: Math.round(value),
           });
         }
       } else if (this.range) {
@@ -148,6 +156,7 @@ export class Model implements IConfigModel {
             this.observer.broadcast("position", {
               position: 0,
               data_num: data_num,
+              value: this.min,
             });
           } else if (position > right) {
             this.observer.broadcast("position", {
@@ -155,29 +164,32 @@ export class Model implements IConfigModel {
               data_num: data_num,
             });
           } else {
-            this.observer.broadcast("position", {
-              position: position,
-              data_num: data_num,
-            });
-          }
-        } else if (data_num == "2") {
-          let left = firstThumbPosition;
-          let right = sliderWidth - thumbWidh;
-
-          if (position < left) {
             this.observer.broadcast("position", {
               position: left,
               data_num: data_num,
+              value: Math.round(value),
+            });
+          }
+        } else if (data_num == "2") {
+          let lf = firstThumbPosition;
+          let right = sliderHeight;
+
+          if (position < lf) {
+            this.observer.broadcast("position", {
+              position: lf,
+              data_num: data_num,
             });
           } else if (position > right) {
             this.observer.broadcast("position", {
               position: right,
               data_num: data_num,
+              value: this.max,
             });
           } else {
             this.observer.broadcast("position", {
-              position: position,
+              position: left,
               data_num: data_num,
+              value: Math.round(value),
             });
           }
         }
@@ -196,10 +208,10 @@ export class Model implements IConfigModel {
   }
 
   getStep(loadData: any) {
-    let sliderWidth = loadData["sliderWidth"];
+    let sliderSize = loadData["sliderSize"];
 
     let stepCount = (this.max - this.min) / this.step;
-    let stepSize = sliderWidth / stepCount;
+    let stepSize = sliderSize / stepCount;
     let onloadPositionThumbOne = stepSize * (this.position_1 / this.step - 1);
 
     let onloadPositionThumbTwo = stepSize * (this.position_2 / this.step - 1);

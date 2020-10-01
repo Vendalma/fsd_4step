@@ -1,5 +1,5 @@
 import { Label } from "./Label";
-import { Observer } from "./observer";
+import { Observer } from "./Observer";
 import config from "./config";
 interface IConfigThumb {
   id?: string;
@@ -13,6 +13,7 @@ export class Thumb {
   position_1: number;
   position_2: number;
   orientation: string;
+
   slider: HTMLElement | null;
   thumb: HTMLElement | null;
   countThumbs: string;
@@ -72,19 +73,41 @@ export class Thumb {
   checkOrientation(data: string) {
     this.orientation = data;
     this.label.changeLabelOrientation(this.orientation);
+    if (this.orientation == "vertical")
+      this.thumb?.classList.add("thumb_vertical");
+
+    if (this.orientation == "horisontal")
+      this.thumb?.classList.remove("thumb_vertical");
   }
 
   setPosition(position: number) {
-    if (!this.range && this.thumb) {
-      this.thumb.style.left = position + "px";
-      //this.label.setLabelValue(this.position_1);
-    } else if (this.range) {
-      if (this.thumb?.classList.contains("thumb_first")) {
+    if (this.orientation == "horisontal") {
+      if (!this.range && this.thumb) {
+        this.thumb.style.top = position + "px";
+        //this.label.setLabelValue(this.position_1);
+      } else if (this.range) {
+        if (this.thumb?.classList.contains("thumb_first")) {
+          this.thumb.style.left = position + "px";
+          // this.label.setLabelValue(this.position_1);
+        } else if (this.thumb?.classList.contains("thumb_second")) {
+          this.thumb.style.left = position + "px";
+          // this.label.setLabelValue(this.position_2);
+        }
+      }
+    }
+
+    if (this.orientation == "vertical") {
+      if (!this.range && this.thumb) {
         this.thumb.style.left = position + "px";
-        // this.label.setLabelValue(this.position_1);
-      } else if (this.thumb?.classList.contains("thumb_second")) {
-        this.thumb.style.left = position + "px";
-        // this.label.setLabelValue(this.position_2);
+        //this.label.setLabelValue(this.position_1);
+      } else if (this.range) {
+        if (this.thumb?.classList.contains("thumb_first")) {
+          this.thumb.style.top = position + "px";
+          // this.label.setLabelValue(this.position_1);
+        } else if (this.thumb?.classList.contains("thumb_second")) {
+          this.thumb.style.top = position + "px";
+          // this.label.setLabelValue(this.position_2);
+        }
       }
     }
   }
@@ -130,6 +153,10 @@ export class Thumb {
   };
 
   findPosition(e: any) {
+    let thumbSecond: HTMLElement | null = document.querySelector(
+      ".thumb_second"
+    );
+    let thumbFirst = this.slider?.querySelector(".thumb_first");
     if (this.orientation == "horisontal") {
       if (!this.range && this.thumb != null) {
         return {
@@ -140,8 +167,10 @@ export class Thumb {
           "data-num": this.thumb.dataset.num,
         };
       } else if (this.range) {
+        console.log(this.thumb?.offsetWidth);
         if (this.thumb?.dataset.num == "1") {
-          let thumbSecond = this.slider?.querySelector(".thumb_second");
+          if (thumbSecond != null)
+            console.log(thumbSecond, thumbSecond.style.left);
           if (thumbSecond instanceof HTMLElement) {
             return {
               "thumb-width": this.thumb.offsetWidth,
@@ -154,7 +183,6 @@ export class Thumb {
             };
           }
         } else if (this.thumb?.dataset.num == "2") {
-          let thumbFirst = this.slider?.querySelector(".thumb_first");
           if (thumbFirst instanceof HTMLElement)
             return {
               "thumb-width": this.thumb.offsetWidth,
@@ -173,35 +201,32 @@ export class Thumb {
           "thumb-width": this.thumb.offsetWidth,
           clientY: e.clientY,
           "slider-top-point": this.slider?.getBoundingClientRect().top,
-          "slider-width": this.slider?.offsetWidth,
+          "slider-height": this.slider?.offsetHeight,
           "data-num": this.thumb.dataset.num,
         };
       } else if (this.range) {
         if (this.thumb?.dataset.num == "1") {
-          let lastChild = this.slider?.lastElementChild;
-          if (lastChild instanceof HTMLElement) {
-            let lastChildPosition = lastChild.style.left;
+          if (thumbSecond instanceof HTMLElement) {
             return {
               "thumb-width": this.thumb.offsetWidth,
               clientY: e.clientY,
               "slider-top-point": this.slider?.getBoundingClientRect().top,
-              "slider-width": this.slider?.offsetWidth,
+              "slider-height": this.slider?.offsetHeight,
               "data-num": this.thumb.dataset.num,
 
-              positionThumbSecond: parseInt(lastChildPosition),
+              positionThumbSecond: parseInt(thumbSecond?.style.top),
             };
           }
         } else if (this.thumb?.dataset.num == "2") {
-          let firstChild = this.slider?.firstElementChild;
-          if (firstChild instanceof HTMLElement)
+          if (thumbFirst instanceof HTMLElement)
             return {
               "thumb-width": this.thumb.offsetWidth,
               clientY: e.clientY,
               "slider-top-point": this.slider?.getBoundingClientRect().top,
-              "slider-width": this.slider?.offsetWidth,
+              "slider-height": this.slider?.offsetHeight,
               "data-num": this.thumb.dataset.num,
 
-              positionThumbFirst: parseInt(firstChild.style.left),
+              positionThumbFirst: parseInt(thumbFirst.style.top),
             };
         }
       }
@@ -212,15 +237,19 @@ export class Thumb {
 
   getPosition(position: number = 0) {
     if (this.thumb instanceof HTMLElement) {
-      this.thumb.style.left = position + "px";
+      if (this.orientation == "horisontal") {
+        this.thumb.style.left = position + "px";
+      }
+
+      if (this.orientation == "vertical") {
+        this.thumb.style.top = position + "px";
+      }
     }
   }
 
   setLabelValue(value: string) {
     if (value) this.label.setLabelValue(value);
   }
-
-  setValueLabelOnload(value: number) {}
 
   removeThis() {
     if (this.thumb) this.thumb.style.display = "none";
