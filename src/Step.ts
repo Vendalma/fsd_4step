@@ -30,8 +30,13 @@ export class Step implements IconfigStep {
       let stepCount = data["stepCount"];
       let stepSize = data["stepSize"];
 
+      let centerStep = data["centerStep"];
+      let leftStep = data["leftStep"];
+      let rightStep = data["rightStep"];
+
       let count = this.step;
       let sizeCount = 0;
+
       for (let i = 0; i < stepCount + 1; i++) {
         let stepBlock = document.createElement("div");
         stepBlock.classList.add("slider__step-block");
@@ -51,13 +56,13 @@ export class Step implements IconfigStep {
 
         sizeCount++;
         if (i == 0) stepBlock.innerHTML = this.min + "";
-        else if (i == 1) {
-          count = this.min + this.step;
-          stepBlock.innerHTML = count + "";
-        } else if (i > 1 && i < stepCount + 1) {
-          count = count + this.step;
-          stepBlock.innerHTML = count + "";
-        } else if (i == stepCount + 1) {
+        else if (i == stepCount / 2) {
+          stepBlock.innerHTML = centerStep + "";
+        } else if (i == stepCount / 4) {
+          stepBlock.innerHTML = leftStep + "";
+        } else if (i == stepCount - stepCount / 4) {
+          stepBlock.innerHTML = rightStep + "";
+        } else if (i == stepCount) {
           stepBlock.innerHTML = this.max + "";
         }
       }

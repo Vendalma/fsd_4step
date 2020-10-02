@@ -83,7 +83,7 @@ export class Thumb {
   setPosition(position: number) {
     if (this.orientation == "horisontal") {
       if (!this.range && this.thumb) {
-        this.thumb.style.top = position + "px";
+        this.thumb.style.left = position + "px";
         //this.label.setLabelValue(this.position_1);
       } else if (this.range) {
         if (this.thumb?.classList.contains("thumb_first")) {
@@ -167,21 +167,21 @@ export class Thumb {
           "data-num": this.thumb.dataset.num,
         };
       } else if (this.range) {
-        console.log(this.thumb?.offsetWidth);
+        //console.log(this.thumb?.offsetWidth);
         if (this.thumb?.dataset.num == "1") {
           if (thumbSecond != null)
-            console.log(thumbSecond, thumbSecond.style.left);
-          if (thumbSecond instanceof HTMLElement) {
-            return {
-              "thumb-width": this.thumb.offsetWidth,
-              clientX: e.clientX,
-              "slider-left-point": this.slider?.getBoundingClientRect().left,
-              "slider-width": this.slider?.offsetWidth,
-              "data-num": this.thumb.dataset.num,
+            if (thumbSecond instanceof HTMLElement) {
+              //console.log(thumbSecond, thumbSecond.style.left);
+              return {
+                "thumb-width": this.thumb.offsetWidth,
+                clientX: e.clientX,
+                "slider-left-point": this.slider?.getBoundingClientRect().left,
+                "slider-width": this.slider?.offsetWidth,
+                "data-num": this.thumb.dataset.num,
 
-              positionThumbSecond: parseInt(thumbSecond.style.left),
-            };
-          }
+                positionThumbSecond: parseInt(thumbSecond.style.left),
+              };
+            }
         } else if (this.thumb?.dataset.num == "2") {
           if (thumbFirst instanceof HTMLElement)
             return {
@@ -247,8 +247,8 @@ export class Thumb {
     }
   }
 
-  setLabelValue(value: string) {
-    if (value) this.label.setLabelValue(value);
+  setLabelValue(value: number) {
+    this.label.setLabelValue(value);
   }
 
   removeThis() {

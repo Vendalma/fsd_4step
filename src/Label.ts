@@ -32,8 +32,8 @@ export class Label {
       : (this.labelElem.style.display = "none");
   }
 
-  setLabelValue(value: string) {
-    if (this.labelElem) this.labelElem.innerHTML = value;
+  setLabelValue(value: number) {
+    if (this.labelElem) this.labelElem.innerHTML = value + "";
   }
 
   changeLabelOrientation(orientation: string) {

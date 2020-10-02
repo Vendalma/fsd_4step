@@ -45,14 +45,20 @@ export class Model implements IConfigModel {
     let firstThumbPosition = data["positionThumbFirst"];
     let secondThumbPosition = data["positionThumbSecond"];
 
-    let stepCount = (this.max - this.min) / this.step;
-    let stepSizeHorisontal = sliderWidth / stepCount;
-    let stepSizeVertical = sliderHeight / stepCount;
+    //let stepSizeHorisontal = ((sliderWidth / stepS) * this.step) / 2;
+
+    let onePixelSize = (this.max - this.min) / sliderWidth;
+    let stepS = this.step / onePixelSize;
+    let stepSizeVertical = ((sliderHeight / stepS) * this.step) / 2;
 
     if (this.orientation == "horisontal") {
       let position = clientX - sliderLeftPoint;
-      let left = Math.round(position / stepSizeHorisontal) * stepSizeHorisontal;
-      let value = (left / stepSizeHorisontal) * this.step + this.step;
+      let left = Math.round(position / stepS) * stepS;
+
+      let value =
+        Math.round((position * onePixelSize + this.min) / this.step) *
+        this.step;
+
       if (!this.range) {
         let right = sliderWidth;
         if (position < 0) {
@@ -71,7 +77,7 @@ export class Model implements IConfigModel {
           this.observer.broadcast("position", {
             position: left,
             data_num: data_num,
-            value: Math.round(value),
+            value: value,
           });
         }
       } else if (this.range) {
@@ -79,10 +85,11 @@ export class Model implements IConfigModel {
           let right = secondThumbPosition;
           // console.log(right);
           if (position < 0) {
+            // console.log(this.min);
             this.observer.broadcast("position", {
               position: 0,
               data_num: data_num,
-              value: this.min,
+              value: this.min + "",
             });
           } else if (position > right) {
             this.observer.broadcast("position", {
@@ -116,7 +123,7 @@ export class Model implements IConfigModel {
             this.observer.broadcast("position", {
               position: left,
               data_num: data_num,
-              value: Math.round(value),
+              value: value,
             });
           }
         }
@@ -124,7 +131,7 @@ export class Model implements IConfigModel {
     } else if (this.orientation == "vertical") {
       let position = clientY - sliderTopPoint;
       let left = Math.round(position / stepSizeVertical) * stepSizeVertical;
-      console.log(left);
+      // console.log(left);
       let value = (left / stepSizeVertical) * this.step + this.step;
       if (!this.range) {
         let right = sliderHeight;
@@ -210,20 +217,45 @@ export class Model implements IConfigModel {
   getStep(loadData: any) {
     let sliderSize = loadData["sliderSize"];
 
-    let stepCount = (this.max - this.min) / this.step;
+    //let stepCount1 = (Math.abs(this.max) + Math.abs(this.min)) / 20;
+    let stepCount = 20;
+    let onePixelSize = (this.max - this.min) / sliderSize;
     let stepSize = sliderSize / stepCount;
-    let onloadPositionThumbOne = stepSize * (this.position_1 / this.step - 1);
 
-    let onloadPositionThumbTwo = stepSize * (this.position_2 / this.step - 1);
+    let onloadPositionThumbOne = (this.position_1 - this.min) / onePixelSize;
+
+    let onloadPositionThumbTwo = (this.position_2 - this.min) / onePixelSize;
+
+    ////
+
+    let centerStep;
+    let leftStep;
+    let rightStep;
+    if (this.isIntegerStep(this.step)) {
+      centerStep = Math.round((this.max + this.min) / 2);
+      leftStep = centerStep - Math.round((centerStep - this.min) / 2);
+      rightStep = centerStep + Math.round((this.max - centerStep) / 2);
+    } else if (!this.isIntegerStep(this.step)) {
+      centerStep = (this.max + this.min) / 2;
+      leftStep = centerStep - Math.round((centerStep - this.min) / 2);
+      rightStep = centerStep + Math.round((this.max - centerStep) / 2);
+    }
 
     this.observer.broadcast("stepData", {
       stepCount: stepCount,
       stepSize: stepSize,
       onloadPositionThumbOne: onloadPositionThumbOne,
       onloadPositionThumbTwo: onloadPositionThumbTwo,
+
+      centerStep: centerStep,
+      leftStep: leftStep,
+      rightStep: rightStep,
     });
   }
 
+  isIntegerStep(step: number) {
+    return (step ^ 0) === step;
+  }
   stepSize(sliderWidth: number) {
     // console.log(sliderWidth);
   }

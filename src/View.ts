@@ -179,19 +179,19 @@ export class View {
 
     if (!this.range) {
       this.thumbOne.setPosition(onloadPositionThumbOne);
-      this.thumbOne.setLabelValue(this.position_1 + "");
+      this.thumbOne.setLabelValue(this.position_1);
       this.progressBar.setOnloadProgressBarPosition(data);
 
       this.thumbTwo?.setPosition(onloadPositionThumbTwo);
-      this.thumbTwo?.setLabelValue(this.position_2 + "");
+      this.thumbTwo?.setLabelValue(this.position_2);
     }
     if (this.range) {
       this.thumbOne.setPosition(onloadPositionThumbOne);
-      this.thumbOne.setLabelValue(this.position_1 + "");
+      this.thumbOne.setLabelValue(this.position_1);
       this.progressBar.setOnloadProgressBarPosition(data);
 
       this.thumbTwo?.setPosition(onloadPositionThumbTwo);
-      this.thumbTwo?.setLabelValue(this.position_2 + "");
+      this.thumbTwo?.setLabelValue(this.position_2);
       this.progressBar.setOnloadProgressBarPosition(data);
     }
   }
