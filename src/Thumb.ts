@@ -53,24 +53,17 @@ export class Thumb {
     this.zIndex = 1;
 
     this.checkOrientation(this.orientation);
-    //this.setPosition();
+
     this.moveThumb(this.thumb);
   }
 
-  init() {
-    if (
-      (this.range && this.thumb?.classList.contains("thumb_first")) ||
-      this.thumb?.classList.contains("thumb_second")
-    ) {
-      this.moveThumb(this.thumb);
-    } else if (this.range && this.thumb?.classList.contains("thumb_first")) {
-      this.moveThumb(this.thumb);
-    }
-  }
   checkLabel(data: boolean) {
     this.label.checkLabelProp(data);
   }
 
+  checkRange(data: boolean) {
+    this.range = data;
+  }
   checkOrientation(data: string) {
     this.orientation = data;
     this.label.changeLabelOrientation(this.orientation);
@@ -96,14 +89,11 @@ export class Thumb {
     if (this.orientation == "horisontal") {
       if (!this.range && this.thumb) {
         this.thumb.style.left = position + "px";
-        //this.label.setLabelValue(this.position_1);
       } else if (this.range) {
         if (this.thumb?.classList.contains("thumb_first")) {
           this.thumb.style.left = position + "px";
-          // this.label.setLabelValue(this.position_1);
         } else if (this.thumb?.classList.contains("thumb_second")) {
           this.thumb.style.left = position + "px";
-          // this.label.setLabelValue(this.position_2);
         }
       }
     }
@@ -111,14 +101,11 @@ export class Thumb {
     if (this.orientation == "vertical") {
       if (!this.range && this.thumb) {
         this.thumb.style.left = position + "px";
-        //this.label.setLabelValue(this.position_1);
       } else if (this.range) {
         if (this.thumb?.classList.contains("thumb_first")) {
           this.thumb.style.top = position + "px";
-          // this.label.setLabelValue(this.position_1);
         } else if (this.thumb?.classList.contains("thumb_second")) {
           this.thumb.style.top = position + "px";
-          // this.label.setLabelValue(this.position_2);
         }
       }
     }
@@ -167,21 +154,19 @@ export class Thumb {
   findPosition(e: any) {
     let thumbSecond = this.slider?.querySelector(".thumb_second");
     let thumbFirst = this.slider?.querySelector(".thumb_first");
+
     if (this.orientation == "horisontal") {
-      if (!this.range && this.thumb != null) {
+      if (!this.range && this.thumb == thumbFirst) {
         return {
-          "thumb-width": this.thumb.offsetWidth,
           clientX: e.clientX,
           "slider-left-point": this.slider?.getBoundingClientRect().left,
           "slider-width": this.slider?.offsetWidth,
-          "data-num": this.thumb.dataset.num,
+          "data-num": this.thumb?.dataset.num,
         };
       } else if (this.range) {
-        //console.log(this.thumb?.offsetWidth);
         if (this.thumb?.dataset.num == "1") {
           if (thumbSecond != null)
             if (thumbSecond instanceof HTMLElement) {
-              //console.log(thumbSecond, thumbSecond.style.left);
               return {
                 "thumb-width": this.thumb.offsetWidth,
                 clientX: e.clientX,
@@ -262,9 +247,9 @@ export class Thumb {
   }
 
   removeThis() {
-    if (this.thumb) this.thumb.style.display = "none";
+    if (this.thumb) this.slider?.removeChild(this.thumb);
   }
   addThis() {
-    if (this.thumb) this.thumb.style.display = "block";
+    if (this.thumb) this.slider?.append(this.thumb);
   }
 }

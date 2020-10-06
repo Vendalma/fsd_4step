@@ -1,3 +1,4 @@
+import { htmlPrefilter } from "jquery";
 import config from "./config";
 interface IConfigProgressBar {
   range: boolean;
@@ -71,7 +72,7 @@ export class progressBar {
 
   checkRange(data: boolean) {
     this.range = data;
-    // this.changeInit();
+    this.changeInit();
   }
 
   checkOrientation(data: string) {
@@ -81,15 +82,11 @@ export class progressBar {
   changeInit() {
     let thumbOne = this.slider?.querySelector(".thumb_first");
     let thumbTwo = this.slider?.querySelector(".thumb_second");
-    if (
-      thumbOne instanceof HTMLElement &&
-      thumbTwo instanceof HTMLElement &&
-      this.progressBar
-    )
+    if (thumbOne instanceof HTMLElement && this.progressBar)
       if (!this.range) {
         this.progressBar.style.left = "0px";
         this.progressBar.style.width = thumbOne.style.left;
-      } else if (this.range) {
+      } else if (this.range && thumbTwo instanceof HTMLElement) {
         this.progressBar.style.left = thumbOne.style.left;
         this.progressBar.style.width =
           parseInt(thumbTwo.style.left) -

@@ -24,13 +24,9 @@ import { Presenter } from "./Presenter";
       },
       options
     );
-    return this.each(() => {
-      let elem = this;
-      let slider = new Presenter(settings, elem[0]);
-      console.log(this[0]);
-    });
+
+    let slider = new Presenter(settings, this[0]);
   };
 })(jQuery);
 
 $("#app").rangeSlider({ range: true, position_2: 5 });
-$("#app1").rangeSlider({ orientation: "vertical" });

@@ -28,7 +28,7 @@ export class View {
   slider: HTMLElement | null;
   controller: Controller;
   thumbOne: Thumb;
-  thumbTwo: Thumb | null;
+  thumbTwo: Thumb | null | undefined;
   observer: Observer;
   step: Step;
   progressBar: progressBar;
@@ -99,6 +99,8 @@ export class View {
     if (type == "range") {
       this.range = data;
       this.checkRange();
+      this.thumbOne.checkRange(data);
+      this.thumbTwo?.checkRange(data);
       this.observer.broadcast("changeRange", data);
       this.progressBar.checkRange(data);
     }
@@ -137,12 +139,10 @@ export class View {
   }
 
   checkRange() {
-    if (this.thumbTwo) {
-      if (this.range) {
-        this.thumbTwo.addThis();
-      } else if (!this.range) {
-        this.thumbTwo.removeThis();
-      }
+    if (this.range) {
+      let thumbTwo = this.thumbTwo?.addThis();
+    } else if (!this.range && this.thumbTwo) {
+      this.thumbTwo.removeThis();
     }
   }
 
