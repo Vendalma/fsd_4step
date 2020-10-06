@@ -4,9 +4,9 @@ import { View } from "./View";
 export class Presenter {
   view: View;
   model: Model;
-  constructor() {
-    this.model = new Model();
-    this.view = new View();
+  constructor(config: any, conteiner: HTMLElement) {
+    this.model = new Model(config);
+    this.view = new View(config, conteiner);
 
     this.view.observer.subscribe(this);
     this.model.observer.subscribe(this);
@@ -23,7 +23,9 @@ export class Presenter {
     } else if (type == "loadData") {
       this.model.getStep(data);
     } else if (type == "sliderWidth") {
-      this.model.stepSize(data);
+      //this.model.stepSize(data);
     }
   }
 }
+
+export default Presenter;

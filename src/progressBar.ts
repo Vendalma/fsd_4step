@@ -2,7 +2,7 @@ import config from "./config";
 interface IConfigProgressBar {
   range: boolean;
   position_1: number;
-  position_2?: number;
+  position_2: number;
   orientation: string;
 }
 export class progressBar {
@@ -15,12 +15,12 @@ export class progressBar {
   slider: HTMLElement | null;
   progressBar: HTMLElement | null;
 
-  constructor(slider: HTMLElement | null) {
-    this.config = config;
-    this.range = config.range;
-    this.position_1 = config.position_1;
-    this.position_2 = config.position_2;
-    this.orientation = config.orientation;
+  constructor(IConfigProgressBar: any, slider: HTMLElement | null) {
+    this.config = IConfigProgressBar;
+    this.range = this.config.range;
+    this.position_1 = this.config.position_1;
+    this.position_2 = this.config.position_2;
+    this.orientation = this.config.orientation;
 
     this.slider = slider;
     this.progressBar = document.createElement("div");
@@ -71,7 +71,11 @@ export class progressBar {
 
   checkRange(data: boolean) {
     this.range = data;
-    this.changeInit();
+    // this.changeInit();
+  }
+
+  checkOrientation(data: string) {
+    this.orientation = data;
   }
 
   changeInit() {
@@ -103,6 +107,9 @@ export class progressBar {
         if (!this.range) {
           this.progressBar.style.width = onloadPositionThumbOne + 2 + "px";
         } else if (this.range) {
+          this.progressBar.style.top = "0px";
+          this.progressBar.style.height = "7px";
+
           this.progressBar.style.left = onloadPositionThumbOne + "px";
           this.progressBar.style.width =
             onloadPositionThumbTwo - onloadPositionThumbOne + "px";
@@ -112,22 +119,17 @@ export class progressBar {
     if (this.orientation == "vertical") {
       if (this.progressBar)
         if (!this.range) {
+          console.log(11);
           this.progressBar.style.height = onloadPositionThumbOne + 2 + "px";
+          this.progressBar.style.width = "7px";
         } else if (this.range) {
+          this.progressBar.style.width = "7px";
+          this.progressBar.style.left = "0px";
+
           this.progressBar.style.top = onloadPositionThumbOne + "px";
           this.progressBar.style.height =
             onloadPositionThumbTwo - onloadPositionThumbOne + "px";
         }
     }
-  }
-
-  checkOrientation(data: string) {
-    this.orientation = data;
-
-    if (this.orientation == "vertical")
-      this.progressBar?.classList.add("progress-bar_vertical");
-
-    if (this.orientation == "horisontal")
-      this.progressBar?.classList.remove("progress-bar_vertical");
   }
 }

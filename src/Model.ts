@@ -1,11 +1,12 @@
+import { data } from "jquery";
 import { Observer } from "./Observer";
-import config from "./config";
+//import config from "./config";
 interface IConfigModel {
   min: number;
   max: number;
   range: boolean;
-  position_1?: number;
-  position_2?: number;
+  position_1: number;
+  position_2: number;
   orientation: string;
   step: number;
 }
@@ -20,20 +21,20 @@ export class Model implements IConfigModel {
   position_2: number;
   orientation: string;
   step: number;
-  constructor() {
+  constructor(IConfigModel: any) {
     this.observer = new Observer();
-    this.range = config.range;
-    this.config = config;
-    this.max = config.max;
-    this.min = config.min;
-    this.position_1 = config.position_1;
-    this.position_2 = config.position_2;
-    this.orientation = config.orientation;
-    this.step = config.step;
+
+    this.config = IConfigModel;
+    this.range = this.config.range;
+    this.max = this.config.max;
+    this.min = this.config.min;
+    this.position_1 = this.config.position_1;
+    this.position_2 = this.config.position_2;
+    this.orientation = this.config.orientation;
+    this.step = this.config.step;
   }
 
   thumbCorrectValue(data: any) {
-    let thumbWidh = data["thumb-width"];
     let clientX = data["clientX"];
     let clientY = data["clientY"];
     let sliderLeftPoint = data["slider-left-point"];
@@ -45,18 +46,15 @@ export class Model implements IConfigModel {
     let firstThumbPosition = data["positionThumbFirst"];
     let secondThumbPosition = data["positionThumbSecond"];
 
-    //let stepSizeHorisontal = ((sliderWidth / stepS) * this.step) / 2;
-
-    let onePixelSize = (this.max - this.min) / sliderWidth;
-    let stepS = this.step / onePixelSize;
-    let stepSizeVertical = ((sliderHeight / stepS) * this.step) / 2;
-
     if (this.orientation == "horisontal") {
+      let onePixelSizeHorisontal = (this.max - this.min) / sliderWidth;
+      let stepSizeHorisontal = this.step / onePixelSizeHorisontal;
       let position = clientX - sliderLeftPoint;
-      let left = Math.round(position / stepS) * stepS;
+      let positionMove =
+        Math.round(position / stepSizeHorisontal) * stepSizeHorisontal;
 
       let value =
-        Math.round((position * onePixelSize + this.min) / this.step) *
+        Math.round((position * onePixelSizeHorisontal + this.min) / this.step) *
         this.step;
 
       if (!this.range) {
@@ -75,7 +73,7 @@ export class Model implements IConfigModel {
           });
         } else {
           this.observer.broadcast("position", {
-            position: left,
+            position: positionMove,
             data_num: data_num,
             value: value,
           });
@@ -83,13 +81,11 @@ export class Model implements IConfigModel {
       } else if (this.range) {
         if (data_num == "1") {
           let right = secondThumbPosition;
-          // console.log(right);
           if (position < 0) {
-            // console.log(this.min);
             this.observer.broadcast("position", {
               position: 0,
               data_num: data_num,
-              value: this.min + "",
+              value: this.min,
             });
           } else if (position > right) {
             this.observer.broadcast("position", {
@@ -99,18 +95,18 @@ export class Model implements IConfigModel {
             });
           } else {
             this.observer.broadcast("position", {
-              position: left,
+              position: positionMove,
               data_num: data_num,
-              value: Math.round(value),
+              value: value,
             });
           }
         } else if (data_num == "2") {
-          let lf = firstThumbPosition;
+          let left = firstThumbPosition;
           let right = sliderWidth;
 
-          if (position < lf) {
+          if (position < left) {
             this.observer.broadcast("position", {
-              position: lf,
+              position: left,
               data_num: data_num,
             });
           } else if (position > right) {
@@ -121,7 +117,7 @@ export class Model implements IConfigModel {
             });
           } else {
             this.observer.broadcast("position", {
-              position: left,
+              position: positionMove,
               data_num: data_num,
               value: value,
             });
@@ -130,9 +126,13 @@ export class Model implements IConfigModel {
       }
     } else if (this.orientation == "vertical") {
       let position = clientY - sliderTopPoint;
-      let left = Math.round(position / stepSizeVertical) * stepSizeVertical;
-      // console.log(left);
-      let value = (left / stepSizeVertical) * this.step + this.step;
+      let onePixelSizeVertical = (this.max - this.min) / sliderHeight;
+      let stepSizeVertical = this.step / onePixelSizeVertical;
+      let positionMove =
+        Math.round(position / stepSizeVertical) * stepSizeVertical;
+      let value =
+        Math.round((position * onePixelSizeVertical + this.min) / this.step) *
+        this.step;
       if (!this.range) {
         let right = sliderHeight;
 
@@ -150,9 +150,9 @@ export class Model implements IConfigModel {
           });
         } else {
           this.observer.broadcast("position", {
-            position: left,
+            position: positionMove,
             data_num: data_num,
-            value: Math.round(value),
+            value: value,
           });
         }
       } else if (this.range) {
@@ -172,18 +172,18 @@ export class Model implements IConfigModel {
             });
           } else {
             this.observer.broadcast("position", {
-              position: left,
+              position: positionMove,
               data_num: data_num,
-              value: Math.round(value),
+              value: value,
             });
           }
         } else if (data_num == "2") {
-          let lf = firstThumbPosition;
+          let left = firstThumbPosition;
           let right = sliderHeight;
 
-          if (position < lf) {
+          if (position < left) {
             this.observer.broadcast("position", {
-              position: lf,
+              position: left,
               data_num: data_num,
             });
           } else if (position > right) {
@@ -194,16 +194,14 @@ export class Model implements IConfigModel {
             });
           } else {
             this.observer.broadcast("position", {
-              position: left,
+              position: positionMove,
               data_num: data_num,
-              value: Math.round(value),
+              value: value,
             });
           }
         }
       }
     }
-
-    //this.getStep(sliderWidth, thumbWidh)
   }
 
   changeRange(data: boolean) {
@@ -217,20 +215,17 @@ export class Model implements IConfigModel {
   getStep(loadData: any) {
     let sliderSize = loadData["sliderSize"];
 
-    //let stepCount1 = (Math.abs(this.max) + Math.abs(this.min)) / 20;
     let stepCount = 20;
     let onePixelSize = (this.max - this.min) / sliderSize;
     let stepSize = sliderSize / stepCount;
 
     let onloadPositionThumbOne = (this.position_1 - this.min) / onePixelSize;
-
     let onloadPositionThumbTwo = (this.position_2 - this.min) / onePixelSize;
-
-    ////
 
     let centerStep;
     let leftStep;
     let rightStep;
+
     if (this.isIntegerStep(this.step)) {
       centerStep = Math.round((this.max + this.min) / 2);
       leftStep = centerStep - Math.round((centerStep - this.min) / 2);
@@ -255,8 +250,5 @@ export class Model implements IConfigModel {
 
   isIntegerStep(step: number) {
     return (step ^ 0) === step;
-  }
-  stepSize(sliderWidth: number) {
-    // console.log(sliderWidth);
   }
 }

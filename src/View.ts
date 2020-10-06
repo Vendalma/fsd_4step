@@ -1,22 +1,20 @@
-import config from "./config";
+//import config from "./config";
 import { Observer } from "./Observer";
 import { Thumb } from "./Thumb";
 import { Controller } from "./Controller";
 import { progressBar } from "./progressBar";
 import { Step } from "./Step";
 interface IConfigView {
-  id: string;
-  min?: number;
-  max?: number;
+  min: number;
+  max: number;
   range: boolean;
   position_1: number;
-  position_2?: number;
+  position_2: number;
   orientation: string;
   step: number;
 }
 export class View {
   config: IConfigView;
-  id: string;
   range: boolean;
   position_1: number;
   position_2: number;
@@ -36,18 +34,17 @@ export class View {
   progressBar: progressBar;
   sliderBlock: HTMLElement | null;
 
-  constructor() {
-    this.config = config;
-    this.id = config.id;
-    this.range = config.range;
-    this.position_1 = config.position_1;
-    this.position_2 = config.position_2;
-    this.orientation = config.orientation;
-    this.min = config.min;
-    this.max = config.max;
-    this.stepValue = config.step;
+  constructor(IConfigView: any, wrapper: HTMLElement) {
+    this.config = IConfigView;
+    this.range = this.config.range;
+    this.position_1 = this.config.position_1;
+    this.position_2 = this.config.position_2;
+    this.orientation = this.config.orientation;
+    this.min = this.config.min;
+    this.max = this.config.max;
+    this.stepValue = this.config.step;
 
-    this.wrapper = document.querySelector(this.id);
+    this.wrapper = wrapper;
     this.wrapper?.classList.add("wrapper");
 
     this.panel = this.createElement("div", "panel");
@@ -59,24 +56,24 @@ export class View {
     this.wrapper?.append(this.slider);
     this.slider.append(this.sliderBlock);
 
-    this.thumbOne = new Thumb("thumb_first", this.sliderBlock, this.range, 1);
+    this.thumbOne = new Thumb(this.config, "thumb_first", this.sliderBlock, 1);
 
     this.thumbOne.observer.subscribe(this);
 
-    this.thumbTwo = new Thumb("thumb_second", this.sliderBlock, this.range, 2);
+    this.thumbTwo = new Thumb(this.config, "thumb_second", this.sliderBlock, 2);
     this.range ? null : this.thumbTwo?.removeThis();
     this.thumbTwo?.observer.subscribe(this);
 
-    this.controller = new Controller(this.panel);
+    this.controller = new Controller(this.config, this.panel);
     this.controller.observer.subscribe(this);
 
     this.observer = new Observer();
-    this.progressBar = new progressBar(this.sliderBlock);
+    this.progressBar = new progressBar(this.config, this.sliderBlock);
 
-    this.step = new Step(this.sliderBlock);
+    this.step = new Step(this.config, this.sliderBlock);
 
     this.checkOrientation();
-    this.onload();
+    this.onloadWindow();
   }
 
   checkOrientation() {
@@ -117,6 +114,9 @@ export class View {
       this.thumbOne.checkOrientation(data);
       this.thumbTwo?.checkOrientation(data);
       this.observer.broadcast("orientation", data);
+
+      this.step.checkOrientation(this.orientation);
+      this.getSliderSize();
     }
 
     if (type == "updatePositionThumbFirst") {
@@ -196,23 +196,27 @@ export class View {
     }
   }
 
-  onload() {
+  onloadWindow() {
     window.addEventListener("load", () => {
-      if (this.orientation == "horisontal")
-        this.observer.broadcast("loadData", {
-          sliderSize: this.slider?.offsetWidth,
-        });
-
-      if (this.orientation == "vertical")
-        this.observer.broadcast("loadData", {
-          sliderSize: this.slider?.offsetHeight,
-        });
+      this.getSliderSize();
+      this.resizeWindow();
     });
+  }
 
-    /* window.addEventListener("resize", () => {
-      this.observer.broadcast("loadData", {
-        sliderWidth: this.slider?.offsetWidth,
+  resizeWindow() {
+    window.addEventListener("resize", () => {
+      this.getSliderSize();
+    });
+  }
+  getSliderSize() {
+    if (this.orientation == "horisontal")
+      return this.observer.broadcast("loadData", {
+        sliderSize: this.slider?.offsetWidth,
       });
-    });*/
+
+    if (this.orientation == "vertical")
+      return this.observer.broadcast("loadData", {
+        sliderSize: this.slider?.offsetHeight,
+      });
   }
 }

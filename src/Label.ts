@@ -15,17 +15,17 @@ export class Label {
   max: number;
   step: number;
 
-  constructor(thumb: HTMLElement | null) {
+  constructor(IConfigLabel: any, thumb: HTMLElement | null) {
     this.thumb = thumb;
     this.labelElem = document.createElement("div");
     this.labelElem.classList.add("thumb__label");
     this.thumb?.append(this.labelElem);
 
-    this.config = config;
-    this.label = config.label;
-    this.min = config.min;
-    this.max = config.max;
-    this.step = config.step;
+    this.config = IConfigLabel;
+    this.label = this.config.label;
+    this.min = this.config.min;
+    this.max = this.config.max;
+    this.step = this.config.step;
 
     this.label
       ? (this.labelElem.style.display = "block")

@@ -1,11 +1,10 @@
 import { Label } from "./Label";
 import { Observer } from "./Observer";
-import config from "./config";
+
 interface IConfigThumb {
-  id?: string;
-  range?: boolean;
+  range: boolean;
   position_1: number;
-  position_2?: number;
+  position_2: number;
   orientation: string;
 }
 export class Thumb {
@@ -25,29 +24,31 @@ export class Thumb {
   label: Label;
 
   constructor(
+    IConfigThumb: any,
     countThumbs: string,
     slider: HTMLElement | null,
-    range: boolean,
     data_num: number
   ) {
-    this.config = config;
-    this.position_1 = config.position_1;
-    this.position_2 = config.position_2;
-    this.orientation = config.orientation;
+    this.config = IConfigThumb;
+    this.position_1 = this.config.position_1;
+    this.position_2 = this.config.position_2;
+    this.orientation = this.config.orientation;
+    this.range = this.config.range;
+
     this.slider = slider;
     this.countThumbs = countThumbs;
 
     this.thumb = document.createElement("div");
     this.thumb.classList.add("thumb");
     this.thumb.classList.add(this.countThumbs);
-    this.range = range;
+
     this.value = document.createElement("div");
     this.data_num = data_num;
     this.thumb.setAttribute("data-num", data_num + "");
     this.slider?.append(this.thumb);
 
     this.observer = new Observer();
-    this.label = new Label(this.thumb);
+    this.label = new Label(this.config, this.thumb);
 
     this.zIndex = 1;
 
@@ -73,11 +74,22 @@ export class Thumb {
   checkOrientation(data: string) {
     this.orientation = data;
     this.label.changeLabelOrientation(this.orientation);
-    if (this.orientation == "vertical")
+    if (this.orientation == "vertical") {
+      if (this.thumb) {
+        this.thumb.style.top = this.thumb?.style.left;
+        this.thumb.style.left = "-5px";
+      }
       this.thumb?.classList.add("thumb_vertical");
+    }
 
-    if (this.orientation == "horisontal")
+    if (this.orientation == "horisontal") {
+      if (this.thumb) {
+        this.thumb.style.left = this.thumb?.style.top;
+        this.thumb.style.top = "-5px";
+      }
+
       this.thumb?.classList.remove("thumb_vertical");
+    }
   }
 
   setPosition(position: number) {
@@ -153,9 +165,7 @@ export class Thumb {
   };
 
   findPosition(e: any) {
-    let thumbSecond: HTMLElement | null = document.querySelector(
-      ".thumb_second"
-    );
+    let thumbSecond = this.slider?.querySelector(".thumb_second");
     let thumbFirst = this.slider?.querySelector(".thumb_first");
     if (this.orientation == "horisontal") {
       if (!this.range && this.thumb != null) {

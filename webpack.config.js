@@ -34,6 +34,12 @@ const config = {
   resolve: {
     extensions: [".tsx", ".ts", ".js"],
   },
+  plugins: [
+    new webpack.ProvidePlugin({
+      $: "jquery",
+      jQuery: "jquery",
+    }),
+  ],
 };
 
 module.exports = config;

@@ -1,5 +1,5 @@
 import { Observer } from "./Observer";
-import config from "./config";
+
 interface IConfigController {
   range: boolean;
   orientation: string;
@@ -37,17 +37,18 @@ export class Controller {
   step: number;
   position_1: number;
   position_2?: number;
-  constructor(panel: HTMLElement | null) {
+  constructor(IConfigController: any, panel: HTMLElement | null) {
     this.observer = new Observer();
-    this.config = config;
-    this.range = config.range;
-    this.orientation = config.orientation;
-    this.label = config.label;
-    this.min = config.min;
-    this.max = config.max;
-    this.step = config.step;
-    this.position_1 = config.position_1;
-    this.position_2 = config.position_2;
+
+    this.config = IConfigController;
+    this.range = this.config.range;
+    this.orientation = this.config.orientation;
+    this.label = this.config.label;
+    this.min = this.config.min;
+    this.max = this.config.max;
+    this.step = this.config.step;
+    this.position_1 = this.config.position_1;
+    this.position_2 = this.config.position_2;
 
     this.panel = panel;
     this.panelBlock = document.createElement("div");
@@ -144,6 +145,7 @@ export class Controller {
   }
 
   checkChange() {
+    let panelBlock = this.panel?.querySelectorAll(".panel__block");
     this.panelBlock.addEventListener("click", (e) => {
       if (e.target == this.valueLabel) {
         if (this.valueLabel?.checked) this.observer.broadcast("label", true);
@@ -361,7 +363,7 @@ export class Controller {
   }
 
   checkRange() {
-    let hiddenBlock = document.querySelector(".hidden");
+    let hiddenBlock = this.panelBlock.querySelector(".hidden");
     if (hiddenBlock instanceof HTMLElement)
       this.range
         ? (hiddenBlock.style.display = "flex")
@@ -396,3 +398,5 @@ export class Controller {
     });
   }
 }
+
+export default Controller;

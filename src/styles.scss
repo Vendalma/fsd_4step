@@ -10,6 +10,7 @@
 .slider {
   width: 100%;
   min-height: 300px;
+  min-width: 250px;
   position: relative;
   display: flex;
   justify-content: center;
@@ -115,11 +116,6 @@
 .progress-bar {
   background: linear-gradient(180deg, #6fcf97 0%, #66d2ea 100%);
   position: absolute;
-  height: 7px;
-
-  &_vertical {
-    width: 7px;
-  }
 }
 
 .panel {
