@@ -1,32 +1,35 @@
 import "./styles.scss";
-import { Presenter } from "./Presenter";
+import { RangeSlider } from "./RangeSlider/rangeSlider";
+import * as $ from "jquery";
 
 (function ($) {
-  $.fn.rangeSlider = function (options: {
-    min: number;
-    max: number;
-    position_1: number;
-    position_2?: number;
-    range: boolean;
-    label?: boolean;
-    step: number;
-    orientation: string;
-  }) {
-    const settings = $.extend(
-      {
-        min: 0,
-        max: 10,
-        position_1: 0,
-        range: false,
-        label: true,
-        step: 1,
-        orientation: "horisontal",
-      },
-      options
-    );
-
-    let slider = new Presenter(settings, this[0]);
+  $.fn.rangeSlider = function (options: any) {
+    return this.each(function () {
+      let obj = $(this);
+      new RangeSlider(obj, options);
+    });
   };
 })(jQuery);
 
-$("#app").rangeSlider({ range: true, position_2: 5 });
+$(".app").rangeSlider({
+  range: true,
+  positionTo: 15,
+  min: 0,
+  max: 10,
+  positionFrom: 5,
+
+  label: true,
+  step: 1,
+  orientation: "horisontal",
+});
+$(".app2").rangeSlider({
+  range: false,
+
+  min: 0,
+  max: 10,
+  positionFrom: 110,
+  positionTo: 150,
+  label: false,
+  step: 1,
+  orientation: "vertical",
+});

@@ -1,4 +1,4 @@
-import { Observer } from "./Observer";
+//import { Observer } from "./Observer";
 
 interface IConfigController {
   range: boolean;
@@ -11,7 +11,7 @@ interface IConfigController {
   position_2?: number;
 }
 export class Controller {
-  panel: HTMLElement | null;
+  /*panel: HTMLElement | null;
   panelBlock: HTMLElement;
   inputMinValue: HTMLInputElement | null;
   inputMaxValue: HTMLInputElement | null;
@@ -142,6 +142,8 @@ export class Controller {
     this.setThumbPosition();
     this.setMaxValue();
     this.setMinValue();
+
+    return this;
   }
 
   checkChange() {
@@ -396,7 +398,7 @@ export class Controller {
     this.inputMinValue?.addEventListener("blur", () => {
       this.observer.broadcast("changeMinValue", this.inputMinValue?.value);
     });
-  }
+  }*/
 }
 
 export default Controller;

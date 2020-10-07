@@ -1,32 +1,29 @@
-//import config from "./config";
-import { Observer } from "./Observer";
+import { Observer } from "../../Observer/Observer";
 import { Thumb } from "./Thumb";
-import { Controller } from "./Controller";
 import { progressBar } from "./progressBar";
 import { Step } from "./Step";
 interface IConfigView {
   min: number;
   max: number;
   range: boolean;
-  position_1: number;
-  position_2: number;
+  positionFrom: number;
+  positionTo: number;
   orientation: string;
   step: number;
 }
 export class View {
   config: IConfigView;
   range: boolean;
-  position_1: number;
-  position_2: number;
+  positionFrom: number;
+  positionTo: number;
   orientation: string;
   min: number;
   max: number;
   stepValue: number;
 
-  wrapper: HTMLElement | null | Element;
-  panel: HTMLElement | null;
+  wrapper: HTMLElement | null;
+
   slider: HTMLElement | null;
-  controller: Controller;
   thumbOne: Thumb;
   thumbTwo: Thumb | null | undefined;
   observer: Observer;
@@ -37,8 +34,8 @@ export class View {
   constructor(IConfigView: any, wrapper: HTMLElement) {
     this.config = IConfigView;
     this.range = this.config.range;
-    this.position_1 = this.config.position_1;
-    this.position_2 = this.config.position_2;
+    this.positionFrom = this.config.positionFrom;
+    this.positionTo = this.config.positionTo;
     this.orientation = this.config.orientation;
     this.min = this.config.min;
     this.max = this.config.max;
@@ -47,12 +44,10 @@ export class View {
     this.wrapper = wrapper;
     this.wrapper?.classList.add("wrapper");
 
-    this.panel = this.createElement("div", "panel");
     this.slider = this.createElement("div", "slider");
 
     this.sliderBlock = this.createElement("div", "slider__block");
 
-    this.wrapper?.append(this.panel);
     this.wrapper?.append(this.slider);
     this.slider.append(this.sliderBlock);
 
@@ -63,9 +58,6 @@ export class View {
     this.thumbTwo = new Thumb(this.config, "thumb_second", this.sliderBlock, 2);
     this.range ? null : this.thumbTwo?.removeThis();
     this.thumbTwo?.observer.subscribe(this);
-
-    this.controller = new Controller(this.config, this.panel);
-    this.controller.observer.subscribe(this);
 
     this.observer = new Observer();
     this.progressBar = new progressBar(this.config, this.sliderBlock);
@@ -166,7 +158,7 @@ export class View {
         this.progressBar.setProgressBar(data);
       }
     }
-    this.controller.updateThumbPosition(data);
+    // this.controller.updateThumbPosition(data);
   }
 
   setStep(data: any) {
@@ -179,19 +171,19 @@ export class View {
 
     if (!this.range) {
       this.thumbOne.setPosition(onloadPositionThumbOne);
-      this.thumbOne.setLabelValue(this.position_1);
+      this.thumbOne.setLabelValue(this.positionFrom);
       this.progressBar.setOnloadProgressBarPosition(data);
 
       this.thumbTwo?.setPosition(onloadPositionThumbTwo);
-      this.thumbTwo?.setLabelValue(this.position_2);
+      this.thumbTwo?.setLabelValue(this.positionTo);
     }
     if (this.range) {
       this.thumbOne.setPosition(onloadPositionThumbOne);
-      this.thumbOne.setLabelValue(this.position_1);
+      this.thumbOne.setLabelValue(this.positionFrom);
       this.progressBar.setOnloadProgressBarPosition(data);
 
       this.thumbTwo?.setPosition(onloadPositionThumbTwo);
-      this.thumbTwo?.setLabelValue(this.position_2);
+      this.thumbTwo?.setLabelValue(this.positionTo);
       this.progressBar.setOnloadProgressBarPosition(data);
     }
   }

@@ -1,6 +1,6 @@
 const webpack = require("webpack");
 const path = require("path");
-
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 const config = {
   entry: "./src/index.ts",
   output: {
@@ -29,6 +29,13 @@ const config = {
         test: /\.scss$/,
         use: ["style-loader", "css-loader", "sass-loader"],
       },
+      {
+        test: /\.pug$/,
+        loader: "pug-loader",
+        options: {
+          name: "[name].pug",
+        },
+      },
     ],
   },
   resolve: {
@@ -38,6 +45,10 @@ const config = {
     new webpack.ProvidePlugin({
       $: "jquery",
       jQuery: "jquery",
+    }),
+    new HtmlWebpackPlugin({
+      filename: "index.html",
+      template: "./src/index.pug",
     }),
   ],
 };

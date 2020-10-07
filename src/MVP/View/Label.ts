@@ -1,4 +1,3 @@
-import config from "./config";
 interface IConfigLabel {
   label: boolean;
   min: number;

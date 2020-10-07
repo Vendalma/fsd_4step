@@ -1,15 +1,16 @@
-import { Model } from "./Model";
-import { View } from "./View";
+import { Model } from "../Model/Model";
+import { View } from "../View/View";
 
 export class Presenter {
   view: View;
   model: Model;
-  constructor(config: any, conteiner: HTMLElement) {
-    this.model = new Model(config);
-    this.view = new View(config, conteiner);
+  constructor(view: View, model: Model) {
+    this.model = model;
+    this.view = view;
 
     this.view.observer.subscribe(this);
     this.model.observer.subscribe(this);
+    console.log("presenter");
   }
 
   update(type: string, data: any) {

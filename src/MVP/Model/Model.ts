@@ -1,5 +1,5 @@
 import { data } from "jquery";
-import { Observer } from "./Observer";
+import { Observer } from "../../Observer/Observer";
 //import config from "./config";
 interface IConfigModel {
   min: number;

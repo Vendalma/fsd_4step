@@ -1,5 +1,3 @@
-import { htmlPrefilter } from "jquery";
-import config from "./config";
 interface IConfigProgressBar {
   range: boolean;
   position_1: number;

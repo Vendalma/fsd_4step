@@ -1,5 +1,5 @@
 import { Label } from "./Label";
-import { Observer } from "./Observer";
+import { Observer } from "../../Observer/Observer";
 
 interface IConfigThumb {
   range: boolean;
