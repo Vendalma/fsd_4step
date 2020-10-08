@@ -10,6 +10,7 @@ interface IConfigView {
   positionTo: number;
   orientation: string;
   step: number;
+  label: boolean;
 }
 export class View {
   config: IConfigView;
@@ -20,6 +21,7 @@ export class View {
   min: number;
   max: number;
   stepValue: number;
+  label: boolean;
 
   wrapper: HTMLElement | null;
 
@@ -40,6 +42,7 @@ export class View {
     this.min = this.config.min;
     this.max = this.config.max;
     this.stepValue = this.config.step;
+    this.label = this.config.label;
 
     this.wrapper = wrapper;
     this.wrapper?.classList.add("wrapper");
@@ -130,6 +133,10 @@ export class View {
     }
   }
 
+  Label(data: boolean) {
+    this.thumbOne.checkLabel(data);
+    this.thumbTwo?.checkLabel(data);
+  }
   checkRange() {
     if (this.range) {
       let thumbTwo = this.thumbTwo?.addThis();

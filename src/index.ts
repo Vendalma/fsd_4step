@@ -1,28 +1,9 @@
-import "./styles.scss";
-import { RangeSlider } from "./RangeSlider/rangeSlider";
+import "./RangeSlider/slider";
 import * as $ from "jquery";
+import "./styles.scss";
 
-(function ($) {
-  $.fn.rangeSlider = function (options: any) {
-    return this.each(function () {
-      let obj = $(this);
-      new RangeSlider(obj, options);
-    });
-  };
-})(jQuery);
-
-$(".app").rangeSlider({
-  range: true,
-  positionTo: 15,
-  min: 0,
-  max: 10,
-  positionFrom: 5,
-
-  label: true,
-  step: 1,
-  orientation: "horisontal",
-});
-$(".app2").rangeSlider({
+$(".app").rangeSlider("init");
+$(".app2").rangeSlider("init", {
   range: false,
 
   min: 0,

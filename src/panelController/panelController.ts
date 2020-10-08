@@ -1,4 +1,5 @@
 import "./panelController.scss";
+import * as $ from "jquery";
 interface ISettings {
   range: boolean;
   orientation: string;
@@ -22,6 +23,7 @@ export class PanelController {
   inputVertical: HTMLInputElement | null;
   inputSingle: HTMLInputElement | null;
   inputDouble: HTMLInputElement | null;
+  $slider: JQuery;
 
   settings: ISettings;
   range: boolean;
@@ -58,7 +60,11 @@ export class PanelController {
     this.inputVertical = this.parent.querySelector(".panel__radio_vertical");
     this.inputSingle = this.parent.querySelector(".panel__radio_single");
     this.inputDouble = this.parent.querySelector(".panel__radio_double");
+
+    this.$slider = $(this.parent).find(".slider");
+
     this.init();
+    this.change();
   }
 
   init() {
@@ -78,6 +84,13 @@ export class PanelController {
 
     if (this.range && this.inputDouble) this.inputDouble.checked = true;
     if (!this.range && this.inputSingle) this.inputSingle.checked = true;
+  }
+
+  change() {
+    this.inputLabel?.addEventListener("click", () => {
+      let isibleLabel = this.inputLabel?.checked;
+      this.$slider.rangeSlider({ label: isibleLabel });
+    });
   }
 }
 
