@@ -24,7 +24,6 @@ export class Step implements IconfigStep {
   }
 
   addStepLine(data: any) {
-    console.log(this.orientation);
     this.deleteElements();
     let thimbHeight = this.container?.querySelector(".thumb_first");
 

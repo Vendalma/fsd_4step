@@ -10,7 +10,6 @@ export class Presenter {
 
     this.view.observer.subscribe(this);
     this.model.observer.subscribe(this);
-    console.log("presenter");
   }
 
   update(type: string, data: any) {

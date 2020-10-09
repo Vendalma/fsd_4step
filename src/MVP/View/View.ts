@@ -67,11 +67,25 @@ export class View {
 
     this.step = new Step(this.config, this.sliderBlock);
 
-    this.checkOrientation();
+    this.init();
+    this.checkOrientation(this.orientation);
     this.onloadWindow();
   }
-
-  checkOrientation() {
+  init() {
+    this.slider?.setAttribute("data-min", this.min + "");
+    this.slider?.setAttribute("data-max", this.max + "");
+    this.slider?.setAttribute("data-step", this.stepValue + "");
+    this.slider?.setAttribute("data-label", this.label + "");
+    this.slider?.setAttribute("data-orientation", this.orientation);
+    this.slider?.setAttribute("data-range", this.range + "");
+    this.slider?.setAttribute("data-from", this.positionFrom + "");
+    if (this.range) this.slider?.setAttribute("data-to", this.positionTo + "");
+  }
+  checkOrientation(data: string) {
+    this.orientation = data;
+    this.thumbOne.checkOrientation(data);
+    this.thumbTwo?.checkOrientation(data);
+    this.observer.broadcast("orientation", data);
     if (this.orientation == "vertical") {
       this.sliderBlock?.classList.add("slider__block_vertical");
     }
@@ -107,10 +121,7 @@ export class View {
 
     if (type == "orientation") {
       this.orientation = data;
-      this.checkOrientation();
-      this.thumbOne.checkOrientation(data);
-      this.thumbTwo?.checkOrientation(data);
-      this.observer.broadcast("orientation", data);
+      //this.checkOrientation();
 
       this.step.checkOrientation(this.orientation);
       this.getSliderSize();

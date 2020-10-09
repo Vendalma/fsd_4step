@@ -2,8 +2,8 @@ import "./RangeSlider/slider";
 import * as $ from "jquery";
 import "./styles.scss";
 
-$(".app").rangeSlider("init");
-$(".app2").rangeSlider("init", {
+$(".app").rangeSlider();
+$(".app2").rangeSlider({
   range: false,
 
   min: 0,

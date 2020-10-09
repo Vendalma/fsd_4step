@@ -114,7 +114,6 @@ export class progressBar {
     if (this.orientation == "vertical") {
       if (this.progressBar)
         if (!this.range) {
-          console.log(11);
           this.progressBar.style.height = onloadPositionThumbOne + 2 + "px";
           this.progressBar.style.width = "7px";
         } else if (this.range) {

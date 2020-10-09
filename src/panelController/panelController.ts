@@ -61,7 +61,7 @@ export class PanelController {
     this.inputSingle = this.parent.querySelector(".panel__radio_single");
     this.inputDouble = this.parent.querySelector(".panel__radio_double");
 
-    this.$slider = $(this.parent).find(".slider");
+    this.$slider = $(this.parent);
 
     this.init();
     this.change();
@@ -87,9 +87,27 @@ export class PanelController {
   }
 
   change() {
-    this.inputLabel?.addEventListener("click", () => {
-      let isibleLabel = this.inputLabel?.checked;
-      this.$slider.rangeSlider({ label: isibleLabel });
+    this.panel?.addEventListener("click", (e) => {
+      if (e.target == this.inputLabel) {
+        let isLabelVisible = this.inputLabel?.checked;
+        this.$slider.rangeSlider("labelVisible", isLabelVisible);
+      }
+
+      if (e.target == this.inputHorisontal && this.inputHorisontal?.checked) {
+        this.$slider.rangeSlider("orientation", "horisontal");
+      }
+
+      if (e.target == this.inputVertical && this.inputVertical?.checked) {
+        this.$slider.rangeSlider("orientation", "vertical");
+      }
+
+      if (e.target == this.inputSingle && this.inputSingle?.checked) {
+        this.$slider.rangeSlider("range", false);
+      }
+
+      if (e.target == this.inputDouble && this.inputDouble?.checked) {
+        this.$slider.rangeSlider("range", true);
+      }
     });
   }
 }

@@ -1,6 +1,7 @@
 import { RangeSlider } from "./rangeSlider";
 import { PanelController } from "../panelController/panelController";
 import * as $ from "jquery";
+import { fn } from "jquery";
 
 interface ISettings {
   min: number;
@@ -20,40 +21,45 @@ interface MethodsObject {
 (function ($) {
   const methods: MethodsObject = {
     init: function ($: any, options: any) {
-      console.log(options);
-      /*
-        options
-      );*/
-      let slider = new RangeSlider($[0], options);
-      let panel = new PanelController($[0], options);
+      return this.each(function () {
+        let slider = new RangeSlider($[0], options);
+        let panel = new PanelController($[0], options);
+      });
+    },
+    labelVisible: function ($: any, options: boolean) {
+      $.attr("data-label", options);
+      methods.init();
+    },
+    orientation: function ($: any, options: string) {
+      console.log($.data);
+      $.attr("data-orientation", options);
     },
   };
   $.fn.rangeSlider = function (method: any, settings: any = undefined) {
-    let defaultSettings = $.extend(
-      {
-        min: 0,
-        max: 10,
-        label: true,
-        range: true,
-        step: 1,
-        orientation: "horisontal",
-        positionFrom: 0,
-        positionTo: 5,
-      },
-      settings
-    );
-    let $elem = $(this);
-    for (method in methods) {
-      if (methods.hasOwnProperty(method)) {
-        if (method == "init") {
-          return methods[method].call(this, $elem, defaultSettings);
-        }
-      } else if (typeof method === "object" || !method) {
-      } else {
-        $.error(
-          "Метод с именем " + method + " не существует для jQuery.tooltip"
-        );
-      }
+    if (methods[method]) {
+      let slider = this.children(".slider");
+      console.log(slider);
+      return methods[method].apply(
+        this,
+        Array.prototype.slice.call([slider, settings])
+      );
+    } else if (typeof method === "object" || !method) {
+      let defaultSettings = $.extend(
+        {
+          min: 0,
+          max: 10,
+          label: true,
+          range: true,
+          step: 1,
+          orientation: "horisontal",
+          positionFrom: 0,
+          positionTo: 5,
+        },
+        method
+      );
+      return methods.init.apply(this, [this, defaultSettings]);
+    } else {
+      $.error("Метод с именем " + method + " не существует");
     }
   };
 })(jQuery);
