@@ -25,49 +25,41 @@ export class RangeSlider {
     new Presenter(this.view, this.model);
 
     this.container = container;
-    this.observer();
+ 
   }
 
   setLabel(data: boolean) {
-    this.view.Label(data);
+    this.view.changeLabel(data);
   }
 
   setOrientation(data: string) {
-    //console.log(data);
     this.view.checkOrientation(data);
   }
-  change(data: any) {
-    console.log(data);
+
+  setRange(data: boolean) {
+    this.view.checkRange(data)
+  }
+  changeMin(data:number) {
+    this.model.changeMin(data)
+    this.view.changeMin(data)
+  }
+  changeMax (data: number) {
+    this.model.changeMax(data)
+    this.view.changeMax(data)
   }
 
-  observer() {
-    var target = this.container.lastChild;
-    let that = this;
-    const config = {
-      attributes: true,
-      subtree: true,
-      attributeFilter: ["data-label", "data-orientation"],
-    };
-
-    const callback = function (mutationsList: any, observer: any) {
-      for (let mutation of mutationsList) {
-        if (mutation.type === "attributes" && target instanceof HTMLElement) {
-          let name = mutation.attributeName + "";
-          let value = target.getAttribute(name);
-
-          if (name == "data-label" && value) {
-            that.setLabel(JSON.parse(value));
-          }
-
-          if (name == "data-orientation" && value) {
-            that.setOrientation(value);
-          }
-        }
-      }
-    };
-
-    const observer = new MutationObserver(callback);
-    if (target) observer.observe(target, config);
+  changeStep (data: number) {
+    this.model.changeStep(data);
+    this.view.changeStep(data)
+  }
+ 
+  changePositionFrom( data:number) {
+    this.model.changePositionFrom(data)
+    this.view.changePositionFrom(data)
+  }
+  changePositionTo( data:number) {
+    this.model.changePositionTo(data)
+    this.view.changePositionTo(data)
   }
 }
 

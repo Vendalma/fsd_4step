@@ -65,6 +65,7 @@ export class PanelController {
 
     this.init();
     this.change();
+    this.checkRange();
   }
 
   init() {
@@ -82,8 +83,11 @@ export class PanelController {
     if (this.orientation == "vertical" && this.inputVertical)
       this.inputVertical.checked = true;
 
-    if (this.range && this.inputDouble) this.inputDouble.checked = true;
+    if (this.range && this.inputDouble)  {
+      this.inputDouble.checked = true;
+    }
     if (!this.range && this.inputSingle) this.inputSingle.checked = true;
+
   }
 
   change() {
@@ -103,12 +107,43 @@ export class PanelController {
 
       if (e.target == this.inputSingle && this.inputSingle?.checked) {
         this.$slider.rangeSlider("range", false);
+        this.range = false
+        this.checkRange()
       }
 
       if (e.target == this.inputDouble && this.inputDouble?.checked) {
         this.$slider.rangeSlider("range", true);
+        this.range = true
+        this.checkRange()
       }
+    this.inputMin?.addEventListener('blur', () => {
+      this.$slider.rangeSlider('min', Number(this.inputMin?.value))
+    })
+
+    this.inputMax?.addEventListener('blur', ()=> {
+      this.$slider.rangeSlider('max', Number(this.inputMax?.value))
+    })
+
+      this.inputStep?.addEventListener('blur', ()=> {
+        this.$slider.rangeSlider('step', Number(this.inputStep?.value))
+      })
+
+      this.inputFrom?.addEventListener('blur', ()=> {
+        this.$slider.rangeSlider('position-from', Number(this.inputFrom?.value))
+      })
+      this.inputTo?.addEventListener('blur', ()=> {
+        this.$slider.rangeSlider('position-to', Number(this.inputTo?.value))
+      })
     });
+  }
+
+  checkRange() {
+    let hiddenBlock = this.parent.querySelector('.panel__block_hidden')
+    if (hiddenBlock instanceof HTMLElement) {
+      if (!this.range) hiddenBlock.style.display = 'none'
+      if (this.range) hiddenBlock.style.display = 'block'
+    }
+    
   }
 }
 

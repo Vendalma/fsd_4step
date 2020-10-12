@@ -100,7 +100,7 @@ export class Thumb {
 
     if (this.orientation == "vertical") {
       if (!this.range && this.thumb) {
-        this.thumb.style.left = position + "px";
+        this.thumb.style.top = position + "px";
       } else if (this.range) {
         if (this.thumb?.classList.contains("thumb_first")) {
           this.thumb.style.top = position + "px";

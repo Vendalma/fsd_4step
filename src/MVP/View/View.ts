@@ -104,29 +104,6 @@ export class View {
 
   update(type: string, data: any) {
     this.observer.broadcast("mouseMove", data);
-
-    if (type == "range") {
-      this.range = data;
-      this.checkRange();
-      this.thumbOne.checkRange(data);
-      this.thumbTwo?.checkRange(data);
-      this.observer.broadcast("changeRange", data);
-      this.progressBar.checkRange(data);
-    }
-
-    if (type == "label") {
-      this.thumbOne.checkLabel(data);
-      this.thumbTwo?.checkLabel(data);
-    }
-
-    if (type == "orientation") {
-      this.orientation = data;
-      //this.checkOrientation();
-
-      this.step.checkOrientation(this.orientation);
-      this.getSliderSize();
-    }
-
     if (type == "updatePositionThumbFirst") {
       this.thumbOne.getPosition(data);
     }
@@ -134,26 +111,48 @@ export class View {
     if (type == "updatePositionThumbSecond") {
       this.thumbTwo?.getPosition(data);
     }
-
-    if (type == "changeMaxValue") {
-      //this.step.changeMaxValue(data);
-    }
-
-    if (type == "changeMinValue") {
-      // this.step.changeMinValue(data);
-    }
   }
 
-  Label(data: boolean) {
+  changeMin(data:number) {
+    this.min = data
+    this.step.changeMinValue(data)
+  }
+
+  changeMax (data: number) {
+    this.max = data;
+    this.step.changeMaxValue(data)
+  }
+
+  changeLabel(data: boolean) {
     this.thumbOne.checkLabel(data);
     this.thumbTwo?.checkLabel(data);
   }
-  checkRange() {
+
+  checkRange(data: boolean) {
+    this.range = data;
+    this.thumbOne.checkRange(data);
+    this.thumbTwo?.checkRange(data);
+    this.observer.broadcast("changeRange", data);
+    this.progressBar.checkRange(data);
+
     if (this.range) {
       let thumbTwo = this.thumbTwo?.addThis();
     } else if (!this.range && this.thumbTwo) {
       this.thumbTwo.removeThis();
     }
+  }
+
+  changeStep(data: number) {
+    this.stepValue = data
+  }
+
+  changePositionFrom(data: number) {
+    this.positionFrom = data;
+    this.getSliderSize()
+  }
+  changePositionTo(data: number) {
+    this.positionTo = data;
+    this.getSliderSize();
   }
 
   setPosition_1(data: any) {
@@ -191,9 +190,6 @@ export class View {
       this.thumbOne.setPosition(onloadPositionThumbOne);
       this.thumbOne.setLabelValue(this.positionFrom);
       this.progressBar.setOnloadProgressBarPosition(data);
-
-      this.thumbTwo?.setPosition(onloadPositionThumbTwo);
-      this.thumbTwo?.setLabelValue(this.positionTo);
     }
     if (this.range) {
       this.thumbOne.setPosition(onloadPositionThumbOne);

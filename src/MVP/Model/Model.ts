@@ -212,6 +212,23 @@ export class Model implements IConfigModel {
     this.orientation = data;
   }
 
+  changeMin(data:number) {
+    this.min = data
+  }
+  changeMax (data: number) {
+    this.max = data
+  }
+  changeStep(data: number) {
+    this.step = data
+  }
+  changePositionFrom(data: number) {
+    this.position_1 = data
+  }
+
+  changePositionTo(data: number) {
+    this.position_2 = data
+  }
+  
   getStep(loadData: any) {
     let sliderSize = loadData["sliderSize"];
 
@@ -222,29 +239,12 @@ export class Model implements IConfigModel {
     let onloadPositionThumbOne = (this.position_1 - this.min) / onePixelSize;
     let onloadPositionThumbTwo = (this.position_2 - this.min) / onePixelSize;
 
-    let centerStep;
-    let leftStep;
-    let rightStep;
-
-    if (this.isIntegerStep(this.step)) {
-      centerStep = Math.round((this.max + this.min) / 2);
-      leftStep = centerStep - Math.round((centerStep - this.min) / 2);
-      rightStep = centerStep + Math.round((this.max - centerStep) / 2);
-    } else if (!this.isIntegerStep(this.step)) {
-      centerStep = (this.max + this.min) / 2;
-      leftStep = centerStep - Math.round((centerStep - this.min) / 2);
-      rightStep = centerStep + Math.round((this.max - centerStep) / 2);
-    }
 
     this.observer.broadcast("stepData", {
       stepCount: stepCount,
       stepSize: stepSize,
       onloadPositionThumbOne: onloadPositionThumbOne,
       onloadPositionThumbTwo: onloadPositionThumbTwo,
-
-      centerStep: centerStep,
-      leftStep: leftStep,
-      rightStep: rightStep,
     });
   }
 

@@ -1,7 +1,8 @@
 import { RangeSlider } from "./rangeSlider";
 import { PanelController } from "../panelController/panelController";
+import {MutationObserverClass} from './mutationObserver'
 import * as $ from "jquery";
-import { fn } from "jquery";
+
 
 interface ISettings {
   min: number;
@@ -21,19 +22,32 @@ interface MethodsObject {
 (function ($) {
   const methods: MethodsObject = {
     init: function ($: any, options: any) {
-      return this.each(function () {
-        let slider = new RangeSlider($[0], options);
-        let panel = new PanelController($[0], options);
-      });
+      let sliderInstance = new MutationObserverClass($[0], options) 
     },
     labelVisible: function ($: any, options: boolean) {
       $.attr("data-label", options);
-      methods.init();
     },
     orientation: function ($: any, options: string) {
-      console.log($.data);
       $.attr("data-orientation", options);
     },
+    range: function ($: any, options: string) {
+      $.attr("data-range", options);
+    },
+    min: function($:any, options: number) {
+      $.attr('data-min', options)
+    },
+    max: function($:any, options: number) {
+      $.attr('data-max', options)
+    },
+    step: function ($:any, options: number) {
+      $.attr('data-step', options)
+    },
+    'position-from': function ($:any, options: number) {
+      $.attr('data-from', options)
+    },
+    'position-to': function ($:any, options: number) {
+      $.attr('data-to', options)
+    }
   };
   $.fn.rangeSlider = function (method: any, settings: any = undefined) {
     if (methods[method]) {
