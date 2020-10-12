@@ -55,11 +55,13 @@ export class Step implements IconfigStep {
   }
 
   changeMinValue(data: number) {
+    this.min = data;
     let blockMin = this.container?.querySelector('.slider__step-block_min')
     if (blockMin instanceof HTMLElement) blockMin.innerHTML = data + ''
   }
 
   changeMaxValue(data: number) {
+    this.max = data
     let blockMax = this.container?.querySelector('.slider__step-block_max')
     if (blockMax instanceof HTMLElement) blockMax.innerHTML = data + ''
   }

@@ -22,7 +22,9 @@ interface MethodsObject {
 (function ($) {
   const methods: MethodsObject = {
     init: function ($: any, options: any) {
-      let sliderInstance = new MutationObserverClass($[0], options) 
+      let panel = new PanelController($[0],options)
+      let slider = new RangeSlider($[0], options)
+      let mutationObserver = new MutationObserverClass(panel,slider,$[0], options) 
     },
     labelVisible: function ($: any, options: boolean) {
       $.attr("data-label", options);

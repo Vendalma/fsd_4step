@@ -7,9 +7,8 @@ $(".app2").rangeSlider({
   range: false,
 
   min: 0,
-  max: 10,
-  positionFrom: 110,
-  positionTo: 150,
+  max: 100,
+  positionFrom: 15,
   label: false,
   step: 1,
   orientation: "vertical",

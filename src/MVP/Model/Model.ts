@@ -5,8 +5,8 @@ interface IConfigModel {
   min: number;
   max: number;
   range: boolean;
-  position_1: number;
-  position_2: number;
+  positionFrom: number;
+  positionTo: number;
   orientation: string;
   step: number;
 }
@@ -17,8 +17,8 @@ export class Model implements IConfigModel {
   config: IConfigModel;
   max: number;
   min: number;
-  position_1: number;
-  position_2: number;
+  positionFrom: number;
+  positionTo: number;
   orientation: string;
   step: number;
   constructor(IConfigModel: any) {
@@ -28,8 +28,8 @@ export class Model implements IConfigModel {
     this.range = this.config.range;
     this.max = this.config.max;
     this.min = this.config.min;
-    this.position_1 = this.config.position_1;
-    this.position_2 = this.config.position_2;
+    this.positionFrom = this.config.positionFrom;
+    this.positionTo = this.config.positionTo;
     this.orientation = this.config.orientation;
     this.step = this.config.step;
   }
@@ -222,11 +222,11 @@ export class Model implements IConfigModel {
     this.step = data
   }
   changePositionFrom(data: number) {
-    this.position_1 = data
+    this.positionFrom = data
   }
 
   changePositionTo(data: number) {
-    this.position_2 = data
+    this.positionTo = data
   }
   
   getStep(loadData: any) {
@@ -235,9 +235,8 @@ export class Model implements IConfigModel {
     let stepCount = 20;
     let onePixelSize = (this.max - this.min) / sliderSize;
     let stepSize = sliderSize / stepCount;
-
-    let onloadPositionThumbOne = (this.position_1 - this.min) / onePixelSize;
-    let onloadPositionThumbTwo = (this.position_2 - this.min) / onePixelSize;
+    let onloadPositionThumbOne = (this.positionFrom - this.min) / onePixelSize;
+    let onloadPositionThumbTwo = (this.positionTo - this.min) / onePixelSize;
 
 
     this.observer.broadcast("stepData", {

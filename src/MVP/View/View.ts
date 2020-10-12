@@ -86,6 +86,8 @@ export class View {
     this.thumbOne.checkOrientation(data);
     this.thumbTwo?.checkOrientation(data);
     this.observer.broadcast("orientation", data);
+    this.step.checkOrientation(data)
+    this.getSliderSize()
     if (this.orientation == "vertical") {
       this.sliderBlock?.classList.add("slider__block_vertical");
     }
@@ -163,19 +165,21 @@ export class View {
       this.thumbOne.getPosition(position);
       this.thumbOne.setLabelValue(valueThumb);
       this.progressBar.setProgressBar(data);
+      this.slider?.setAttribute('data-from', valueThumb)
     }
     if (this.range) {
       if (data_num == "1") {
         this.thumbOne.getPosition(position);
         this.thumbOne.setLabelValue(valueThumb);
         this.progressBar.setProgressBar(data);
+        this.slider?.setAttribute('data-from', valueThumb)
       } else {
         this.thumbTwo?.getPosition(position);
         this.thumbTwo?.setLabelValue(valueThumb);
         this.progressBar.setProgressBar(data);
+        this.slider?.setAttribute('data-to', valueThumb)
       }
     }
-    // this.controller.updateThumbPosition(data);
   }
 
   setStep(data: any) {
@@ -184,7 +188,7 @@ export class View {
 
   setOnloadThumbPosition(data: any) {
     let onloadPositionThumbOne = data["onloadPositionThumbOne"];
-    let onloadPositionThumbTwo = data["onloadPositionThumbTwo"];
+    let onloadPositionThumbTwo = data["onloadPositionThumbTwo"]
 
     if (!this.range) {
       this.thumbOne.setPosition(onloadPositionThumbOne);
@@ -214,6 +218,7 @@ export class View {
       this.getSliderSize();
     });
   }
+
   getSliderSize() {
     if (this.orientation == "horisontal")
       return this.observer.broadcast("loadData", {

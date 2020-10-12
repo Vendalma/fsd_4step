@@ -1,10 +1,7 @@
 import {RangeSlider} from './rangeSlider'
 import {PanelController} from '../panelController/panelController'
-import { Label } from '../MVP/View/Label';
-interface IObject {
-    [key: string]: any;
-  }
-interface ISettings extends IObject {
+
+interface ISettings {
     min: number;
     max: number;
     positionFrom: number;
@@ -29,10 +26,10 @@ export class MutationObserverClass {
     container: HTMLElement | null;
     panel: PanelController;
     slider: RangeSlider
-    constructor(container: HTMLElement, settings: ISettings) {
+    constructor(panel: PanelController, slider: RangeSlider,container: HTMLElement, settings: ISettings) {
         this.container = container;
-        this.panel = new PanelController(container, settings)
-        this.slider = new RangeSlider(container,settings)
+        this.panel = panel;
+        this.slider = slider;
 
 
         this.settings = settings;
@@ -62,7 +59,6 @@ export class MutationObserverClass {
                 let value = target.getAttribute(name);
                 if (name == "data-label" && value) {
                   that.slider.setLabel(JSON.parse(value));
-                 
                 }
       
                 if (name == "data-orientation" && value) {
@@ -85,9 +81,11 @@ export class MutationObserverClass {
                   }
                   if (name == "data-from" && value) {
                     that.slider.changePositionFrom(Number(value));
+                    that.panel.updateInputFrom(value)
                   }
                   if (name == "data-to" && value) {
                     that.slider.changePositionTo(Number(value));
+                    that.panel.updateInputTo(value)
                   }
               }
             }

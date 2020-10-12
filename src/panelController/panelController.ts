@@ -145,6 +145,16 @@ export class PanelController {
     }
     
   }
+
+  updateInputFrom(data: string) {
+    if (this.inputFrom)
+    this.inputFrom.value = data
+  }
+
+  updateInputTo(data: string) {
+    if (this.inputTo)
+    this.inputTo.value = data
+  }
 }
 
 export default PanelController;
