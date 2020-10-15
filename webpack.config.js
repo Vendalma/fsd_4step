@@ -26,6 +26,15 @@ const config = {
         exclude: /node_modules/,
       },
       {
+        test: /\.ts$/,
+        exclude: [ path.resolve("src/test/") ],
+        enforce: 'post',
+        use: {
+          loader: 'istanbul-instrumenter-loader',
+          options: { esModules: true }
+        }
+      },
+      {
         test: /\.scss$/,
         use: ["style-loader", "css-loader", "sass-loader"],
       },

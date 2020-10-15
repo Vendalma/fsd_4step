@@ -5,11 +5,9 @@ delete webpackConfig.entry
 
 module.exports = function (config) {
     config.set({
-        basePath: '',
         frameworks: ['jasmine'],
         files: [{pattern : 'src/test/*.test.ts'},
     {pattern: './styles.scss'}],
-        exclude: [],
         preprocessors: {
             'src/test/*.test.ts': ['webpack'],
             'styles.scss':['scss']
@@ -34,11 +32,8 @@ module.exports = function (config) {
         port: 9000,
         colors: true,
         logLevel: config.LOG_INFO,
-
         autoWatch: true,
-
         singleRun: false,   
         concurrency: Infinity,
-
     })
 }

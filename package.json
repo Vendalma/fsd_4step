@@ -28,6 +28,7 @@
     "eslint-plugin-fsd": "^1.0.1",
     "eslint-plugin-import": "^2.21.2",
     "html-webpack-plugin": "^4.5.0",
+    "istanbul-instrumenter-loader": "^3.0.1",
     "karma": "^5.2.3",
     "karma-coverage": "^2.0.3",
     "karma-coverage-istanbul-reporter": "^3.0.3",
