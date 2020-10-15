@@ -1,4 +1,8 @@
-const webpackConfig = require('./webpack.config')
+
+const webpackConfig = require('./webpack.config');
+const path = require('path')
+delete webpackConfig.entry
+
 module.exports = function (config) {
     config.set({
         basePath: '',
@@ -7,36 +11,33 @@ module.exports = function (config) {
     {pattern: './styles.scss'}],
         exclude: [],
         preprocessors: {
-            'src/test/**/*.test.ts': ['webpack'],
-            'src/test/**/*.js': ['webpack'],
-            'styles.scss' : ['scss']
+            'src/test/*.test.ts': ['webpack'],
+            'styles.scss':['scss']
         },
-        webpack: {
-            module: webpackConfig.module,
-            resolve: webpackConfig.resolve,
-            mode: webpackConfig.mode,
-            devtool: 'inline-source-map',
+        reporters: ["spec", 'coverage-istanbul'],
+        coverageIstanbulReporter: {
+            reports: [ 'html', 'text-summary', 'lcovonly' ],
+            dir: path.join(__dirname, 'coverage'),
+            fixWebpackSourcePaths: true,
+            'report-config': {
+              html: { outdir: 'html' }
+            }
         },
+        webpack: webpackConfig,
+        webpackMiddleware: {
+            noInfo: true
+          },
+        mime: {
+            'text/x-typescript': ['ts','tsx']
+      },
         browsers: ['Firefox'],
-        reporters: ['spec'],
-
-       
         port: 9000,
-
-      
         colors: true,
-
-       
         logLevel: config.LOG_INFO,
 
-    
         autoWatch: true,
 
-        
-
-        singleRun: false,
-
-      
+        singleRun: false,   
         concurrency: Infinity,
 
     })

@@ -7,7 +7,7 @@ const config = {
     path: path.resolve(__dirname, "dist"),
     filename: "bundle.js",
   },
-  devtool: "source-map",
+  devtool: "inline-source-map",
   devServer: {
     contentBase: path.join(__dirname, "dist"),
     compress: true,
