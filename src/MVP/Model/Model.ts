@@ -1,6 +1,5 @@
-import { data } from "jquery";
 import { Observer } from "../../Observer/Observer";
-//import config from "./config";
+
 interface IConfigModel {
   min: number;
   max: number;
@@ -57,6 +56,12 @@ export class Model implements IConfigModel {
         Math.round((position * onePixelSizeHorisontal + this.min) / this.step) *
         this.step;
 
+      let rightValueForRange = Math.round((secondThumbPosition * onePixelSizeHorisontal + this.min) / this.step) *
+      this.step;
+
+      let leftValueForRange = Math.round((firstThumbPosition * onePixelSizeHorisontal + this.min) / this.step) *
+      this.step;
+      console.log(this.range)
       if (!this.range) {
         let right = sliderWidth;
         if (position < 0) {
@@ -91,7 +96,7 @@ export class Model implements IConfigModel {
             this.observer.broadcast("position", {
               position: right,
               data_num: data_num,
-              // value: Math.round(value) + this.step,
+              value: rightValueForRange,
             });
           } else {
             this.observer.broadcast("position", {
@@ -108,6 +113,7 @@ export class Model implements IConfigModel {
             this.observer.broadcast("position", {
               position: left,
               data_num: data_num,
+              value: leftValueForRange,
             });
           } else if (position > right) {
             this.observer.broadcast("position", {
@@ -125,6 +131,7 @@ export class Model implements IConfigModel {
         }
       }
     } else if (this.orientation == "vertical") {
+      console.log(sliderHeight)
       let position = clientY - sliderTopPoint;
       let onePixelSizeVertical = (this.max - this.min) / sliderHeight;
       let stepSizeVertical = this.step / onePixelSizeVertical;
@@ -132,6 +139,11 @@ export class Model implements IConfigModel {
         Math.round(position / stepSizeVertical) * stepSizeVertical;
       let value =
         Math.round((position * onePixelSizeVertical + this.min) / this.step) *
+        this.step;
+      let rightValueForRange = Math.round((secondThumbPosition * onePixelSizeVertical + this.min) / this.step) *
+        this.step;
+  
+      let leftValueForRange = Math.round((firstThumbPosition * onePixelSizeVertical + this.min) / this.step) *
         this.step;
       if (!this.range) {
         let right = sliderHeight;
@@ -169,6 +181,7 @@ export class Model implements IConfigModel {
             this.observer.broadcast("position", {
               position: right,
               data_num: data_num,
+              value: rightValueForRange,
             });
           } else {
             this.observer.broadcast("position", {
@@ -185,6 +198,7 @@ export class Model implements IConfigModel {
             this.observer.broadcast("position", {
               position: left,
               data_num: data_num,
+              value: leftValueForRange
             });
           } else if (position > right) {
             this.observer.broadcast("position", {

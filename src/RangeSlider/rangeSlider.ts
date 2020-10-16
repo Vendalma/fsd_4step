@@ -34,10 +34,12 @@ export class RangeSlider {
 
   setOrientation(data: string) {
     this.view.checkOrientation(data);
+    this.model.changeOrientation(data)
   }
 
   setRange(data: boolean) {
     this.view.checkRange(data)
+    this.model.changeRange(data)
   }
   changeMin(data:number) {
     this.model.changeMin(data)

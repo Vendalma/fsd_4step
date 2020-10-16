@@ -24,7 +24,7 @@ export class progressBar {
     this.slider = slider;
     this.progressBar = document.createElement("div");
     this.progressBar.classList.add("progress-bar");
-    this.slider?.prepend(this.progressBar);
+    //this.slider?.prepend(this.progressBar);
 
     this.checkOrientation(this.orientation);
   }

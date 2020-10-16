@@ -152,9 +152,9 @@ export class Thumb {
   };
 
   findPosition(e: any) {
-    let thumbSecond = this.slider?.querySelector(".thumb_second");
     let thumbFirst = this.slider?.querySelector(".thumb_first");
-
+    let thumbSecond = this.slider?.querySelector(".thumb_second");
+   
     if (this.orientation == "horisontal") {
       if (!this.range && this.thumb == thumbFirst) {
         return {
@@ -201,7 +201,9 @@ export class Thumb {
         };
       } else if (this.range) {
         if (this.thumb?.dataset.num == "1") {
+        
           if (thumbSecond instanceof HTMLElement) {
+           
             return {
               "thumb-width": this.thumb.offsetWidth,
               clientY: e.clientY,
@@ -209,6 +211,7 @@ export class Thumb {
               "slider-height": this.slider?.offsetHeight,
               "data-num": this.thumb.dataset.num,
 
+              
               positionThumbSecond: parseInt(thumbSecond?.style.top),
             };
           }

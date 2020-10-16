@@ -138,10 +138,10 @@ export class PanelController {
   }
 
   checkRange() {
-    let hiddenBlock = this.parent.querySelector('.panel__block_hidden')
-    if (hiddenBlock instanceof HTMLElement) {
-      if (!this.range) hiddenBlock.style.display = 'none'
-      if (this.range) hiddenBlock.style.display = 'block'
+    let disabledBlock = this.parent.querySelector('.panel__input_disabled')
+    if (disabledBlock instanceof HTMLInputElement) {
+      if (!this.range) disabledBlock.disabled = true
+      if (this.range) disabledBlock.disabled = false
     }
     
   }

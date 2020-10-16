@@ -44,25 +44,26 @@ export class View {
     this.stepValue = this.config.step;
     this.label = this.config.label;
 
+    this.observer = new Observer();
+
     this.wrapper = wrapper;
     this.wrapper?.classList.add("wrapper");
 
-    this.slider = this.createElement("div", "slider");
-
-    this.sliderBlock = this.createElement("div", "slider__block");
-
+    this.slider = document.createElement('div')
+    this.slider.classList.add('slider')
     this.wrapper?.append(this.slider);
-    this.slider.append(this.sliderBlock);
+
+    this.sliderBlock = document.createElement('div')
+    this.sliderBlock.classList.add('slider__block')
+    this.slider.append(this.sliderBlock); 
 
     this.thumbOne = new Thumb(this.config, "thumb_first", this.sliderBlock, 1);
-
     this.thumbOne.observer.subscribe(this);
 
     this.thumbTwo = new Thumb(this.config, "thumb_second", this.sliderBlock, 2);
     this.range ? null : this.thumbTwo?.removeThis();
     this.thumbTwo?.observer.subscribe(this);
 
-    this.observer = new Observer();
     this.progressBar = new progressBar(this.config, this.sliderBlock);
 
     this.step = new Step(this.config, this.sliderBlock);
@@ -71,6 +72,7 @@ export class View {
     this.checkOrientation(this.orientation);
     this.onloadWindow();
   }
+
   init() {
     this.slider?.setAttribute("data-min", this.min + "");
     this.slider?.setAttribute("data-max", this.max + "");
@@ -81,11 +83,11 @@ export class View {
     this.slider?.setAttribute("data-from", this.positionFrom + "");
     if (this.range) this.slider?.setAttribute("data-to", this.positionTo + "");
   }
+
   checkOrientation(data: string) {
     this.orientation = data;
     this.thumbOne.checkOrientation(data);
     this.thumbTwo?.checkOrientation(data);
-    this.observer.broadcast("orientation", data);
     this.step.checkOrientation(data)
     this.getSliderSize()
     if (this.orientation == "vertical") {
@@ -95,13 +97,6 @@ export class View {
     if (this.orientation == "horisontal") {
       this.sliderBlock?.classList.remove("slider__block_vertical");
     }
-  }
-
-  createElement(tag: string, className: string) {
-    const element = document.createElement(tag);
-    if (className) element.classList.add(className);
-
-    return element;
   }
 
   update(type: string, data: any) {
@@ -152,12 +147,13 @@ export class View {
     this.positionFrom = data;
     this.getSliderSize()
   }
+
   changePositionTo(data: number) {
     this.positionTo = data;
     this.getSliderSize();
   }
 
-  setPosition_1(data: any) {
+  setPositionMoveThumb(data: any) {
     let data_num = data["data_num"];
     let position = data["position"];
     let valueThumb = data["value"];
@@ -182,7 +178,7 @@ export class View {
     }
   }
 
-  setStep(data: any) {
+  addStep(data: any) {
     this.step.addStepLine(data);
   }
 

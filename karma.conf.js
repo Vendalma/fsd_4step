@@ -5,7 +5,23 @@ delete webpackConfig.entry
 
 module.exports = function (config) {
     config.set({
-        frameworks: ['jasmine'],
+        plugins: [
+            'karma-jasmine',
+            'karma-jasmine-jquery-2',
+            "@metahub/karma-jasmine-jquery",
+            "karma-coverage-istanbul-reporter",
+            "karma-spec-reporter",
+            "karma-webpack",
+            "karma-scss-preprocessor",
+            "karma-firefox-launcher",
+            "karma-jquery"
+          ],
+        frameworks: ['jasmine','jasmine-jquery'],
+        client: {
+          jasmine: {
+            random: false,
+          }
+        },
         files: [{pattern : 'src/test/*.test.ts'},
     {pattern: './styles.scss'}],
         preprocessors: {

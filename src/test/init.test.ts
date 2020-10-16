@@ -23,4 +23,4 @@ const view = new View(config, block[0])
 const model = new Model(config)
 const presenter = new Presenter(view, model)
 
-export { view as View, model as Model, presenter as Presenter}
+export {config as config,block as block, view as View, model as Model, presenter as Presenter}
