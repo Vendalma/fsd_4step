@@ -3,6 +3,7 @@ interface IConfigLabel {
   min: number;
   max: number;
   step: number;
+  orientation : string
 }
 export class Label {
   thumb: HTMLElement | null;
@@ -13,33 +14,35 @@ export class Label {
   min: number;
   max: number;
   step: number;
+  orientation: string;
 
-  constructor(IConfigLabel: any, thumb: HTMLElement | null) {
+  constructor(config: any, thumb: HTMLElement ) {
     this.thumb = thumb;
     this.labelElem = document.createElement("div");
     this.labelElem.classList.add("thumb__label");
-    this.thumb?.append(this.labelElem);
+    this.thumb.append(this.labelElem);
 
-    this.config = IConfigLabel;
+    this.config = config;
     this.label = this.config.label;
     this.min = this.config.min;
     this.max = this.config.max;
     this.step = this.config.step;
+    this.orientation = this.config.orientation
 
-    this.label
-      ? (this.labelElem.style.display = "block")
-      : (this.labelElem.style.display = "none");
+   this.checkLabelProp(this.label)
+   this.checkLabelOrientation(this.orientation)
   }
 
   setLabelValue(value: number) {
     if (this.labelElem) this.labelElem.innerHTML = value + "";
   }
 
-  changeLabelOrientation(orientation: string) {
-    if (orientation == "vertical")
+  checkLabelOrientation(data: string) {
+    this.orientation = data;
+    if (this.orientation == "vertical")
       this.labelElem?.classList.add("thumb__label_vertical");
 
-    if (orientation == "horisontal")
+    if (this.orientation == "horisontal")
       this.labelElem?.classList.remove("thumb__label_vertical");
   }
 

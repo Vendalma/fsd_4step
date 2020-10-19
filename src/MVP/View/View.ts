@@ -201,7 +201,9 @@ export class View {
       this.progressBar.setOnloadProgressBarPosition(data);
     }
   }
-
+  addFollower(follower:any) {
+    this.observer.subscribe(follower)
+  }
   onloadWindow() {
     window.addEventListener("load", () => {
       this.getSliderSize();

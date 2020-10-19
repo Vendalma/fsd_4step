@@ -32,7 +32,9 @@ export class Model implements IConfigModel {
     this.orientation = this.config.orientation;
     this.step = this.config.step;
   }
-
+  addFollower(follower:any) {
+    this.observer.subscribe(follower)
+  }
   thumbCorrectValue(data: any) {
     let clientX = data["clientX"];
     let clientY = data["clientY"];

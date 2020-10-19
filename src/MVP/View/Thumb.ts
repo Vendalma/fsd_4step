@@ -3,14 +3,14 @@ import { Observer } from "../../Observer/Observer";
 
 interface IConfigThumb {
   range: boolean;
-  position_1: number;
-  position_2: number;
+  positionFrom: number;
+  positionTo: number;
   orientation: string;
 }
 export class Thumb {
   config: IConfigThumb;
-  position_1: number;
-  position_2: number;
+  positionFrom: number;
+  positionTo: number;
   orientation: string;
 
   slider: HTMLElement | null;
@@ -30,8 +30,8 @@ export class Thumb {
     data_num: number
   ) {
     this.config = IConfigThumb;
-    this.position_1 = this.config.position_1;
-    this.position_2 = this.config.position_2;
+    this.positionFrom = this.config.positionFrom;
+    this.positionTo = this.config.positionTo;
     this.orientation = this.config.orientation;
     this.range = this.config.range;
 
@@ -66,7 +66,7 @@ export class Thumb {
   }
   checkOrientation(data: string) {
     this.orientation = data;
-    this.label.changeLabelOrientation(this.orientation);
+    this.label.checkLabelOrientation(this.orientation);
     if (this.orientation == "vertical") {
       if (this.thumb) {
         this.thumb.style.top = this.thumb?.style.left;

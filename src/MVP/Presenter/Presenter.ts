@@ -7,11 +7,12 @@ export class Presenter {
   constructor(view: View, model: Model) {
     this.model = model;
     this.view = view;
-
-    this.view.observer.subscribe(this);
-    this.model.observer.subscribe(this);
+    this.subscribeOnUpdate()
   }
-
+  subscribeOnUpdate() {
+    this.view.addFollower(this)
+    this.model.addFollower(this)
+  }
   update(type: string, data: any) {
     if (type == "mouseMove") this.model.thumbCorrectValue(data);
     else if (type == "position") this.view.setPositionMoveThumb(data);
