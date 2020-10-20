@@ -13,8 +13,8 @@ export class Thumb {
   positionTo: number;
   orientation: string;
 
-  slider: HTMLElement | null;
-  thumb: HTMLElement | null;
+  slider: HTMLElement ;
+  thumb: HTMLElement;
   countThumbs: string;
   observer: Observer;
   value: HTMLElement | null;
@@ -26,7 +26,7 @@ export class Thumb {
   constructor(
     IConfigThumb: any,
     countThumbs: string,
-    slider: HTMLElement | null,
+    slider: HTMLElement,
     data_num: number
   ) {
     this.config = IConfigThumb;
@@ -53,7 +53,6 @@ export class Thumb {
     this.zIndex = 1;
 
     this.checkOrientation(this.orientation);
-
     this.moveThumb(this.thumb);
   }
 
@@ -72,7 +71,7 @@ export class Thumb {
     this.label.checkLabelOrientation(this.orientation);
     if (this.orientation == "vertical") {
       if (this.thumb) {
-        this.thumb.style.top = this.thumb?.style.left;
+        this.thumb.style.top = this.thumb.style.left;
         this.thumb.style.left = "-5px";
       }
       this.thumb?.classList.add("thumb_vertical");
@@ -80,7 +79,7 @@ export class Thumb {
 
     if (this.orientation == "horisontal") {
       if (this.thumb) {
-        this.thumb.style.left = this.thumb?.style.top;
+        this.thumb.style.left = this.thumb.style.top;
         this.thumb.style.top = "-5px";
       }
 

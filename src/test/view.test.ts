@@ -32,18 +32,10 @@ describe('View', ()=> {
         spyOn(view, 'getSliderSize')
         spyOn(view,'checkOrientation')
         spyOn(view, 'setThumbTwo')
+        spyOn(view, 'resizeWindow')
     })
     it('Инициализация View', () => {
         expect(view).toBeDefined()
-
-        /*expect(config.range).toBeInstanceOf(Boolean)
-        expect(config.positionFrom).toBeInstanceOf(Number)
-        expect(config.positionTo).toBeInstanceOf(Number)
-        expect(config.min).toBeInstanceOf(Number)
-        expect(config.max).toBeInstanceOf(Number)
-        expect(config.orientation).toBeInstanceOf(String)
-        expect(config.step).toBeInstanceOf(Number)
-        expect(config.label).toBeInstanceOf(Boolean)*/
 
         expect(view.config).toEqual(config);
         expect(view.range).toEqual(config.range)
@@ -131,13 +123,27 @@ describe('View', ()=> {
         expect(view.observer.subscribe).toHaveBeenCalled()
     })
     
-    /*it('проверка метода onloadWindow', ()=> {
+    it('проверка метода onloadWindow', ()=> {
         spyOn(window, 'addEventListener')
         view.onloadWindow()
-        expect(window.addEventListener).toHaveBeenCalled()
-        expect(view.getSliderSize).toHaveBeenCalled()
-    })*/
-
+        if (window.onload) {
+            expect(window.addEventListener).toHaveBeenCalled()
+            expect(view.getSliderSize).toHaveBeenCalled()
+            expect(view.resizeWindow).toHaveBeenCalled()
+        }
+        
+        
+    })
+    it('проверка метода resizeWindow', ()=> {
+        spyOn(window, 'addEventListener')
+        view.resizeWindow()
+        if (window.onresize) {
+            expect(window.addEventListener).toHaveBeenCalled()
+            expect(view.getSliderSize).toHaveBeenCalled()
+        }
+        
+        
+    })
     describe('проверка метода setOnloadThumbPosition', () => {
         it ('range = true', ()=> {
             view.range = true;
