@@ -23,9 +23,9 @@ export class View {
   stepValue: number;
   label: boolean;
 
-  wrapper: HTMLElement | null;
+  wrapper: HTMLElement;
 
-  slider: HTMLElement | null;
+  slider: HTMLElement;
   thumbOne: Thumb;
   thumbTwo: Thumb | null | undefined;
   observer: Observer;
@@ -47,23 +47,19 @@ export class View {
     this.observer = new Observer();
 
     this.wrapper = wrapper;
-    this.wrapper?.classList.add("wrapper");
+    this.wrapper.classList.add("wrapper");
 
     this.slider = document.createElement('div')
     this.slider.classList.add('slider')
-    this.wrapper?.append(this.slider);
+    this.wrapper.append(this.slider);
 
     this.sliderBlock = document.createElement('div')
     this.sliderBlock.classList.add('slider__block')
     this.slider.append(this.sliderBlock); 
 
     this.thumbOne = new Thumb(this.config, "thumb_first", this.sliderBlock, 1);
-    this.thumbOne.observer.subscribe(this);
-
     this.thumbTwo = new Thumb(this.config, "thumb_second", this.sliderBlock, 2);
-    this.range ? null : this.thumbTwo?.removeThis();
-    this.thumbTwo?.observer.subscribe(this);
-
+    
     this.progressBar = new progressBar(this.config, this.sliderBlock);
 
     this.step = new Step(this.config, this.sliderBlock);
@@ -71,19 +67,28 @@ export class View {
     this.init();
     this.checkOrientation(this.orientation);
     this.onloadWindow();
+    this.setThumbTwo()
+    this.subscribeOnUpdate();
   }
 
   init() {
-    this.slider?.setAttribute("data-min", this.min + "");
-    this.slider?.setAttribute("data-max", this.max + "");
-    this.slider?.setAttribute("data-step", this.stepValue + "");
-    this.slider?.setAttribute("data-label", this.label + "");
-    this.slider?.setAttribute("data-orientation", this.orientation);
-    this.slider?.setAttribute("data-range", this.range + "");
-    this.slider?.setAttribute("data-from", this.positionFrom + "");
-    if (this.range) this.slider?.setAttribute("data-to", this.positionTo + "");
+    this.slider.setAttribute("data-min", this.min + "");
+    this.slider.setAttribute("data-max", this.max + "");
+    this.slider.setAttribute("data-step", this.stepValue + "");
+    this.slider.setAttribute("data-label", this.label + "");
+    this.slider.setAttribute("data-orientation", this.orientation);
+    this.slider.setAttribute("data-range", this.range + "");
+    this.slider.setAttribute("data-from", this.positionFrom + "");
+    if (this.range) this.slider.setAttribute("data-to", this.positionTo + "");
   }
 
+  setThumbTwo() {
+    this.range ? null : this.thumbTwo?.removeThis();
+  }
+  subscribeOnUpdate() {
+    this.thumbOne.addFollower(this)
+    this.thumbTwo?.addFollower(this)
+  }
   checkOrientation(data: string) {
     this.orientation = data;
     this.thumbOne.checkOrientation(data);
@@ -127,6 +132,7 @@ export class View {
 
   checkRange(data: boolean) {
     this.range = data;
+    this.setThumbTwo()
     this.thumbOne.checkRange(data);
     this.thumbTwo?.checkRange(data);
     this.observer.broadcast("changeRange", data);

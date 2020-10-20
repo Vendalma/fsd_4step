@@ -57,6 +57,9 @@ export class Thumb {
     this.moveThumb(this.thumb);
   }
 
+  addFollower(follower:any) {
+    this.observer.subscribe(follower)
+  }
   checkLabel(data: boolean) {
     this.label.checkLabelProp(data);
   }

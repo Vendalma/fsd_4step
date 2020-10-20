@@ -9,9 +9,9 @@ export class Step implements IconfigStep {
   max: number;
   orientation: string;
 
-  container: HTMLElement | null;
+  container: HTMLElement;
 
-  constructor(IconfigStep: any, container: HTMLElement | null) {
+  constructor(IconfigStep: any, container: HTMLElement) {
     this.config = IconfigStep;
     this.min = this.config.min;
     this.max = this.config.max;
@@ -22,16 +22,16 @@ export class Step implements IconfigStep {
 
   addStepLine(data: any) {
     this.deleteElements();
-    let thimbHeight = this.container?.querySelector(".thumb_first");
+    let thimbHeight = this.container.querySelector(".thumb_first");
 
-    if (this.container?.parentElement && thimbHeight instanceof HTMLElement) {
+    if (this.container.parentElement && thimbHeight instanceof HTMLElement) {
       let stepCount = data["stepCount"];
       let stepSize = data["stepSize"];
 
       for (let i = 0; i < stepCount + 1; i++) {
         let stepBlock = document.createElement("div");
         stepBlock.classList.add("slider__step-block");
-        this.container?.append(stepBlock);
+        this.container.append(stepBlock);
 
         if (i == 0) {
           stepBlock.innerHTML = this.min + "";
@@ -56,22 +56,22 @@ export class Step implements IconfigStep {
 
   changeMinValue(data: number) {
     this.min = data;
-    let blockMin = this.container?.querySelector('.slider__step-block_min')
+    let blockMin = this.container.querySelector('.slider__step-block_min')
     if (blockMin instanceof HTMLElement) blockMin.innerHTML = data + ''
   }
 
   changeMaxValue(data: number) {
     this.max = data
-    let blockMax = this.container?.querySelector('.slider__step-block_max')
+    let blockMax = this.container.querySelector('.slider__step-block_max')
     if (blockMax instanceof HTMLElement) blockMax.innerHTML = data + ''
   }
 
   deleteElements() {
-    let steps = this.container?.querySelectorAll(".slider__step-block");
+    let steps = this.container.querySelectorAll(".slider__step-block");
 
     if (steps)
       steps.forEach((elem) => {
-        this.container?.removeChild(elem);
+        this.container.removeChild(elem);
       });
   }
 

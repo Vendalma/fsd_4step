@@ -19,12 +19,13 @@ describe('Label', () => {
     const label: Label = new Label(config, block[0])
 
     it('Инициализация класса Label', ()=> {
+        expect(label).toBeDefined();
+        
         expect(label.max).toBeInstanceOf(Number)
         expect(label.min).toBeInstanceOf(Number)
         expect(label.step).toBeInstanceOf(Number)
         expect(label.label).toBeInstanceOf(Boolean)
 
-        expect(label).toBeDefined();
         expect(label.config).toEqual(config)
         expect(label.label).toEqual(config.label)
         expect(label.min).toEqual(config.min)

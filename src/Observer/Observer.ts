@@ -1,5 +1,16 @@
-export class Observer {
-  observers: Array<any>;
+interface Subject {
+  // Присоединяет наблюдателя к издателю.
+  subscribe(observer: Observer): void;
+
+  // Отсоединяет наблюдателя от издателя.
+  unsubscribe(observer: Observer): void;
+
+  // Уведомляет всех наблюдателей о событии.
+  broadcast(type: string, data: any): void;
+}
+
+export class Observer implements Subject {
+  private observers: Array<any>;
   constructor() {
     this.observers = [];
   }
