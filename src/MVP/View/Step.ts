@@ -22,9 +22,8 @@ export class Step implements IconfigStep {
 
   addStepLine(data: any) {
     this.deleteElements();
-    let thimbHeight = this.container.querySelector(".thumb_first");
 
-    if (this.container.parentElement && thimbHeight instanceof HTMLElement) {
+    if (this.container.parentElement) {
       let stepCount = data["stepCount"];
       let stepSize = data["stepSize"];
 
@@ -56,23 +55,22 @@ export class Step implements IconfigStep {
 
   changeMinValue(data: number) {
     this.min = data;
-    let blockMin = this.container.querySelector('.slider__step-block_min')
-    if (blockMin instanceof HTMLElement) blockMin.innerHTML = data + ''
+    let blockMin = this.container.querySelector('.slider__step-block_min') as HTMLElement;
+    blockMin.innerHTML = data + '';
   }
 
   changeMaxValue(data: number) {
-    this.max = data
-    let blockMax = this.container.querySelector('.slider__step-block_max')
-    if (blockMax instanceof HTMLElement) blockMax.innerHTML = data + ''
+    this.max = data;
+    let blockMax = this.container.querySelector('.slider__step-block_max') as HTMLElement;
+    blockMax.innerHTML = data + '';
   }
 
-  deleteElements() {
-    let steps = this.container.querySelectorAll(".slider__step-block");
+  private deleteElements() {
+    let steps = this.container.querySelectorAll(".slider__step-block") as NodeListOf<HTMLElement>;
 
-    if (steps)
-      steps.forEach((elem) => {
-        this.container.removeChild(elem);
-      });
+    steps.forEach((elem) => {
+      this.container.removeChild(elem);
+    });
   }
 
   checkOrientation(data: string) {

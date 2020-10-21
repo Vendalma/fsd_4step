@@ -11,7 +11,7 @@ const config  = {
 }
 const block =  $('<div>')
 beforeEach(function () {
-    
+
     block[0].classList.add('thumb')
     $(document.body).append(block)
 })
@@ -20,7 +20,7 @@ let view : View = new View(config,block[0])
 let observer = jasmine.createSpyObj('observer',['broadcast','subscribe']) ;
 let thumbOne = jasmine.createSpyObj('thumbOne', ['checkOrientation','getPosition','checkLabel','checkRange','setLabelValue','addFollower','setPosition'])
 const thumbTwo = jasmine.createSpyObj('thumbTwo', ['checkOrientation','getPosition','checkLabel','checkRange','setLabelValue','addFollower','setPosition', 'removeThis','addThis'])
-const progressBar = jasmine.createSpyObj('progressBar', ['checkRange','setProgressBar','setOnloadProgressBarPosition'])
+const progressBar = jasmine.createSpyObj('progressBar', ['checkRange','setPositionForThumbOne','setPositionForThumbTwo','setOnloadProgressBarPosition','checkOrientation'])
 const Step = jasmine.createSpyObj('Step', ['checkOrientation', 'changeMinValue','changeMaxValue','addStepLine'])
 describe('View', ()=> {
     view.thumbOne = thumbOne
@@ -82,7 +82,7 @@ describe('View', ()=> {
         expect(view.thumbOne.addFollower).toHaveBeenCalled()
         expect(view.thumbTwo?.addFollower).toHaveBeenCalled()
     })
-   
+
 
      it('проверка метода changeMin', () => {
         view.changeMin(1);
@@ -109,7 +109,7 @@ describe('View', ()=> {
         expect(view.positionTo).toEqual(100)
         expect(view.getSliderSize).toHaveBeenCalled()
      })
-  
+
      it('проверка метода changeStep', ()=> {
         view.changeStep(2)
         expect(view.stepValue).toEqual(2)
@@ -122,7 +122,7 @@ describe('View', ()=> {
         view.addFollower({})
         expect(view.observer.subscribe).toHaveBeenCalled()
     })
-    
+
     it('проверка метода onloadWindow', ()=> {
         spyOn(window, 'addEventListener')
         view.onloadWindow()
@@ -131,8 +131,8 @@ describe('View', ()=> {
             expect(view.getSliderSize).toHaveBeenCalled()
             expect(view.resizeWindow).toHaveBeenCalled()
         }
-        
-        
+
+
     })
     it('проверка метода resizeWindow', ()=> {
         spyOn(window, 'addEventListener')
@@ -141,19 +141,19 @@ describe('View', ()=> {
             expect(window.addEventListener).toHaveBeenCalled()
             expect(view.getSliderSize).toHaveBeenCalled()
         }
-        
-        
+
+
     })
     describe('проверка метода setOnloadThumbPosition', () => {
         it ('range = true', ()=> {
             view.range = true;
             view.setOnloadThumbPosition({})
-            
+
             if (view.range) {
                expect(view.thumbOne.setPosition).toHaveBeenCalled()
                expect(view.thumbOne.setLabelValue).toHaveBeenCalled()
                expect(view.progressBar.setOnloadProgressBarPosition).toHaveBeenCalled()
-      
+
                expect(view.thumbTwo?.setPosition).toHaveBeenCalled()
                expect(view.thumbTwo?.setLabelValue).toHaveBeenCalled()
                expect(view.progressBar.setOnloadProgressBarPosition).toHaveBeenCalled()
@@ -166,9 +166,9 @@ describe('View', ()=> {
                 expect(view.thumbOne.setPosition).toHaveBeenCalled()
                 expect(view.thumbOne.setLabelValue).toHaveBeenCalled()
                 expect(view.progressBar.setOnloadProgressBarPosition).toHaveBeenCalled()
-              } 
+              }
         })
-    })  
+    })
     describe('проверка метода update', ()=> {
         it ('type = mouseMove ', () => {
             view.update('mouseMove', {})
@@ -192,26 +192,28 @@ describe('View проверка метода checkOrientation', () => {
     })
     it('orientation = horisontal', () => {
         view.checkOrientation('horisontal')
-       
+
         expect(view.orientation).toEqual('horisontal')
         expect(view.thumbOne.checkOrientation).toHaveBeenCalled()
         expect(view.thumbTwo?.checkOrientation).toHaveBeenCalled()
         expect(view.step.checkOrientation).toHaveBeenCalled();
+        expect(view.progressBar.checkOrientation).toHaveBeenCalled();
         expect(view.getSliderSize).toHaveBeenCalled()
-  
+
         if (view.orientation === 'horisontal') {
            expect(view.sliderBlock).not.toHaveClass("slider__block_vertical")
         }
      })
      it('orientation = vertical', () => {
         view.checkOrientation('vertical')
-       
+
         expect(view.orientation).toEqual('vertical')
         expect(view.thumbOne.checkOrientation).toHaveBeenCalled()
         expect(view.thumbTwo?.checkOrientation).toHaveBeenCalled()
         expect(view.step.checkOrientation).toHaveBeenCalled();
+        expect(view.progressBar.checkOrientation).toHaveBeenCalled();
         expect(view.getSliderSize).toHaveBeenCalled()
-  
+
         if (view.orientation === 'vertical') {
            expect(view.sliderBlock).toHaveClass("slider__block_vertical")
         }
@@ -224,7 +226,7 @@ describe('View проверка метода checkRange', () => {
     })
     it('range = true', ()=> {
         view.checkRange(true);
-        
+
         expect(view.setThumbTwo).toHaveBeenCalled()
         expect(view.thumbOne.checkRange).toHaveBeenCalled()
         expect(view.thumbTwo?.checkRange).toHaveBeenCalled()
@@ -236,7 +238,7 @@ describe('View проверка метода checkRange', () => {
     })
     it('range = false', ()=> {
         view.checkRange(false);
-        
+
         expect(view.setThumbTwo).toHaveBeenCalled()
         expect(view.thumbOne.checkRange).toHaveBeenCalled()
         expect(view.thumbTwo?.checkRange).toHaveBeenCalled()
@@ -267,8 +269,8 @@ describe('View проверка метода setPositionMoveThumb', ()=> {
         if(data_num == '1'){
             expect(view.thumbOne.getPosition).toHaveBeenCalled()
             expect(view.thumbOne.setLabelValue).toHaveBeenCalled()
-            expect(view.progressBar.setProgressBar).toHaveBeenCalled()
-        }      
+            //expect(view.progressBar.setPositionForThumbOne).toHaveBeenCalled()
+        }
     })
     it('range = true, data_num = 2', ()=> {
         view.range = true;
@@ -277,15 +279,15 @@ describe('View проверка метода setPositionMoveThumb', ()=> {
         if(data_num == '2'){
             expect(view.thumbTwo?.getPosition).toHaveBeenCalled()
             expect(view.thumbTwo?.setLabelValue).toHaveBeenCalled()
-            expect(view.progressBar.setProgressBar).toHaveBeenCalled()
-        }      
+            expect(view.progressBar.setPositionForThumbTwo).toHaveBeenCalled()
+        }
     })
     it('range = false', ()=> {
         view.range = false;
         view.setPositionMoveThumb({})
             expect(view.thumbOne.getPosition).toHaveBeenCalled()
             expect(view.thumbOne.setLabelValue).toHaveBeenCalled()
-            expect(view.progressBar.setProgressBar).toHaveBeenCalled()
-         
-    })   
+            expect(view.progressBar.setPositionForThumbOne).toHaveBeenCalled()
+
+    })
 })

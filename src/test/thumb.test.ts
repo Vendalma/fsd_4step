@@ -6,10 +6,9 @@ const config  = {
     orientation: "horisontal",
   }
   const block =  $('<div>')
-  beforeEach(function () {
-      
-      block[0].classList.add('slider__block')
-      $(document.body).append(block)
+  beforeEach(function () { 
+    block[0].classList.add('slider__block')
+    $(document.body).append(block)
   })
 
 let thumb: Thumb = new Thumb(config,'thumb_first',block[0], 1)

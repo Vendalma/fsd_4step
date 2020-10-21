@@ -46,7 +46,7 @@ export class Model implements IConfigModel {
 
     let firstThumbPosition = data["positionThumbFirst"];
     let secondThumbPosition = data["positionThumbSecond"];
-
+    
     if (this.orientation == "horisontal") {
       let onePixelSizeHorisontal = (this.max - this.min) / sliderWidth;
       let stepSizeHorisontal = this.step / onePixelSizeHorisontal;
@@ -57,15 +57,14 @@ export class Model implements IConfigModel {
       let value =
         Math.round((position * onePixelSizeHorisontal + this.min) / this.step) *
         this.step;
-
+        
       let rightValueForRange = Math.round((secondThumbPosition * onePixelSizeHorisontal + this.min) / this.step) *
       this.step;
-
       let leftValueForRange = Math.round((firstThumbPosition * onePixelSizeHorisontal + this.min) / this.step) *
       this.step;
-      console.log(this.range)
       if (!this.range) {
         let right = sliderWidth;
+       
         if (position < 0) {
           this.observer.broadcast("position", {
             position: 0,
@@ -133,7 +132,6 @@ export class Model implements IConfigModel {
         }
       }
     } else if (this.orientation == "vertical") {
-      console.log(sliderHeight)
       let position = clientY - sliderTopPoint;
       let onePixelSizeVertical = (this.max - this.min) / sliderHeight;
       let stepSizeVertical = this.step / onePixelSizeVertical;

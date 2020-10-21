@@ -6,16 +6,13 @@ const config  = {
     orientation: "horisontal",
   }
 const container = $('<div>');
-const thumbBlock =  $('<div>')
 const blockMin = $('<div>')
 const blockMax = $('<div>')
 beforeEach(function () { 
-    thumbBlock[0].classList.add('thumb_first')
     blockMin[0].classList.add('slider__step-block_min')
     blockMin[0].innerHTML = step.min + '';
     blockMax[0].classList.add('slider__step-block_max')
     blockMax[0].innerHTML = step.max + '';
-    container.append(thumbBlock)
     container.append(blockMin)
     container.append(blockMax)
     $(document.body).append(container)
@@ -24,9 +21,6 @@ beforeEach(function () {
 let step : Step = new Step(config, container[0])
 
 describe('Step', ()=> {
-    beforeAll(function () {
-        spyOn(step,'deleteElements')
-    })
     it('инициализация класса Step', ()=> {
         expect(step).toBeDefined();
         
@@ -36,13 +30,6 @@ describe('Step', ()=> {
         expect(step.orientation).toEqual(config.orientation)
 
         expect(step.container).toBeInstanceOf(HTMLElement)
-    })
-    it('проверка метода addStepLine ', ()=> {
-        step.addStepLine({});
-
-        expect(step.deleteElements).toHaveBeenCalled()
-        expect($('.thumb_first')[0]).toBeInDOM()
-        
     })
     it('проверка метода changeMinValue', ()=> {
         step.changeMinValue(4)
@@ -58,8 +45,70 @@ describe('Step', ()=> {
         expect(blockMax[0]).toBeInDOM()
         expect(blockMax).toContainText('104')
     })
+    describe('проверка метода addStepLine ', () => {
+        let data: any;
+        let stepCount: number;
+        let stepSize : number;
+        
+        beforeAll(function (){
+            data = {
+                'stepCount': 2,
+                'stepSize': 14,
+            }
+            stepCount = data["stepCount"];
+            stepSize = data["stepSize"];
+            step.min = 7;
+            step.max = 11;
+        })
+        beforeEach(function()  {
+            let blocks =  step.container.querySelectorAll('.slider__step-block') as NodeListOf<HTMLElement>
+            blocks.forEach((elem) => {
+                step.container.removeChild(elem)
+            })
+        })
+        it('orientation = horisontal', ()=> {
+            step.orientation = 'horisontal';
+            step.addStepLine(data);
+            let stepBlocks =  step.container.querySelectorAll('.slider__step-block')
+            
+            expect(stepBlocks.length).toEqual(stepCount+1)
+            for (let i = 0; i < stepBlocks.length; i++){
+                expect(stepBlocks[i]).toHaveCss({left: stepSize  * i + 'px'})
+                expect(stepBlocks[i]).not.toHaveClass('slider__step-block_vertical')
+                if ( i ==0 ) {
+                    expect(stepBlocks[i].innerHTML).toEqual('7')
+                    expect(stepBlocks[i]).toHaveClass('slider__step-block_min')
+                }
+                if ( i == stepBlocks.length ) {
+                    expect(stepBlocks[i].innerHTML).toEqual('11')
+                    expect(stepBlocks[i]).toHaveClass('slider__step-block_max')
+                }
+            }
+            
+        })
+        it('orientation = vertical', ()=> {
+            step.orientation = 'vertical';
+            step.addStepLine(data);
+            let stepBlocks =  step.container.querySelectorAll('.slider__step-block') as NodeListOf<HTMLElement>
+            
+            expect(stepBlocks.length).toEqual(stepCount+1)
+            for (let i = 0; i < stepBlocks.length; i++){
+                expect(stepBlocks[i]).toHaveCss({top: stepSize  * i - stepBlocks[i].offsetHeight + 'px'})
+                expect(stepBlocks[i]).toHaveClass('slider__step-block_vertical')
+                if ( i ==0 ) {
+                    expect(stepBlocks[i].innerHTML).toEqual('7')
+                    expect(stepBlocks[i]).toHaveClass('slider__step-block_min')
+                }
+                if ( i == stepBlocks.length ) {
+                    expect(stepBlocks[i].innerHTML).toEqual('11')
+                    expect(stepBlocks[i]).toHaveClass('slider__step-block_max')
+                }
+            }
+        })
+    })
     it('проверка метода checkOrientation', () => {
         step.checkOrientation('vertical');
         expect(step.orientation).toEqual('vertical')
     })
+
 })
