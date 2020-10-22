@@ -65,16 +65,16 @@ export class Thumb {
   checkOrientation(data: string) {
     this.orientation = data;
     this.label.checkLabelOrientation(this.orientation);
-    if (this.orientation == "vertical") {
-      this.thumb.style.top = this.thumb.style.left;
-      this.thumb.style.left = "-5px";
-      this.thumb.classList.add("thumb_vertical");
-    }
-
     if (this.orientation == "horisontal") {
       this.thumb.style.left = this.thumb.style.top;
       this.thumb.style.top = "-5px";
       this.thumb.classList.remove("thumb_vertical");
+    }
+
+    if (this.orientation == "vertical") {
+      this.thumb.style.top = this.thumb.style.left;
+      this.thumb.style.left = "-5px";
+      this.thumb.classList.add("thumb_vertical");
     }
   }
 
@@ -103,13 +103,13 @@ export class Thumb {
       }
     }
   }
-  moveThumb(elem: HTMLElement | null) {
+  moveThumb(elem: HTMLElement) {
     let that = this;
-    if (elem instanceof HTMLElement) {
-      elem.addEventListener("mousedown", (e) => {
-        that.mouseDown(e);
-      });
-    }
+   
+    elem.addEventListener("mousedown", (e) => {
+      that.mouseDown(e);
+    });
+    
   }
 
   mouseDown(e: any = MouseEvent) {
@@ -121,7 +121,7 @@ export class Thumb {
       document.onmouseup = (e) => this.onMouseUp(e);
 
       this.zIndex++;
-      if (this.thumb) this.thumb.style.zIndex = this.zIndex + "";
+      this.thumb.style.zIndex = this.zIndex + "";
       return this.observer.broadcast("mouseMove", this.findPosition(e));
     }
   }
@@ -149,7 +149,7 @@ export class Thumb {
     if (this.orientation == "horisontal") {
       if (!this.range && this.thumb == thumbFirst) {
         return {
-          clientX: e.clientX,
+          clientX : e.clientX ,
           "slider-left-point": this.slider.getBoundingClientRect().left,
           "slider-width": this.slider.offsetWidth,
           "data-num": this.thumb.dataset.num,
@@ -157,17 +157,15 @@ export class Thumb {
       } else if (this.range) {
         if (this.thumb.dataset.num == "1") {
               return {
-                "thumb-width": this.thumb.offsetWidth,
                 clientX: e.clientX,
-                "slider-left-point": this.slider?.getBoundingClientRect().left,
-                "slider-width": this.slider?.offsetWidth,
+                "slider-left-point": this.slider.getBoundingClientRect().left,
+                "slider-width": this.slider.offsetWidth,
                 "data-num": this.thumb.dataset.num,
 
                 positionThumbSecond: parseInt(thumbSecond.style.left),
               };
-        } else if (this.thumb?.dataset.num == "2") {
+        } else if (this.thumb.dataset.num == "2") {
             return {
-              "thumb-width": this.thumb.offsetWidth,
               clientX: e.clientX,
               "slider-left-point": this.slider.getBoundingClientRect().left,
               "slider-width": this.slider.offsetWidth,
@@ -179,8 +177,7 @@ export class Thumb {
       }
     } else if (this.orientation == "vertical") {
       if (!this.range) {
-        return {
-          "thumb-width": this.thumb.offsetWidth,
+        return { 
           clientY: e.clientY,
           "slider-top-point": this.slider.getBoundingClientRect().top,
           "slider-height": this.slider.offsetHeight,
@@ -189,19 +186,16 @@ export class Thumb {
       } else if (this.range) {
         if (this.thumb.dataset.num == "1") {
             return {
-              "thumb-width": this.thumb.offsetWidth,
               clientY: e.clientY,
               "slider-top-point": this.slider?.getBoundingClientRect().top,
               "slider-height": this.slider?.offsetHeight,
               "data-num": this.thumb.dataset.num,
 
-              
-              positionThumbSecond: parseInt(thumbSecond?.style.top),
+              positionThumbSecond: parseInt(thumbSecond.style.top),
             };
           
-        } else if (this.thumb?.dataset.num == "2") {
+        } else if (this.thumb.dataset.num == "2") {
             return {
-              "thumb-width": this.thumb.offsetWidth,
               clientY: e.clientY,
               "slider-top-point": this.slider?.getBoundingClientRect().top,
               "slider-height": this.slider?.offsetHeight,
@@ -212,7 +206,6 @@ export class Thumb {
           }
         }
     }
-    return 'error in find position'
   }
 
   getPosition(position: number = 0) {
@@ -230,9 +223,9 @@ export class Thumb {
   }
 
   removeThis() {
-    if (this.thumb) this.slider.removeChild(this.thumb);
+    this.slider.removeChild(this.thumb);
   }
   addThis() {
-    if (this.thumb) this.slider.append(this.thumb);
+    this.slider.append(this.thumb);
   }
 }

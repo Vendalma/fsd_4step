@@ -1,10 +1,5 @@
-interface Subject {
-  subscribe(observer: Observer): void;
-  unsubscribe(observer: Observer): void;
-  broadcast(type: string, data: any): void;
-}
 
-export class Observer implements Subject {
+export class Observer  {
   private observers: Array<any>;
   constructor() {
     this.observers = [];
