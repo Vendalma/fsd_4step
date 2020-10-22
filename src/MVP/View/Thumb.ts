@@ -143,72 +143,83 @@ export class Thumb {
   };
 
   findPosition(e: any) {
-    let thumbFirst = this.slider.querySelector(".thumb_first") as HTMLElement;
-    let thumbSecond = this.slider.querySelector(".thumb_second") as HTMLElement;
-   
-    if (this.orientation == "horisontal") {
-      if (!this.range && this.thumb == thumbFirst) {
-        return {
-          clientX : e.clientX ,
-          "slider-left-point": this.slider.getBoundingClientRect().left,
-          "slider-width": this.slider.offsetWidth,
-          "data-num": this.thumb.dataset.num,
-        };
-      } else if (this.range) {
-        if (this.thumb.dataset.num == "1") {
-              return {
-                clientX: e.clientX,
-                "slider-left-point": this.slider.getBoundingClientRect().left,
-                "slider-width": this.slider.offsetWidth,
-                "data-num": this.thumb.dataset.num,
+  if(this.orientation == 'horisontal') {
+    return this.findPositionForHorisontal(e)
+  }
+    
+  if (this.orientation == "vertical") {
+    return this.findPositionForVertical(e)
+  }
+}
 
-                positionThumbSecond: parseInt(thumbSecond.style.left),
-              };
-        } else if (this.thumb.dataset.num == "2") {
-            return {
-              clientX: e.clientX,
-              "slider-left-point": this.slider.getBoundingClientRect().left,
-              "slider-width": this.slider.offsetWidth,
-              "data-num": this.thumb.dataset.num,
+private findPositionForHorisontal(e: MouseEvent) {
+  let thumbFirst = this.slider.querySelector(".thumb_first") as HTMLElement;
+  let thumbSecond = this.slider.querySelector(".thumb_second") as HTMLElement;
 
-              positionThumbFirst: parseInt(thumbFirst.style.left),
-            };
-        }
-      }
-    } else if (this.orientation == "vertical") {
-      if (!this.range) {
-        return { 
-          clientY: e.clientY,
-          "slider-top-point": this.slider.getBoundingClientRect().top,
-          "slider-height": this.slider.offsetHeight,
-          "data-num": this.thumb.dataset.num,
-        };
-      } else if (this.range) {
-        if (this.thumb.dataset.num == "1") {
-            return {
-              clientY: e.clientY,
-              "slider-top-point": this.slider?.getBoundingClientRect().top,
-              "slider-height": this.slider?.offsetHeight,
-              "data-num": this.thumb.dataset.num,
-
-              positionThumbSecond: parseInt(thumbSecond.style.top),
-            };
-          
-        } else if (this.thumb.dataset.num == "2") {
-            return {
-              clientY: e.clientY,
-              "slider-top-point": this.slider?.getBoundingClientRect().top,
-              "slider-height": this.slider?.offsetHeight,
-              "data-num": this.thumb.dataset.num,
-
-              positionThumbFirst: parseInt(thumbFirst.style.top),
-            };
-          }
-        }
+  if (!this.range && this.thumb == thumbFirst) {
+    return {
+      clientX : e.clientX ,
+      "slider-left-point": this.slider.getBoundingClientRect().left,
+      "slider-width": this.slider.offsetWidth,
+      "data-num": this.thumb.dataset.num,
+    };
+  } else if (this.range) {
+    if (this.thumb.dataset.num == "1") {
+      return {
+        clientX: e.clientX,
+        "slider-left-point": this.slider.getBoundingClientRect().left,
+        "slider-width": this.slider.offsetWidth,
+        "data-num": this.thumb.dataset.num,
+        positionThumbSecond: parseInt(thumbSecond.style.left),
+      };
+    } else if (this.thumb.dataset.num == "2") {
+      return {
+        clientX: e.clientX,
+        "slider-left-point": this.slider.getBoundingClientRect().left,
+        "slider-width": this.slider.offsetWidth,
+        "data-num": this.thumb.dataset.num,
+         positionThumbFirst: parseInt(thumbFirst.style.left),
+      };
     }
   }
+}
+ 
+private findPositionForVertical(e:MouseEvent) {
+  let thumbFirst = this.slider.querySelector(".thumb_first") as HTMLElement;
+  let thumbSecond = this.slider.querySelector(".thumb_second") as HTMLElement;
 
-  getPosition(position: number = 0) {
+  if (!this.range) {
+    return { 
+      clientY: e.clientY,
+      "slider-top-point": this.slider.getBoundingClientRect().top,
+      "slider-height": this.slider.offsetHeight,
+      "data-num": this.thumb.dataset.num,
+    };
+  } else if (this.range) {
+    if (this.thumb.dataset.num == "1") {
+        return {
+          clientY: e.clientY,
+          "slider-top-point": this.slider?.getBoundingClientRect().top,
+          "slider-height": this.slider?.offsetHeight,
+          "data-num": this.thumb.dataset.num,
+
+          positionThumbSecond: parseInt(thumbSecond.style.top),
+        };
+      
+    } else if (this.thumb.dataset.num == "2") {
+        return {
+          clientY: e.clientY,
+          "slider-top-point": this.slider?.getBoundingClientRect().top,
+          "slider-height": this.slider?.offsetHeight,
+          "data-num": this.thumb.dataset.num,
+
+          positionThumbFirst: parseInt(thumbFirst.style.top),
+        };
+      }
+    }
+}
+
+getPosition(position: number = 0) {
     if (this.orientation == "horisontal") {
       this.thumb.style.left = position + "px";
     }

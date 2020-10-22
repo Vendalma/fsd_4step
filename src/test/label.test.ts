@@ -20,11 +20,6 @@ describe('Label', () => {
 
     it('Инициализация класса Label', ()=> {
         expect(label).toBeDefined();
-        
-        expect(label.max).toBeInstanceOf(Number)
-        expect(label.min).toBeInstanceOf(Number)
-        expect(label.step).toBeInstanceOf(Number)
-        expect(label.label).toBeInstanceOf(Boolean)
 
         expect(label.config).toEqual(config)
         expect(label.label).toEqual(config.label)

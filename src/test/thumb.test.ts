@@ -245,7 +245,7 @@ describe('Thumb', ()=> {
                 "slider-width" : 400,
                 "data-num": '1'
             }
-            thumb.findPosition(event);
+            thumb.findPosition(event)
             let returnedValue = thumb.findPosition(event);
             expect(returnedValue).toEqual(expectedValue)
         })
