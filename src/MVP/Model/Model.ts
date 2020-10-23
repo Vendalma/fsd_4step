@@ -35,124 +35,89 @@ export class Model implements IConfigModel {
   addFollower(follower:any) {
     this.observer.subscribe(follower)
   }
-  thumbCorrectValue(data: any) {
-    let clientX = data["clientX"];
-    let clientY = data["clientY"];
-    let sliderLeftPoint = data["slider-left-point"];
-    let sliderTopPoint = data["slider-top-point"];
-    let sliderWidth = data["slider-width"];
-    let sliderHeight = data["slider-height"];
-    let data_num = data["data-num"];
+  fundThumbPosition(data: any) {
+    if (this.orientation == "horisontal") {
+      this.fundThumbPositionHorisontal(data)
+    } else if (this.orientation == "vertical") {
+      this.fundThumbPositionVertical(data)
+    }
+  }
 
+  private fundThumbPositionHorisontal(data: any) {
+    let clientX = data["clientX"];
+    let sliderLeftPoint = data["slider-left-point"];
+    let sliderWidth = data["slider-width"];
+    let data_num = data["data-num"];
     let firstThumbPosition = data["positionThumbFirst"];
     let secondThumbPosition = data["positionThumbSecond"];
-    
-    if (this.orientation == "horisontal") {
-      let onePixelSizeHorisontal = (this.max - this.min) / sliderWidth;
-      let stepSizeHorisontal = this.step / onePixelSizeHorisontal;
-      let position = clientX - sliderLeftPoint;
-      let positionMove =
-        Math.round(position / stepSizeHorisontal) * stepSizeHorisontal;
 
-      let value =
-        Math.round((position * onePixelSizeHorisontal + this.min) / this.step) *
-        this.step;
+    let onePixelSizeHorisontal = (this.max - this.min) / sliderWidth;
+    let stepSizeHorisontal = this.step / onePixelSizeHorisontal;
+    let position = clientX - sliderLeftPoint;
+    let positionMove =
+      Math.round(position / stepSizeHorisontal) * stepSizeHorisontal;
+
+    let value =
+      Math.round((position * onePixelSizeHorisontal + this.min) / this.step) *
+      this.step;
         
-      let rightValueForRange = Math.round((secondThumbPosition * onePixelSizeHorisontal + this.min) / this.step) *
-      this.step;
-      let leftValueForRange = Math.round((firstThumbPosition * onePixelSizeHorisontal + this.min) / this.step) *
-      this.step;
-      if (!this.range) {
-        let right = sliderWidth;
+    let rightValueForRange = Math.round((secondThumbPosition * onePixelSizeHorisontal + this.min) / this.step) *
+    this.step;
+    let leftValueForRange = Math.round((firstThumbPosition * onePixelSizeHorisontal + this.min) / this.step) *
+    this.step;
+    if (!this.range) {
+      let right = sliderWidth;
        
-        if (position < 0) {
-          this.observer.broadcast("position", {
-            position: 0,
-            data_num: data_num,
-            value: this.min,
-          });
-        } else if (position > right) {
-          this.observer.broadcast("position", {
-            position: right,
-            data_num: data_num,
-            value: this.max,
-          });
-        } else {
-          this.observer.broadcast("position", {
-            position: positionMove,
-            data_num: data_num,
-            value: value,
-          });
-        }
-      } else if (this.range) {
-        if (data_num == "1") {
-          let right = secondThumbPosition;
-          if (position < 0) {
-            this.observer.broadcast("position", {
-              position: 0,
-              data_num: data_num,
-              value: this.min,
-            });
-          } else if (position > right) {
-            this.observer.broadcast("position", {
-              position: right,
-              data_num: data_num,
-              value: rightValueForRange,
-            });
-          } else {
-            this.observer.broadcast("position", {
-              position: positionMove,
-              data_num: data_num,
-              value: value,
-            });
-          }
-        } else if (data_num == "2") {
-          let left = firstThumbPosition;
-          let right = sliderWidth;
-
-          if (position < left) {
-            this.observer.broadcast("position", {
-              position: left,
-              data_num: data_num,
-              value: leftValueForRange,
-            });
-          } else if (position > right) {
-            this.observer.broadcast("position", {
-              position: right,
-              data_num: data_num,
-              value: this.max,
-            });
-          } else {
-            this.observer.broadcast("position", {
-              position: positionMove,
-              data_num: data_num,
-              value: value,
-            });
-          }
-        }
+      if (position < 0) {
+        this.observer.broadcast("position", {
+          position: 0,
+          data_num: data_num,
+          value: this.min,
+        });
+      } else if (position > right) {
+        this.observer.broadcast("position", {
+          position: right,
+          data_num: data_num,
+          value: this.max,
+        });
+      } else {
+        this.observer.broadcast("position", {
+          position: positionMove,
+          data_num: data_num,
+          value: value,
+        });
       }
-    } else if (this.orientation == "vertical") {
-      let position = clientY - sliderTopPoint;
-      let onePixelSizeVertical = (this.max - this.min) / sliderHeight;
-      let stepSizeVertical = this.step / onePixelSizeVertical;
-      let positionMove =
-        Math.round(position / stepSizeVertical) * stepSizeVertical;
-      let value =
-        Math.round((position * onePixelSizeVertical + this.min) / this.step) *
-        this.step;
-      let rightValueForRange = Math.round((secondThumbPosition * onePixelSizeVertical + this.min) / this.step) *
-        this.step;
-  
-      let leftValueForRange = Math.round((firstThumbPosition * onePixelSizeVertical + this.min) / this.step) *
-        this.step;
-      if (!this.range) {
-        let right = sliderHeight;
-
+    } else if (this.range) {
+      if (data_num == "1") {
+        let right = secondThumbPosition;
         if (position < 0) {
+        this.observer.broadcast("position", {
+          position: 0,
+          data_num: data_num,
+          value: this.min,
+        });
+        } else if (position > right) {
           this.observer.broadcast("position", {
-            position: 0,
+            position: right,
             data_num: data_num,
-            value: this.min,
+            value: rightValueForRange,
+          });
+        } else {
+          this.observer.broadcast("position", {
+            position: positionMove,
+            data_num: data_num,
+            value: value,
+          });
+        }
+      } else if (data_num == "2") {
+        let left = firstThumbPosition;
+        let right = sliderWidth;
+
+        if (position < left) {
+          this.observer.broadcast("position", {
+            position: left,
+            data_num: data_num,
+            value: leftValueForRange,
           });
         } else if (position > right) {
           this.observer.broadcast("position", {
@@ -166,58 +131,104 @@ export class Model implements IConfigModel {
             data_num: data_num,
             value: value,
           });
-        }
-      } else if (this.range) {
-        if (data_num == "1") {
-          let right = secondThumbPosition;
-
-          if (position < 0) {
-            this.observer.broadcast("position", {
-              position: 0,
-              data_num: data_num,
-              value: this.min,
-            });
-          } else if (position > right) {
-            this.observer.broadcast("position", {
-              position: right,
-              data_num: data_num,
-              value: rightValueForRange,
-            });
-          } else {
-            this.observer.broadcast("position", {
-              position: positionMove,
-              data_num: data_num,
-              value: value,
-            });
-          }
-        } else if (data_num == "2") {
-          let left = firstThumbPosition;
-          let right = sliderHeight;
-
-          if (position < left) {
-            this.observer.broadcast("position", {
-              position: left,
-              data_num: data_num,
-              value: leftValueForRange
-            });
-          } else if (position > right) {
-            this.observer.broadcast("position", {
-              position: right,
-              data_num: data_num,
-              value: this.max,
-            });
-          } else {
-            this.observer.broadcast("position", {
-              position: positionMove,
-              data_num: data_num,
-              value: value,
-            });
-          }
         }
       }
     }
   }
 
+  private fundThumbPositionVertical(data:any) {
+    let clientY = data["clientY"];
+    let sliderTopPoint = data["slider-top-point"];
+    let sliderHeight = data["slider-height"];
+    let data_num = data["data-num"];
+    let firstThumbPosition = data["positionThumbFirst"];
+    let secondThumbPosition = data["positionThumbSecond"];
+    
+    let position = clientY - sliderTopPoint;
+    let onePixelSizeVertical = (this.max - this.min) / sliderHeight;
+    let stepSizeVertical = this.step / onePixelSizeVertical;
+    let positionMove =
+      Math.round(position / stepSizeVertical) * stepSizeVertical;
+    let value =
+      Math.round((position * onePixelSizeVertical + this.min) / this.step) *
+      this.step;
+    let rightValueForRange = Math.round((secondThumbPosition * onePixelSizeVertical + this.min) / this.step) *
+      this.step;
+  
+    let leftValueForRange = Math.round((firstThumbPosition * onePixelSizeVertical + this.min) / this.step) *
+      this.step;
+    if (!this.range) {
+      let right = sliderHeight;
+
+      if (position < 0) {
+        this.observer.broadcast("position", {
+          position: 0,
+          data_num: data_num,
+          value: this.min,
+        });
+      } else if (position > right) {
+        this.observer.broadcast("position", {
+          position: right,
+          data_num: data_num,
+          value: this.max,
+        });
+      } else {
+        this.observer.broadcast("position", {
+          position: positionMove,
+          data_num: data_num,
+          value: value,
+        });
+      }
+    } else if (this.range) {
+      if (data_num == "1") {
+        let right = secondThumbPosition;
+
+        if (position < 0) {
+          this.observer.broadcast("position", {
+            position: 0,
+            data_num: data_num,
+            value: this.min,
+          });
+        } else if (position > right) {
+          this.observer.broadcast("position", {
+            position: right,
+            data_num: data_num,
+            value: rightValueForRange,
+          });
+        } else {
+          this.observer.broadcast("position", {
+            position: positionMove,
+            data_num: data_num,
+            value: value,
+          });
+        }
+      } else if (data_num == "2") {
+        let left = firstThumbPosition;
+        let right = sliderHeight;
+
+        if (position < left) {
+          this.observer.broadcast("position", {
+            position: left,
+            data_num: data_num,
+            value: leftValueForRange
+          });
+        } else if (position > right) {
+          this.observer.broadcast("position", {
+            position: right,
+            data_num: data_num,
+            value: this.max,
+          });
+        } else {
+          this.observer.broadcast("position", {
+            position: positionMove,
+            data_num: data_num,
+            value: value,
+          });
+        }
+      }
+    }
+  }
+  
   changeRange(data: boolean) {
     this.range = data;
   }
@@ -259,9 +270,5 @@ export class Model implements IConfigModel {
       onloadPositionThumbOne: onloadPositionThumbOne,
       onloadPositionThumbTwo: onloadPositionThumbTwo,
     });
-  }
-
-  isIntegerStep(step: number) {
-    return (step ^ 0) === step;
   }
 }

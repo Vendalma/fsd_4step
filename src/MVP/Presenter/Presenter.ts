@@ -14,7 +14,7 @@ export class Presenter {
     this.model.addFollower(this)
   }
   update(type: string, data: any) {
-    if (type == "mouseMove") this.model.thumbCorrectValue(data);
+    if (type == "mouseMove") this.model.fundThumbPosition(data);
     else if (type == "position") this.view.setPositionMoveThumb(data);
     else if (type == "stepData") {
       this.view.addStep(data);

@@ -1,7 +1,7 @@
 import {Presenter} from '../MVP/Presenter/Presenter'
 
 describe('Presenter', ()=> {
-    const model = jasmine.createSpyObj('model',['thumbCorrectValue','getStep','addFollower']);
+    const model = jasmine.createSpyObj('model',['fundThumbPosition','getStep','addFollower']);
     const view = jasmine.createSpyObj('view',['setPositionMoveThumb','addStep','setOnloadThumbPosition','addFollower'])
     const presenter: Presenter = new Presenter(view, model)
     const data = {a:1}
@@ -17,7 +17,7 @@ describe('Presenter', ()=> {
     })
     it('Метод update с mouseMove', ()=> {
         presenter.update('mouseMove', data)
-        expect(presenter.model.thumbCorrectValue).toHaveBeenCalled()
+        expect(presenter.model.fundThumbPosition).toHaveBeenCalled()
     })
     it('Метод update с position', ()=> {
         presenter.update('position', data)
