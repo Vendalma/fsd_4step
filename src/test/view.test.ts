@@ -124,49 +124,36 @@ describe('View', ()=> {
     })
 
     it('проверка метода onloadWindow', ()=> {
-        spyOn(window, 'addEventListener')
-        view.onloadWindow()
-        if (window.onload) {
-            expect(window.addEventListener).toHaveBeenCalled()
-            expect(view.getSliderSize).toHaveBeenCalled()
-            expect(view.resizeWindow).toHaveBeenCalled()
-        }
-
-
+        const event = new Event('load', {})
+        window.dispatchEvent(event)
+        expect(view.getSliderSize).toHaveBeenCalled()
+        expect(view.resizeWindow).toHaveBeenCalled()
     })
     it('проверка метода resizeWindow', ()=> {
-        spyOn(window, 'addEventListener')
-        view.resizeWindow()
-        if (window.onresize) {
-            expect(window.addEventListener).toHaveBeenCalled()
-            expect(view.getSliderSize).toHaveBeenCalled()
-        }
-
-
+        const event = new Event('resize', {})
+        window.dispatchEvent(event)
+        expect(view.getSliderSize).toHaveBeenCalled()
     })
     describe('проверка метода setOnloadThumbPosition', () => {
         it ('range = true', ()=> {
             view.range = true;
             view.setOnloadThumbPosition({})
+            expect(view.thumbOne.setPosition).toHaveBeenCalled()
+            expect(view.thumbOne.setLabelValue).toHaveBeenCalled()
+            expect(view.progressBar.setOnloadProgressBarPosition).toHaveBeenCalled()
 
-            if (view.range) {
-               expect(view.thumbOne.setPosition).toHaveBeenCalled()
-               expect(view.thumbOne.setLabelValue).toHaveBeenCalled()
-               expect(view.progressBar.setOnloadProgressBarPosition).toHaveBeenCalled()
-
-               expect(view.thumbTwo?.setPosition).toHaveBeenCalled()
-               expect(view.thumbTwo?.setLabelValue).toHaveBeenCalled()
-               expect(view.progressBar.setOnloadProgressBarPosition).toHaveBeenCalled()
-            }
+            expect(view.thumbTwo?.setPosition).toHaveBeenCalled()
+            expect(view.thumbTwo?.setLabelValue).toHaveBeenCalled()
+            expect(view.progressBar.setOnloadProgressBarPosition).toHaveBeenCalled()
+            
          })
         it ('range = false', ()=> {
             view.range = false;
             view.setOnloadThumbPosition({})
-            if (!view.range) {
-                expect(view.thumbOne.setPosition).toHaveBeenCalled()
-                expect(view.thumbOne.setLabelValue).toHaveBeenCalled()
-                expect(view.progressBar.setOnloadProgressBarPosition).toHaveBeenCalled()
-              }
+            expect(view.thumbOne.setPosition).toHaveBeenCalled()
+            expect(view.thumbOne.setLabelValue).toHaveBeenCalled()
+            expect(view.progressBar.setOnloadProgressBarPosition).toHaveBeenCalled()
+
         })
     })
     describe('проверка метода update', ()=> {
@@ -185,7 +172,6 @@ describe('View', ()=> {
     })
 })
 
-
 describe('View проверка метода checkOrientation', () => {
     beforeAll(function () {
         spyOn(view, 'getSliderSize')
@@ -199,10 +185,8 @@ describe('View проверка метода checkOrientation', () => {
         expect(view.step.checkOrientation).toHaveBeenCalled();
         expect(view.progressBar.checkOrientation).toHaveBeenCalled();
         expect(view.getSliderSize).toHaveBeenCalled()
-
-        if (view.orientation === 'horisontal') {
-           expect(view.sliderBlock).not.toHaveClass("slider__block_vertical")
-        }
+        expect(view.sliderBlock).not.toHaveClass("slider__block_vertical")
+    
      })
      it('orientation = vertical', () => {
         view.checkOrientation('vertical')
@@ -213,74 +197,73 @@ describe('View проверка метода checkOrientation', () => {
         expect(view.step.checkOrientation).toHaveBeenCalled();
         expect(view.progressBar.checkOrientation).toHaveBeenCalled();
         expect(view.getSliderSize).toHaveBeenCalled()
-
-        if (view.orientation === 'vertical') {
-           expect(view.sliderBlock).toHaveClass("slider__block_vertical")
-        }
+        expect(view.sliderBlock).toHaveClass("slider__block_vertical")
      })
 })
 
 describe('View проверка метода checkRange', () => {
     beforeAll(function () {
         spyOn(view, 'setThumbTwo')
+        spyOn(view, 'getSliderSize')
     })
     it('range = true', ()=> {
         view.checkRange(true);
 
+        expect(view.range).toEqual(true)
         expect(view.setThumbTwo).toHaveBeenCalled()
         expect(view.thumbOne.checkRange).toHaveBeenCalled()
         expect(view.thumbTwo?.checkRange).toHaveBeenCalled()
-        expect(view.observer.broadcast).toHaveBeenCalled()
         expect(view.progressBar.checkRange).toHaveBeenCalled()
-
+        expect(view.getSliderSize).toHaveBeenCalled()
         expect(view.thumbTwo?.addThis).toHaveBeenCalled()
-        expect($('.thumb_second')[0]).toBeInDOM()
     })
     it('range = false', ()=> {
         view.checkRange(false);
 
+        expect(view.range).toEqual(false)
         expect(view.setThumbTwo).toHaveBeenCalled()
         expect(view.thumbOne.checkRange).toHaveBeenCalled()
         expect(view.thumbTwo?.checkRange).toHaveBeenCalled()
-        expect(view.observer.broadcast).toHaveBeenCalled()
+        expect(view.getSliderSize).toHaveBeenCalled()
         expect(view.progressBar.checkRange).toHaveBeenCalled()
-
-        if (view.thumbTwo) {
-            expect(view.thumbTwo.removeThis).toHaveBeenCalled()
-            //expect($('.thumb_second')[0]).not.toBeInDOM()
-        }
+        expect(view.thumbTwo?.removeThis).toHaveBeenCalled() 
+        
     })
 })
 describe('View проверка метода setThumbTwo', ()=> {
     it('проверка метода setThumbTwo', ()=> {
         view.range = false;
         view.setThumbTwo()
-        if (!view.range) {
-            expect(view.thumbTwo?.removeThis).toHaveBeenCalled()
-        }
+        expect(view.thumbTwo?.removeThis).toHaveBeenCalled()
     })
 })
 
 describe('View проверка метода setPositionMoveThumb', ()=> {
+    let data: any;
+    beforeEach(function(){
+        
+    })
     it('range = true, data_num = 1', ()=> {
         view.range = true;
-        let data_num = '1'
-        view.setPositionMoveThumb({})
-        if(data_num == '1'){
-            expect(view.thumbOne.getPosition).toHaveBeenCalled()
-            expect(view.thumbOne.setLabelValue).toHaveBeenCalled()
-            //expect(view.progressBar.setPositionForThumbOne).toHaveBeenCalled()
-        }
+        let data = {
+            'data_num' : '1'
+        } 
+        view.setPositionMoveThumb(data)
+        expect(view.thumbOne.getPosition).toHaveBeenCalled()
+        expect(view.thumbOne.setLabelValue).toHaveBeenCalled()
+        expect(view.progressBar.setPositionForThumbOne).toHaveBeenCalled()
+        
     })
     it('range = true, data_num = 2', ()=> {
         view.range = true;
-        let data_num = '2'
-        view.setPositionMoveThumb({})
-        if(data_num == '2'){
-            expect(view.thumbTwo?.getPosition).toHaveBeenCalled()
-            expect(view.thumbTwo?.setLabelValue).toHaveBeenCalled()
-            expect(view.progressBar.setPositionForThumbTwo).toHaveBeenCalled()
-        }
+        let data = {
+            'data_num' : '2'
+        } 
+        view.setPositionMoveThumb(data)
+        
+        expect(view.thumbTwo?.getPosition).toHaveBeenCalled()
+        expect(view.thumbTwo?.setLabelValue).toHaveBeenCalled()
+        expect(view.progressBar.setPositionForThumbTwo).toHaveBeenCalled()
     })
     it('range = false', ()=> {
         view.range = false;

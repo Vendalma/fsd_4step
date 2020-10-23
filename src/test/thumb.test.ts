@@ -14,7 +14,7 @@ const config  = {
 
 let thumb: Thumb = new Thumb(config,'thumb_first',block[0], 1)
 let observer = jasmine.createSpyObj('observer',['broadcast','subscribe'])
-let label = jasmine.createSpyObj('label',['checkLabelProp','setLabelValue','checkLabelOrientation'])
+let label = jasmine.createSpyObj('label',['checkVisibleLabel','setLabelValue','checkLabelOrientation'])
 
 describe('Thumb', ()=> {
     thumb.observer = observer;
@@ -50,7 +50,7 @@ describe('Thumb', ()=> {
     it('проверка метода checkLabel', () => {
         thumb.checkLabel(true)
 
-        expect(thumb.label.checkLabelProp).toHaveBeenCalled()
+        expect(thumb.label.checkVisibleLabel).toHaveBeenCalled()
     })
     it('проверка метода checkRange', () => {
         thumb.checkRange(false)
@@ -89,7 +89,7 @@ describe('Thumb', ()=> {
         })
         it('orientation = horisontal', () => {
             thumb.orientation = 'horisontal'
-            thumb.getPosition(0)
+            thumb.getPosition()
     
             expect(thumb.thumb).toHaveCss({left : '0px'})
         })
@@ -142,7 +142,6 @@ describe('Thumb', ()=> {
         
             expect(thumb.orientation).toEqual('vertical');
             expect(thumb.label.checkLabelOrientation).toHaveBeenCalled()
-            //expect( thumb.thumb.style.top).toEqual(thumb.thumb.style.left)
             expect(thumb.thumb).toHaveCss({left: '-5px'})
             expect(thumb.thumb).toHaveClass('thumb_vertical')
         })
@@ -151,7 +150,6 @@ describe('Thumb', ()=> {
         
             expect(thumb.orientation).toEqual('horisontal');
             expect(thumb.label.checkLabelOrientation).toHaveBeenCalled()
-            //expect( thumb.thumb.style.left).toEqual(thumb.thumb.style.top)
             expect(thumb.thumb).toHaveCss({top: '-5px'})
             expect(thumb.thumb).not.toHaveClass('thumb_vertical')
         })

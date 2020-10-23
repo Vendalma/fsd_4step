@@ -27,42 +27,42 @@ describe('Label', () => {
         expect(label.max).toEqual(config.max)
         expect(label.step).toEqual(config.step)
         expect(label.orientation).toEqual(config.orientation)
+        expect(config.orientation).toBeInstanceOf(String)
 
         expect(label.thumb).toBeInstanceOf(HTMLElement)
         expect(label.thumb).toContainElement('div.thumb__label')
-        expect(label.labelElem).toBeInDOM();
-        expect(label.labelElem).toHaveClass('thumb__label')
+        expect(label.elementLabel).toBeInDOM();
+        expect(label.elementLabel).toHaveClass('thumb__label')
         
        
     })
 
     it('Тестирование метода setLabelValue', () => {
         label.setLabelValue(4)
-        if (label.labelElem) {
-            expect(label.labelElem).toContainText('4')
-        }
+        expect(label.elementLabel).toContainText('4')
     })
-
-    it ('Тестирование метода CheckLabelOrientation', () => {
-        label.checkLabelOrientation('vertical')     
-        expect(label.orientation).toEqual('vertical')
-       if (label.orientation == 'vertical') {
-           expect(label.labelElem).toHaveClass('thumb__label_vertical')
-       }
-       if (label.orientation == 'horisontal') {
-        expect(label.labelElem).not.toHaveClass('thumb__label_vertical')
-    }
+    describe('Тестирование метода CheckLabelOrientation', ()=> {
+        it ('orientation = horisontal', () => {
+            label.checkLabelOrientation('horisontal')     
+            expect(label.orientation).toEqual('horisontal')
+            expect(label.elementLabel).not.toHaveClass('thumb__label_vertical')
+        });
+        it ('orientation = vertical', () => {
+            label.checkLabelOrientation('vertical')     
+            expect(label.orientation).toEqual('vertical')
+            expect(label.elementLabel).toHaveClass('thumb__label_vertical')
+        });
     })
-
-    it('Tестирование метода checkLabelProp', () => {
-        label.checkLabelProp(false);
-        expect(label.label).toEqual(false)
-        if (label.labelElem) {
-            if (label.label) {
-                expect(label.labelElem).toHaveCss({display : 'block'})
-            } else if (!label.label) {
-                expect(label.labelElem).toHaveCss({display : 'none'})
-            }
-        }
+    describe('Tестирование метода checkVisibleLabel', ()=> {
+        it('checkVisibleLabel = true', () => {
+            label.checkVisibleLabel(true);
+            expect(label.label).toEqual(true)
+            expect(label.elementLabel).toHaveCss({display : 'block'})
+        })
+        it('checkVisibleLabel = false', () => {
+            label.checkVisibleLabel(false);
+            expect(label.label).toEqual(false)
+            expect(label.elementLabel).toHaveCss({display : 'none'})
+        })
     })
 })

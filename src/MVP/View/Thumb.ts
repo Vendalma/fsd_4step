@@ -57,7 +57,7 @@ export class Thumb {
     this.observer.subscribe(follower)
   }
   checkLabel(data: boolean) {
-    this.label.checkLabelProp(data);
+    this.label.checkVisibleLabel(data);
   }
   checkRange(data: boolean) {
     this.range = data;
@@ -83,11 +83,7 @@ export class Thumb {
       if (!this.range) {
         this.thumb.style.left = position + "px";
       } else if (this.range) {
-        if (this.thumb.classList.contains("thumb_first")) {
-          this.thumb.style.left = position + "px";
-        } else if (this.thumb.classList.contains("thumb_second")) {
-          this.thumb.style.left = position + "px";
-        }
+       this.thumb.style.left = position + "px";
       }
     }
 
@@ -95,11 +91,7 @@ export class Thumb {
       if (!this.range) {
         this.thumb.style.top = position + "px";
       } else if (this.range) {
-        if (this.thumb.classList.contains("thumb_first")) {
-          this.thumb.style.top = position + "px";
-        } else if (this.thumb.classList.contains("thumb_second")) {
-          this.thumb.style.top = position + "px";
-        }
+        this.thumb.style.top = position + "px";  
       }
     }
   }
