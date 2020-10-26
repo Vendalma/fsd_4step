@@ -31,25 +31,25 @@ mixin panel-controller(id='')
             .panel__block_row
                 label.panel__label.panel__label_flex  
                     span Min
-                    input(type="number"  class='panel__input panel__input_medium panel__input_min')
+                    input(type="number" step = 'any'  class='panel__input panel__input_medium panel__input_min')
             .panel__block_row
                 label.panel__label.panel__label_flex  
                     span Max
-                    input(type="number" class='panel__input panel__input_medium panel__input_max')
+                    input(type="number" step = 'any' class='panel__input panel__input_medium panel__input_max')
         .panel__block_column
             .panel__block_row
                 label.panel__label.panel__label_flex 
                     span Шаг
-                    input(type="number" class='panel__input panel__input_medium panel__input_step')
+                    input(type="number" step = 'any' class='panel__input panel__input_medium panel__input_step')
         .panel__block_column
             .panel__block_row
                 label.panel__label.panel__label_flex
                     span Ползунок №1 
-                    input(type='number' id='thumb-one-position' class='panel__input panel__input_short panel__input_from')
+                    input(type='number' step = 'any' id='thumb-one-position' class='panel__input panel__input_short panel__input_from')
             .panel__block_row
                 label.panel__label.panel__label_flex
                     span Ползунок №2
-                    input(type='number'  class='panel__input panel__input_short panel__input_to panel__input_disabled')
+                    input(type='number' step = 'any' class='panel__input panel__input_short panel__input_to panel__input_disabled')
             
             
 

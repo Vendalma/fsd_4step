@@ -1,238 +1,242 @@
 import { Observer } from "../../Observer/Observer";
-import { Thumb } from "./Thumb";
 import { progressBar } from "./progressBar";
-import { Step } from "./Step";
+import { Step } from './Step';
+import { Thumb } from "./Thumb";
 interface IConfigView {
-  min: number;
-  max: number;
-  range: boolean;
-  positionFrom: number;
-  positionTo: number;
-  orientation: string;
-  step: number;
-  label: boolean;
+	min: number;
+	max: number;
+	range: boolean;
+	positionFrom: number;
+	positionTo: number;
+	orientation: string;
+	step: number;
+	label: boolean;
 }
 export class View {
-  config: IConfigView;
-  range: boolean;
-  positionFrom: number;
-  positionTo: number;
-  orientation: string;
-  min: number;
-  max: number;
-  stepValue: number;
-  label: boolean;
+	config: IConfigView;
+	range: boolean;
+	positionFrom: number;
+	positionTo: number;
+	orientation: string;
+	min: number;
+	max: number;
+	stepValue: number;
+	label: boolean;
 
-  wrapper: HTMLElement;
+	wrapper: HTMLElement;
 
-  slider: HTMLElement;
-  thumbOne: Thumb;
-  thumbTwo: Thumb | null | undefined;
-  observer: Observer;
-  step: Step;
-  progressBar: progressBar;
-  sliderBlock: HTMLElement | null;
+	slider: HTMLElement;
+	thumbOne: Thumb;
+	thumbTwo: Thumb | null | undefined;
+	observer: Observer;
+	step: Step;
+	progressBar: progressBar;
+	sliderBlock: HTMLElement | null;
 
-  constructor(IConfigView: any, wrapper: HTMLElement) {
-    this.config = IConfigView;
-    this.range = this.config.range;
-    this.positionFrom = this.config.positionFrom;
-    this.positionTo = this.config.positionTo;
-    this.orientation = this.config.orientation;
-    this.min = this.config.min;
-    this.max = this.config.max;
-    this.stepValue = this.config.step;
-    this.label = this.config.label;
+	constructor(IConfigView: any, wrapper: HTMLElement) {
+		this.config = IConfigView;
+		this.range = this.config.range;
+		this.positionFrom = this.config.positionFrom;
+		this.positionTo = this.config.positionTo;
+		this.orientation = this.config.orientation;
+		this.min = this.config.min;
+		this.max = this.config.max;
+		this.stepValue = this.config.step;
+		this.label = this.config.label;
 
-    this.observer = new Observer();
+		this.observer = new Observer();
 
-    this.wrapper = wrapper;
-    this.wrapper.classList.add("wrapper");
+		this.wrapper = wrapper;
+		this.wrapper.classList.add("wrapper");
 
-    this.slider = document.createElement('div')
-    this.slider.classList.add('slider')
-    this.wrapper.append(this.slider);
+		this.slider = document.createElement("div");
+		this.slider.classList.add("slider");
+		this.wrapper.append(this.slider);
 
-    this.sliderBlock = document.createElement('div')
-    this.sliderBlock.classList.add('slider__block')
-    this.slider.append(this.sliderBlock); 
+		this.sliderBlock = document.createElement("div");
+		this.sliderBlock.classList.add("slider__block");
+		this.slider.append(this.sliderBlock);
 
-    this.thumbOne = new Thumb(this.config, "thumb_first", this.sliderBlock, 1);
-    this.thumbTwo = new Thumb(this.config, "thumb_second", this.sliderBlock, 2);
-    
-    this.progressBar = new progressBar(this.config, this.sliderBlock);
+		this.thumbOne = new Thumb(this.config, "thumb_first", this.sliderBlock, 1);
+		this.thumbTwo = new Thumb(this.config, "thumb_second", this.sliderBlock, 2);
 
-    this.step = new Step(this.config, this.sliderBlock);
+		this.progressBar = new progressBar(this.config, this.sliderBlock);
 
-    this.init();
-    this.checkOrientation(this.orientation);
-    this.onloadWindow();
-    this.setThumbTwo()
-    this.subscribeOnUpdate();
-  }
+		this.step = new Step(this.config, this.sliderBlock);
 
-  init() {
-    this.slider.setAttribute("data-min", this.min + "");
-    this.slider.setAttribute("data-max", this.max + "");
-    this.slider.setAttribute("data-step", this.stepValue + "");
-    this.slider.setAttribute("data-label", this.label + "");
-    this.slider.setAttribute("data-orientation", this.orientation);
-    this.slider.setAttribute("data-range", this.range + "");
-    this.slider.setAttribute("data-from", this.positionFrom + "");
-    if (this.range) this.slider.setAttribute("data-to", this.positionTo + "");
-  }
 
-  setThumbTwo() {
-    this.range ? null : this.thumbTwo?.removeThis();
-  }
-  subscribeOnUpdate() {
-    this.thumbOne.addFollower(this)
-    this.thumbTwo?.addFollower(this)
-  }
-  checkOrientation(data: string) {
-    this.orientation = data;
-    this.thumbOne.checkOrientation(data);
-    this.thumbTwo?.checkOrientation(data);
-    this.step.checkOrientation(data)
-    this.progressBar.checkOrientation(data)
-    this.getSliderSize()
-    if (this.orientation == "vertical") {
-      this.sliderBlock?.classList.add("slider__block_vertical");
-    }
+		this.changeOrientation(this.orientation);
+		this.onloadWindow();
+		this.setThumbTwo();
+		this.subscribeOnUpdate();
+		this.init();
+	}
 
-    if (this.orientation == "horisontal") {
-      this.sliderBlock?.classList.remove("slider__block_vertical");
-    }
-  }
+	init() {
+		this.slider.setAttribute("data-min", this.min + "");
+		this.slider.setAttribute("data-max", this.max + "");
+		this.slider.setAttribute("data-step", this.stepValue + "");
+		this.slider.setAttribute("data-label", this.label + "");
+		this.slider.setAttribute("data-orientation", this.orientation);
+		this.slider.setAttribute("data-range", this.range + "");
+		this.slider.setAttribute("data-from", this.positionFrom + "");
+		if (this.range) this.slider.setAttribute("data-to", this.positionTo + "");
+	}
 
-  update(type: string, data: any) {
-    this.observer.broadcast("mouseMove", data);
-    if (type == "updatePositionThumbFirst") {
-      this.thumbOne.getPosition(data);
-    }
+	setThumbTwo() {
+		this.range ? null : this.thumbTwo?.removeThis();
+	}
+	subscribeOnUpdate() {
+		this.thumbOne.addFollower(this);
+		this.thumbTwo?.addFollower(this);
+	}
+	changeOrientation(data: string) {
+		this.orientation = data;
+		this.thumbOne.checkOrientation(data);
+		this.thumbTwo?.checkOrientation(data);
+		this.step.checkOrientation(data);
+		this.progressBar.checkOrientation(data);
+		this.getSliderSize();
+		if (this.orientation == "vertical") {
+			this.sliderBlock?.classList.add("slider__block_vertical");
+		}
 
-    if (type == "updatePositionThumbSecond") {
-      this.thumbTwo?.getPosition(data);
-    }
-  }
+		if (this.orientation == "horisontal") {
+			this.sliderBlock?.classList.remove("slider__block_vertical");
+		}
+	}
 
-  changeMin(data:number) {
-    this.min = data
-    this.step.changeMinValue(data)
-  }
+	update(type: string, data: any) {
+		this.observer.broadcast("mouseMove", data);
+		if (type == "updatePositionThumbFirst") {
+			this.thumbOne.getPosition(data);
+		}
 
-  changeMax (data: number) {
-    this.max = data;
-    this.step.changeMaxValue(data)
-  }
+		if (type == "updatePositionThumbSecond") {
+			this.thumbTwo?.getPosition(data);
+		}
+	}
 
-  changeLabel(data: boolean) {
-    this.thumbOne.checkLabel(data);
-    this.thumbTwo?.checkLabel(data);
-  }
+	changeMin(data: number) {
+		this.min = data;
+		this.step.changeMinValue(data);
+		this.getSliderSize();
+	}
 
-  checkRange(data: boolean) {
-    this.range = data;
-    this.setThumbTwo()
-    this.thumbOne.checkRange(data);
-    this.thumbTwo?.checkRange(data);
-    this.progressBar.checkRange(data);
-    this.getSliderSize();
+	changeMax(data: number) {
+		this.max = data;
+		this.getSliderSize();
+		this.step.changeMaxValue(data);
+	}
 
-    if (this.range) {
-      let thumbTwo = this.thumbTwo?.addThis();
-    } else if (!this.range && this.thumbTwo) {
-      this.thumbTwo.removeThis();
-    }
-  }
+	changeLabel(data: boolean) {
+		this.thumbOne.checkLabel(data);
+		this.thumbTwo?.checkLabel(data);
+	}
 
-  changeStep(data: number) {
-    this.stepValue = data
-  }
+	checkRange(data: boolean) {
+		this.range = data;
+		this.setThumbTwo();
+		this.thumbOne.checkRange(data);
+		this.thumbTwo?.checkRange(data);
+		this.progressBar.checkRange(data);
+		this.getSliderSize();
+		this.slider.setAttribute("data-from", this.positionFrom + "");
 
-  changePositionFrom(data: number) {
-    this.positionFrom = data;
-    this.getSliderSize()
-  }
+		if (this.range) {
+			let thumbTwo = this.thumbTwo?.addThis();
+		} else if (!this.range && this.thumbTwo) {
+			this.thumbTwo.removeThis();
+		}
+	}
 
-  changePositionTo(data: number) {
-    this.positionTo = data;
-    this.getSliderSize();
-  }
+	changeStep(data: number) {
+		this.stepValue = data;
+	}
 
-  setPositionMoveThumb(data: any) {
-    let data_num = data["data_num"];
-    let position = data["position"];
-    let valueThumb = data["value"];
-    if (!this.range) {
-      this.thumbOne.getPosition(position);
-      this.thumbOne.setLabelValue(valueThumb);
-      this.progressBar.setPositionForThumbOne(position);
-      this.slider.setAttribute('data-from', valueThumb)
-    }
-    if (this.range) {
-      if (data_num == "1") {
-        this.thumbOne.getPosition(position);
-        this.thumbOne.setLabelValue(valueThumb);
-        this.progressBar.setPositionForThumbOne(position);
-        this.slider.setAttribute('data-from', valueThumb)
-      } else {
-        this.thumbTwo?.getPosition(position);
-        this.thumbTwo?.setLabelValue(valueThumb);
-        this.progressBar.setPositionForThumbTwo(position);
-        this.slider.setAttribute('data-to', valueThumb)
-      }
-    }
-  }
+	changePositionFrom(data: number) {
+		this.positionFrom = data;
+		this.getSliderSize();
+	}
 
-  addStep(data: any) {
-    this.step.addStepLine(data);
-  }
+	changePositionTo(data: number) {
+		this.positionTo = data;
+		this.getSliderSize();
+	}
 
-  setOnloadThumbPosition(data: any) {
-    let onloadPositionThumbOne = data["onloadPositionThumbOne"];
-    let onloadPositionThumbTwo = data["onloadPositionThumbTwo"]
+	setPositionMoveThumb(data: any) {
+		let data_num = data["data_num"];
+		let position = data["position"];
+		let valueThumb = data["value"];
+		if (!this.range) {
+			this.thumbOne.getPosition(position);
+			this.thumbOne.setLabelValue(valueThumb);
+			this.progressBar.setPositionForThumbOne(position);
+			this.slider.setAttribute("data-from", valueThumb);
+		}
+		if (this.range) {
+			if (data_num == "1") {
+				this.thumbOne.getPosition(position);
+				this.thumbOne.setLabelValue(valueThumb);
+				this.progressBar.setPositionForThumbOne(position);
+				this.slider.setAttribute("data-from", valueThumb);
+			} else {
+				this.thumbTwo?.getPosition(position);
+				this.thumbTwo?.setLabelValue(valueThumb);
+				this.progressBar.setPositionForThumbTwo(position);
+				this.slider.setAttribute("data-to", valueThumb);
+			}
+		}
+	}
 
-    if (!this.range) {
-      this.thumbOne.setPosition(onloadPositionThumbOne);
-      this.thumbOne.setLabelValue(this.positionFrom);
-      this.progressBar.setOnloadProgressBarPosition(data);
-    }
-    if (this.range) {
-      this.thumbOne.setPosition(onloadPositionThumbOne);
-      this.thumbOne.setLabelValue(this.positionFrom);
-      this.progressBar.setOnloadProgressBarPosition(data);
+	addStep(data: any) {
+		this.step.addStepLine(data);
+	}
 
-      this.thumbTwo?.setPosition(onloadPositionThumbTwo);
-      this.thumbTwo?.setLabelValue(this.positionTo);
-      this.progressBar.setOnloadProgressBarPosition(data);
-    }
-  }
-  addFollower(follower:any) {
-    this.observer.subscribe(follower)
-  }
-  onloadWindow() {
-    window.addEventListener("load", () => {
-      this.getSliderSize();
-      this.resizeWindow();
-    });
-  }
+	setOnloadThumbPosition(data: any) {
+		let onloadPositionThumbOne = data["onloadPositionThumbOne"];
+		let onloadPositionThumbTwo = data["onloadPositionThumbTwo"];
 
-  resizeWindow() {
-    window.addEventListener("resize", () => {
-      this.getSliderSize();
-    });
-  }
+		if (!this.range) {
+			this.thumbOne.setPosition(onloadPositionThumbOne);
+			this.thumbOne.setLabelValue(this.positionFrom);
+			this.progressBar.setOnloadProgressBarPosition(data);
+		}
+		if (this.range) {
+			this.thumbOne.setPosition(onloadPositionThumbOne);
+			this.thumbOne.setLabelValue(this.positionFrom);
+			this.progressBar.setOnloadProgressBarPosition(data);
 
-  getSliderSize() {
-    if (this.orientation == "horisontal")
-      return this.observer.broadcast("loadData", {
-        sliderSize: this.slider?.offsetWidth,
-      });
+			this.thumbTwo?.setPosition(onloadPositionThumbTwo);
+			this.thumbTwo?.setLabelValue(this.positionTo);
+			this.progressBar.setOnloadProgressBarPosition(data);
+		}
+	}
+	addFollower(follower: any) {
+		this.observer.subscribe(follower);
+	}
+	onloadWindow() {
+		window.addEventListener("load", () => {
+			this.getSliderSize();
+			this.resizeWindow();
+		});
+	}
 
-    if (this.orientation == "vertical")
-      return this.observer.broadcast("loadData", {
-        sliderSize: this.slider?.offsetHeight,
-      });
-  }
+	resizeWindow() {
+		window.addEventListener("resize", () => {
+			this.getSliderSize();
+		});
+	}
+
+	getSliderSize() {
+		if (this.orientation == "horisontal")
+			return this.observer.broadcast("loadData", {
+				sliderSize: this.slider?.offsetWidth,
+			});
+
+		if (this.orientation == "vertical")
+			return this.observer.broadcast("loadData", {
+				sliderSize: this.slider?.offsetHeight,
+			});
+	}
 }
