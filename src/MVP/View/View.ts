@@ -70,6 +70,7 @@ export class View {
 		this.setThumbTwo();
 		this.subscribeOnUpdate();
 		this.init();
+		//this.sliderClick()
 	}
 
 	init() {
@@ -157,6 +158,7 @@ export class View {
 	changePositionFrom(data: number) {
 		this.positionFrom = data;
 		this.getSliderSize();
+
 	}
 
 	changePositionTo(data: number) {
@@ -238,5 +240,11 @@ export class View {
 			return this.observer.broadcast("loadData", {
 				sliderSize: this.slider?.offsetHeight,
 			});
+	}
+
+	sliderClick() {
+		this.sliderBlock?.addEventListener('click', (e) => {
+			console.log(e.clientX)
+		})
 	}
 }

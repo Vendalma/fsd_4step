@@ -1,5 +1,5 @@
 import { Observer } from "../../Observer/Observer";
-import { Validator } from './validator';
+import { Validator } from "./validator";
 
 interface IConfigModel {
 	min: number;
@@ -24,7 +24,7 @@ export class Model implements IConfigModel {
 	step: number;
 	label: boolean;
 
-	validator: Validator
+	validator: Validator;
 	constructor(IConfigModel: any) {
 		this.observer = new Observer();
 
@@ -36,9 +36,9 @@ export class Model implements IConfigModel {
 		this.positionTo = this.config.positionTo;
 		this.orientation = this.config.orientation;
 		this.step = this.config.step;
-		this.label = this.config.label
+		this.label = this.config.label;
 
-		this.validator = new Validator(this.config)
+		this.validator = new Validator(this.config);
 	}
 	addFollower(follower: any) {
 		this.observer.subscribe(follower);
@@ -51,8 +51,7 @@ export class Model implements IConfigModel {
 		}
 	}
 	getConfig() {
-		if (this.validator.validation())
-			return this.config
+		if (this.validator.validation()) return this.config;
 	}
 	private fundThumbPositionHorisontal(data: any) {
 		let clientX = data["clientX"];
@@ -247,15 +246,27 @@ export class Model implements IConfigModel {
 			}
 		}
 	}
+	changeLabel(data: boolean) {
+		this.label = data;
+		if (this.validator.checkLabel(this.label)) {
+			this.observer.broadcast("changeLabel", this.label);
+		}
+	}
 
 	changeRange(data: boolean) {
 		this.range = data;
-		this.checkPosotionFrom();
-		this.checkPosotionTo();
+		if (this.validator.checkRange(this.range)) {
+			this.observer.broadcast("changeRange", this.range);
+			this.checkPosotionFrom();
+			this.checkPosotionTo();
+		}
 	}
 
 	changeOrientation(data: string) {
 		this.orientation = data;
+		if (this.validator.checkOrientation(this.orientation)) {
+			this.observer.broadcast("changeOrientation", this.orientation);
+		}
 	}
 
 	changeMin(data: number) {
@@ -271,20 +282,26 @@ export class Model implements IConfigModel {
 			this.observer.broadcast("changeMaxValue", this.max);
 		this.checkPosotionFrom();
 		this.checkPosotionTo();
-
 	}
 	changeStep(data: number) {
 		this.step = data;
-		this.checkStep();
+		if (this.validator.checkStep(this.step)) {
+			this.observer.broadcast("changeStep", this.step);
+			this.checkStep();
+		}
 	}
 	changePositionFrom(data: number) {
 		this.positionFrom = data;
-		this.checkPosotionFrom();
+		if (this.validator.checkPositionFrom(this.positionFrom)) {
+			this.checkPosotionFrom();
+		}
 	}
 
 	changePositionTo(data: number) {
 		this.positionTo = data;
-		this.checkPosotionTo();
+		if (this.validator.checkPositionTo(this.positionTo)) {
+			this.checkPosotionTo();
+		}
 	}
 	checkPosotionFrom() {
 		if (this.positionFrom < this.min) {

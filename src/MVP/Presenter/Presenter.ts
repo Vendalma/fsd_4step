@@ -29,10 +29,15 @@ export class Presenter {
 			this.view.changePositionFrom(data);
 		} else if (type == "changePositionTo") {
 			this.view.changePositionTo(data);
+		} else if (type == "changeRange") {
+			this.view.checkRange(data);
+		} else if (type == "changeOrientation") {
+			this.view.changeOrientation(data);
 		} else if (type == "changeStep") {
 			this.view.changeStep(data);
+		} else if (type == "changeLabel") {
+			this.view.changeLabel(data);
 		}
-
 	}
 }
 

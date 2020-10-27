@@ -1,68 +1,50 @@
 import { Model } from "../MVP/Model/Model";
-import { View } from "../MVP/View/View";
 import { Presenter } from "../MVP/Presenter/Presenter";
-import { htmlPrefilter } from "jquery";
 
 interface ISettings {
-  min: number;
-  max: number;
-  positionFrom: number;
-  positionTo: number;
-  range: boolean;
-  label: boolean;
-  step: number;
-  orientation: string;
+	min: number;
+	max: number;
+	positionFrom: number;
+	positionTo: number;
+	range: boolean;
+	label: boolean;
+	step: number;
+	orientation: string;
 }
 export class RangeSlider {
-  model: Model;
-  view: View;
+	model: Model;
+	constructor(container: HTMLElement, settings: ISettings) {
+		this.model = new Model(settings);
+		new Presenter(this.model, container);
+	}
+	setLabel(data: boolean) {
+		this.model.changeLabel(data)
+	}
 
-  container: HTMLElement;
+	setOrientation(data: string) {
+		this.model.changeOrientation(data);
+	}
 
-  constructor(container: HTMLElement, settings: ISettings) {
-    this.model = new Model(settings);
-    this.view = new View(settings, container);
-    new Presenter(this.view, this.model);
+	setRange(data: boolean) {
+		this.model.changeRange(data);
+	}
+	changeMin(data: number) {
+		this.model.changeMin(data);
+	}
+	changeMax(data: number) {
+		this.model.changeMax(data);
+	}
 
-    this.container = container;
- 
-  }
+	changeStep(data: number) {
+		this.model.changeStep(data);
+	}
 
-  setLabel(data: boolean) {
-    this.view.changeLabel(data);
-  }
-
-  setOrientation(data: string) {
-    this.model.changeOrientation(data)
-    this.view.checkOrientation(data);
-  }
-
-  setRange(data: boolean) {
-    this.model.changeRange(data)
-    this.view.checkRange(data)
-  }
-  changeMin(data:number) {
-    this.model.changeMin(data)
-    this.view.changeMin(data)
-  }
-  changeMax (data: number) {
-    this.model.changeMax(data)
-    this.view.changeMax(data)
-  }
-
-  changeStep (data: number) {
-    this.model.changeStep(data);
-    this.view.changeStep(data)
-  }
- 
-  changePositionFrom( data:number) {
-    this.model.changePositionFrom(data)
-    this.view.changePositionFrom(data)
-  }
-  changePositionTo( data:number) {
-    this.model.changePositionTo(data)
-    this.view.changePositionTo(data)
-  }
+	changePositionFrom(data: number) {
+		this.model.changePositionFrom(data);
+	}
+	changePositionTo(data: number) {
+		this.model.changePositionTo(data);
+	}
 }
 
 export default RangeSlider;

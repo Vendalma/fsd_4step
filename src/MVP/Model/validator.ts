@@ -32,28 +32,30 @@ export class Validator {
 
 	checkMaxValue(data: number) {
 		try {
-			this.max = data
+			this.max = data;
 			if (this.max <= this.min) {
 				throw new Error("Error: max <= min");
 			}
 		} catch (error) {
-			return console.log(error);
+			return error
 		}
 		return true;
 	}
 
 	checkMinValue(data: number) {
+		this.min = data;
 		try {
-			this.min = data
+			this.min = data;
 			if (this.min >= this.max) {
 				throw new Error("Error: min >= max");
 			}
 		} catch (error) {
-			return console.log(error);
+			return error
 		}
 		return true;
 	}
 	checkPositionFrom(data: number) {
+		this.positionFrom = data;
 		try {
 			if (this.positionFrom < this.min) {
 				throw new Error("Error: position from < min");
@@ -63,11 +65,12 @@ export class Validator {
 				throw new Error("Error: position from > max");
 			}
 		} catch (error) {
-			return console.log(error);
+			return error
 		}
 		return true;
 	}
 	checkPositionTo(data: number) {
+		this.positionTo = data;
 		try {
 			if (this.positionTo > this.max) {
 				throw new Error("Error: position to > max");
@@ -75,11 +78,12 @@ export class Validator {
 				throw new Error("Error: position to < position from");
 			}
 		} catch (error) {
-			return console.log(error);
+			return error
 		}
 		return true;
 	}
 	checkStep(data: number) {
+		this.step = data;
 		try {
 			if (this.step <= 0) {
 				throw new Error("Error: step <= 0");
@@ -87,40 +91,42 @@ export class Validator {
 				throw new Error("Error: step > max - min");
 			}
 		} catch (error) {
-			return console.log(error);
+			return error
 		}
 		return true;
 	}
 	checkRange(data: boolean) {
+		this.range = data;
 		try {
 			if (typeof this.range !== "boolean") {
 				throw new Error("Error: range is not valid");
 			}
 		} catch (error) {
-			return console.log(error);
+			return error
 		}
 		return true;
 	}
 	checkLabel(data: boolean) {
+		this.label = data;
 		try {
 			if (typeof this.label !== "boolean") {
 				throw new Error("Error: label is not valid");
 			}
 		} catch (error) {
-			return console.log(error);
+			return error
 		}
 		return true;
 	}
 	checkOrientation(data: string) {
+		this.orientation = data;
 		try {
-			if ((this.orientation == 'vertical') || (this.orientation == 'horisontal')) {
-				return true
-
+			if (this.orientation == "vertical" || this.orientation == "horisontal") {
+				return true;
 			} else {
 				throw new Error("Error: not valid orientation value");
 			}
 		} catch (error) {
-			return console.log(error);
+			return error;
 		}
 	}
 	validation() {
