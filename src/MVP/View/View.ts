@@ -1,6 +1,6 @@
 import { Observer } from "../../Observer/Observer";
 import { progressBar } from "./progressBar";
-import { Step } from './Step';
+import { Step } from "./Step";
 import { Thumb } from "./Thumb";
 interface IConfigView {
 	min: number;
@@ -64,13 +64,12 @@ export class View {
 
 		this.step = new Step(this.config, this.sliderBlock);
 
-
 		this.changeOrientation(this.orientation);
 		this.onloadWindow();
 		this.setThumbTwo();
 		this.subscribeOnUpdate();
 		this.init();
-		//this.sliderClick()
+		this.sliderClick();
 	}
 
 	init() {
@@ -158,7 +157,6 @@ export class View {
 	changePositionFrom(data: number) {
 		this.positionFrom = data;
 		this.getSliderSize();
-
 	}
 
 	changePositionTo(data: number) {
@@ -243,8 +241,43 @@ export class View {
 	}
 
 	sliderClick() {
-		this.sliderBlock?.addEventListener('click', (e) => {
-			console.log(e.clientX)
-		})
+		this.sliderBlock?.addEventListener("click", (e) => {
+			if (this.orientation == "horisontal") {
+				if (!this.range) {
+					this.thumbOne.onMouseUp(e);
+				} else if (this.range) {
+					let thumbFirst = Math.abs(
+						this.thumbOne.thumb.getBoundingClientRect().x - e.clientX
+					);
+					let thumbSecond = Math.abs(
+						(this.thumbTwo?.thumb.getBoundingClientRect().x as number) -
+						e.clientX
+					);
+					if (thumbFirst < thumbSecond) {
+						this.thumbOne.onMouseUp(e);
+					} else if (thumbFirst > thumbSecond) {
+						this.thumbTwo?.onMouseUp(e);
+					}
+				}
+			}
+			if (this.orientation == "vertical") {
+				if (!this.range) {
+					this.thumbOne.onMouseUp(e);
+				} else if (this.range) {
+					let thumbFirst = Math.abs(
+						this.thumbOne.thumb.getBoundingClientRect().y - e.clientY
+					);
+					let thumbSecond = Math.abs(
+						(this.thumbTwo?.thumb.getBoundingClientRect().y as number) -
+						e.clientY
+					);
+					if (thumbFirst < thumbSecond) {
+						this.thumbOne.onMouseUp(e);
+					} else if (thumbFirst > thumbSecond) {
+						this.thumbTwo?.onMouseUp(e);
+					}
+				}
+			}
+		});
 	}
 }
