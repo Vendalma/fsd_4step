@@ -1,5 +1,5 @@
 import { Observer } from "../../Observer/Observer";
-import { Validator } from "./validator";
+import { Validator } from "./Validator";
 
 interface IConfigModel {
 	min: number;
@@ -12,7 +12,7 @@ interface IConfigModel {
 	label: boolean;
 }
 
-export class Model implements IConfigModel {
+class Model extends Validator {
 	observer: Observer;
 	range: boolean;
 	config: IConfigModel;
@@ -26,6 +26,7 @@ export class Model implements IConfigModel {
 
 	validator: Validator;
 	constructor(IConfigModel: any) {
+		super(IConfigModel);
 		this.observer = new Observer();
 
 		this.config = IConfigModel;
@@ -51,7 +52,7 @@ export class Model implements IConfigModel {
 		}
 	}
 	getConfig() {
-		if (this.validator.validation()) return this.config;
+		if (this.validation()) return this.config;
 	}
 	private fundThumbPositionHorisontal(data: any) {
 		let clientX = data["clientX"];
@@ -248,62 +249,65 @@ export class Model implements IConfigModel {
 	}
 	changeLabel(data: boolean) {
 		this.label = data;
-		if (this.validator.checkLabel(this.label)) {
+		if (this.checkLabel(this.label)) {
 			this.observer.broadcast("changeLabel", this.label);
 		}
 	}
 
 	changeRange(data: boolean) {
 		this.range = data;
-		if (this.validator.checkRange(this.range)) {
+		if (this.checkRange(this.range)) {
 			this.observer.broadcast("changeRange", this.range);
-			this.checkPosotionFrom();
-			this.checkPosotionTo();
+			this.calcPosotionFrom();
+			this.calcPosotionTo();
 		}
 	}
 
 	changeOrientation(data: string) {
 		this.orientation = data;
-		if (this.validator.checkOrientation(this.orientation)) {
+		if (this.checkOrientation(this.orientation)) {
 			this.observer.broadcast("changeOrientation", this.orientation);
 		}
 	}
 
 	changeMin(data: number) {
 		this.min = data;
-		if (this.validator.checkMinValue(this.min))
+		if (this.checkMinValue(this.min)) {
 			this.observer.broadcast("changeMinValue", this.min);
-		this.checkPosotionFrom();
-		this.checkPosotionTo();
+			this.calcPosotionFrom();
+			this.calcPosotionTo();
+		}
 	}
 	changeMax(data: number) {
 		this.max = data;
-		if (this.validator.checkMaxValue(this.max))
+		if (this.checkMaxValue(this.max)) {
 			this.observer.broadcast("changeMaxValue", this.max);
-		this.checkPosotionFrom();
-		this.checkPosotionTo();
+			this.calcPosotionFrom();
+			this.calcPosotionTo();
+		}
 	}
 	changeStep(data: number) {
 		this.step = data;
-		if (this.validator.checkStep(this.step)) {
+		if (this.checkStepValue(this.step)) {
 			this.observer.broadcast("changeStep", this.step);
-			this.checkStep();
+			this.calckStep();
 		}
 	}
 	changePositionFrom(data: number) {
 		this.positionFrom = data;
-		if (this.validator.checkPositionFrom(this.positionFrom)) {
-			this.checkPosotionFrom();
+		if (this.checkPositionFrom(this.positionFrom)) {
+			this.observer.broadcast('changePositionFrom', this.positionFrom)
+			this.calcPosotionFrom();
 		}
 	}
 
 	changePositionTo(data: number) {
 		this.positionTo = data;
-		if (this.validator.checkPositionTo(this.positionTo)) {
-			this.checkPosotionTo();
+		if (this.checkPositionTo(this.positionTo)) {
+			this.calcPosotionTo();
 		}
 	}
-	checkPosotionFrom() {
+	calcPosotionFrom() {
 		if (this.positionFrom < this.min) {
 			this.positionFrom = this.min;
 			this.observer.broadcast("changePositionFrom", this.positionFrom);
@@ -317,7 +321,7 @@ export class Model implements IConfigModel {
 			this.observer.broadcast("changePositionFrom", this.positionFrom);
 		}
 	}
-	checkPosotionTo() {
+	calcPosotionTo() {
 		if (this.positionTo > this.max) {
 			this.positionTo = this.max;
 			this.observer.broadcast("changePositionTo", this.positionTo);
@@ -328,15 +332,11 @@ export class Model implements IConfigModel {
 			this.observer.broadcast("changePositionTo", this.positionTo);
 		}
 	}
-	checkStep() {
+	calckStep() {
 		if (this.step <= 0) {
 			this.step = 1;
-			this.observer.broadcast("changeStep", this.step);
 		} else if (this.step > this.max - this.min) {
 			this.step = this.max;
-			this.observer.broadcast("changeStep", this.step);
-		} else {
-			this.observer.broadcast("changeStep", this.step);
 		}
 	}
 	getStep(loadData: any) {
@@ -356,3 +356,4 @@ export class Model implements IConfigModel {
 		});
 	}
 }
+export { Model };
