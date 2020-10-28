@@ -11,20 +11,18 @@ interface ISettings {
 	step: number;
 	orientation: string;
 }
-export class RangeSlider {
+class RangeSlider {
 	model: Model;
 	constructor(container: HTMLElement, settings: ISettings) {
 		this.model = new Model(settings);
 		new Presenter(this.model, container);
 	}
 	setLabel(data: boolean) {
-		this.model.changeLabel(data)
+		this.model.changeLabel(data);
 	}
-
 	setOrientation(data: string) {
 		this.model.changeOrientation(data);
 	}
-
 	setRange(data: boolean) {
 		this.model.changeRange(data);
 	}
@@ -34,11 +32,9 @@ export class RangeSlider {
 	changeMax(data: number) {
 		this.model.changeMax(data);
 	}
-
 	changeStep(data: number) {
 		this.model.changeStep(data);
 	}
-
 	changePositionFrom(data: number) {
 		this.model.changePositionFrom(data);
 	}
@@ -46,5 +42,5 @@ export class RangeSlider {
 		this.model.changePositionTo(data);
 	}
 }
+export { RangeSlider };
 
-export default RangeSlider;

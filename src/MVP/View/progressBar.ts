@@ -2,7 +2,7 @@ interface IConfigProgressBar {
 	range: boolean;
 	orientation: string;
 }
-export class progressBar {
+class progressBar {
 	config: IConfigProgressBar;
 	range: boolean;
 	orientation: string;
@@ -55,6 +55,7 @@ export class progressBar {
 	}
 	checkRange(data: boolean) {
 		this.range = data;
+
 	}
 
 	checkOrientation(data: string) {
@@ -93,3 +94,4 @@ export class progressBar {
 		}
 	}
 }
+export { progressBar };

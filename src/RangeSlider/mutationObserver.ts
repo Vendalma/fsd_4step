@@ -1,7 +1,7 @@
 import { PanelController } from '../panelController/panelController';
 import { RangeSlider } from './rangeSlider';
 
-export class MutationObserverClass {
+class MutationObserverClass {
 	container: HTMLElement | null;
 	panel: PanelController;
 	slider: RangeSlider
@@ -66,5 +66,5 @@ export class MutationObserverClass {
 		if (target) observer.observe(target, config);
 	}
 }
-
+export { MutationObserverClass };
 

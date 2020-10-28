@@ -3,7 +3,7 @@ interface IconfigStep {
   max: number;
   orientation: string;
 }
-export class Step implements IconfigStep {
+class Step {
   config: IconfigStep;
   min: number;
   max: number;
@@ -22,35 +22,36 @@ export class Step implements IconfigStep {
 
   addStepLine(data: any) {
     this.deleteElements();
+    const fragment = document.createDocumentFragment()
 
-    if (this.container.parentElement) {
-      let stepCount = data["stepCount"];
-      let stepSize = data["stepSize"];
+    let stepCount = data["stepCount"];
+    let stepSize = data["stepSize"];
 
-      for (let i = 0; i < stepCount + 1; i++) {
-        let stepBlock = document.createElement("div");
-        stepBlock.classList.add("slider__step-block");
-        this.container.append(stepBlock);
+    for (let i = 0; i < stepCount + 1; i++) {
+      let stepBlock = document.createElement("div");
+      stepBlock.classList.add("slider__step-block");
+      fragment.append(stepBlock);
 
-        if (i == 0) {
-          stepBlock.innerHTML = this.min + "";
-          stepBlock.classList.add('slider__step-block_min')
-        }else if (i == stepCount) {
-          stepBlock.innerHTML = this.max + "";
-          stepBlock.classList.add('slider__step-block_max')
-        }
+      if (i == 0) {
+        stepBlock.innerHTML = this.min + "";
+        stepBlock.classList.add('slider__step-block_min')
+      } else if (i == stepCount) {
+        stepBlock.innerHTML = this.max + "";
+        stepBlock.classList.add('slider__step-block_max')
+      }
 
-        if (this.orientation == "vertical") {
-          stepBlock.classList.add("slider__step-block_vertical");
-          stepBlock.style.top = stepSize * i - stepBlock.offsetHeight + "px";
-        }
+      if (this.orientation == "vertical") {
+        stepBlock.classList.add("slider__step-block_vertical");
+        stepBlock.style.top = stepSize * i - stepBlock.offsetHeight + "px";
+      }
 
-        if (this.orientation == "horisontal") {
-          stepBlock.style.left = stepSize * i + "px";
-          stepBlock.classList.remove("slider__step-block_vertical");
-        }
+      if (this.orientation == "horisontal") {
+        stepBlock.style.left = stepSize * i + "px";
+        stepBlock.classList.remove("slider__step-block_vertical");
       }
     }
+    this.container.append(fragment)
+
   }
 
   changeMinValue(data: number) {
@@ -77,3 +78,5 @@ export class Step implements IconfigStep {
     this.orientation = data;
   }
 }
+export { Step };
+

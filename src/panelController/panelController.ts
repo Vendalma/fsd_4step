@@ -10,7 +10,7 @@ interface ISettings {
 	step: number;
 	label: boolean;
 }
-export class PanelController {
+class PanelController {
 	parent: HTMLElement;
 	panel: HTMLElement | null;
 	inputFrom: HTMLInputElement | null;
@@ -166,4 +166,5 @@ export class PanelController {
 	}
 }
 
-export default PanelController;
+export { PanelController };
+

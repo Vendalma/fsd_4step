@@ -1,8 +1,6 @@
 import { PanelController } from "../panelController/panelController";
-import { MutationObserverClass } from './mutationObserver';
+import { MutationObserverClass } from "./mutationObserver";
 import { RangeSlider } from "./rangeSlider";
-
-
 interface ISettings {
 	min: number;
 	max: number;
@@ -21,9 +19,9 @@ interface MethodsObject {
 (function ($) {
 	const methods: MethodsObject = {
 		init: function ($: any, options: any) {
-			let panel = new PanelController($[0], options)
-			let slider = new RangeSlider($[0], options)
-			let mutationObserver = new MutationObserverClass(panel, slider, $[0])
+			let panel = new PanelController($[0], options);
+			let slider = new RangeSlider($[0], options);
+			let mutationObserver = new MutationObserverClass(panel, slider, $[0]);
 		},
 		labelVisible: function ($: any, options: boolean) {
 			$.attr("data-label", options);
@@ -35,20 +33,19 @@ interface MethodsObject {
 			$.attr("data-range", options);
 		},
 		min: function ($: any, options: number) {
-
-			$.attr('data-min', options)
+			$.attr("data-min", options);
 		},
 		max: function ($: any, options: number) {
-			$.attr('data-max', options)
+			$.attr("data-max", options);
 		},
 		step: function ($: any, options: number) {
-			$.attr('data-step', options)
+			$.attr("data-step", options);
 		},
-		'position-from': function ($: any, options: number) {
-			$.attr('data-from', options)
+		"position-from": function ($: any, options: number) {
+			$.attr("data-from", options);
 		},
-		'position-to': function ($: any, options: number) {
-			$.attr('data-to', options)
+		"position-to": function ($: any, options: number) {
+			$.attr("data-to", options);
 		},
 	};
 
@@ -78,5 +75,4 @@ interface MethodsObject {
 			$.error("Метод с именем " + method + " не существует");
 		}
 	};
-
 })(jQuery);
