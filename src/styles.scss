@@ -87,7 +87,6 @@
   position: absolute;
   top: -5px;
   cursor: pointer;
-  z-index: 1;
 
   &__label {
     position: absolute;
@@ -116,4 +115,12 @@
 .progress-bar {
   background: linear-gradient(180deg, #6fcf97 0%, #66d2ea 100%);
   position: absolute;
+
+  &_vertical {
+    width: 7px !important;
+  }
+  &_horisontal {
+    top: 0px !important;
+    height: 7px !important;
+  }
 }
