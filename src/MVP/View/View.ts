@@ -67,10 +67,10 @@ class View {
       this.sliderContainer.setAttribute("data-to", this.positionTo + "");
   }
 
-  subscribeOnUpdate() {
+  private subscribeOnUpdate() {
     this.sliderBlock.addFollower(this);
   }
-  update(type: string, data: any) {
+  private update(type: string, data: any) {
     this.observer.broadcast("mouseMove", data);
   }
   changeOrientation(data: string) {
@@ -133,15 +133,15 @@ class View {
   addFollower(follower: any) {
     this.observer.subscribe(follower);
   }
-  onloadWindow() {
+  private onloadWindow() {
     window.addEventListener("load", this.getSliderSize.bind(this));
   }
 
-  resizeWindow() {
+  private resizeWindow() {
     window.addEventListener("resize", this.getSliderSize.bind(this));
   }
 
-  getSliderSize() {
+  private getSliderSize() {
     if (this.orientation == "horisontal")
       this.observer.broadcast("loadData", {
         sliderSize: this.sliderContainer.offsetWidth,

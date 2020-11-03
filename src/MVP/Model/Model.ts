@@ -279,6 +279,7 @@ class Model extends Validator {
   }
   changeMax(data: number) {
     this.max = data;
+    console.log(this.checkMaxValue(this.max))
     if (this.checkMaxValue(this.max)) {
       this.observer.broadcast("changeMaxValue", this.max);
       this.calcPosotionFrom();

@@ -36,10 +36,10 @@ class Validator {
       if (this.max <= this.min) {
         throw new Error("Error: max <= min");
       }
+      return true;
     } catch (error) {
-      return error
+      return error;
     }
-    return true;
   }
 
   checkMinValue(data: number) {
@@ -49,10 +49,10 @@ class Validator {
       if (this.min >= this.max) {
         throw new Error("Error: min >= max");
       }
+      return true;
     } catch (error) {
-      return error
+      return error;
     }
-    return true;
   }
   checkPositionFrom(data: number) {
     this.positionFrom = data;
@@ -64,10 +64,10 @@ class Validator {
       } else if (!this.range && this.positionFrom > this.max) {
         throw new Error("Error: position from > max");
       }
+      return true;
     } catch (error) {
-      return error
+      return error;
     }
-    return true;
   }
   checkPositionTo(data: number) {
     this.positionTo = data;
@@ -77,10 +77,10 @@ class Validator {
       } else if (this.positionTo < this.positionFrom) {
         throw new Error("Error: position to < position from");
       }
+      return true;
     } catch (error) {
-      return error
+      return error;
     }
-    return true;
   }
   checkStepValue(data: number) {
     this.step = data;
@@ -90,10 +90,10 @@ class Validator {
       } else if (this.step > this.max - this.min) {
         throw new Error("Error: step > max - min");
       }
+      return true;
     } catch (error) {
-      return error
+      return error;
     }
-    return true;
   }
   checkRange(data: boolean) {
     this.range = data;
@@ -101,10 +101,10 @@ class Validator {
       if (typeof this.range !== "boolean") {
         throw new Error("Error: range is not valid");
       }
+      return true;
     } catch (error) {
-      return error
+      return error;
     }
-    return true;
   }
   checkLabel(data: boolean) {
     this.label = data;
@@ -112,10 +112,10 @@ class Validator {
       if (typeof this.label !== "boolean") {
         throw new Error("Error: label is not valid");
       }
+      return true;
     } catch (error) {
-      return error
+      return error;
     }
-    return true;
   }
   checkOrientation(data: string) {
     this.orientation = data;
