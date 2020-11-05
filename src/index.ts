@@ -1,4 +1,3 @@
-import * as $ from "jquery";
 import "./RangeSlider/slider";
 import "./styles.scss";
 

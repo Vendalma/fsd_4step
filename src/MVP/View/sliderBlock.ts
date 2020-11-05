@@ -15,14 +15,6 @@ interface IConfig {
 }
 class SliderBlock {
   config: IConfig;
-  range: boolean;
-  positionFrom: number;
-  positionTo: number;
-  orientation: string;
-  min: number;
-  max: number;
-  stepValue: number;
-  label: boolean;
 
   sliderContainer: HTMLElement;
   sliderBlock: HTMLElement;
@@ -33,14 +25,6 @@ class SliderBlock {
   progressBar: progressBar;
   constructor(IConfig: any, sliderContainer: HTMLElement) {
     this.config = IConfig;
-    this.range = this.config.range;
-    this.positionFrom = this.config.positionFrom;
-    this.positionTo = this.config.positionTo;
-    this.orientation = this.config.orientation;
-    this.min = this.config.min;
-    this.max = this.config.max;
-    this.stepValue = this.config.step;
-    this.label = this.config.label;
 
     this.sliderContainer = sliderContainer;
 
@@ -58,6 +42,7 @@ class SliderBlock {
     this.setThumbTwo();
     this.subscribeOnUpdate();
     this.sliderClick();
+    this.changeOrientation();
   }
 
   addFollower(follower: any) {
@@ -66,47 +51,34 @@ class SliderBlock {
   addStep(data: any) {
     this.step.addStepLine(data);
   }
+  updateConfig(data: any) {
+    this.config = data;
+    this.changeRange();
+    this.changeOrientation();
+    this.step.updateConfigStep(data);
+    this.thumbOne.updateConfigThumb(data);
+    this.thumbTwo?.updateConfigThumb(data);
+    this.progressBar.updateBarConfig(data);
+  }
 
-  changeMin(data: number) {
-    this.min = data;
-    this.step.changeMinValue(data);
-  }
-  changeMax(data: number) {
-    this.max = data;
-    this.step.changeMaxValue(data);
-  }
-  changeLabel(data: boolean) {
-    this.thumbOne.checkLabel(data);
-    this.thumbTwo?.checkLabel(data);
-  }
-  changePositionFrom(data: number) {
-    this.positionFrom = data;
-  }
-  changePositionTo(data: number) {
-    this.positionTo = data;
-  }
-  changeRange(data: boolean) {
-    this.range = data;
-    this.setThumbTwo();
-    this.thumbOne.checkRange(data);
-    this.thumbTwo?.checkRange(data);
-    this.progressBar.checkRange(data);
+  private changeRange() {
+    const secondThumb = this.sliderBlock.querySelector(
+      ".thumb_second"
+    ) as HTMLElement;
 
-    if (this.range) {
+    if (secondThumb !== null) {
+      this.setThumbTwo();
+    }
+
+    if (this.config.range) {
       let thumbTwo = this.thumbTwo?.addThis();
     }
   }
-  changeOrientation(data: string) {
-    this.orientation = data;
-    this.thumbOne.checkOrientation(data);
-    this.thumbTwo?.checkOrientation(data);
-    this.step.checkOrientation(data);
-    this.progressBar.checkOrientation(data);
-
-    if (this.orientation == "vertical") {
+  private changeOrientation() {
+    if (this.config.orientation == "vertical") {
       this.sliderBlock?.classList.add("slider__block_vertical");
     }
-    if (this.orientation == "horisontal") {
+    if (this.config.orientation == "horisontal") {
       this.sliderBlock?.classList.remove("slider__block_vertical");
     }
   }
@@ -115,18 +87,18 @@ class SliderBlock {
     let onloadPositionThumbOne = data["onloadPositionThumbOne"];
     let onloadPositionThumbTwo = data["onloadPositionThumbTwo"];
 
-    if (!this.range) {
+    if (!this.config.range) {
       this.thumbOne.setPosition(onloadPositionThumbOne);
-      this.thumbOne.setLabelValue(this.positionFrom);
+      this.thumbOne.setLabelValue(this.config.positionFrom);
       this.progressBar.setOnloadProgressBarPosition(data);
     }
-    if (this.range) {
+    if (this.config.range) {
       this.thumbOne.setPosition(onloadPositionThumbOne);
-      this.thumbOne.setLabelValue(this.positionFrom);
+      this.thumbOne.setLabelValue(this.config.positionFrom);
       this.progressBar.setOnloadProgressBarPosition(data);
 
       this.thumbTwo?.setPosition(onloadPositionThumbTwo);
-      this.thumbTwo?.setLabelValue(this.positionTo);
+      this.thumbTwo?.setLabelValue(this.config.positionTo);
     }
   }
   setPositionMoveThumb(data: any) {
@@ -134,17 +106,17 @@ class SliderBlock {
     let position = data["position"];
     let valueThumb = data["value"];
 
-    if (!this.range) {
+    if (!this.config.range) {
       this.thumbOne.setPosition(position);
       this.thumbOne.setLabelValue(valueThumb);
       this.progressBar.setPositionForThumbOne(position);
     }
-    if (this.range) {
+    if (this.config.range) {
       if (data_num == "1") {
         this.thumbOne.setPosition(position);
         this.thumbOne.setLabelValue(valueThumb);
         this.progressBar.setPositionForThumbOne(position);
-      } else if (data_num == '2') {
+      } else if (data_num == "2") {
         this.thumbTwo?.setPosition(position);
         this.thumbTwo?.setLabelValue(valueThumb);
         this.progressBar.setPositionForThumbTwo(position);
@@ -156,10 +128,10 @@ class SliderBlock {
     this.sliderBlock?.addEventListener("click", this.onSliderClick.bind(this));
   }
   private onSliderClick(e: MouseEvent): any {
-    if (this.orientation == "horisontal") {
-      if (!this.range) {
+    if (this.config.orientation == "horisontal") {
+      if (!this.config.range) {
         this.thumbOne.onMouseUp(e);
-      } else if (this.range) {
+      } else if (this.config.range) {
         let thumbFirst = Math.abs(
           this.thumbOne.thumb.getBoundingClientRect().x - e.clientX
         );
@@ -173,10 +145,10 @@ class SliderBlock {
         }
       }
     }
-    if (this.orientation == "vertical") {
-      if (!this.range) {
+    if (this.config.orientation == "vertical") {
+      if (!this.config.range) {
         this.thumbOne.onMouseUp(e);
-      } else if (this.range) {
+      } else if (this.config.range) {
         let thumbFirst = Math.abs(
           this.thumbOne.thumb.getBoundingClientRect().y - e.clientY
         );
@@ -196,7 +168,7 @@ class SliderBlock {
     this.thumbTwo?.addFollower(this);
   }
   private setThumbTwo() {
-    this.range ? null : this.thumbTwo?.removeThis();
+    this.config.range ? null : this.thumbTwo?.removeThis();
   }
   private update(type: string, data: any) {
     this.observer.broadcast("mouseMove", data);

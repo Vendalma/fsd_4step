@@ -14,15 +14,7 @@ interface IConfigModel {
 
 class Model extends Validator {
   observer: Observer;
-  range: boolean;
   config: IConfigModel;
-  max: number;
-  min: number;
-  positionFrom: number;
-  positionTo: number;
-  orientation: string;
-  step: number;
-  label: boolean;
 
   validator: Validator;
   constructor(IConfigModel: any) {
@@ -30,29 +22,21 @@ class Model extends Validator {
     this.observer = new Observer();
 
     this.config = IConfigModel;
-    this.range = this.config.range;
-    this.max = this.config.max;
-    this.min = this.config.min;
-    this.positionFrom = this.config.positionFrom;
-    this.positionTo = this.config.positionTo;
-    this.orientation = this.config.orientation;
-    this.step = this.config.step;
-    this.label = this.config.label;
-
     this.validator = new Validator(this.config);
   }
   addFollower(follower: any) {
     this.observer.subscribe(follower);
   }
   fundThumbPosition(data: any) {
-    if (this.orientation == "horisontal") {
+    if (this.config.orientation == "horisontal") {
       this.fundThumbPositionHorisontal(data);
-    } else if (this.orientation == "vertical") {
+    } else if (this.config.orientation == "vertical") {
       this.fundThumbPositionVertical(data);
     }
   }
   getConfig() {
     if (this.validation()) return this.config;
+    console.log(this.config)
   }
   private fundThumbPositionHorisontal(data: any) {
     let clientX = data["clientX"];
@@ -62,38 +46,38 @@ class Model extends Validator {
     let firstThumbPosition = data["positionThumbFirst"];
     let secondThumbPosition = data["positionThumbSecond"];
 
-    let onePixelSizeHorisontal = (this.max - this.min) / sliderWidth;
-    let stepSizeHorisontal = this.step / onePixelSizeHorisontal;
+    let onePixelSizeHorisontal = (this.config.max - this.config.min) / sliderWidth;
+    let stepSizeHorisontal = this.config.step / onePixelSizeHorisontal;
     let position = clientX - sliderLeftPoint;
     let positionMove =
       Math.round(position / stepSizeHorisontal) * stepSizeHorisontal;
 
     let value =
-      Math.round((position * onePixelSizeHorisontal + this.min) / this.step) *
-      this.step;
+      Math.round((position * onePixelSizeHorisontal + this.config.min) / this.config.step) *
+      this.config.step;
 
     let rightValueForRange =
       Math.round(
-        (secondThumbPosition * onePixelSizeHorisontal + this.min) / this.step
-      ) * this.step;
+        (secondThumbPosition * onePixelSizeHorisontal + this.config.min) / this.config.step
+      ) * this.config.step;
     let leftValueForRange =
       Math.round(
-        (firstThumbPosition * onePixelSizeHorisontal + this.min) / this.step
-      ) * this.step;
-    if (!this.range) {
+        (firstThumbPosition * onePixelSizeHorisontal + this.config.min) / this.config.step
+      ) * this.config.step;
+    if (!this.config.range) {
       let right = sliderWidth;
 
       if (position < 0) {
         this.observer.broadcast("position", {
           position: 0,
           data_num: data_num,
-          value: this.min,
+          value: this.config.min,
         });
       } else if (position > right) {
         this.observer.broadcast("position", {
           position: right,
           data_num: data_num,
-          value: this.max,
+          value: this.config.max,
         });
       } else {
         this.observer.broadcast("position", {
@@ -102,14 +86,14 @@ class Model extends Validator {
           value: value,
         });
       }
-    } else if (this.range) {
+    } else if (this.config.range) {
       if (data_num == "1") {
         let right = secondThumbPosition;
         if (position < 0) {
           this.observer.broadcast("position", {
             position: 0,
             data_num: data_num,
-            value: this.min,
+            value: this.config.min,
           });
         } else if (position > right) {
           this.observer.broadcast("position", {
@@ -138,7 +122,7 @@ class Model extends Validator {
           this.observer.broadcast("position", {
             position: right,
             data_num: data_num,
-            value: this.max,
+            value: this.config.max,
           });
         } else {
           this.observer.broadcast("position", {
@@ -160,35 +144,35 @@ class Model extends Validator {
     let secondThumbPosition = data["positionThumbSecond"];
 
     let position = clientY - sliderTopPoint;
-    let onePixelSizeVertical = (this.max - this.min) / sliderHeight;
-    let stepSizeVertical = this.step / onePixelSizeVertical;
+    let onePixelSizeVertical = (this.config.max - this.config.min) / sliderHeight;
+    let stepSizeVertical = this.config.step / onePixelSizeVertical;
     let positionMove =
       Math.round(position / stepSizeVertical) * stepSizeVertical;
-    let value = (Math.round(position * onePixelSizeVertical + this.min) / this.step) *
-      this.step;
+    let value = (Math.round(position * onePixelSizeVertical + this.config.min) / this.config.step) *
+      this.config.step;
     let rightValueForRange =
       Math.round(
-        (secondThumbPosition * onePixelSizeVertical + this.min) / this.step
-      ) * this.step;
+        (secondThumbPosition * onePixelSizeVertical + this.config.min) / this.config.step
+      ) * this.config.step;
 
     let leftValueForRange =
       Math.round(
-        (firstThumbPosition * onePixelSizeVertical + this.min) / this.step
-      ) * this.step;
-    if (!this.range) {
+        (firstThumbPosition * onePixelSizeVertical + this.config.min) / this.config.step
+      ) * this.config.step;
+    if (!this.config.range) {
       let right = sliderHeight;
 
       if (position < 0) {
         this.observer.broadcast("position", {
           position: 0,
           data_num: data_num,
-          value: this.min,
+          value: this.config.min,
         });
       } else if (position > right) {
         this.observer.broadcast("position", {
           position: right,
           data_num: data_num,
-          value: this.max,
+          value: this.config.max,
         });
       } else {
         this.observer.broadcast("position", {
@@ -197,7 +181,7 @@ class Model extends Validator {
           value: value,
         });
       }
-    } else if (this.range) {
+    } else if (this.config.range) {
       if (data_num == "1") {
         let right = secondThumbPosition;
 
@@ -205,7 +189,7 @@ class Model extends Validator {
           this.observer.broadcast("position", {
             position: 0,
             data_num: data_num,
-            value: this.min,
+            value: this.config.min,
           });
         } else if (position > right) {
           this.observer.broadcast("position", {
@@ -234,7 +218,7 @@ class Model extends Validator {
           this.observer.broadcast("position", {
             position: right,
             data_num: data_num,
-            value: this.max,
+            value: this.config.max,
           });
         } else {
           this.observer.broadcast("position", {
@@ -247,106 +231,109 @@ class Model extends Validator {
     }
   }
   changeLabel(data: boolean) {
-    this.label = data;
-    if (this.checkLabel(this.label)) {
-      this.observer.broadcast("changeLabel", this.label);
+    if (this.validationLabel(data) === true) {
+      this.config.label = data;
+      this.observer.broadcast("changeConfig", this.getConfig());
     }
   }
 
   changeRange(data: boolean) {
-    this.range = data;
-    if (this.checkRange(this.range)) {
-      this.observer.broadcast("changeRange", this.range);
+
+    if (this.validationRange(data) === true) {
+      this.config.range = data;
+      this.observer.broadcast("changeConfig", this.getConfig());
       this.calcPosotionFrom();
       this.calcPosotionTo();
     }
   }
 
   changeOrientation(data: string) {
-    this.orientation = data;
-    if (this.checkOrientation(this.orientation)) {
-      this.observer.broadcast("changeOrientation", this.orientation);
+
+    if (this.validationOrientation(data) === true) {
+      this.config.orientation = data;
+      this.observer.broadcast("changeConfig", this.getConfig());
     }
   }
 
   changeMin(data: number) {
-    this.min = data;
-    if (this.checkMinValue(this.min)) {
-      this.observer.broadcast("changeMinValue", this.min);
-      this.calcPosotionFrom();
-      this.calcPosotionTo();
+    if (this.validationMinValue(data) === true) {
+      this.config.min = data;
+      this.observer.broadcast("changeConfig", this.getConfig());
+      // this.calcPosotionFrom();
+      // this.calcPosotionTo();
     }
   }
   changeMax(data: number) {
-    this.max = data;
-    console.log(this.checkMaxValue(this.max))
-    if (this.checkMaxValue(this.max)) {
-      this.observer.broadcast("changeMaxValue", this.max);
-      this.calcPosotionFrom();
-      this.calcPosotionTo();
+    if (this.validationMaxValue(data) === true) {
+      this.config.max = data;
+      this.observer.broadcast("changeConfig", this.getConfig());
+      // this.calcPosotionFrom();
+      // this.calcPosotionTo();
     }
   }
   changeStep(data: number) {
-    this.step = data;
-    if (this.checkStepValue(this.step)) {
-      this.observer.broadcast("changeStep", this.step);
-      this.calckStep();
+    if (this.validationStepValue(data) === true) {
+      this.config.step = data
+      this.observer.broadcast("changeConfig", this.getConfig());
+      //this.calckStep();
     }
   }
   changePositionFrom(data: number) {
-    this.positionFrom = data;
-    if (this.checkPositionFrom(this.positionFrom)) {
-      this.observer.broadcast('changePositionFrom', this.positionFrom)
+
+    if (this.validationPositionFrom(data) === true) {
+      this.config.positionFrom = data;
+      this.observer.broadcast("changeConfig", this.getConfig());
       this.calcPosotionFrom();
     }
   }
 
   changePositionTo(data: number) {
-    this.positionTo = data;
-    if (this.checkPositionTo(this.positionTo)) {
+    if (this.validationPositionTo(data) === true) {
+      this.config.positionTo = data
+      this.observer.broadcast("changeConfig", this.getConfig());
       this.calcPosotionTo();
     }
   }
   calcPosotionFrom() {
-    if (this.positionFrom < this.min) {
-      this.positionFrom = this.min;
-      this.observer.broadcast("changePositionFrom", this.positionFrom);
-    } else if (this.range && this.positionFrom > this.positionTo) {
-      this.positionFrom = this.positionTo - this.step;
-      this.observer.broadcast("changePositionFrom", this.positionFrom);
-    } else if (!this.range && this.positionFrom > this.max) {
-      this.positionFrom = this.max;
-      this.observer.broadcast("changePositionFrom", this.positionFrom);
+    if (this.config.positionFrom < this.config.min) {
+      this.config.positionFrom = this.config.min;
+      this.observer.broadcast("changeConfig", this.getConfig());
+    } else if (this.config.range && this.config.positionFrom > this.config.positionTo) {
+      this.config.positionFrom = this.config.positionTo - this.config.step;
+      this.observer.broadcast("changeConfig", this.getConfig());
+    } else if (!this.config.range && this.config.positionFrom > this.config.max) {
+      this.config.positionFrom = this.config.max;
+      this.observer.broadcast("changeConfig", this.getConfig());
     } else {
-      this.observer.broadcast("changePositionFrom", this.positionFrom);
+      this.observer.broadcast("changeConfig", this.getConfig());
     }
   }
   calcPosotionTo() {
-    if (this.positionTo > this.max) {
-      this.positionTo = this.max;
-      this.observer.broadcast("changePositionTo", this.positionTo);
-    } else if (this.positionTo < this.positionFrom) {
-      this.positionTo = this.positionFrom + this.step;
-      this.observer.broadcast("changePositionTo", this.positionTo);
+    if (this.config.positionTo > this.config.max) {
+      this.config.positionTo = this.config.max;
+      this.observer.broadcast("changeConfig", this.getConfig());
+    } else if (this.config.positionTo < this.config.positionFrom) {
+      this.config.positionTo = this.config.positionFrom + this.config.step;
+      this.observer.broadcast("changeConfig", this.getConfig());
     } else {
-      this.observer.broadcast("changePositionTo", this.positionTo);
+      this.observer.broadcast("changeConfig", this.getConfig());
     }
   }
   calckStep() {
-    if (this.step <= 0) {
-      this.step = 1;
-    } else if (this.step > this.max - this.min) {
-      this.step = this.max;
+    if (this.config.step <= 0) {
+      this.config.step = 1;
+    } else if (this.config.step > this.config.max - this.config.min) {
+      this.config.step = this.config.max;
     }
   }
   getStep(loadData: any) {
     let sliderSize = loadData["sliderSize"];
 
     let stepCount = 20;
-    let onePixelSize = (this.max - this.min) / sliderSize;
+    let onePixelSize = (this.config.max - this.config.min) / sliderSize;
     let stepSize = sliderSize / stepCount;
-    let onloadPositionThumbOne = (this.positionFrom - this.min) / onePixelSize;
-    let onloadPositionThumbTwo = (this.positionTo - this.min) / onePixelSize;
+    let onloadPositionThumbOne = (this.config.positionFrom - this.config.min) / onePixelSize;
+    let onloadPositionThumbTwo = (this.config.positionTo - this.config.min) / onePixelSize;
 
     this.observer.broadcast("stepData", {
       stepCount: stepCount,

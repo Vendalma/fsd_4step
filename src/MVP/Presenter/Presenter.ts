@@ -22,20 +22,8 @@ class Presenter {
       this.view.setOnloadView(data);
     } else if (type == "loadData") {
       this.model.getStep(data);
-    } else if (type == "changeMinValue") {
-      this.view.changeMin(data);
-    } else if (type == "changeMaxValue") {
-      this.view.changeMax(data);
-    } else if (type == "changePositionFrom") {
-      this.view.changePositionFrom(data);
-    } else if (type == "changePositionTo") {
-      this.view.changePositionTo(data);
-    } else if (type == "changeRange") {
-      this.view.changeRange(data);
-    } else if (type == "changeOrientation") {
-      this.view.changeOrientation(data);
-    } else if (type == "changeLabel") {
-      this.view.changeLabel(data);
+    } else if (type == "changeConfig") {
+      this.view.updateConfig(data);
     }
   }
 }

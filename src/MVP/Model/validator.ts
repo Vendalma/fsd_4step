@@ -9,118 +9,101 @@ interface IConfigModel {
   label: boolean;
 }
 class Validator {
-  range: boolean;
   config: IConfigModel;
-  max: number;
-  min: number;
-  positionFrom: number;
-  positionTo: number;
-  orientation: string;
-  step: number;
-  label: boolean;
   constructor(config: any) {
     this.config = config;
-    this.range = this.config.range;
-    this.max = this.config.max;
-    this.min = this.config.min;
-    this.positionFrom = this.config.positionFrom;
-    this.positionTo = this.config.positionTo;
-    this.orientation = this.config.orientation;
-    this.step = this.config.step;
-    this.label = this.config.label;
   }
 
-  checkMaxValue(data: number) {
+  validationMaxValue(data: number) {
     try {
-      this.max = data;
-      if (this.max <= this.min) {
+      if (data <= this.config.min) {
         throw new Error("Error: max <= min");
       }
+      this.config.max = data;
       return true;
     } catch (error) {
       return error;
     }
   }
 
-  checkMinValue(data: number) {
-    this.min = data;
+  validationMinValue(data: number) {
     try {
-      this.min = data;
-      if (this.min >= this.max) {
+      if (data >= this.config.max) {
         throw new Error("Error: min >= max");
       }
+      this.config.min = data;
       return true;
     } catch (error) {
       return error;
     }
   }
-  checkPositionFrom(data: number) {
-    this.positionFrom = data;
+  validationPositionFrom(data: number) {
     try {
-      if (this.positionFrom < this.min) {
+      if (data < this.config.min) {
         throw new Error("Error: position from < min");
-      } else if (this.range && this.positionFrom > this.positionTo) {
+      } else if (this.config.range && data > this.config.positionTo) {
         throw new Error("Error: position from > position to");
-      } else if (!this.range && this.positionFrom > this.max) {
+      } else if (!this.config.range && data > this.config.max) {
         throw new Error("Error: position from > max");
       }
+      this.config.positionFrom = data;
       return true;
     } catch (error) {
       return error;
     }
   }
-  checkPositionTo(data: number) {
-    this.positionTo = data;
+  validationPositionTo(data: number) {
     try {
-      if (this.positionTo > this.max) {
+      if (data > this.config.max) {
         throw new Error("Error: position to > max");
-      } else if (this.positionTo < this.positionFrom) {
+      } else if (data < this.config.positionFrom) {
         throw new Error("Error: position to < position from");
       }
+      this.config.positionTo = data;
       return true;
     } catch (error) {
       return error;
     }
   }
-  checkStepValue(data: number) {
-    this.step = data;
+  validationStepValue(data: number) {
     try {
-      if (this.step <= 0) {
+      if (data <= 0) {
         throw new Error("Error: step <= 0");
-      } else if (this.step > this.max - this.min) {
+      } else if (data > this.config.max - this.config.min) {
         throw new Error("Error: step > max - min");
       }
+      this.config.step = data;
       return true;
     } catch (error) {
       return error;
     }
   }
-  checkRange(data: boolean) {
-    this.range = data;
+  validationRange(data: boolean) {
     try {
-      if (typeof this.range !== "boolean") {
+      if (typeof data !== "boolean") {
         throw new Error("Error: range is not valid");
       }
+      this.config.range = data;
       return true;
     } catch (error) {
       return error;
     }
   }
-  checkLabel(data: boolean) {
-    this.label = data;
+  validationLabel(data: boolean) {
     try {
-      if (typeof this.label !== "boolean") {
+      if (typeof data !== "boolean") {
         throw new Error("Error: label is not valid");
       }
+      this.config.label = data;
       return true;
     } catch (error) {
       return error;
     }
   }
-  checkOrientation(data: string) {
-    this.orientation = data;
+  validationOrientation(data: string) {
     try {
-      if (this.orientation == "vertical" || this.orientation == "horisontal") {
+      if (data == "vertical" || data == "horisontal") {
+        this.config.orientation = data;
         return true;
       } else {
         throw new Error("Error: not valid orientation value");
@@ -131,14 +114,14 @@ class Validator {
   }
   validation() {
     if (
-      this.checkMaxValue(this.max) &&
-      this.checkMinValue(this.min) &&
-      this.checkPositionFrom(this.positionFrom) &&
-      this.checkPositionTo(this.positionTo) &&
-      this.checkRange(this.range) &&
-      this.checkLabel(this.label) &&
-      this.checkOrientation(this.orientation) &&
-      this.checkStepValue(this.step)
+      this.validationMaxValue(this.config.max) &&
+      this.validationMinValue(this.config.min) &&
+      this.validationPositionFrom(this.config.positionFrom) &&
+      this.validationPositionTo(this.config.positionTo) &&
+      this.validationRange(this.config.range) &&
+      this.validationLabel(this.config.label) &&
+      this.validationOrientation(this.config.orientation) &&
+      this.validationStepValue(this.config.step)
     )
       return true;
   }

@@ -12,15 +12,6 @@ interface IConfigView {
 }
 class View {
   config: IConfigView;
-  range: boolean;
-  positionFrom: number;
-  positionTo: number;
-  orientation: string;
-  min: number;
-  max: number;
-  stepValue: number;
-  label: boolean;
-
   wrapper: HTMLElement;
 
   sliderContainer: HTMLElement;
@@ -29,14 +20,6 @@ class View {
 
   constructor(IConfigView: any, wrapper: HTMLElement) {
     this.config = IConfigView;
-    this.range = this.config.range;
-    this.positionFrom = this.config.positionFrom;
-    this.positionTo = this.config.positionTo;
-    this.orientation = this.config.orientation;
-    this.min = this.config.min;
-    this.max = this.config.max;
-    this.stepValue = this.config.step;
-    this.label = this.config.label;
 
     this.wrapper = wrapper;
     this.wrapper.classList.add("wrapper");
@@ -48,7 +31,6 @@ class View {
     this.observer = new Observer();
     this.sliderBlock = new SliderBlock(this.config, this.sliderContainer);
 
-    this.changeOrientation(this.orientation);
     this.onloadWindow();
     this.resizeWindow();
     this.subscribeOnUpdate();
@@ -56,15 +38,24 @@ class View {
   }
 
   init() {
-    this.sliderContainer.setAttribute("data-min", this.min + "");
-    this.sliderContainer.setAttribute("data-max", this.max + "");
-    this.sliderContainer.setAttribute("data-step", this.stepValue + "");
-    this.sliderContainer.setAttribute("data-label", this.label + "");
-    this.sliderContainer.setAttribute("data-orientation", this.orientation);
-    this.sliderContainer.setAttribute("data-range", this.range + "");
-    this.sliderContainer.setAttribute("data-from", this.positionFrom + "");
-    if (this.range)
-      this.sliderContainer.setAttribute("data-to", this.positionTo + "");
+    this.sliderContainer.setAttribute("data-min", String(this.config.min));
+    this.sliderContainer.setAttribute("data-max", String(this.config.max));
+    this.sliderContainer.setAttribute("data-step", String(this.config.step));
+    this.sliderContainer.setAttribute("data-label", String(this.config.label));
+    this.sliderContainer.setAttribute(
+      "data-orientation",
+      String(this.config.orientation)
+    );
+    this.sliderContainer.setAttribute("data-range", String(this.config.range));
+    this.sliderContainer.setAttribute(
+      "data-from",
+      String(this.config.positionFrom)
+    );
+    if (this.config.range)
+      this.sliderContainer.setAttribute(
+        "data-to",
+        String(this.config.positionTo)
+      );
   }
 
   private subscribeOnUpdate() {
@@ -73,60 +64,25 @@ class View {
   private update(type: string, data: any) {
     this.observer.broadcast("mouseMove", data);
   }
-  changeOrientation(data: string) {
-    this.orientation = data;
-    this.sliderBlock.changeOrientation(this.orientation);
-    this.getSliderSize();
-  }
-  changeMin(data: number) {
-    this.min = data;
-    this.sliderBlock.changeMin(this.min);
-  }
-
-  changeMax(data: number) {
-    this.max = data;
-    this.sliderBlock.changeMax(this.max);
-  }
-
-  changeLabel(data: boolean) {
-    this.sliderBlock.changeLabel(data);
-  }
-
-  changeRange(data: boolean) {
-    this.range = data;
-    this.sliderBlock.changeRange(this.range);
-    this.getSliderSize();
-  }
-
-  changePositionFrom(data: number) {
-    this.positionFrom = data;
-    this.sliderBlock.changePositionFrom(data);
-    this.getSliderSize();
-  }
-
-  changePositionTo(data: number) {
-    this.positionTo = data;
-    this.sliderBlock.changePositionTo(data);
-    this.getSliderSize();
-  }
 
   setPositionMoveThumb(data: any) {
     this.sliderBlock.setPositionMoveThumb(data);
     let data_num = data["data_num"];
     let valueThumb = data["value"];
-    if (!this.range) {
-      this.sliderContainer.setAttribute("data-from", valueThumb);
+    /*if (!this.range) {
+      //this.sliderContainer.setAttribute("data-from", valueThumb);
     }
     if (this.range) {
       if (data_num == "1") {
-        this.sliderContainer.setAttribute("data-from", valueThumb);
+        // this.sliderContainer.setAttribute("data-from", valueThumb);
       } else if (data_num == "2") {
-        this.sliderContainer.setAttribute("data-to", valueThumb);
+        //  this.sliderContainer.setAttribute("data-to", valueThumb);
       }
-    }
+    }*/
   }
 
   setOnloadView(data: any) {
+    console.log("set onload view");
     this.sliderBlock.setOnloadThumbPosition(data);
     this.sliderBlock.addStep(data);
   }
@@ -142,15 +98,20 @@ class View {
   }
 
   private getSliderSize() {
-    if (this.orientation == "horisontal")
+    if (this.config.orientation == "horisontal")
       this.observer.broadcast("loadData", {
         sliderSize: this.sliderContainer.offsetWidth,
       });
 
-    if (this.orientation == "vertical")
+    if (this.config.orientation == "vertical")
       this.observer.broadcast("loadData", {
         sliderSize: this.sliderContainer.offsetHeight,
       });
+  }
+  updateConfig(data: any) {
+    this.config = data;
+    this.sliderBlock.updateConfig(data);
+    this.getSliderSize();
   }
 }
 export { View };

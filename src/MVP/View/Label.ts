@@ -1,56 +1,46 @@
 interface IConfigLabel {
-	label: boolean;
-	min: number;
-	max: number;
-	step: number;
-	orientation: string
+  label: boolean;
+  orientation: string;
 }
 class Label {
-	thumb: HTMLElement;
-	elementLabel: HTMLElement;
+  thumb: HTMLElement;
+  elementLabel: HTMLElement;
+  config: IConfigLabel;
 
-	config: IConfigLabel;
-	label: boolean;
-	min: number;
-	max: number;
-	step: number;
-	orientation: string;
+  constructor(config: any, thumb: HTMLElement) {
+    this.thumb = thumb;
+    this.elementLabel = document.createElement("div");
+    this.elementLabel.classList.add("thumb__label");
+    this.thumb.append(this.elementLabel);
 
-	constructor(config: any, thumb: HTMLElement) {
-		this.thumb = thumb;
-		this.elementLabel = document.createElement("div");
-		this.elementLabel.classList.add("thumb__label");
-		this.thumb.append(this.elementLabel);
+    this.config = config;
+    this.changeVisibleLabel();
+    this.changeLabelOrientation();
+    this.update(this.config);
+  }
 
-		this.config = config;
-		this.label = this.config.label;
-		this.min = this.config.min;
-		this.max = this.config.max;
-		this.step = this.config.step;
-		this.orientation = this.config.orientation
+  setLabelValue(value: number) {
+    this.elementLabel.innerHTML = value + "";
+  }
 
-		this.checkVisibleLabel(this.label)
-		this.checkLabelOrientation(this.orientation)
-	}
+  private changeLabelOrientation() {
+    if (this.config.orientation == "vertical")
+      this.elementLabel.classList.add("thumb__label_vertical");
 
-	setLabelValue(value: number) {
-		this.elementLabel.innerHTML = value + "";
-	}
+    if (this.config.orientation == "horisontal")
+      this.elementLabel.classList.remove("thumb__label_vertical");
+  }
 
-	checkLabelOrientation(data: string) {
-		this.orientation = data;
-		if (this.orientation == "vertical")
-			this.elementLabel.classList.add("thumb__label_vertical");
-
-		if (this.orientation == "horisontal")
-			this.elementLabel.classList.remove("thumb__label_vertical");
-	}
-
-	checkVisibleLabel(data: boolean) {
-		this.label = data;
-		this.label
-			? (this.elementLabel.style.display = "block")
-			: (this.elementLabel.style.display = "none");
-	}
+  changeVisibleLabel() {
+    this.config.label
+      ? (this.elementLabel.style.display = "block")
+      : (this.elementLabel.style.display = "none");
+  }
+  update(data: any) {
+    this.config = data;
+    this.changeVisibleLabel();
+    this.changeLabelOrientation();
+  }
 }
 export { Label };
+

@@ -5,16 +5,10 @@ interface IconfigStep {
 }
 class Step {
   config: IconfigStep;
-  min: number;
-  max: number;
-  orientation: string;
   container: HTMLElement;
 
   constructor(IconfigStep: any, container: HTMLElement) {
     this.config = IconfigStep;
-    this.min = this.config.min;
-    this.max = this.config.max;
-    this.orientation = this.config.orientation;
     this.container = container;
   }
 
@@ -29,14 +23,14 @@ class Step {
       stepBlock.classList.add("slider__step-block");
       fragment.append(stepBlock);
       if (i == 0) {
-        stepBlock.innerHTML = this.min + "";
+        stepBlock.innerHTML = this.config.min + "";
         stepBlock.classList.add("slider__step-block_min");
       } else if (i == stepCount) {
-        stepBlock.innerHTML = this.max + "";
+        stepBlock.innerHTML = this.config.max + "";
         stepBlock.classList.add("slider__step-block_max");
       }
 
-      if (this.orientation == "vertical") {
+      if (this.config.orientation == "vertical") {
         stepBlock.classList.add("slider__step-block_vertical");
         stepBlock.style.top = stepSize * i + "px";
         if (i == 0) {
@@ -45,7 +39,7 @@ class Step {
           stepBlock.style.top = stepSize * i - 17 + "px";
         }
       }
-      if (this.orientation == "horisontal") {
+      if (this.config.orientation == "horisontal") {
         stepBlock.style.left = stepSize * i + "px";
         stepBlock.classList.remove("slider__step-block_vertical");
       }
@@ -53,20 +47,18 @@ class Step {
     this.container.append(fragment);
   }
 
-  changeMinValue(data: number) {
-    this.min = data;
+  private changeMinValue() {
     let blockMin = this.container.querySelector(
       ".slider__step-block_min"
     ) as HTMLElement;
-    blockMin.innerHTML = data + "";
+    blockMin.innerHTML = this.config.min + "";
   }
 
-  changeMaxValue(data: number) {
-    this.max = data;
+  private changeMaxValue() {
     let blockMax = this.container.querySelector(
       ".slider__step-block_max"
     ) as HTMLElement;
-    blockMax.innerHTML = data + "";
+    blockMax.innerHTML = this.config.max + "";
   }
 
   private deleteElements() {
@@ -79,8 +71,10 @@ class Step {
     });
   }
 
-  checkOrientation(data: string) {
-    this.orientation = data;
+  updateConfigStep(data: any) {
+    this.config = data;
+    this.changeMinValue()
+    this.changeMaxValue()
   }
 }
 export { Step };
