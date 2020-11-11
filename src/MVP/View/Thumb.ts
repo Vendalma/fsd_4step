@@ -47,16 +47,13 @@ class Thumb {
     this.observer.subscribe(follower);
   }
   private checkOrientation() {
-    this.label.changeLabelOrientation(this.config.orientation);
     if (this.config.orientation == "horisontal") {
-      this.thumb.style.left = this.thumb.style.top;
-      this.thumb.style.top = "-5px";
+      this.thumb.classList.add("thumb_horisontal");
       this.thumb.classList.remove("thumb_vertical");
     }
 
     if (this.config.orientation == "vertical") {
-      this.thumb.style.top = this.thumb.style.left;
-      this.thumb.style.left = "-5px";
+      this.thumb.classList.remove("thumb_horisontal");
       this.thumb.classList.add("thumb_vertical");
     }
   }
@@ -74,7 +71,7 @@ class Thumb {
       document.onmouseup = (e) => this.onMouseUp(e);
 
       this.zIndex++;
-      this.thumb.style.zIndex = this.zIndex + "";
+      this.thumb.style.zIndex = this.zIndex.toString();
       this.observer.broadcast("mouseMove", this.findPosition(e));
     }
   }
@@ -108,68 +105,48 @@ class Thumb {
   private findPositionForHorisontal(e: MouseEvent) {
     let thumbFirst = this.slider.querySelector(".thumb_first") as HTMLElement;
     let thumbSecond = this.slider.querySelector(".thumb_second") as HTMLElement;
-
-    if (!this.config.range) {
+    if (this.thumb.dataset.num == "1") {
       return {
-        clientX: e.clientX,
-        "slider-left-point": this.slider.getBoundingClientRect().left,
-        "slider-width": this.slider.offsetWidth,
-        "data-num": this.thumb.dataset.num,
+        clientXY: e.clientX,
+        "slider_client_react": this.slider.getBoundingClientRect().left,
+        "data_num": this.thumb.dataset.num,
+        positionThumbSecond: this.config.range
+          ? parseInt(thumbSecond.style.left)
+          : null,
       };
-    } else if (this.config.range) {
-      if (this.thumb.dataset.num == "1") {
-        return {
-          clientX: e.clientX,
-          "slider-left-point": this.slider.getBoundingClientRect().left,
-          "slider-width": this.slider.offsetWidth,
-          "data-num": this.thumb.dataset.num,
-          positionThumbSecond: parseInt(thumbSecond.style.left),
-        };
-      } else if (this.thumb.dataset.num == "2") {
-        return {
-          clientX: e.clientX,
-          "slider-left-point": this.slider.getBoundingClientRect().left,
-          "slider-width": this.slider.offsetWidth,
-          "data-num": this.thumb.dataset.num,
-          positionThumbFirst: parseInt(thumbFirst.style.left),
-        };
-      }
+    } else if (this.thumb.dataset.num == "2") {
+      return {
+        clientXY: e.clientX,
+        "slider_client_react": this.slider.getBoundingClientRect().left,
+        "data_num": this.thumb.dataset.num,
+        positionThumbFirst: parseInt(thumbFirst.style.left),
+      };
     }
   }
 
   private findPositionForVertical(e: MouseEvent) {
     let thumbFirst = this.slider.querySelector(".thumb_first") as HTMLElement;
     let thumbSecond = this.slider.querySelector(".thumb_second") as HTMLElement;
-
-    if (!this.config.range) {
+    if (this.thumb.dataset.num == "1") {
       return {
-        clientY: e.clientY,
-        "slider-top-point": this.slider.getBoundingClientRect().top,
-        "slider-height": this.slider.offsetHeight,
-        "data-num": this.thumb.dataset.num,
+        clientXY: e.clientY,
+        "slider_client_react": this.slider.getBoundingClientRect().top,
+        "data_num": this.thumb.dataset.num,
+        positionThumbSecond: this.config.range
+          ? parseInt(thumbSecond.style.top)
+          : null,
       };
-    } else if (this.config.range) {
-      if (this.thumb.dataset.num == "1") {
-        return {
-          clientY: e.clientY,
-          "slider-top-point": this.slider?.getBoundingClientRect().top,
-          "slider-height": this.slider?.offsetHeight,
-          "data-num": this.thumb.dataset.num,
-          positionThumbSecond: parseInt(thumbSecond.style.top),
-        };
-      } else if (this.thumb.dataset.num == "2") {
-        return {
-          clientY: e.clientY,
-          "slider-top-point": this.slider?.getBoundingClientRect().top,
-          "slider-height": this.slider?.offsetHeight,
-          "data-num": this.thumb.dataset.num,
-          positionThumbFirst: parseInt(thumbFirst.style.top),
-        };
-      }
+    } else if (this.thumb.dataset.num == "2") {
+      return {
+        clientXY: e.clientY,
+        "slider_client_react": this.slider.getBoundingClientRect().top,
+        "data_num": this.thumb.dataset.num,
+        positionThumbFirst: parseInt(thumbFirst.style.top),
+      };
     }
   }
 
-  setPosition(position: number = 0) {
+  setPosition(position: number) {
     if (this.config.orientation == "horisontal") {
       this.thumb.style.left = position + "px";
     }

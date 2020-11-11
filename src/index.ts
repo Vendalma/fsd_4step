@@ -1,14 +1,22 @@
 import "./RangeSlider/slider";
 import "./styles.scss";
 
-$(".app").rangeSlider();
+$(".app").rangeSlider({
+  max: 110,
+  step: 0.2,
+  min: -110,
+  positionFrom: 10,
+  positionTo: 55
+});
 $(".app2").rangeSlider({
   range: false,
-  min: 10,
-  max: 100,
-  positionFrom: 15,
-  positionTo: 30,
+  min: -9999,
+  max: 9999,
+  positionFrom: 1500,
+  positionTo: 3000,
   label: false,
-  step: 1,
+  step: 105,
   orientation: "vertical",
+});
+$(".app3").rangeSlider({
 });

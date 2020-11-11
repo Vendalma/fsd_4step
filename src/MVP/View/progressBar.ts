@@ -66,10 +66,10 @@ class progressBar {
   }
 
   setOnloadProgressBarPosition(data: any) {
-    let onloadPositionThumbOne = data["onloadPositionThumbOne"];
-    let onloadPositionThumbTwo = data["onloadPositionThumbTwo"];
-
+    let onloadPositionThumbOne = data.thumbData.onloadPositionThumbOne;
+    let onloadPositionThumbTwo = data.thumbData.onloadPositionThumbTwo;
     if (this.config.orientation == "horisontal") {
+      this.progressBar.removeAttribute("style");
       if (!this.config.range) {
         this.progressBar.style.left = "0px";
         this.progressBar.style.width = onloadPositionThumbOne + 2 + "px";
@@ -81,11 +81,11 @@ class progressBar {
     }
 
     if (this.config.orientation == "vertical") {
+      this.progressBar.removeAttribute("style");
       if (!this.config.range) {
         this.progressBar.style.top = "0px";
         this.progressBar.style.height = onloadPositionThumbOne + 2 + "px";
       } else if (this.config.range) {
-        this.progressBar.style.left = "0px";
         this.progressBar.style.top = onloadPositionThumbOne + "px";
         this.progressBar.style.height =
           onloadPositionThumbTwo - onloadPositionThumbOne + "px";

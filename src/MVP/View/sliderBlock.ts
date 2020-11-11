@@ -84,8 +84,8 @@ class SliderBlock {
   }
 
   setOnloadThumbPosition(data: any) {
-    let onloadPositionThumbOne = data["onloadPositionThumbOne"];
-    let onloadPositionThumbTwo = data["onloadPositionThumbTwo"];
+    let onloadPositionThumbOne = data.thumbData.onloadPositionThumbOne;
+    let onloadPositionThumbTwo = data.thumbData.onloadPositionThumbTwo;
 
     if (!this.config.range) {
       this.thumbOne.setPosition(onloadPositionThumbOne);
@@ -102,25 +102,17 @@ class SliderBlock {
     }
   }
   setPositionMoveThumb(data: any) {
-    let data_num = data["data_num"];
-    let position = data["position"];
-    let valueThumb = data["value"];
-
-    if (!this.config.range) {
+    let data_num = data.data_num;
+    let position = data.position;
+    let valueThumb = data.value;
+    if (data_num == "1") {
       this.thumbOne.setPosition(position);
       this.thumbOne.setLabelValue(valueThumb);
       this.progressBar.setPositionForThumbOne(position);
-    }
-    if (this.config.range) {
-      if (data_num == "1") {
-        this.thumbOne.setPosition(position);
-        this.thumbOne.setLabelValue(valueThumb);
-        this.progressBar.setPositionForThumbOne(position);
-      } else if (data_num == "2") {
-        this.thumbTwo?.setPosition(position);
-        this.thumbTwo?.setLabelValue(valueThumb);
-        this.progressBar.setPositionForThumbTwo(position);
-      }
+    } else if (data_num == "2") {
+      this.thumbTwo?.setPosition(position);
+      this.thumbTwo?.setLabelValue(valueThumb);
+      this.progressBar.setPositionForThumbTwo(position);
     }
   }
 

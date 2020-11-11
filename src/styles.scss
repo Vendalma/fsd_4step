@@ -9,7 +9,7 @@
 
 .slider {
   width: 100%;
-  min-height: 300px;
+  min-height: 400px;
   min-width: 250px;
   position: relative;
   display: flex;
@@ -109,6 +109,10 @@
   &_vertical {
     transform: translateY(-50%);
     right: -5px;
+    left: -5px !important;
+  }
+  &_horisontal {
+    top: -5.4px !important;
   }
 }
 
@@ -117,10 +121,11 @@
   position: absolute;
 
   &_vertical {
-    width: 7px !important;
+    width: 7px;
+    left: 0px;
   }
   &_horisontal {
-    top: 0px !important;
-    height: 7px !important;
+    top: 0px;
+    height: 7px;
   }
 }

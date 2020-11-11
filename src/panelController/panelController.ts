@@ -1,169 +1,157 @@
 import * as $ from "jquery";
 import "./panelController.scss";
 interface ISettings {
-	range: boolean;
-	orientation: string;
-	min: number;
-	max: number;
-	positionFrom: number;
-	positionTo: number;
-	step: number;
-	label: boolean;
+  range: boolean;
+  orientation: string;
+  min: number;
+  max: number;
+  positionFrom: number;
+  positionTo: number;
+  step: number;
+  label: boolean;
 }
 class PanelController {
-	parent: HTMLElement;
-	panel: HTMLElement | null;
-	inputFrom: HTMLInputElement | null;
-	inputTo: HTMLInputElement | null;
-	inputMin: HTMLInputElement | null;
-	inputMax: HTMLInputElement | null;
-	inputStep: HTMLInputElement | null;
-	inputLabel: HTMLInputElement | null;
-	inputHorisontal: HTMLInputElement | null;
-	inputVertical: HTMLInputElement | null;
-	inputSingle: HTMLInputElement | null;
-	inputDouble: HTMLInputElement | null;
-	$slider: JQuery;
+  parent: HTMLElement;
+  panel: HTMLElement;
+  inputFrom: HTMLInputElement;
+  inputTo: HTMLInputElement;
+  inputMin: HTMLInputElement;
+  inputMax: HTMLInputElement;
+  inputStep: HTMLInputElement;
+  inputLabel: HTMLInputElement;
+  inputHorisontal: HTMLInputElement;
+  inputVertical: HTMLInputElement;
+  inputSingle: HTMLInputElement;
+  inputDouble: HTMLInputElement;
+  $slider: JQuery;
+  config: ISettings;
+  constructor(parent: HTMLElement, config: ISettings) {
+    this.parent = parent;
+    this.config = config;
 
-	settings: ISettings;
-	range: boolean;
-	orientation: string;
-	min: number;
-	max: number;
-	positionFrom: number;
-	positionTo: number;
-	step: number;
-	label: boolean;
+    this.panel = this.parent.querySelector(".panel") as HTMLElement;
+    this.inputFrom = this.parent.querySelector(
+      ".panel__input_from"
+    ) as HTMLInputElement;
+    this.inputTo = this.parent.querySelector(
+      ".panel__input_to"
+    ) as HTMLInputElement;
+    this.inputMin = this.parent.querySelector(
+      ".panel__input_min"
+    ) as HTMLInputElement;
+    this.inputMax = this.parent.querySelector(
+      ".panel__input_max"
+    ) as HTMLInputElement;
+    this.inputStep = this.parent.querySelector(
+      ".panel__input_step"
+    ) as HTMLInputElement;
+    this.inputLabel = this.parent.querySelector(
+      ".panel__checkbox_label"
+    ) as HTMLInputElement;
+    this.inputHorisontal = this.parent.querySelector(
+      ".panel__radio_horisontal"
+    ) as HTMLInputElement;
+    this.inputVertical = this.parent.querySelector(
+      ".panel__radio_vertical"
+    ) as HTMLInputElement;
+    this.inputSingle = this.parent.querySelector(
+      ".panel__radio_single"
+    ) as HTMLInputElement;
+    this.inputDouble = this.parent.querySelector(
+      ".panel__radio_double"
+    ) as HTMLInputElement;
 
-	constructor(parent: HTMLElement, settings: ISettings) {
-		this.parent = parent;
+    this.$slider = $(this.parent);
 
-		this.settings = settings;
-		this.range = this.settings.range;
-		this.orientation = this.settings.orientation;
-		this.min = this.settings.min;
-		this.max = this.settings.max;
-		this.positionFrom = this.settings.positionFrom;
-		this.positionTo = this.settings.positionTo;
-		this.step = this.settings.step;
-		this.label = this.settings.label;
+    this.init();
+    this.change();
+    this.checkRange();
+  }
 
-		this.panel = this.parent.querySelector(".panel");
-		this.inputFrom = this.parent.querySelector(".panel__input_from");
-		this.inputTo = this.parent.querySelector(".panel__input_to");
-		this.inputMin = this.parent.querySelector(".panel__input_min");
-		this.inputMax = this.parent.querySelector(".panel__input_max");
-		this.inputStep = this.parent.querySelector(".panel__input_step");
-		this.inputLabel = this.parent.querySelector(".panel__checkbox_label");
-		this.inputHorisontal = this.parent.querySelector(
-			".panel__radio_horisontal"
-		);
-		this.inputVertical = this.parent.querySelector(".panel__radio_vertical");
-		this.inputSingle = this.parent.querySelector(".panel__radio_single");
-		this.inputDouble = this.parent.querySelector(".panel__radio_double");
+  private init() {
+    this.inputFrom.value = this.config.positionFrom.toString();
+    this.inputTo.value = this.config.positionTo.toString();
+    this.inputMin.value = this.config.min.toString();
+    this.inputMax.value = this.config.max.toString();
+    this.inputStep.value = this.config.step.toString();
+    if (this.config.label) this.inputLabel.checked = true;
+    if (!this.config.label) this.inputLabel.checked = false;
+    if (this.config.orientation == "horisontal")
+      this.inputHorisontal.checked = true;
+    if (this.config.orientation == "vertical")
+      this.inputVertical.checked = true;
+    if (this.config.range) this.inputDouble.checked = true;
+    if (!this.config.range) this.inputSingle.checked = true;
+  }
 
-		this.$slider = $(this.parent);
+  private change() {
+    this.panel?.addEventListener("click", (e) => {
+      if (e.target == this.inputLabel) {
+        let isLabelVisible = this.inputLabel.checked;
+        this.$slider.rangeSlider("labelVisible", isLabelVisible);
+      }
 
-		this.init();
-		this.change();
-		this.checkRange();
-	}
+      if (e.target == this.inputHorisontal && this.inputHorisontal.checked) {
+        this.$slider.rangeSlider("orientation", "horisontal");
+      }
 
-	init() {
-		if (this.inputFrom) this.inputFrom.value = this.positionFrom + "";
-		if (this.inputTo) this.inputTo.value = this.positionTo + "";
-		if (this.inputMin) this.inputMin.value = this.min + "";
-		if (this.inputMax) this.inputMax.value = this.max + "";
-		if (this.inputStep) this.inputStep.value = this.step + "";
-		if (this.inputLabel) {
-			if (this.label) this.inputLabel.checked = true;
-			if (!this.label) this.inputLabel.checked = false;
-		}
-		if (this.orientation == "horisontal" && this.inputHorisontal)
-			this.inputHorisontal.checked = true;
-		if (this.orientation == "vertical" && this.inputVertical)
-			this.inputVertical.checked = true;
+      if (e.target == this.inputVertical && this.inputVertical.checked) {
+        this.$slider.rangeSlider("orientation", "vertical");
+      }
 
-		if (this.range && this.inputDouble) {
-			this.inputDouble.checked = true;
-		}
-		if (!this.range && this.inputSingle) this.inputSingle.checked = true;
+      if (e.target == this.inputSingle && this.inputSingle.checked) {
+        this.$slider.rangeSlider("range", false);
+        this.config.range = false;
+        this.checkRange();
+      }
 
-	}
+      if (e.target == this.inputDouble && this.inputDouble.checked) {
+        this.$slider.rangeSlider("range", true);
+        this.config.range = true;
+        this.checkRange();
+      }
+      this.inputMin.addEventListener("blur", () => {
+        this.$slider.rangeSlider("min", Number(this.inputMin.value));
+      });
 
-	change() {
-		this.panel?.addEventListener("click", (e) => {
-			if (e.target == this.inputLabel) {
-				let isLabelVisible = this.inputLabel?.checked;
-				this.$slider.rangeSlider("labelVisible", isLabelVisible);
-			}
+      this.inputMax.addEventListener("blur", () => {
+        this.$slider.rangeSlider("max", Number(this.inputMax.value));
+      });
 
-			if (e.target == this.inputHorisontal && this.inputHorisontal?.checked) {
-				this.$slider.rangeSlider("orientation", "horisontal");
-			}
+      this.inputStep.addEventListener("blur", () => {
+        this.$slider.rangeSlider("step", Number(this.inputStep.value));
+      });
 
-			if (e.target == this.inputVertical && this.inputVertical?.checked) {
-				this.$slider.rangeSlider("orientation", "vertical");
-			}
+      this.inputFrom.addEventListener("blur", () => {
+        this.$slider.rangeSlider(
+          "position-from",
+          Number(this.inputFrom.value)
+        );
+      });
+      this.inputTo.addEventListener("blur", () => {
+        this.$slider.rangeSlider("position-to", Number(this.inputTo.value));
+      });
+    });
+  }
 
-			if (e.target == this.inputSingle && this.inputSingle?.checked) {
-				this.$slider.rangeSlider("range", false);
-				this.range = false
-				this.checkRange()
-			}
+  private checkRange() {
+    let disabledBlock = this.parent.querySelector(".panel__input_disabled") as HTMLInputElement;
+    if (!this.config.range) disabledBlock.disabled = true;
+    if (this.config.range) disabledBlock.disabled = false;
 
-			if (e.target == this.inputDouble && this.inputDouble?.checked) {
-				this.$slider.rangeSlider("range", true);
-				this.range = true
-				this.checkRange()
-			}
-			this.inputMin?.addEventListener('blur', () => {
-				this.$slider.rangeSlider('min', Number(this.inputMin?.value))
-			})
-
-			this.inputMax?.addEventListener('blur', () => {
-				this.$slider.rangeSlider('max', Number(this.inputMax?.value))
-			})
-
-			this.inputStep?.addEventListener('blur', () => {
-				this.$slider.rangeSlider('step', Number(this.inputStep?.value))
-			})
-
-			this.inputFrom?.addEventListener('blur', () => {
-				this.$slider.rangeSlider('position-from', Number(this.inputFrom?.value))
-			})
-			this.inputTo?.addEventListener('blur', () => {
-				this.$slider.rangeSlider('position-to', Number(this.inputTo?.value))
-			})
-		});
-	}
-
-	checkRange() {
-		let disabledBlock = this.parent.querySelector('.panel__input_disabled')
-		if (disabledBlock instanceof HTMLInputElement) {
-			if (!this.range) disabledBlock.disabled = true
-			if (this.range) disabledBlock.disabled = false
-		}
-
-	}
-
-	updateInputFrom(data: string) {
-		if (this.inputFrom)
-			this.inputFrom.value = data
-	}
-
-	updateInputTo(data: string) {
-		if (this.inputTo)
-			this.inputTo.value = data
-	}
-	updateInputMin(data: string) {
-		if (this.inputMin)
-			this.inputMin.value = data
-	}
-	updateInputMax(data: string) {
-		if (this.inputMax)
-			this.inputMax.value = data
-	}
+  }
+  updateInputFrom(data: string) {
+    this.inputFrom.value = data;
+  }
+  updateInputTo(data: string) {
+    this.inputTo.value = data;
+  }
+  updateInputMin(data: string) {
+    this.inputMin.value = data;
+  }
+  updateInputMax(data: string) {
+    this.inputMax.value = data;
+  }
 }
 
 export { PanelController };

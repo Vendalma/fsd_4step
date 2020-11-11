@@ -20,7 +20,7 @@ class Label {
   }
 
   setLabelValue(value: number) {
-    this.elementLabel.innerHTML = value + "";
+    this.elementLabel.innerHTML = value.toString();
   }
 
   private changeLabelOrientation() {

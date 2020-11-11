@@ -15,18 +15,17 @@ class Step {
   addStepLine(data: any) {
     this.deleteElements();
     const fragment = document.createDocumentFragment();
-    let stepCount = data["stepCount"];
-    let stepSize = data["stepSize"];
+    let stepSize = data.stepData;
 
-    for (let i = 0; i < stepCount + 1; i++) {
+    for (let i = 0; i < 21; i++) {
       let stepBlock = document.createElement("div");
       stepBlock.classList.add("slider__step-block");
       fragment.append(stepBlock);
       if (i == 0) {
-        stepBlock.innerHTML = this.config.min + "";
+        stepBlock.innerHTML = this.config.min.toString();
         stepBlock.classList.add("slider__step-block_min");
-      } else if (i == stepCount) {
-        stepBlock.innerHTML = this.config.max + "";
+      } else if (i == 20) {
+        stepBlock.innerHTML = this.config.max.toString();
         stepBlock.classList.add("slider__step-block_max");
       }
 
@@ -35,7 +34,7 @@ class Step {
         stepBlock.style.top = stepSize * i + "px";
         if (i == 0) {
           stepBlock.style.top = stepSize * i - 17 + "px";
-        } else if (i == stepCount) {
+        } else if (i == 20) {
           stepBlock.style.top = stepSize * i - 17 + "px";
         }
       }
@@ -51,14 +50,14 @@ class Step {
     let blockMin = this.container.querySelector(
       ".slider__step-block_min"
     ) as HTMLElement;
-    blockMin.innerHTML = this.config.min + "";
+    blockMin.innerHTML = this.config.min.toString();
   }
 
   private changeMaxValue() {
     let blockMax = this.container.querySelector(
       ".slider__step-block_max"
     ) as HTMLElement;
-    blockMax.innerHTML = this.config.max + "";
+    blockMax.innerHTML = this.config.max.toString();
   }
 
   private deleteElements() {

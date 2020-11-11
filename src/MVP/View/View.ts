@@ -13,31 +13,27 @@ interface IConfigView {
 class View {
   config: IConfigView;
   wrapper: HTMLElement;
-
   sliderContainer: HTMLElement;
   observer: Observer;
   sliderBlock: SliderBlock;
 
   constructor(IConfigView: any, wrapper: HTMLElement) {
     this.config = IConfigView;
-
     this.wrapper = wrapper;
     this.wrapper.classList.add("wrapper");
-
     this.sliderContainer = document.createElement("div");
     this.sliderContainer.classList.add("slider");
     this.wrapper.append(this.sliderContainer);
-
     this.observer = new Observer();
     this.sliderBlock = new SliderBlock(this.config, this.sliderContainer);
 
     this.onloadWindow();
     this.resizeWindow();
     this.subscribeOnUpdate();
-    this.init();
+    this.setAttr();
   }
 
-  init() {
+  private setAttr() {
     this.sliderContainer.setAttribute("data-min", String(this.config.min));
     this.sliderContainer.setAttribute("data-max", String(this.config.max));
     this.sliderContainer.setAttribute("data-step", String(this.config.step));
@@ -51,13 +47,43 @@ class View {
       "data-from",
       String(this.config.positionFrom)
     );
+    this.sliderContainer.setAttribute(
+      "data-from-move",
+      String(this.config.positionFrom)
+    );
     if (this.config.range)
       this.sliderContainer.setAttribute(
         "data-to",
         String(this.config.positionTo)
       );
+    this.sliderContainer.setAttribute(
+      "data-to-move",
+      String(this.config.positionTo)
+    );
   }
 
+  private updateAttrToMove() {
+    if (
+      Number(this.sliderContainer.getAttribute("data-to-move")) !==
+      this.config.positionTo
+    ) {
+      this.sliderContainer.setAttribute(
+        "data-to-move",
+        String(this.config.positionTo)
+      );
+    }
+  }
+  private updateAttrFromMove() {
+    if (
+      Number(this.sliderContainer.getAttribute("data-from-move")) !==
+      this.config.positionFrom
+    ) {
+      this.sliderContainer.setAttribute(
+        "data-from-move",
+        String(this.config.positionFrom)
+      );
+    }
+  }
   private subscribeOnUpdate() {
     this.sliderBlock.addFollower(this);
   }
@@ -67,22 +93,18 @@ class View {
 
   setPositionMoveThumb(data: any) {
     this.sliderBlock.setPositionMoveThumb(data);
-    let data_num = data["data_num"];
-    let valueThumb = data["value"];
-    /*if (!this.range) {
-      //this.sliderContainer.setAttribute("data-from", valueThumb);
+    let data_num = data.data_num;
+    let valueThumb = data.value;
+    if (data_num == "1") {
+      this.sliderContainer.setAttribute("data-from-move", valueThumb);
     }
-    if (this.range) {
-      if (data_num == "1") {
-        // this.sliderContainer.setAttribute("data-from", valueThumb);
-      } else if (data_num == "2") {
-        //  this.sliderContainer.setAttribute("data-to", valueThumb);
-      }
-    }*/
+
+    if (data_num == "2") {
+      this.sliderContainer.setAttribute("data-to-move", valueThumb);
+    }
   }
 
   setOnloadView(data: any) {
-    console.log("set onload view");
     this.sliderBlock.setOnloadThumbPosition(data);
     this.sliderBlock.addStep(data);
   }
@@ -99,18 +121,20 @@ class View {
 
   private getSliderSize() {
     if (this.config.orientation == "horisontal")
-      this.observer.broadcast("loadData", {
-        sliderSize: this.sliderContainer.offsetWidth,
-      });
+      this.observer.broadcast("loadData", this.sliderContainer.offsetWidth);
 
     if (this.config.orientation == "vertical")
-      this.observer.broadcast("loadData", {
-        sliderSize: this.sliderContainer.offsetHeight,
-      });
+      this.observer.broadcast("loadData", this.sliderContainer.offsetHeight);
   }
+
   updateConfig(data: any) {
     this.config = data;
     this.sliderBlock.updateConfig(data);
+    this.updateAttrFromMove();
+    this.updateAttrToMove();
+  }
+  changeOrientaion(data: any) {
+    this.updateConfig(data);
     this.getSliderSize();
   }
 }

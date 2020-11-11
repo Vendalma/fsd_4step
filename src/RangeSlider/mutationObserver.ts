@@ -16,7 +16,7 @@ class MutationObserverClass {
 
     this.init();
   }
-  init() {
+  private init() {
     let that = this;
     let target = this.container?.lastChild as HTMLElement
     const config = {
@@ -31,6 +31,8 @@ class MutationObserverClass {
         "data-step",
         "data-from",
         "data-to",
+        'data-from-move',
+        'data-to-move'
       ],
     };
     const callback = function (mutationsList: any, observer: any) {
@@ -63,11 +65,19 @@ class MutationObserverClass {
           }
           if (name == "data-from") {
             that.slider.changePositionFrom(Number(value));
-            that.panel.updateInputFrom(value);
+
           }
           if (name == "data-to") {
             that.slider.changePositionTo(Number(value));
+
+          }
+          if (name == 'data-from-move') {
+            that.panel.updateInputFrom(value);
+            that.slider.changePositionFrom(Number(value));
+          }
+          if (name == 'data-to-move') {
             that.panel.updateInputTo(value);
+            that.slider.changePositionTo(Number(value));
           }
         }
       }
