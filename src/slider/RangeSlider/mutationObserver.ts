@@ -1,4 +1,4 @@
-import { PanelController } from "../panelController/panelController";
+import { PanelController } from "../../panel/panelController/panelController";
 import { RangeSlider } from "./rangeSlider";
 
 class MutationObserverClass {

@@ -1,4 +1,4 @@
-import { Step } from "../MVP/View/Step";
+import { Step } from "../slider/MVP/View/Step";
 const config = {
   min: 0,
   max: 100,
@@ -10,9 +10,9 @@ const blockMin = $("<div>");
 const blockMax = $("<div>");
 beforeEach(function () {
   blockMin[0].classList.add("slider__step-block_min");
-  blockMin[0].innerHTML = step.min + "";
+  blockMin[0].innerHTML = step.config.min + "";
   blockMax[0].classList.add("slider__step-block_max");
-  blockMax[0].innerHTML = step.max + "";
+  blockMax[0].innerHTML = step.config.max + "";
   container.append(blockMin);
   container.append(blockMax);
   $(document.body).append(container);
@@ -23,25 +23,26 @@ let step: Step = new Step(config, container[0]);
 describe("Step", () => {
   it("инициализация класса Step", () => {
     expect(step).toBeDefined();
-
     expect(step.config).toEqual(config);
-    expect(step.min).toEqual(config.min);
-    expect(step.max).toEqual(config.max);
-    expect(step.orientation).toEqual(config.orientation);
-
     expect(step.container).toBeInstanceOf(HTMLElement);
   });
   it("проверка метода changeMinValue", () => {
-    step.changeMinValue(4);
-
-    expect(step.min).toEqual(4);
+    step.config.min = 104;
+    const spyForChangeMin = spyOn<any>(
+      step,
+      "changeMinValue"
+    ).and.callThrough();
+    spyForChangeMin.call(step);
     expect(blockMin[0]).toBeInDOM();
     expect(blockMin).toContainText("4");
   });
   it("проверка метода changeMaxValue", () => {
-    step.changeMaxValue(104);
-
-    expect(step.max).toEqual(104);
+    step.config.max = 104;
+    const spyForChangeMax = spyOn<any>(
+      step,
+      "changeMaxValue"
+    ).and.callThrough();
+    spyForChangeMax.call(step);
     expect(blockMax[0]).toBeInDOM();
     expect(blockMax).toContainText("104");
   });
@@ -52,13 +53,12 @@ describe("Step", () => {
 
     beforeAll(function () {
       data = {
-        stepCount: 2,
         stepSize: 14,
       };
       stepCount = data["stepCount"];
       stepSize = data["stepSize"];
-      step.min = 7;
-      step.max = 11;
+      step.config.min = 7;
+      step.config.max = 11;
     });
     beforeEach(function () {
       let blocks = step.container.querySelectorAll(
@@ -69,11 +69,11 @@ describe("Step", () => {
       });
     });
     it("orientation = horisontal", () => {
-      step.orientation = "horisontal";
+      step.config.orientation = "horisontal";
       step.addStepLine(data);
       let stepBlocks = step.container.querySelectorAll(".slider__step-block");
 
-      expect(stepBlocks.length).toEqual(stepCount + 1);
+      expect(stepBlocks.length).toEqual(21);
       for (let i = 0; i < stepBlocks.length; i++) {
         expect(stepBlocks[i]).not.toHaveClass("slider__step-block_vertical");
         if (i == 0) {
@@ -87,13 +87,13 @@ describe("Step", () => {
       }
     });
     it("orientation = vertical", () => {
-      step.orientation = "vertical";
+      step.config.orientation = "vertical";
       step.addStepLine(data);
       let stepBlocks = step.container.querySelectorAll(
         ".slider__step-block"
       ) as NodeListOf<HTMLElement>;
 
-      expect(stepBlocks.length).toEqual(stepCount + 1);
+      expect(stepBlocks.length).toEqual(21);
       for (let i = 0; i < stepBlocks.length; i++) {
         expect(stepBlocks[i]).toHaveClass("slider__step-block_vertical");
         if (i == 0) {
@@ -107,8 +107,11 @@ describe("Step", () => {
       }
     });
   });
-  it("проверка метода checkOrientation", () => {
-    step.checkOrientation("vertical");
-    expect(step.orientation).toEqual("vertical");
+  it("Проверка метода updateConfigStep", () => {
+    const spyForChangeMin = spyOn<any>(step, "changeMinValue");
+    const spyForChangeMax = spyOn<any>(step, "changeMaxValue");
+    step.updateConfigStep({});
+    expect(spyForChangeMin).toHaveBeenCalled();
+    expect(spyForChangeMax).toHaveBeenCalled();
   });
 });

@@ -43,7 +43,7 @@ class Model extends Validator {
     let positionMove = this.checkSliderSizeMax(
       Math.round(position / stepSize) * stepSize
     );
-
+    console.log(positionMove, Math.round(position / stepSize), stepSize)
     let value = this.checkValueWithMin(
       this.checkValueWithMax(this.calcValue(positionMove))
     );
@@ -175,6 +175,7 @@ class Model extends Validator {
     if (this.validationPositionFrom(data) === true) {
       this.config.positionFrom = data;
       this.calcPosotionFrom();
+      this.setOnloadData(this.sliderSize)
     }
   }
 
@@ -182,6 +183,7 @@ class Model extends Validator {
     if (this.validationPositionTo(data) === true) {
       this.config.positionTo = data;
       this.calcPosotionTo();
+      this.setOnloadData(this.sliderSize)
     }
   }
   private calcPosotionFrom() {
@@ -254,7 +256,7 @@ class Model extends Validator {
     }
   }
   private checkSliderSizeMax(value: number) {
-    if (value <= this.sliderSize) {
+    if (value <= this.sliderSize - 3) {
       return value;
     } else {
       return this.sliderSize;

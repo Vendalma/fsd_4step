@@ -1,5 +1,4 @@
-
-export class Observer  {
+export class Observer {
   private observers: Array<any>;
   constructor() {
     this.observers = [];

@@ -15,7 +15,6 @@ interface IConfig {
 }
 class SliderBlock {
   config: IConfig;
-
   sliderContainer: HTMLElement;
   sliderBlock: HTMLElement;
   thumbOne: Thumb;
@@ -65,11 +64,9 @@ class SliderBlock {
     const secondThumb = this.sliderBlock.querySelector(
       ".thumb_second"
     ) as HTMLElement;
-
     if (secondThumb !== null) {
       this.setThumbTwo();
     }
-
     if (this.config.range) {
       let thumbTwo = this.thumbTwo?.addThis();
     }
@@ -132,7 +129,7 @@ class SliderBlock {
         );
         if (thumbFirst < thumbSecond) {
           this.thumbOne.onMouseUp(e);
-        } else if (thumbFirst > thumbSecond) {
+        } else {
           this.thumbTwo?.onMouseUp(e);
         }
       }
@@ -149,7 +146,7 @@ class SliderBlock {
         );
         if (thumbFirst < thumbSecond) {
           this.thumbOne.onMouseUp(e);
-        } else if (thumbFirst > thumbSecond) {
+        } else {
           this.thumbTwo?.onMouseUp(e);
         }
       }

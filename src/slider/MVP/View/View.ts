@@ -51,11 +51,10 @@ class View {
       "data-from-move",
       String(this.config.positionFrom)
     );
-    if (this.config.range)
-      this.sliderContainer.setAttribute(
-        "data-to",
-        String(this.config.positionTo)
-      );
+    this.sliderContainer.setAttribute(
+      "data-to",
+      String(this.config.positionTo)
+    );
     this.sliderContainer.setAttribute(
       "data-to-move",
       String(this.config.positionTo)

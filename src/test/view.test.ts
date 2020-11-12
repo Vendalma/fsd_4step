@@ -1,4 +1,4 @@
-import { View } from "../MVP/View/View";
+import { View } from "../slider/MVP/View/View";
 const config = {
   range: true,
   min: 0,
@@ -19,35 +19,17 @@ let view: View = new View(config, block[0]);
 let observer = jasmine.createSpyObj("observer", ["broadcast", "subscribe"]);
 let sliderBlock = jasmine.createSpyObj("sliderBlock", [
   "addFollower",
-  "changeMin",
-  "changeMax",
-  "changeLabel",
-  "changePositionFrom",
-  "changePositionTo",
-  "changeOrientation",
-  "changeRange",
   "setPositionMoveThumb",
   "setOnloadThumbPosition",
   "addStep",
+  "updateConfig",
 ]);
 view.observer = observer;
 view.sliderBlock = sliderBlock;
 describe("View", () => {
-  beforeEach(function () {
-    spyOn(view, "changeOrientation");
-  });
   it("Инициализация View", () => {
     expect(view).toBeDefined();
-
     expect(view.config).toEqual(config);
-    expect(view.range).toEqual(config.range);
-    expect(view.positionFrom).toEqual(config.positionFrom);
-    expect(view.positionTo).toEqual(config.positionTo);
-    expect(view.min).toEqual(config.min);
-    expect(view.max).toEqual(config.max);
-    expect(view.orientation).toEqual(config.orientation);
-    expect(view.stepValue).toEqual(config.step);
-    expect(view.label).toEqual(config.label);
   });
 
   it("Инициализация блока div.slider", () => {
@@ -58,99 +40,150 @@ describe("View", () => {
     expect(view.sliderContainer).toBeInstanceOf(HTMLElement);
     expect(view.sliderContainer).toHaveClass("slider");
   });
-
-  it("проверка метода init", () => {
-    view.init();
-    expect(view.sliderContainer).toHaveData("orientation", view.orientation);
+  it("div.sliderContainer должен иметь атрибуты с заданными параметрами", () => {
+    const spy = spyOn<any>(view, "setAttr").and.callThrough();
+    spy.call(view);
+    expect(view.sliderContainer).toHaveAttr(
+      "data-min",
+      view.config.min.toString()
+    );
+    expect(view.sliderContainer).toHaveAttr(
+      "data-max",
+      view.config.max.toString()
+    );
+    expect(view.sliderContainer).toHaveAttr(
+      "data-step",
+      view.config.step.toString()
+    );
+    expect(view.sliderContainer).toHaveAttr(
+      "data-label",
+      String(view.config.label)
+    );
+    expect(view.sliderContainer).toHaveAttr(
+      "data-orientation",
+      view.config.orientation
+    );
+    expect(view.sliderContainer).toHaveAttr(
+      "data-range",
+      String(view.config.range)
+    );
     expect(view.sliderContainer).toHaveAttr(
       "data-from",
-      view.positionFrom + ""
+      view.config.positionFrom.toString()
     );
-    expect(view.sliderContainer).toHaveAttr("data-min", view.min + "");
-    expect(view.sliderContainer).toHaveAttr("data-max", view.max + "");
-    expect(view.sliderContainer).toHaveAttr("data-step", view.stepValue + "");
-    expect(view.sliderContainer).toHaveAttr("data-label", view.label + "");
-    expect(view.sliderContainer).toHaveAttr("data-range", view.range + "");
-    if (view.range) {
-      expect(view.sliderContainer).toHaveAttr("data-to", view.positionTo + "");
-    }
+    expect(view.sliderContainer).toHaveAttr(
+      "data-to",
+      view.config.positionTo.toString()
+    );
+    expect(view.sliderContainer).toHaveAttr(
+      "data-from-move",
+      view.config.positionFrom.toString()
+    );
+    expect(view.sliderContainer).toHaveAttr(
+      "data-to-move",
+      view.config.positionTo.toString()
+    );
   });
-  it("проверка метода changeMin", () => {
-    view.changeMin(1);
-    expect(view.min).toEqual(1);
-    expect(view.sliderBlock.changeMin).toHaveBeenCalled();
-  });
-  it("проверка метода changeMax", () => {
-    view.changeMax(1000);
-    expect(view.max).toEqual(1000);
-    expect(view.sliderBlock.changeMax).toHaveBeenCalled();
-  });
-  it("проверка метода changeLabel", () => {
-    view.changeLabel(false);
-    expect(view.sliderBlock.changeLabel).toHaveBeenCalled();
-  });
-  it("проверка метода changePositionFrom", () => {
-    view.changePositionFrom(10);
-    expect(view.positionFrom).toEqual(10);
-    expect(view.sliderBlock.changePositionFrom).toHaveBeenCalled();
-  });
-  it("проверка метода changePositionTo", () => {
-    view.changePositionTo(100);
-    expect(view.positionTo).toEqual(100);
-    expect(view.sliderBlock.changePositionTo).toHaveBeenCalled();
-  });
-
   it("проверка метода addFollower", () => {
     view.addFollower({});
     expect(view.observer.subscribe).toHaveBeenCalled();
   });
+  it("Проверка метода updateConfig", () => {
+    const newConf = {
+      range: false,
+      min: -100,
+      max: 100,
+      positionFrom: 10,
+      positionTo: 45,
+      label: true,
+      step: 0.1,
+      orientation: "vertical",
+    };
+    const spyOnFrom = spyOn<any>(view, "updateAttrFromMove");
+    const spyOnTo = spyOn<any>(view, "updateAttrToMove");
+    view.updateConfig(newConf);
+    expect(view.config).toEqual(newConf);
+    expect(view.sliderBlock.updateConfig).toHaveBeenCalled();
+    expect(spyOnFrom).toHaveBeenCalled();
+    expect(spyOnTo).toHaveBeenCalled();
+  });
 
-  describe("проверка метода setOnloadView", () => {
-    it("", () => {
-      view.setOnloadView({});
-      expect(view.sliderBlock.setOnloadThumbPosition).toHaveBeenCalled();
-      expect(view.sliderBlock.addStep).toHaveBeenCalled();
-    });
+  it("проверка метода setOnloadView", () => {
+    view.setOnloadView({});
+    expect(view.sliderBlock.setOnloadThumbPosition).toHaveBeenCalled();
+    expect(view.sliderBlock.addStep).toHaveBeenCalled();
   });
-  describe("View проверка метода changeRange", () => {
-    it("range = true", () => {
-      view.changeRange(true);
-      expect(view.range).toEqual(true);
-      expect(view.sliderBlock.changeRange).toHaveBeenCalled();
-    });
-    it("range = false", () => {
-      view.changeRange(false);
-      expect(view.range).toEqual(false);
-      expect(view.sliderBlock.changeRange).toHaveBeenCalled();
-    });
-  });
+
   describe("проверка метода setPositionMoveThumb", () => {
-    it("", () => {
-      view.setPositionMoveThumb({});
+    let data: any;
+    beforeEach(function () {
+      data = {
+        data_num: "1",
+        value: "50",
+      };
+    });
+    it("data_num = 1", () => {
+      view.setPositionMoveThumb(data);
       expect(view.sliderBlock.setPositionMoveThumb).toHaveBeenCalled();
+      expect(view.sliderContainer).toHaveAttr("data-from-move", data.value);
+    });
+    it("data_num = 2", () => {
+      data.data_num = "2";
+      view.setPositionMoveThumb(data);
+      expect(view.sliderBlock.setPositionMoveThumb).toHaveBeenCalled();
+      expect(view.sliderContainer).toHaveAttr("data-to-move", data.value);
     });
   });
+  it("проверка метода subscribeOnUpdate", () => {
+    const spy = spyOn<any>(view, "subscribeOnUpdate").and.callThrough();
+    spy.call(view);
+    expect(view.sliderBlock.addFollower).toHaveBeenCalled();
+  });
+  it("проверка метода update", () => {
+    const spy = spyOn<any>(view, "update").and.callThrough();
+    spy.call(view);
+    expect(view.observer.broadcast).toHaveBeenCalled();
+  });
+  describe('', () => {
+    beforeAll(function () {
+      let view: View = new View(config, block[0]);
+    })
+    it("проверка метода onloadWindow", () => {
+      const event = new UIEvent("load", { bubbles: true });
+      window.dispatchEvent(event);
+      expect(view.observer.broadcast).toHaveBeenCalled();
+    });
+  });
+  describe('', () => {
+    beforeAll(function () {
+      let view: View = new View(config, block[0]);
+    })
+    it("проверка метода resizeWindow", () => {
+      const event = new UIEvent('resize', {})
+      window.dispatchEvent(event)
+      expect(view.observer.broadcast).toHaveBeenCalled();
+    });
+  })
+
   describe("проверка метода getSliderSize", () => {
+    beforeEach(function () {
+      const spy = spyOn<any>(view, "getSliderSize").and.callThrough();
+      spy.call(view);
+    });
     it("orientation = horisontal", () => {
-      view.orientation = "horisontal";
+      view.config.orientation = "horisontal";
       expect(view.observer.broadcast).toHaveBeenCalled();
     });
     it("orientation = vertical", () => {
-      view.orientation = "vertical";
+      view.config.orientation = "verticcal";
       expect(view.observer.broadcast).toHaveBeenCalled();
     });
   });
-});
-describe("проверка метода changeOrientation", () => {
-  it("orientation = horisontal ", () => {
-    view.changeOrientation("horisontal");
-    expect(view.orientation).toEqual("horisontal");
-    expect(view.sliderBlock.changeOrientation).toHaveBeenCalled();
-  });
-  it("orientation = vertical ", () => {
-    view.changeOrientation("vertical");
-    expect(view.orientation).toEqual("vertical");
-    expect(view.sliderBlock.changeOrientation).toHaveBeenCalled();
+  it("проверка метода changeOrientaion", () => {
+    const spy = spyOn<any>(view, 'getSliderSize');
+    const anotherSpy = spyOn(view, 'updateConfig')
+    view.changeOrientaion({})
+    expect(view.updateConfig).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalled()
   });
 });
-

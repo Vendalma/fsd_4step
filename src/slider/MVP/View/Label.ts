@@ -31,7 +31,7 @@ class Label {
       this.elementLabel.classList.remove("thumb__label_vertical");
   }
 
-  changeVisibleLabel() {
+  private changeVisibleLabel() {
     this.config.label
       ? (this.elementLabel.style.display = "block")
       : (this.elementLabel.style.display = "none");

@@ -83,7 +83,7 @@ class progressBar {
     if (this.config.orientation == "vertical") {
       this.progressBar.removeAttribute("style");
       if (!this.config.range) {
-        this.progressBar.style.top = "0px";
+        this.progressBar.style.top = "-1px";
         this.progressBar.style.height = onloadPositionThumbOne + 2 + "px";
       } else if (this.config.range) {
         this.progressBar.style.top = onloadPositionThumbOne + "px";

@@ -1,4 +1,4 @@
-import { SliderBlock } from "../MVP/View/sliderBlock";
+import { SliderBlock } from "../slider/MVP/View/sliderBlock";
 const config = {
   range: true,
   min: 0,
@@ -10,42 +10,40 @@ const config = {
   orientation: "horisontal",
 };
 const block = $("<div>");
+const secondThumb = $("<div>");
 beforeEach(function () {
+  secondThumb[0].classList.add('thumb_second')
+  block.append(secondThumb)
   block[0].classList.add("slider__container");
   $(document.body).append(block);
 });
 const sliderBlock: SliderBlock = new SliderBlock(config, block[0]);
 const observer = jasmine.createSpyObj("observer", ["subscribe", "broadcast"]);
 const progressBar = jasmine.createSpyObj("progressBar", [
-  "checkOrientation",
-  "checkRange",
   "setOnloadProgressBarPosition",
   "setPositionForThumbOne",
-  'setPositionForThumbTwo'
+  'setPositionForThumbTwo',
+  'updateBarConfig'
 ]);
 const step = jasmine.createSpyObj("step", [
-  "checkOrientation",
-  "changeMinValue",
-  "changeMaxValue",
-  "addStepLine",
+  'updateConfigStep',
+  "addStepLine"
 ]);
 const thumbOne = jasmine.createSpyObj("thumbOne", [
   "addFollower",
-  "checkOrientation",
-  "checkLabel",
-  "checkRange",
   "setPosition",
   "setLabelValue",
+  'updateConfigThumb',
+  'onMouseUp'
 ]);
 const thumbTwo = jasmine.createSpyObj("thumbTwo", [
   "addFollower",
-  "checkOrientation",
-  "checkLabel",
-  "checkRange",
   "setPosition",
   "setLabelValue",
   "addThis",
   "removeThis",
+  'updateConfigThumb',
+  'onMouseUp'
 ]);
 
 sliderBlock.observer = observer;
@@ -58,15 +56,6 @@ describe("Slider Block", () => {
   it("Инициализация Slider Block", () => {
     expect(sliderBlock).toBeDefined();
     expect(sliderBlock.config).toEqual(config);
-    expect(sliderBlock.range).toEqual(config.range);
-    expect(sliderBlock.positionFrom).toEqual(config.positionFrom);
-    expect(sliderBlock.positionTo).toEqual(config.positionTo);
-    expect(sliderBlock.min).toEqual(config.min);
-    expect(sliderBlock.max).toEqual(config.max);
-    expect(sliderBlock.orientation).toEqual(config.orientation);
-    expect(sliderBlock.stepValue).toEqual(config.step);
-    expect(sliderBlock.label).toEqual(config.label);
-
     expect(sliderBlock.sliderBlock).toBeInDOM();
     expect(sliderBlock.sliderBlock).toHaveClass("slider__block");
   });
@@ -78,64 +67,50 @@ describe("Slider Block", () => {
     sliderBlock.addStep({});
     expect(sliderBlock.step.addStepLine).toHaveBeenCalled();
   });
-  it("Проверка метода changeMin", () => {
-    sliderBlock.changeMin(7);
-    expect(sliderBlock.min).toEqual(7);
-    expect(sliderBlock.step.changeMinValue).toHaveBeenCalled();
-  });
-  it("Проверка метода changeMax", () => {
-    sliderBlock.changeMax(104);
-    expect(sliderBlock.max).toEqual(104);
-    expect(sliderBlock.step.changeMaxValue).toHaveBeenCalled();
-  });
-  it("Проверка метода changeLabel", () => {
-    sliderBlock.changeLabel(false);
-    expect(sliderBlock.thumbOne.checkLabel).toHaveBeenCalled();
-    expect(sliderBlock.thumbTwo?.checkLabel).toHaveBeenCalled();
-  });
-  it("Проверка метода changePositionFrom", () => {
-    sliderBlock.changePositionFrom(50);
-    expect(sliderBlock.positionFrom).toEqual(50);
-  });
-  it("Проверка метода changePositionTo", () => {
-    sliderBlock.changePositionTo(250);
-    expect(sliderBlock.positionTo).toEqual(250);
+  it("Проверка метода updateConfig", () => {
+    const spyForOrientation = spyOn<any>(sliderBlock, 'changeOrientation')
+    const spyForRange = spyOn<any>(sliderBlock, 'changeRange')
+    sliderBlock.updateConfig({});
+    expect(spyForRange).toHaveBeenCalled()
+    expect(spyForOrientation).toHaveBeenCalled()
+    expect(step.updateConfigStep).toHaveBeenCalled();
+    expect(thumbOne.updateConfigThumb).toHaveBeenCalled()
+    expect(thumbTwo?.updateConfigThumb).toHaveBeenCalled()
+    expect(progressBar.updateBarConfig).toHaveBeenCalled()
   });
 
   describe("Проверка метода changeRange", () => {
-    it("range = true", () => {
-      sliderBlock.changeRange(true);
-      expect(sliderBlock.range).toEqual(true);
-      expect(sliderBlock.thumbOne.checkRange).toHaveBeenCalled();
-      expect(sliderBlock.thumbTwo?.checkRange).toHaveBeenCalled();
-      expect(sliderBlock.thumbTwo?.addThis).toHaveBeenCalled();
-      expect(sliderBlock.progressBar.checkRange).toHaveBeenCalled();
+    let secondThumb;
+    beforeEach(function () {
+      secondThumb = sliderBlock.sliderBlock.querySelector(
+        ".thumb_second"
+      ) as HTMLElement;
+    })
+    it("secondThumb = null", () => {
+      secondThumb = null;
+      let spyForSetThumb = spyOn<any>(sliderBlock, 'setThumbTwo')
+      let spy = spyOn<any>(sliderBlock, 'changeRange').and.callThrough();
+      spy.call(sliderBlock)
+      expect(spyForSetThumb).toHaveBeenCalled()
     });
-    it("range = false", () => {
-      sliderBlock.changeRange(false);
-      expect(sliderBlock.range).toEqual(false);
-      expect(sliderBlock.thumbOne.checkRange).toHaveBeenCalled();
-      expect(sliderBlock.thumbTwo?.checkRange).toHaveBeenCalled();
-      expect(sliderBlock.progressBar.checkRange).toHaveBeenCalled();
+    it("range = true", () => {
+      sliderBlock.config.range = true;
+      let spy = spyOn<any>(sliderBlock, 'changeRange').and.callThrough();
+      spy.call(sliderBlock)
+      expect(sliderBlock.thumbTwo?.addThis).toHaveBeenCalled()
     });
   });
   describe("Проверка метода changeOrientation", () => {
     it("orientation = vertical", () => {
-      sliderBlock.changeOrientation("vertical");
-      expect(sliderBlock.orientation).toEqual("vertical");
-      expect(sliderBlock.thumbOne.checkOrientation).toHaveBeenCalled();
-      expect(sliderBlock.thumbTwo?.checkOrientation).toHaveBeenCalled();
-      expect(sliderBlock.step.checkOrientation).toHaveBeenCalled();
-      expect(sliderBlock.progressBar.checkOrientation).toHaveBeenCalled();
+      sliderBlock.config.orientation = 'vertical';
+      const spyForOrientation = spyOn<any>(sliderBlock, 'changeOrientation').and.callThrough()
+      spyForOrientation.call(sliderBlock)
       expect(sliderBlock.sliderBlock).toHaveClass("slider__block_vertical");
     });
     it("orientation = horisontal", () => {
-      sliderBlock.changeOrientation("horisontal");
-      expect(sliderBlock.orientation).toEqual("horisontal");
-      expect(sliderBlock.thumbOne.checkOrientation).toHaveBeenCalled();
-      expect(sliderBlock.thumbTwo?.checkOrientation).toHaveBeenCalled();
-      expect(sliderBlock.step.checkOrientation).toHaveBeenCalled();
-      expect(sliderBlock.progressBar.checkOrientation).toHaveBeenCalled();
+      sliderBlock.config.orientation = 'horisontal';
+      const spyForOrientation = spyOn<any>(sliderBlock, 'changeOrientation').and.callThrough()
+      spyForOrientation.call(sliderBlock)
       expect(sliderBlock.sliderBlock).not.toHaveClass("slider__block_vertical");
     });
   });
@@ -143,12 +118,14 @@ describe("Slider Block", () => {
     let data: any;
     beforeEach(function () {
       data = {
-        onloadPositionThumbOne: 50,
-        onloadPositionThumbTwo: 245,
+        thumbData: {
+          onloadPositionThumbOne: 50,
+          onloadPositionThumbTwo: 245,
+        }
       };
     });
     it("range = false", () => {
-      sliderBlock.range = false;
+      sliderBlock.config.range = false;
       sliderBlock.setOnloadThumbPosition(data);
       expect(sliderBlock.thumbOne.setPosition).toHaveBeenCalled();
       expect(sliderBlock.thumbOne.setLabelValue).toHaveBeenCalled();
@@ -157,7 +134,7 @@ describe("Slider Block", () => {
       ).toHaveBeenCalled();
     });
     it("range = true", () => {
-      sliderBlock.range = true;
+      sliderBlock.config.range = true;
       sliderBlock.setOnloadThumbPosition(data);
       expect(sliderBlock.thumbOne.setPosition).toHaveBeenCalled();
       expect(sliderBlock.thumbOne.setLabelValue).toHaveBeenCalled();
@@ -176,8 +153,8 @@ describe("Slider Block", () => {
         data_num: '1',
       };
     });
-    it("range = false", () => {
-      sliderBlock.range = false;
+
+    it(" data_num = 1", () => {
       sliderBlock.setPositionMoveThumb(data);
       expect(sliderBlock.thumbOne.setPosition).toHaveBeenCalled();
       expect(sliderBlock.thumbOne.setLabelValue).toHaveBeenCalled();
@@ -185,17 +162,7 @@ describe("Slider Block", () => {
         sliderBlock.progressBar.setPositionForThumbOne
       ).toHaveBeenCalled();
     });
-    it("range = true, data_num = 1", () => {
-      sliderBlock.range = true;
-      sliderBlock.setPositionMoveThumb(data);
-      expect(sliderBlock.thumbOne.setPosition).toHaveBeenCalled();
-      expect(sliderBlock.thumbOne.setLabelValue).toHaveBeenCalled();
-      expect(
-        sliderBlock.progressBar.setPositionForThumbOne
-      ).toHaveBeenCalled();
-    });
-    it("range = true, data_num = 2", () => {
-      sliderBlock.range = true;
+    it(" data_num = 2", () => {
       data['data_num'] = '2'
       sliderBlock.setPositionMoveThumb(data);
       expect(sliderBlock.thumbTwo?.setPosition).toHaveBeenCalled();
@@ -205,4 +172,90 @@ describe("Slider Block", () => {
       ).toHaveBeenCalled();
     });
   });
+  it('Проверка метода subscribeOnUpdate', () => {
+    const spy = spyOn<any>(sliderBlock, 'subscribeOnUpdate').and.callThrough();
+    spy.call(sliderBlock)
+    expect(sliderBlock.thumbOne.addFollower).toHaveBeenCalled()
+    expect(sliderBlock.thumbTwo?.addFollower).toHaveBeenCalled()
+  })
+  describe('Проверка метода setThumbTwo', () => {
+    it('range = false', () => {
+      sliderBlock.config.range = false
+      const spy = spyOn<any>(sliderBlock, 'setThumbTwo').and.callThrough();
+      spy.call(sliderBlock)
+      expect(sliderBlock.thumbTwo?.removeThis).toHaveBeenCalled()
+    })
+  })
+
+  it('Проверка метода update', () => {
+    const spy = spyOn<any>(sliderBlock, 'update').and.callThrough();
+    spy.call(sliderBlock)
+    expect(sliderBlock.observer.broadcast).toHaveBeenCalled()
+  })
+  describe('Проверка метода sliderClick', () => {
+    let event: MouseEvent
+    beforeEach(function () {
+      event = new MouseEvent('click', { bubbles: true })
+    })
+    describe('orientation = horisontal', () => {
+      beforeAll(function () {
+        sliderBlock.config.orientation = 'horisontal'
+        sliderBlock.thumbOne.thumb = sliderBlock.sliderBlock.querySelector('.thumb_first') as HTMLElement
+        if (sliderBlock.thumbTwo)
+          sliderBlock.thumbTwo.thumb = sliderBlock.sliderBlock.querySelector('.thumb_second') as HTMLElement
+      })
+      it('range = false', () => {
+        sliderBlock.config.range = false
+        sliderBlock.sliderBlock.dispatchEvent(event)
+        expect(sliderBlock.thumbOne.onMouseUp).toHaveBeenCalled()
+      })
+      it('range = true thumbFirst < thumbSecond', () => {
+        sliderBlock.config.range = true
+        let thumbFirst = 40;
+        let thumbSecond = 100
+        sliderBlock.sliderBlock.dispatchEvent(event)
+        expect(sliderBlock.thumbOne.onMouseUp).toHaveBeenCalled()
+      })
+      it('range = true thumbFirst > thumbSecond', () => {
+        sliderBlock.config.range = true
+        let thumbFirst = 100;
+        let thumbSecond = 30
+        sliderBlock.sliderBlock.dispatchEvent(event)
+        console.log(thumbFirst, thumbSecond)
+        expect(sliderBlock.thumbTwo?.onMouseUp).toHaveBeenCalled()
+      })
+
+    })
+    describe('orientation = vertical', () => {
+      beforeAll(function () {
+        sliderBlock.config.orientation = 'vertical'
+        sliderBlock.thumbOne.thumb = sliderBlock.sliderBlock.querySelector('.thumb_first') as HTMLElement
+        if (sliderBlock.thumbTwo)
+          sliderBlock.thumbTwo.thumb = sliderBlock.sliderBlock.querySelector('.thumb_second') as HTMLElement
+      })
+      it('range = false', () => {
+        sliderBlock.config.range = false
+        sliderBlock.sliderBlock.dispatchEvent(event)
+        expect(sliderBlock.thumbOne.onMouseUp).toHaveBeenCalled()
+      })
+      it('range = true thumbFirst < thumbSecond', () => {
+        sliderBlock.config.range = true
+        let thumbFirst = 40;
+        let thumbSecond = 100
+        sliderBlock.sliderBlock.dispatchEvent(event)
+        expect(sliderBlock.thumbOne.onMouseUp).toHaveBeenCalled()
+      })
+      it('range = true thumbFirst > thumbSecond', () => {
+        sliderBlock.config.range = true
+        let thumbFirst = 100;
+        let thumbSecond = 30
+        sliderBlock.sliderBlock.dispatchEvent(event)
+        console.log(thumbFirst, thumbSecond)
+        expect(sliderBlock.thumbTwo?.onMouseUp).toHaveBeenCalled()
+      })
+    })
+
+  })
+
 });
+

@@ -1,4 +1,5 @@
-import { PanelController } from "../panelController/panelController";
+import { PanelController } from "../../panel/panelController/panelController";
+import "../styles.scss";
 import { MutationObserverClass } from "./mutationObserver";
 import { RangeSlider } from "./rangeSlider";
 interface ISettings {
@@ -59,13 +60,13 @@ interface MethodsObject {
       let defaultSettings = $.extend(
         {
           min: 0,
-          max: 10,
+          max: 100,
           label: true,
           range: true,
           step: 1,
           orientation: "horisontal",
-          positionFrom: 0,
-          positionTo: 5,
+          positionFrom: 10,
+          positionTo: 50,
         },
         method
       );
