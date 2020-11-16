@@ -1,5 +1,5 @@
 import { Observer } from "../../Observer/Observer";
-import { Validator } from "./Validator";
+import { Validator } from './Validator';
 interface IConfigModel {
   min: number;
   max: number;
@@ -10,16 +10,15 @@ interface IConfigModel {
   step: number;
   label: boolean;
 }
-class Model extends Validator {
+class Model {
   observer: Observer;
   config: IConfigModel;
   validator: Validator;
   sliderSize: number;
-  constructor(IConfigModel: any) {
-    super(IConfigModel);
+  constructor(IConfigModel: IConfigModel) {
     this.observer = new Observer();
     this.config = IConfigModel;
-    this.validator = new Validator(this.config);
+    this.validator = new Validator(Object.assign({}, this.config));
     this.sliderSize = 0;
   }
   addFollower(follower: any) {
@@ -28,8 +27,29 @@ class Model extends Validator {
   fundThumbPosition(data: any) {
     this.calcThumbPosition(data);
   }
+  updateConf(data: any) {
+    // Object.assign(this.config, data);
+    let key = Object.keys(data)[0];
+    if (key == "orientation") {
+      this.observer.broadcast("changeOrientation", this.config);
+    } else {
+      if (key == "range") {
+        this.changeRange();
+      } else if (key == "min") {
+        this.changeMin();
+      } else if (key == "max") {
+        this.changeMax();
+      } else if (key == "positionFrom") {
+        this.changePositionFrom();
+      } else if (key == "positionTo") {
+        this.changePositionTo();
+      }
+      this.observer.broadcast("changeConfig", this.config);
+    }
+
+  }
   getConfig() {
-    if (this.validation()) return this.config;
+    return this.config;
   }
   private calcThumbPosition(data: any) {
     let clientX = data.clientXY;
@@ -43,7 +63,6 @@ class Model extends Validator {
     let positionMove = this.checkSliderSizeMax(
       Math.round(position / stepSize) * stepSize
     );
-    console.log(positionMove, Math.round(position / stepSize), stepSize)
     let value = this.checkValueWithMin(
       this.checkValueWithMax(this.calcValue(positionMove))
     );
@@ -124,97 +143,72 @@ class Model extends Validator {
       }
     }
   }
-  changeLabel(data: boolean) {
-    if (this.validationLabel(data) === true) {
-      this.config.label = data;
-      this.observer.broadcast("changeConfig", this.getConfig());
-    }
+  changeRange() {
+    this.calcPosotionFrom();
+    this.calcPosotionTo();
+    this.setOnloadData(this.sliderSize);
   }
 
-  changeRange(data: boolean) {
-    if (this.validationRange(data) === true) {
-      this.config.range = data;
-      this.observer.broadcast("changeConfig", this.getConfig());
-      this.calcPosotionFrom();
-      this.calcPosotionTo();
-      this.setOnloadData(this.sliderSize)
-    }
-  }
+  /* changeOrientation(data: string) {
+     if (this.validationOrientation(data) === true) {
+       this.config.orientation = data;
+       
+     }
+   }*/
 
-  changeOrientation(data: string) {
-    if (this.validationOrientation(data) === true) {
-      this.config.orientation = data;
-      this.observer.broadcast("changeOrientation", this.getConfig());
-    }
+  changeMin() {
+    this.calcPosotionFrom();
+    this.calcPosotionTo();
+    this.setOnloadData(this.sliderSize);
   }
-
-  changeMin(data: number) {
-    if (this.validationMinValue(data) === true) {
-      this.config.min = data;
-      this.observer.broadcast("changeConfig", this.getConfig());
-      this.calcPosotionFrom();
-      this.calcPosotionTo();
-      this.setOnloadData(this.sliderSize)
-    }
+  changeMax() {
+    this.calcPosotionFrom();
+    this.calcPosotionTo();
+    this.setOnloadData(this.sliderSize);
   }
-  changeMax(data: number) {
-    if (this.validationMaxValue(data) === true) {
-      this.config.max = data;
-      this.observer.broadcast("changeConfig", this.getConfig());
-      this.calcPosotionFrom();
-      this.calcPosotionTo();
-      this.setOnloadData(this.sliderSize)
-    }
-  }
-  changeStep(data: number) {
+  /*changeStep(data: number) {
     if (this.validationStepValue(data) === true) {
       this.config.step = data;
     }
-  }
-  changePositionFrom(data: number) {
-    if (this.validationPositionFrom(data) === true) {
-      this.config.positionFrom = data;
-      this.calcPosotionFrom();
-      this.setOnloadData(this.sliderSize)
-    }
+  }*/
+  changePositionFrom() {
+    this.calcPosotionFrom();
+    this.setOnloadData(this.sliderSize);
   }
 
-  changePositionTo(data: number) {
-    if (this.validationPositionTo(data) === true) {
-      this.config.positionTo = data;
-      this.calcPosotionTo();
-      this.setOnloadData(this.sliderSize)
-    }
+  changePositionTo() {
+    this.calcPosotionTo();
+    this.setOnloadData(this.sliderSize);
   }
   private calcPosotionFrom() {
     if (this.config.positionFrom < this.config.min) {
       this.config.positionFrom = this.config.min;
-      this.observer.broadcast("changeConfig", this.getConfig());
+      //this.observer.broadcast("changeConfig", this.getConfig());
     } else if (
       this.config.range &&
       this.config.positionFrom > this.config.positionTo
     ) {
       this.config.positionTo = this.config.positionFrom + this.config.step;
-      this.observer.broadcast("changeConfig", this.getConfig());
+      //this.observer.broadcast("changeConfig", this.getConfig());
     } else if (
       !this.config.range &&
       this.config.positionFrom > this.config.max
     ) {
       this.config.positionFrom = this.config.max;
-      this.observer.broadcast("changeConfig", this.getConfig());
+      //this.observer.broadcast("changeConfig", this.getConfig());
     } else {
-      this.observer.broadcast("changeConfig", this.getConfig());
+      //this.observer.broadcast("changeConfig", this.getConfig());
     }
   }
   private calcPosotionTo() {
     if (this.config.positionTo > this.config.max) {
       this.config.positionTo = this.config.max;
-      this.observer.broadcast("changeConfig", this.getConfig());
+      // this.observer.broadcast("changeConfig", this.getConfig());
     } else if (this.config.positionTo < this.config.positionFrom) {
       this.config.positionTo = this.config.positionFrom + this.config.step;
-      this.observer.broadcast("changeConfig", this.getConfig());
+      //this.observer.broadcast("changeConfig", this.getConfig());
     } else {
-      this.observer.broadcast("changeConfig", this.getConfig());
+      // this.observer.broadcast("changeConfig", this.getConfig());
     }
   }
   setOnloadData(data: number) {
@@ -264,8 +258,8 @@ class Model extends Validator {
   }
   private calcValue(position: number) {
     return (
-      Math.round((
-        position * this.calcPixelSize() + this.config.min) / this.config.step
+      Math.round(
+        (position * this.calcPixelSize() + this.config.min) / this.config.step
       ) * this.config.step
     );
   }

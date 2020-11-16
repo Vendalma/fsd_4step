@@ -1,4 +1,5 @@
-import { Presenter } from "../slider/MVP/Presenter/Presenter";
+import { Model } from '../slider/MVP/Model/Model';
+import { Presenter } from '../slider/MVP/Presenter/Presenter';
 const config = {
   range: true,
   min: 0,
@@ -20,11 +21,12 @@ interface IConfigModel {
   label: boolean;
 }
 describe("Presenter", () => {
-  const model = jasmine.createSpyObj("model", [
+  const SpyModel = jasmine.createSpyObj("model", [
     "fundThumbPosition",
     'getStep',
     "addFollower",
     'getConfig',
+    'setOnloadData',
     {
       'getConfig ': {
         range: true,
@@ -50,26 +52,28 @@ describe("Presenter", () => {
   beforeEach(function () {
     $(document.body).append(block);
   });
+  const model: Model = new Model(config)
   const presenter: Presenter = new Presenter(model, block[0]);
-  //presenter.view = view;
-  presenter.model.getConfig()
+  presenter.view = view;
+  presenter.model = SpyModel;
   const data = { a: 1 };
   it("Инициализация Presenter", () => {
-    console.log(model.getConfig())
     expect(presenter).toBeDefined();
-    //expect(presenter.model).toEqual(model);
-    //expect(presenter.view).toEqual(view);
+    expect(presenter.model).toEqual(SpyModel);
+    expect(presenter.view).toEqual(view);
   });
 
   it("Метод subscribeOnUpdate", () => {
-    //expect(presenter.view.addFollower).toHaveBeenCalled();
-    //expect(presenter.model.addFollower).toHaveBeenCalled();
+    const spy = spyOn<any>(presenter, 'subscribeOnUpdate').and.callThrough()
+    spy.call(presenter)
+    expect(presenter.view.addFollower).toHaveBeenCalled();
+    expect(presenter.model.addFollower).toHaveBeenCalled();
   });
   it("Метод update с mouseMove", () => {
-    const spy = spyOn<any>(presenter, 'update').and.callThrough();
+    const spy = spyOn<any>(presenter, 'update').and.callThrough().withArgs('mouseMove', data)
     spy.call(presenter)
     //presenter.update("mouseMove", data);
-    //expect(presenter.model.fundThumbPosition).toHaveBeenCalled();
+    expect(presenter.model.fundThumbPosition).toHaveBeenCalled();
   });
   /*it("Метод update с position", () => {
     presenter.update("position", data);

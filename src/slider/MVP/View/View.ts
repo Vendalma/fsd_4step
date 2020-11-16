@@ -30,7 +30,7 @@ class View {
     this.onloadWindow();
     this.resizeWindow();
     this.subscribeOnUpdate();
-    this.setAttr();
+    // this.setAttr();
   }
 
   private setAttr() {
@@ -94,13 +94,13 @@ class View {
     this.sliderBlock.setPositionMoveThumb(data);
     let data_num = data.data_num;
     let valueThumb = data.value;
-    if (data_num == "1") {
-      this.sliderContainer.setAttribute("data-from-move", valueThumb);
-    }
-
-    if (data_num == "2") {
-      this.sliderContainer.setAttribute("data-to-move", valueThumb);
-    }
+    /* if (data_num == "1") {
+       this.sliderContainer.setAttribute("data-from-move", valueThumb);
+     }
+ 
+     if (data_num == "2") {
+       this.sliderContainer.setAttribute("data-to-move", valueThumb);
+     }*/
   }
 
   setOnloadView(data: any) {
@@ -129,8 +129,8 @@ class View {
   updateConfig(data: any) {
     this.config = data;
     this.sliderBlock.updateConfig(data);
-    this.updateAttrFromMove();
-    this.updateAttrToMove();
+    //this.updateAttrFromMove();
+    //this.updateAttrToMove();
   }
   changeOrientaion(data: any) {
     this.updateConfig(data);

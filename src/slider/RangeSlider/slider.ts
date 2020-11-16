@@ -1,7 +1,7 @@
-import { PanelController } from "../../panel/panelController/panelController";
+import { PanelController } from '../../panel/panelController/panelController';
 import "../styles.scss";
-import { MutationObserverClass } from "./mutationObserver";
 import { RangeSlider } from "./rangeSlider";
+
 interface ISettings {
   min: number;
   max: number;
@@ -17,46 +17,36 @@ interface MethodsObject {
   [key: string]: any;
 }
 (function ($) {
+  let sl: any;
+  let rangeSlider: any;
+  let slider: RangeSlider;
   const methods: MethodsObject = {
-    init: function ($: any, options: any) {
-      let panel = new PanelController($[0], options);
-      let slider = new RangeSlider($[0], options);
-      let mutationObserver = new MutationObserverClass(panel, slider, $[0]);
-    },
-    labelVisible: function ($: any, options: boolean) {
-      $.attr("data-label", options);
-    },
-    orientation: function ($: any, options: string) {
-      $.attr("data-orientation", options);
-    },
-    range: function ($: any, options: string) {
-      $.attr("data-range", options);
-    },
-    min: function ($: any, options: number) {
-      $.attr("data-min", options);
-    },
-    max: function ($: any, options: number) {
-      $.attr("data-max", options);
-    },
-    step: function ($: any, options: number) {
-      $.attr("data-step", options);
-    },
-    "position-from": function ($: any, options: number) {
-      $.attr("data-from", options);
-    },
-    "position-to": function ($: any, options: number) {
-      $.attr("data-to", options);
-    },
-  };
+    init: function (options: any) {
+      return this.each(function (this: HTMLElement) {
+        let $this = $(this);
+        let data = $this.data('sliderData')
+        let instanceSlider = new RangeSlider(this, options)
+        let panel = new PanelController(this, options)
 
-  $.fn.rangeSlider = function (method: any, settings: any = undefined) {
+        $(this).data('sliderData', {
+          slider: slider,
+          panel: panel,
+          instanceSlider: instanceSlider
+        });
+      })
+    },
+    update: function (options: any) {
+      return this.each(function (this: HTMLElement) {
+        $(this).data('sliderData').instanceSlider.updateConfig(options)
+      })
+    }
+  }
+
+  $.fn.rangeSlider = function (method: string, settings: any = undefined) {
     if (methods[method]) {
-      let slider = this.children(".slider");
-      return methods[method].apply(
-        this,
-        Array.prototype.slice.call([slider, settings])
-      );
-    } else if (typeof method === "object" || !method) {
+      return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
+    }
+    else if (typeof method === "object" || !method) {
       let defaultSettings = $.extend(
         {
           min: 0,
@@ -70,9 +60,10 @@ interface MethodsObject {
         },
         method
       );
-      return methods.init.apply(this, [this, defaultSettings]);
+      return methods.init.call(this, defaultSettings);
     } else {
       $.error("Метод с именем " + method + " не существует");
     }
-  };
+  }
+
 })(jQuery);

@@ -88,57 +88,63 @@ class PanelController {
     this.panel?.addEventListener("click", (e) => {
       if (e.target == this.inputLabel) {
         let isLabelVisible = this.inputLabel.checked;
-        this.$slider.rangeSlider("labelVisible", isLabelVisible);
+        this.$slider.rangeSlider("update", { label: isLabelVisible });
       }
 
       if (e.target == this.inputHorisontal && this.inputHorisontal.checked) {
-        this.$slider.rangeSlider("orientation", "horisontal");
+        this.$slider.rangeSlider("update", { orientation: "horisontal" });
       }
 
       if (e.target == this.inputVertical && this.inputVertical.checked) {
-        this.$slider.rangeSlider("orientation", "vertical");
+        this.$slider.rangeSlider("update", { orientation: "vertical" });
       }
 
       if (e.target == this.inputSingle && this.inputSingle.checked) {
-        this.$slider.rangeSlider("range", false);
+        this.$slider.rangeSlider("update", { range: false });
         this.config.range = false;
         this.checkRange();
       }
 
       if (e.target == this.inputDouble && this.inputDouble.checked) {
-        this.$slider.rangeSlider("range", true);
+        this.$slider.rangeSlider("update", { range: true });
         this.config.range = true;
         this.checkRange();
       }
       this.inputMin.addEventListener("blur", () => {
-        this.$slider.rangeSlider("min", Number(this.inputMin.value));
+        this.$slider.rangeSlider("update", {
+          min: Number(this.inputMin.value),
+        });
       });
 
       this.inputMax.addEventListener("blur", () => {
-        this.$slider.rangeSlider("max", Number(this.inputMax.value));
+        this.$slider.rangeSlider("update", {
+          max: Number(this.inputMax.value),
+        });
       });
 
       this.inputStep.addEventListener("blur", () => {
-        this.$slider.rangeSlider("step", Number(this.inputStep.value));
+        this.$slider.rangeSlider("update", {
+          step: Number(this.inputStep.value),
+        });
       });
 
       this.inputFrom.addEventListener("blur", () => {
-        this.$slider.rangeSlider(
-          "position-from",
-          Number(this.inputFrom.value)
-        );
+        this.$slider.rangeSlider("update", {
+          positionFrom: Number(this.inputFrom.value),
+        });
       });
       this.inputTo.addEventListener("blur", () => {
-        this.$slider.rangeSlider("position-to", Number(this.inputTo.value));
+        this.$slider.rangeSlider("update", { positionTo: Number(this.inputTo.value) });
       });
     });
   }
 
   private checkRange() {
-    let disabledBlock = this.parent.querySelector(".panel__input_disabled") as HTMLInputElement;
+    let disabledBlock = this.parent.querySelector(
+      ".panel__input_disabled"
+    ) as HTMLInputElement;
     if (!this.config.range) disabledBlock.disabled = true;
     if (this.config.range) disabledBlock.disabled = false;
-
   }
   updateInputFrom(data: string) {
     this.inputFrom.value = data;

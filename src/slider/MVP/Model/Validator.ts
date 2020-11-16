@@ -1,4 +1,4 @@
-interface IConfigModel {
+interface IConfigValidator {
   min: number;
   max: number;
   range: boolean;
@@ -9,21 +9,19 @@ interface IConfigModel {
   label: boolean;
 }
 class Validator {
-  config: IConfigModel;
-  constructor(config: any) {
+  config: IConfigValidator;
+  constructor(config: IConfigValidator) {
     this.config = config;
   }
 
   validationMaxValue(data: number) {
-    try {
-      if (data <= this.config.min) {
-        throw new Error("Error: max <= min");
-      }
-      this.config.max = data;
-      return true;
-    } catch (error) {
-      return error;
+
+    if (data <= this.config.min) {
+      throw new Error("Error: max <= min");
     }
+    this.config.max = data;
+    return true;
+
   }
 
   validationMinValue(data: number) {
@@ -78,28 +76,6 @@ class Validator {
       return error;
     }
   }
-  validationRange(data: boolean) {
-    try {
-      if (typeof data !== "boolean") {
-        throw new Error("Error: range is not valid");
-      }
-      this.config.range = data;
-      return true;
-    } catch (error) {
-      return error;
-    }
-  }
-  validationLabel(data: boolean) {
-    try {
-      if (typeof data !== "boolean") {
-        throw new Error("Error: label is not valid");
-      }
-      this.config.label = data;
-      return true;
-    } catch (error) {
-      return error;
-    }
-  }
   validationOrientation(data: string) {
     try {
       if (data == "vertical" || data == "horisontal") {
@@ -112,18 +88,30 @@ class Validator {
       return error;
     }
   }
-  validation() {
-    if (
-      this.validationMaxValue(this.config.max) &&
-      this.validationMinValue(this.config.min) &&
-      this.validationPositionFrom(this.config.positionFrom) &&
-      this.validationPositionTo(this.config.positionTo) &&
-      this.validationRange(this.config.range) &&
-      this.validationLabel(this.config.label) &&
-      this.validationOrientation(this.config.orientation) &&
-      this.validationStepValue(this.config.step)
-    )
-      return true;
+  validation(data: any): boolean {
+    let key = Object.keys(data)[0];
+    let value = Object.values(data)[0] as number
+
+    let isValidMin = (key === 'min' && this.validationMinValue(value) === true);
+    let isValidMax = (key === 'max' && this.validationMaxValue(value) === true)
+    try {
+      if (isValidMax && isValidMax)
+      /* if (
+         //  &&
+         // this.validationMinValue() === true /*&&
+         /* this.validationPositionFrom() === true &&
+          this.validationPositionTo() === true &&*/
+
+      // this.validationOrientation() === true &&
+      // this.validationStepValue() === true
+      {
+        return true;
+      } else {
+        throw new Error('config is not valid')
+      }
+    } catch (error) {
+      return error
+    }
   }
 }
 export { Validator };
