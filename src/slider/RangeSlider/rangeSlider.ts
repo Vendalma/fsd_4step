@@ -18,8 +18,7 @@ class RangeSlider {
     new Presenter(this.model, container);
   }
   updateConfig(data: any) {
-    this.model.updateConf(data)
-    console.log(data)
+    this.model.updateConfig(data)
   }
 }
 export { RangeSlider };

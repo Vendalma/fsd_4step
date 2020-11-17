@@ -1,4 +1,5 @@
 import * as $ from "jquery";
+import { MutationObserverClass } from '../mutationObserver';
 import "./panelController.scss";
 interface ISettings {
   range: boolean;
@@ -25,6 +26,7 @@ class PanelController {
   inputDouble: HTMLInputElement;
   $slider: JQuery;
   config: ISettings;
+  mutationObserver: MutationObserverClass
   constructor(parent: HTMLElement, config: ISettings) {
     this.parent = parent;
     this.config = config;
@@ -62,7 +64,7 @@ class PanelController {
     ) as HTMLInputElement;
 
     this.$slider = $(this.parent);
-
+    this.mutationObserver = new MutationObserverClass(this, this.$slider[0])
     this.init();
     this.change();
     this.checkRange();
@@ -134,7 +136,9 @@ class PanelController {
         });
       });
       this.inputTo.addEventListener("blur", () => {
-        this.$slider.rangeSlider("update", { positionTo: Number(this.inputTo.value) });
+        this.$slider.rangeSlider("update", {
+          positionTo: Number(this.inputTo.value),
+        });
       });
     });
   }
@@ -146,17 +150,12 @@ class PanelController {
     if (!this.config.range) disabledBlock.disabled = true;
     if (this.config.range) disabledBlock.disabled = false;
   }
+
   updateInputFrom(data: string) {
     this.inputFrom.value = data;
   }
   updateInputTo(data: string) {
     this.inputTo.value = data;
-  }
-  updateInputMin(data: string) {
-    this.inputMin.value = data;
-  }
-  updateInputMax(data: string) {
-    this.inputMax.value = data;
   }
 }
 

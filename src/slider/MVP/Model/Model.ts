@@ -1,5 +1,5 @@
 import { Observer } from "../../Observer/Observer";
-import { Validator } from './Validator';
+import { Validator } from "./Validator";
 interface IConfigModel {
   min: number;
   max: number;
@@ -27,29 +27,33 @@ class Model {
   fundThumbPosition(data: any) {
     this.calcThumbPosition(data);
   }
-  updateConf(data: any) {
-    // Object.assign(this.config, data);
-    let key = Object.keys(data)[0];
-    if (key == "orientation") {
-      this.observer.broadcast("changeOrientation", this.config);
-    } else {
-      if (key == "range") {
-        this.changeRange();
-      } else if (key == "min") {
-        this.changeMin();
-      } else if (key == "max") {
-        this.changeMax();
-      } else if (key == "positionFrom") {
-        this.changePositionFrom();
-      } else if (key == "positionTo") {
-        this.changePositionTo();
+  updateConfig(data: any) {
+    if (this.validator.validation(data) === true) {
+      Object.assign(this.config, data);
+      let key = Object.keys(data)[0];
+      if (key == "orientation") {
+        this.observer.broadcast("changeOrientation", this.config);
+      } else {
+        if (key == "range" || key == "min" || key == "max") {
+          this.recalcPosition();
+        } else if (key == "positionFrom") {
+          this.changePositionFrom();
+        } else if (key == "positionTo") {
+          this.changePositionTo();
+        }
+        this.observer.broadcast("changeConfig", this.config);
       }
-      this.observer.broadcast("changeConfig", this.config);
     }
-
   }
   getConfig() {
-    return this.config;
+    if (this.validator.validation(this.config) === true) return this.config;
+  }
+  setOnloadData(data: number) {
+    this.sliderSize = data;
+    this.observer.broadcast("onloadData", {
+      stepData: this.calcStepData(),
+      thumbData: this.calcOnloadThumbPosition(),
+    });
   }
   private calcThumbPosition(data: any) {
     let clientX = data.clientXY;
@@ -76,6 +80,7 @@ class Model {
 
     if (!this.config.range) {
       let right = this.sliderSize;
+      this.config.positionTo = value
       if (position <= 0) {
         this.observer.broadcast("position", {
           position: 0,
@@ -98,6 +103,7 @@ class Model {
     } else if (this.config.range) {
       if (data_num == "1") {
         let right = secondThumbPosition;
+        this.config.positionFrom = value
         if (position <= 0) {
           this.observer.broadcast("position", {
             position: 0,
@@ -120,7 +126,7 @@ class Model {
       } else if (data_num == "2") {
         let left = firstThumbPosition;
         let right = this.sliderSize;
-
+        this.config.positionTo = value
         if (position < left) {
           this.observer.broadcast("position", {
             position: left,
@@ -143,80 +149,40 @@ class Model {
       }
     }
   }
-  changeRange() {
+  private recalcPosition() {
     this.calcPosotionFrom();
     this.calcPosotionTo();
     this.setOnloadData(this.sliderSize);
   }
-
-  /* changeOrientation(data: string) {
-     if (this.validationOrientation(data) === true) {
-       this.config.orientation = data;
-       
-     }
-   }*/
-
-  changeMin() {
-    this.calcPosotionFrom();
-    this.calcPosotionTo();
-    this.setOnloadData(this.sliderSize);
-  }
-  changeMax() {
-    this.calcPosotionFrom();
-    this.calcPosotionTo();
-    this.setOnloadData(this.sliderSize);
-  }
-  /*changeStep(data: number) {
-    if (this.validationStepValue(data) === true) {
-      this.config.step = data;
-    }
-  }*/
-  changePositionFrom() {
+  private changePositionFrom() {
     this.calcPosotionFrom();
     this.setOnloadData(this.sliderSize);
   }
-
-  changePositionTo() {
+  private changePositionTo() {
     this.calcPosotionTo();
     this.setOnloadData(this.sliderSize);
   }
   private calcPosotionFrom() {
     if (this.config.positionFrom < this.config.min) {
       this.config.positionFrom = this.config.min;
-      //this.observer.broadcast("changeConfig", this.getConfig());
     } else if (
       this.config.range &&
       this.config.positionFrom > this.config.positionTo
     ) {
       this.config.positionTo = this.config.positionFrom + this.config.step;
-      //this.observer.broadcast("changeConfig", this.getConfig());
     } else if (
       !this.config.range &&
       this.config.positionFrom > this.config.max
     ) {
       this.config.positionFrom = this.config.max;
-      //this.observer.broadcast("changeConfig", this.getConfig());
-    } else {
-      //this.observer.broadcast("changeConfig", this.getConfig());
     }
   }
   private calcPosotionTo() {
     if (this.config.positionTo > this.config.max) {
       this.config.positionTo = this.config.max;
-      // this.observer.broadcast("changeConfig", this.getConfig());
     } else if (this.config.positionTo < this.config.positionFrom) {
       this.config.positionTo = this.config.positionFrom + this.config.step;
-      //this.observer.broadcast("changeConfig", this.getConfig());
-    } else {
-      // this.observer.broadcast("changeConfig", this.getConfig());
     }
-  }
-  setOnloadData(data: number) {
-    this.sliderSize = data;
-    this.observer.broadcast("onloadData", {
-      stepData: this.calcStepData(),
-      thumbData: this.calcOnloadThumbPosition(),
-    });
   }
   private calcPixelSize() {
     return (this.config.max - this.config.min) / this.sliderSize;

@@ -30,7 +30,7 @@ class View {
     this.onloadWindow();
     this.resizeWindow();
     this.subscribeOnUpdate();
-    // this.setAttr();
+    this.setAttr();
   }
 
   private setAttr() {
@@ -48,40 +48,9 @@ class View {
       String(this.config.positionFrom)
     );
     this.sliderContainer.setAttribute(
-      "data-from-move",
-      String(this.config.positionFrom)
-    );
-    this.sliderContainer.setAttribute(
       "data-to",
       String(this.config.positionTo)
     );
-    this.sliderContainer.setAttribute(
-      "data-to-move",
-      String(this.config.positionTo)
-    );
-  }
-
-  private updateAttrToMove() {
-    if (
-      Number(this.sliderContainer.getAttribute("data-to-move")) !==
-      this.config.positionTo
-    ) {
-      this.sliderContainer.setAttribute(
-        "data-to-move",
-        String(this.config.positionTo)
-      );
-    }
-  }
-  private updateAttrFromMove() {
-    if (
-      Number(this.sliderContainer.getAttribute("data-from-move")) !==
-      this.config.positionFrom
-    ) {
-      this.sliderContainer.setAttribute(
-        "data-from-move",
-        String(this.config.positionFrom)
-      );
-    }
   }
   private subscribeOnUpdate() {
     this.sliderBlock.addFollower(this);
@@ -94,13 +63,13 @@ class View {
     this.sliderBlock.setPositionMoveThumb(data);
     let data_num = data.data_num;
     let valueThumb = data.value;
-    /* if (data_num == "1") {
-       this.sliderContainer.setAttribute("data-from-move", valueThumb);
-     }
- 
-     if (data_num == "2") {
-       this.sliderContainer.setAttribute("data-to-move", valueThumb);
-     }*/
+    if (data_num == "1") {
+      this.sliderContainer.setAttribute("data-from", valueThumb);
+    }
+
+    if (data_num == "2") {
+      this.sliderContainer.setAttribute("data-to", valueThumb);
+    }
   }
 
   setOnloadView(data: any) {

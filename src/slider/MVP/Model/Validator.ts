@@ -14,72 +14,80 @@ class Validator {
     this.config = config;
   }
 
-  validationMaxValue(data: number) {
-
-    if (data <= this.config.min) {
-      throw new Error("Error: max <= min");
+  private validationMaxValue() {
+    try {
+      if (this.config.max <= this.config.min) {
+        throw new Error("Error: max <= min");
+      }
+      return true;
+    } catch (error) {
+      return error;
     }
-    this.config.max = data;
-    return true;
-
   }
 
-  validationMinValue(data: number) {
+  private validationMinValue() {
     try {
-      if (data >= this.config.max) {
+      if (this.config.min >= this.config.max) {
         throw new Error("Error: min >= max");
       }
-      this.config.min = data;
       return true;
     } catch (error) {
       return error;
     }
   }
-  validationPositionFrom(data: number) {
+  private validationPositionFrom() {
     try {
-      if (data < this.config.min) {
+      if (this.config.positionFrom < this.config.min) {
         throw new Error("Error: position from < min");
-      } else if (this.config.range && data > this.config.positionTo) {
+      } else if (
+        this.config.range &&
+        this.config.positionFrom > this.config.positionTo
+      ) {
         throw new Error("Error: position from > position to");
-      } else if (!this.config.range && data > this.config.max) {
+      } else if (
+        !this.config.range &&
+        this.config.positionFrom > this.config.max
+      ) {
         throw new Error("Error: position from > max");
       }
-      this.config.positionFrom = data;
       return true;
     } catch (error) {
       return error;
     }
   }
-  validationPositionTo(data: number) {
+  private validationPositionTo() {
     try {
-      if (data > this.config.max) {
+      if (this.config.range && this.config.positionTo > this.config.max) {
         throw new Error("Error: position to > max");
-      } else if (data < this.config.positionFrom) {
+      } else if (
+        this.config.range &&
+        this.config.positionTo < this.config.positionFrom
+      ) {
         throw new Error("Error: position to < position from");
       }
-      this.config.positionTo = data;
       return true;
     } catch (error) {
       return error;
     }
   }
-  validationStepValue(data: number) {
+  private validationStepValue() {
     try {
-      if (data <= 0) {
+      if (this.config.step <= 0) {
         throw new Error("Error: step <= 0");
-      } else if (data > this.config.max - this.config.min) {
+      } else if (this.config.step > this.config.max - this.config.min) {
         throw new Error("Error: step > max - min");
       }
-      this.config.step = data;
       return true;
     } catch (error) {
       return error;
     }
   }
-  validationOrientation(data: string) {
+  private validationOrientation() {
     try {
-      if (data == "vertical" || data == "horisontal") {
-        this.config.orientation = data;
+      if (
+        this.config.orientation == "vertical" ||
+        this.config.orientation == "horisontal"
+      ) {
         return true;
       } else {
         throw new Error("Error: not valid orientation value");
@@ -89,28 +97,22 @@ class Validator {
     }
   }
   validation(data: any): boolean {
-    let key = Object.keys(data)[0];
-    let value = Object.values(data)[0] as number
-
-    let isValidMin = (key === 'min' && this.validationMinValue(value) === true);
-    let isValidMax = (key === 'max' && this.validationMaxValue(value) === true)
+    Object.assign(this.config, data);
     try {
-      if (isValidMax && isValidMax)
-      /* if (
-         //  &&
-         // this.validationMinValue() === true /*&&
-         /* this.validationPositionFrom() === true &&
-          this.validationPositionTo() === true &&*/
-
-      // this.validationOrientation() === true &&
-      // this.validationStepValue() === true
-      {
+      if (
+        this.validationMaxValue() === true &&
+        this.validationMinValue() === true &&
+        this.validationPositionFrom() === true &&
+        this.validationPositionTo() === true &&
+        this.validationOrientation() === true &&
+        this.validationStepValue() === true
+      ) {
         return true;
       } else {
-        throw new Error('config is not valid')
+        throw new Error("config is not valid");
       }
     } catch (error) {
-      return error
+      return error;
     }
   }
 }
