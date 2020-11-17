@@ -33,7 +33,7 @@ class View {
     this.setAttr();
   }
 
-  private setAttr() {
+  setAttr() {
     this.sliderContainer.setAttribute("data-min", String(this.config.min));
     this.sliderContainer.setAttribute("data-max", String(this.config.max));
     this.sliderContainer.setAttribute("data-step", String(this.config.step));
@@ -52,13 +52,12 @@ class View {
       String(this.config.positionTo)
     );
   }
-  private subscribeOnUpdate() {
+  subscribeOnUpdate() {
     this.sliderBlock.addFollower(this);
   }
-  private update(type: string, data: any) {
+  update(type: string, data: any) {
     this.observer.broadcast("mouseMove", data);
   }
-
   setPositionMoveThumb(data: any) {
     this.sliderBlock.setPositionMoveThumb(data);
     let data_num = data.data_num;
@@ -71,7 +70,6 @@ class View {
       this.sliderContainer.setAttribute("data-to", valueThumb);
     }
   }
-
   setOnloadView(data: any) {
     this.sliderBlock.setOnloadThumbPosition(data);
     this.sliderBlock.addStep(data);
@@ -79,27 +77,25 @@ class View {
   addFollower(follower: any) {
     this.observer.subscribe(follower);
   }
-  private onloadWindow() {
+  onloadWindow() {
     window.addEventListener("load", this.getSliderSize.bind(this));
   }
 
-  private resizeWindow() {
+  resizeWindow() {
     window.addEventListener("resize", this.getSliderSize.bind(this));
   }
 
-  private getSliderSize() {
+  getSliderSize() {
     if (this.config.orientation == "horisontal")
-      this.observer.broadcast("loadData", this.sliderContainer.offsetWidth);
+      this.observer.broadcast("sliderSize", this.sliderContainer.offsetWidth);
 
     if (this.config.orientation == "vertical")
-      this.observer.broadcast("loadData", this.sliderContainer.offsetHeight);
+      this.observer.broadcast("sliderSize", this.sliderContainer.offsetHeight);
   }
 
   updateConfig(data: any) {
     this.config = data;
     this.sliderBlock.updateConfig(data);
-    //this.updateAttrFromMove();
-    //this.updateAttrToMove();
   }
   changeOrientaion(data: any) {
     this.updateConfig(data);

@@ -50,7 +50,7 @@ class Model {
   }
   setOnloadData(data: number) {
     this.sliderSize = data;
-    this.observer.broadcast("onloadData", {
+    this.observer.broadcast("onloadPosition", {
       stepData: this.calcStepData(),
       thumbData: this.calcOnloadThumbPosition(),
     });

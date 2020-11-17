@@ -1,5 +1,5 @@
-import { Model } from '../slider/MVP/Model/Model';
-import { Presenter } from '../slider/MVP/Presenter/Presenter';
+import { Model } from "../slider/MVP/Model/Model";
+import { Presenter } from "../slider/MVP/Presenter/Presenter";
 const config = {
   range: true,
   min: 0,
@@ -10,49 +10,25 @@ const config = {
   step: 1,
   orientation: "horisontal",
 };
-interface IConfigModel {
-  min: number;
-  max: number;
-  range: boolean;
-  positionFrom: number;
-  positionTo: number;
-  orientation: string;
-  step: number;
-  label: boolean;
-}
 describe("Presenter", () => {
   const SpyModel = jasmine.createSpyObj("model", [
     "fundThumbPosition",
-    'getStep',
     "addFollower",
-    'getConfig',
-    'setOnloadData',
-    {
-      'getConfig ': {
-        range: true,
-        min: 0,
-        max: 100,
-        positionFrom: 15,
-        positionTo: 30,
-        label: true,
-        step: 1,
-        orientation: "horisontal",
-      }
-    }
+    "getConfig",
+    "setOnloadData",
   ]);
   const view = jasmine.createSpyObj("view", [
     "setPositionMoveThumb",
-    "addStep",
-    "setOnloadThumbPosition",
     "addFollower",
     "setOnloadView",
-    "changeOrientation",
+    "updateConfig",
+    "changeOrientaion",
   ]);
   const block = $("<div>");
   beforeEach(function () {
     $(document.body).append(block);
   });
-  const model: Model = new Model(config)
+  const model: Model = new Model(config);
   const presenter: Presenter = new Presenter(model, block[0]);
   presenter.view = view;
   presenter.model = SpyModel;
@@ -63,56 +39,37 @@ describe("Presenter", () => {
     expect(presenter.view).toEqual(view);
   });
 
-  it("Метод subscribeOnUpdate", () => {
-    const spy = spyOn<any>(presenter, 'subscribeOnUpdate').and.callThrough()
-    spy.call(presenter)
-    expect(presenter.view.addFollower).toHaveBeenCalled();
-    expect(presenter.model.addFollower).toHaveBeenCalled();
+  describe("Метод subscribeOnUpdate", () => {
+    it("должен вызвать ф-цию addFollower в Model и View", () => {
+      presenter.subscribeOnUpdate();
+      expect(presenter.view.addFollower).toHaveBeenCalled();
+      expect(presenter.model.addFollower).toHaveBeenCalled();
+    });
   });
-  it("Метод update с mouseMove", () => {
-    const spy = spyOn<any>(presenter, 'update').and.callThrough().withArgs('mouseMove', data)
-    spy.call(presenter)
-    //presenter.update("mouseMove", data);
-    expect(presenter.model.fundThumbPosition).toHaveBeenCalled();
+  describe("Метод update", () => {
+    it(" type = mouseMove должно вызывать ф-ю fundThumbPosition в Model", () => {
+      presenter.update("mouseMove", data);
+      expect(presenter.model.fundThumbPosition).toHaveBeenCalled();
+    });
+    it(" type = position должно вызывать ф-ю setPositionMoveThumb в View", () => {
+      presenter.update("position", data);
+      expect(presenter.view.setPositionMoveThumb).toHaveBeenCalled();
+    });
+    it(" type = onloadPosition должно вызывать ф-ю setOnloadView в View", () => {
+      presenter.update("onloadPosition", data);
+      expect(presenter.view.setOnloadView).toHaveBeenCalled();
+    });
+    it(" type = sliderSize должно вызывать ф-ю setOnloadData в View", () => {
+      presenter.update("sliderSize", data);
+      expect(presenter.model.setOnloadData).toHaveBeenCalled();
+    });
+    it(" type = changeConfig должно вызывать ф-ю updateConfig в View", () => {
+      presenter.update("changeConfig", data);
+      expect(presenter.view.updateConfig).toHaveBeenCalled();
+    });
+    it(" type = changeOrientation должно вызывать ф-ю changeOrientaion в View", () => {
+      presenter.update("changeOrientation", data);
+      expect(presenter.view.changeOrientaion).toHaveBeenCalled();
+    });
   });
-  /*it("Метод update с position", () => {
-    presenter.update("position", data);
-    expect(presenter.view.setPositionMoveThumb).toHaveBeenCalled();
-  });
-  it("Метод update с stepData", () => {
-    presenter.update("stepData", data);
-    expect(presenter.view.setOnloadView).toHaveBeenCalled();
-  });
-  it("Метод update с loadData", () => {
-    presenter.update("loadData", data);
-    expect(presenter.model.getStep).toHaveBeenCalled();
-  });
-  it("Метод update с changeMinValue", () => {
-    presenter.update("changeMinValue", data);
-    expect(presenter.view.changeMin).toHaveBeenCalled();
-  });
-  it("Метод update с changeMaxValue", () => {
-    presenter.update("changeMaxValue", data);
-    expect(presenter.view.changeMax).toHaveBeenCalled();
-  });
-  it("Метод update с changePositionFrom", () => {
-    presenter.update("changePositionFrom", data);
-    expect(presenter.view.changePositionFrom).toHaveBeenCalled();
-  });
-  it("Метод update с changePositionTo", () => {
-    presenter.update("changePositionTo", data);
-    expect(presenter.view.changePositionTo).toHaveBeenCalled();
-  });
-  it("Метод update с changeRange", () => {
-    presenter.update("changeRange", data);
-    expect(presenter.view.changeRange).toHaveBeenCalled();
-  });
-  it("Метод update с changeOrientation", () => {
-    presenter.update("changeOrientation", data);
-    expect(presenter.view.changeOrientation).toHaveBeenCalled();
-  });
-  it("Метод update с changeLabel", () => {
-    presenter.update("changeLabel", data);
-    expect(presenter.view.changeLabel).toHaveBeenCalled();
-  });*/
 });

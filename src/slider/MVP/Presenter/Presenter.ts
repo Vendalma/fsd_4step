@@ -9,18 +9,18 @@ class Presenter {
     this.view = new View(this.model.getConfig(), container);
     this.subscribeOnUpdate();
   }
-  private subscribeOnUpdate() {
+  subscribeOnUpdate() {
     this.view.addFollower(this);
     this.model.addFollower(this);
   }
-  private update(type: string, data: any) {
+  update(type: string, data: any) {
     if (type == "mouseMove") {
       this.model.fundThumbPosition(data);
     } else if (type == "position") {
       this.view.setPositionMoveThumb(data);
-    } else if (type == "onloadData") {
+    } else if (type == "onloadPosition") {
       this.view.setOnloadView(data);
-    } else if (type == "loadData") {
+    } else if (type == "sliderSize") {
       this.model.setOnloadData(data);
     } else if (type == "changeConfig") {
       this.view.updateConfig(data);
