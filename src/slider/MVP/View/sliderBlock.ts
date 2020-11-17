@@ -60,7 +60,7 @@ class SliderBlock {
     this.progressBar.updateBarConfig(data);
   }
 
-  private changeRange() {
+  changeRange() {
     const secondThumb = this.sliderBlock.querySelector(
       ".thumb_second"
     ) as HTMLElement;
@@ -71,7 +71,7 @@ class SliderBlock {
       let thumbTwo = this.thumbTwo?.addThis();
     }
   }
-  private changeOrientation() {
+  changeOrientation() {
     if (this.config.orientation == "vertical") {
       this.sliderBlock?.classList.add("slider__block_vertical");
     }
@@ -113,10 +113,10 @@ class SliderBlock {
     }
   }
 
-  private sliderClick() {
-    this.sliderBlock?.addEventListener("click", this.onSliderClick.bind(this));
+  sliderClick() {
+    this.sliderBlock.addEventListener("click", this.onSliderClick.bind(this));
   }
-  private onSliderClick(e: MouseEvent): any {
+  onSliderClick(e: MouseEvent): any {
     if (this.config.orientation == "horisontal") {
       if (!this.config.range) {
         this.thumbOne.onMouseUp(e);
@@ -152,14 +152,14 @@ class SliderBlock {
       }
     }
   }
-  private subscribeOnUpdate() {
+  subscribeOnUpdate() {
     this.thumbOne.addFollower(this);
     this.thumbTwo?.addFollower(this);
   }
-  private setThumbTwo() {
+  setThumbTwo() {
     this.config.range ? null : this.thumbTwo?.removeThis();
   }
-  private update(type: string, data: any) {
+  update(type: string, data: any) {
     this.observer.broadcast("mouseMove", data);
   }
 }

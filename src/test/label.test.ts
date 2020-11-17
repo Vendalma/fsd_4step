@@ -25,55 +25,39 @@ describe("Label", () => {
     expect(label.elementLabel).toHaveClass("thumb__label");
   });
 
-  it("Тестирование метода setLabelValue", () => {
+  it("метод setLabelValue устанавливает переданное значение для innerHTML блока лейбла", () => {
     label.setLabelValue(4);
     expect(label.elementLabel).toContainText("4");
   });
-  describe("Тестирование метода CheckLabelOrientation", () => {
-    it("orientation = horisontal", () => {
+  describe("метода CheckLabelOrientation", () => {
+    it("при orientation = horisontal у блока удаляеся класс thumb__label_vertical", () => {
       label.config.orientation = "horisontal";
-      let spyChangeOrientation = spyOn<any>(
-        label,
-        "changeLabelOrientation"
-      ).and.callThrough();
-      spyChangeOrientation.call(label);
+      label.changeLabelOrientation()
       expect(label.elementLabel).not.toHaveClass("thumb__label_vertical");
     });
-    it("orientation = vertical", () => {
+    it("при orientation = vertical блоку устанавливается класс thumb__label_vertical", () => {
       label.config.orientation = "vertical";
-      let spyChangeOrientation = spyOn<any>(
-        label,
-        "changeLabelOrientation"
-      ).and.callThrough();
-      spyChangeOrientation.call(label);
+      label.changeLabelOrientation()
       expect(label.elementLabel).toHaveClass("thumb__label_vertical");
     });
   });
-  describe("Tестирование метода checkVisibleLabel", () => {
-    it("config.label = true", () => {
+  describe("метод checkVisibleLabel", () => {
+    it("если config.label = true, то блок имеет style.display = block", () => {
       label.config.label = true;
-      let spyChangeVisible = spyOn<any>(
-        label,
-        "changeVisibleLabel"
-      ).and.callThrough();
-      spyChangeVisible.call(label);
+      label.changeVisibleLabel()
       expect(label.elementLabel).toHaveCss({ display: "block" });
     });
-    it("config.label = false", () => {
+    it("если config.label = false, то блок имеет style.display = none", () => {
       label.config.label = false;
-      let spyChangeVisible = spyOn<any>(
-        label,
-        "changeVisibleLabel"
-      ).and.callThrough();
-      spyChangeVisible.call(label);
+      label.changeVisibleLabel()
       expect(label.elementLabel).toHaveCss({ display: "none" });
     });
   });
-  it("Проверка метода update", () => {
-    const spyChangeOrientation = spyOn<any>(label, "changeLabelOrientation");
-    const spyChangeVisible = spyOn<any>(label, "changeVisibleLabel");
+  it("метод update обновляет конфиг, вызывает ф-ции changeVisibleLabel и changeLabelOrientation", () => {
+    spyOn(label, "changeLabelOrientation");
+    spyOn(label, "changeVisibleLabel");
     label.update({});
-    expect(spyChangeOrientation).toHaveBeenCalled();
-    expect(spyChangeVisible).toHaveBeenCalled();
+    expect(label.changeLabelOrientation).toHaveBeenCalled();
+    expect(label.changeVisibleLabel).toHaveBeenCalled();
   });
 });

@@ -25,32 +25,24 @@ describe("ProgressBar", () => {
     expect(ProgressBar.progressBar).toBeInstanceOf(HTMLElement);
     expect(ProgressBar.progressBar).toHaveClass("progress-bar");
   });
-  describe("проверка метода checkOrientation", () => {
-    it("orientaion = vertical", () => {
+  describe("метода checkOrientation", () => {
+    it("при orientaion = vertical устанавливает блоку класс progress-bar_vertical и удаляет класс progress-bar_horisontal", () => {
       ProgressBar.config.orientation = "vertical";
-      const spyForOrientation = spyOn<any>(
-        ProgressBar,
-        "checkOrientation"
-      ).and.callThrough();
-      spyForOrientation.call(ProgressBar);
+      ProgressBar.checkOrientation();
       expect(ProgressBar.progressBar).toHaveClass("progress-bar_vertical");
       expect(ProgressBar.progressBar).not.toHaveClass(
         "progress-bar_horisontal"
       );
     });
-    it("orientaion = horisontal", () => {
+    it("при orientaion = horisontal устанавливает блоку класс progress-bar_horisontal и удаляет класс progress-bar_vertical", () => {
       ProgressBar.config.orientation = "horisontal";
-      const spyForOrientation = spyOn<any>(
-        ProgressBar,
-        "checkOrientation"
-      ).and.callThrough();
-      spyForOrientation.call(ProgressBar);
+      ProgressBar.checkOrientation();
       expect(ProgressBar.progressBar).not.toHaveClass("progress-bar_vertical");
       expect(ProgressBar.progressBar).toHaveClass("progress-bar_horisontal");
     });
   });
 
-  describe("проверка метода setOnloadProgressBarPosition", () => {
+  describe("метод setOnloadProgressBarPosition", () => {
     let data: any;
     let onloadPositionThumbOne: number;
     let onloadPositionThumbTwo: number;
@@ -64,7 +56,7 @@ describe("ProgressBar", () => {
       onloadPositionThumbOne = data.thumbData.onloadPositionThumbOne;
       onloadPositionThumbTwo = data.thumbData.onloadPositionThumbTwo;
     });
-    it("orientation = horisontal, range = false", () => {
+    it("при orientation = horisontal, range = false устанавливает style.left и style.width", () => {
       ProgressBar.config.range = false;
       ProgressBar.config.orientation = "horisontal";
       ProgressBar.setOnloadProgressBarPosition(data);
@@ -73,7 +65,7 @@ describe("ProgressBar", () => {
         width: onloadPositionThumbOne + 2 + "px",
       });
     });
-    it("orientation = horisontal, range = true", () => {
+    it("при orientation = horisontal, range = true  устанавливает style.left и style.width", () => {
       ProgressBar.config.range = true;
       ProgressBar.config.orientation = "horisontal";
       ProgressBar.setOnloadProgressBarPosition(data);
@@ -84,7 +76,7 @@ describe("ProgressBar", () => {
         width: onloadPositionThumbTwo - onloadPositionThumbOne + "px",
       });
     });
-    it("orientation = vertical, range = false", () => {
+    it("при orientation = vertical, range = false  устанавливает style.top и style.height", () => {
       ProgressBar.config.range = false;
       ProgressBar.config.orientation = "vertical";
       ProgressBar.setOnloadProgressBarPosition(data);
@@ -93,7 +85,7 @@ describe("ProgressBar", () => {
         height: onloadPositionThumbOne + 2 + "px",
       });
     });
-    it("orientation = vertical, range = true", () => {
+    it("при orientation = vertical, range = true  устанавливает style.top и style.height", () => {
       ProgressBar.config.range = true;
       ProgressBar.config.orientation = "vertical";
       ProgressBar.setOnloadProgressBarPosition(data);
@@ -105,7 +97,7 @@ describe("ProgressBar", () => {
       });
     });
   });
-  describe("проверка метода setPositionForThumbOne", () => {
+  describe("метод setPositionForThumbOne", () => {
     let position: number;
     let secondThumb: HTMLElement;
     beforeAll(function () {
@@ -114,14 +106,14 @@ describe("ProgressBar", () => {
         ".thumb_second"
       ) as HTMLElement;
     });
-    it("orientation = horisontal, range = false", () => {
+    it("при orientation = horisontal, range = false устанавливает style.width для блока", () => {
       ProgressBar.config.range = false;
       ProgressBar.config.orientation = "horisontal";
       ProgressBar.setPositionForThumbOne(position);
       expect(ProgressBar.progressBar).toHaveCss({ width: position + 2 + "px" });
     });
 
-    it("orientation = horisontal, range = true", () => {
+    it("при orientation = horisontal, range = true устанавливает блоку style.width и style.left", () => {
       ProgressBar.config.range = true;
       ProgressBar.config.orientation = "horisontal";
       secondThumb.style.left = "170px";
@@ -131,7 +123,7 @@ describe("ProgressBar", () => {
         width: parseInt(secondThumb.style.left) - position + "px",
       });
     });
-    it("orientation = vertical, range = false", () => {
+    it("при orientation = vertical, range = false устанавливает блоку style.height", () => {
       ProgressBar.config.range = false;
       ProgressBar.config.orientation = "vertical";
       ProgressBar.setPositionForThumbOne(position);
@@ -139,7 +131,7 @@ describe("ProgressBar", () => {
         height: position + 2 + "px",
       });
     });
-    it("orientation = vertical, range = true", () => {
+    it("при orientation = vertical, range = true устанавливает блоку style.height и style.top", () => {
       ProgressBar.config.range = true;
       ProgressBar.config.orientation = "vertical";
       secondThumb.style.top = "270px";
@@ -157,7 +149,7 @@ describe("ProgressBar", () => {
       ProgressBar.progressBar.style.left = "100px";
       ProgressBar.progressBar.style.top = "30px";
     });
-    it("orientation = horisontal", () => {
+    it("при orientation = horisontal устанавливает блоку style.width", () => {
       ProgressBar.config.orientation = "horisontal";
       ProgressBar.setPositionForThumbTwo(position);
       expect(ProgressBar.progressBar).toHaveCss({
@@ -165,7 +157,7 @@ describe("ProgressBar", () => {
           position - parseInt(ProgressBar.progressBar.style.left) + 7 + "px",
       });
     });
-    it("orientation = vertical", () => {
+    it("при orientation = vertical устанавливает блоку style.height", () => {
       ProgressBar.config.orientation = "vertical";
       ProgressBar.setPositionForThumbTwo(position);
       expect(ProgressBar.progressBar).toHaveCss({
@@ -174,9 +166,9 @@ describe("ProgressBar", () => {
       });
     });
   });
-  it("Проверка метода updateBarConfig", () => {
-    const spyForOrientation = spyOn<any>(ProgressBar, "checkOrientation");
+  it("метод updateBarConfig обновляет конфиг и вызывает ф-ю checkOrientation", () => {
+    spyOn(ProgressBar, "checkOrientation");
     ProgressBar.updateBarConfig({});
-    expect(spyForOrientation).toHaveBeenCalled();
+    expect(ProgressBar.checkOrientation).toHaveBeenCalled();
   });
 });

@@ -6,12 +6,10 @@ interface IconfigStep {
 class Step {
   config: IconfigStep;
   container: HTMLElement;
-
   constructor(IconfigStep: any, container: HTMLElement) {
     this.config = IconfigStep;
     this.container = container;
   }
-
   addStepLine(data: any) {
     this.deleteElements();
     const fragment = document.createDocumentFragment();
@@ -46,25 +44,24 @@ class Step {
     this.container.append(fragment);
   }
 
-  private changeMinValue() {
+  changeMinValue() {
     let blockMin = this.container.querySelector(
       ".slider__step-block_min"
     ) as HTMLElement;
     blockMin.innerHTML = this.config.min.toString();
   }
 
-  private changeMaxValue() {
+  changeMaxValue() {
     let blockMax = this.container.querySelector(
       ".slider__step-block_max"
     ) as HTMLElement;
     blockMax.innerHTML = this.config.max.toString();
   }
 
-  private deleteElements() {
+  deleteElements() {
     let steps = this.container.querySelectorAll(
       ".slider__step-block"
     ) as NodeListOf<HTMLElement>;
-
     steps.forEach((elem) => {
       this.container.removeChild(elem);
     });
@@ -72,8 +69,8 @@ class Step {
 
   updateConfigStep(data: any) {
     this.config = data;
-    this.changeMinValue()
-    this.changeMaxValue()
+    this.changeMinValue();
+    this.changeMaxValue();
   }
 }
 export { Step };

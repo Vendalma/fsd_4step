@@ -23,7 +23,7 @@ class Label {
     this.elementLabel.innerHTML = value.toString();
   }
 
-  private changeLabelOrientation() {
+  changeLabelOrientation() {
     if (this.config.orientation == "vertical")
       this.elementLabel.classList.add("thumb__label_vertical");
 
@@ -31,7 +31,7 @@ class Label {
       this.elementLabel.classList.remove("thumb__label_vertical");
   }
 
-  private changeVisibleLabel() {
+  changeVisibleLabel() {
     this.config.label
       ? (this.elementLabel.style.display = "block")
       : (this.elementLabel.style.display = "none");

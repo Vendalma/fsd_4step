@@ -10,8 +10,10 @@ const blockMin = $("<div>");
 const blockMax = $("<div>");
 beforeEach(function () {
   blockMin[0].classList.add("slider__step-block_min");
+  blockMin[0].classList.add("slider__step-block");
   blockMin[0].innerHTML = step.config.min + "";
   blockMax[0].classList.add("slider__step-block_max");
+  blockMax[0].classList.add("slider__step-block");
   blockMax[0].innerHTML = step.config.max + "";
   container.append(blockMin);
   container.append(blockMax);
@@ -26,27 +28,19 @@ describe("Step", () => {
     expect(step.config).toEqual(config);
     expect(step.container).toBeInstanceOf(HTMLElement);
   });
-  it("проверка метода changeMinValue", () => {
+  it("метода changeMinValue изменяет innerHTML блока min", () => {
     step.config.min = 104;
-    const spyForChangeMin = spyOn<any>(
-      step,
-      "changeMinValue"
-    ).and.callThrough();
-    spyForChangeMin.call(step);
+    step.changeMinValue()
     expect(blockMin[0]).toBeInDOM();
     expect(blockMin).toContainText("4");
   });
-  it("проверка метода changeMaxValue", () => {
+  it("метод changeMaxValue изменяет innerHTML блока max", () => {
     step.config.max = 104;
-    const spyForChangeMax = spyOn<any>(
-      step,
-      "changeMaxValue"
-    ).and.callThrough();
-    spyForChangeMax.call(step);
+    step.changeMaxValue()
     expect(blockMax[0]).toBeInDOM();
     expect(blockMax).toContainText("104");
   });
-  describe("проверка метода addStepLine ", () => {
+  describe("метода addStepLine добавляет шкалу значений", () => {
     let data: any;
     let stepCount: number;
     let stepSize: number;
@@ -107,11 +101,15 @@ describe("Step", () => {
       }
     });
   });
-  it("Проверка метода updateConfigStep", () => {
-    const spyForChangeMin = spyOn<any>(step, "changeMinValue");
-    const spyForChangeMax = spyOn<any>(step, "changeMaxValue");
+  it('метод deleteElements удаляет все эл-ты с классом slider__step-block', () => {
+    step.deleteElements()
+    expect(step.container).not.toContainElement('div.slider__step-block')
+  })
+  it("метод updateConfigStep обновляет конфиг и вызывает ф-ции changeMinValue и changeMaxValue", () => {
+    spyOn(step, "changeMinValue");
+    spyOn(step, "changeMaxValue");
     step.updateConfigStep({});
-    expect(spyForChangeMin).toHaveBeenCalled();
-    expect(spyForChangeMax).toHaveBeenCalled();
+    expect(step.changeMinValue).toHaveBeenCalled();
+    expect(step.changeMaxValue).toHaveBeenCalled();
   });
 });

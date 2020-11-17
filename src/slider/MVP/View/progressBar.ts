@@ -8,7 +8,6 @@ class progressBar {
   progressBar: HTMLElement;
   constructor(IConfigProgressBar: any, slider: HTMLElement) {
     this.config = IConfigProgressBar;
-
     this.slider = slider;
     this.progressBar = document.createElement("div");
     this.progressBar.classList.add("progress-bar");
@@ -54,7 +53,7 @@ class progressBar {
     }
   }
 
-  private checkOrientation() {
+  checkOrientation() {
     if (this.config.orientation == "horisontal") {
       this.progressBar.classList.remove("progress-bar_vertical");
       this.progressBar.classList.add("progress-bar_horisontal");
