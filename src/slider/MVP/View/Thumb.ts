@@ -14,7 +14,6 @@ class Thumb {
   countThumbs: string;
   observer: Observer;
   data_num: number;
-  zIndex: number;
   label: Label;
 
   constructor(
@@ -37,9 +36,6 @@ class Thumb {
 
     this.observer = new Observer();
     this.label = new Label(this.config, this.thumb);
-
-    this.zIndex = 1;
-
     this.checkOrientation();
     this.moveThumb();
   }
@@ -64,8 +60,7 @@ class Thumb {
     e.preventDefault();
     document.onmousemove = (e) => this.onMouseMove(e);
     document.onmouseup = (e) => this.onMouseUp(e);
-    this.zIndex++;
-    this.thumb.style.zIndex = this.zIndex.toString();
+    this.changeZIndexUp()
     this.observer.broadcast("mouseMove", this.findPosition(e));
   }
   onMouseMove = (e: MouseEvent) => {
@@ -79,6 +74,7 @@ class Thumb {
     document.onmousemove = null;
     document.onmouseup = null;
     this.observer.broadcast("mouseMove", this.findPosition(e));
+    this.changeZIndexDown()
   };
   findPosition(e: MouseEvent) {
     if (this.config.orientation == "horizontal") {
@@ -147,6 +143,12 @@ class Thumb {
   }
   addThis() {
     this.slider.append(this.thumb);
+  }
+  changeZIndexUp() {
+    this.thumb.classList.add('thumb_zIndex_up')
+  }
+  changeZIndexDown() {
+    this.thumb.classList.remove('thumb_zIndex_up')
   }
   updateConfigThumb(data: any) {
     this.config = data;

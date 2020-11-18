@@ -30,66 +30,63 @@ describe("Thumb", () => {
     expect(thumb.thumb).toHaveAttr("data-num", "1");
   });
 
-  it("проверка метода addFollower", () => {
+  it("метод addFollower вызывает ф-ю subscribe в классе Observer", () => {
     thumb.addFollower({});
     expect(thumb.observer.subscribe).toHaveBeenCalled();
   });
-  it("проверка метода setLabelValue", () => {
+  it("метод setLabelValue вызывает ф-ю setLabelValue в классе Label", () => {
     thumb.setLabelValue(8);
     expect(thumb.label.setLabelValue).toHaveBeenCalled();
   });
-  it("проверка метода removeThis", () => {
+  it("метод removeThis удаляет бегунок из родительского блока", () => {
     thumb.removeThis();
     expect(thumb.slider).not.toContainElement("div.thumb_first");
     expect(thumb.thumb).not.toBeInDOM();
   });
-  it("проверка метода addThis", () => {
+  it("метод addThis добавляет блок бегунка в родительский блок", () => {
     thumb.addThis();
     expect(thumb.slider).toContainElement("div.thumb_first");
     expect(thumb.thumb).toBeInDOM();
   });
-  describe("проверка метода setPosition", () => {
-    it("orientation = horizontal", () => {
+  describe("метод setPosition", () => {
+    it("при orientation = horizontal устанавливает бегунку style.left", () => {
       thumb.config.orientation = "horizontal";
       thumb.setPosition(8);
       expect(thumb.thumb).toHaveCss({ left: "8px" });
     });
-    it("orientation = vertical", () => {
+    it("при orientation = vertical устанавливает бегунку style.top", () => {
       thumb.config.orientation = "vertical";
       thumb.setPosition(8);
       expect(thumb.thumb).toHaveCss({ top: "8px" });
     });
   });
-  describe("проверка метода checkOrientation", () => {
-    it("orientation = vertical", () => {
+  describe("метод checkOrientation", () => {
+    it("при orientation = vertical добавляет контейнеру бегунка класс thumb_vertical и удаляет класс thumb_horizontal", () => {
       thumb.config.orientation = 'vertical'
-      const spy = spyOn<any>(thumb, 'checkOrientation').and.callThrough();
-      spy.call(thumb)
+      thumb.checkOrientation()
       expect(thumb.thumb).toHaveClass("thumb_vertical");
       expect(thumb.thumb).not.toHaveClass("thumb_horizontal");
     });
-    it("orientation = horizontal", () => {
+    it("при orientation = horizontal добавляет контейнеру бегунка класс thumb_horizontal и удаляет класс thumb_vertical", () => {
       thumb.config.orientation = 'horizontal'
-      const spy = spyOn<any>(thumb, 'checkOrientation').and.callThrough();
-      spy.call(thumb)
+      thumb.checkOrientation()
       expect(thumb.thumb).toHaveClass("thumb_horizontal");
       expect(thumb.thumb).not.toHaveClass("thumb_vertical");
     });
   });
 
-  it("проверка метода moveThumb", () => {
+  it("метод moveThumb вешает на контейнер бегунка событие mousedown и вызывает ф-ю mouseDown", () => {
     spyOn(thumb, "mouseDown");
     const mousedown = new MouseEvent("mousedown", { bubbles: true });
-
     thumb.moveThumb();
     thumb.thumb.dispatchEvent(mousedown);
     expect(thumb.mouseDown).toHaveBeenCalled();
   });
 
-  it("проверка метода mouseDown", () => {
+  it("метод mouseDown вызывает ф-ции onMouseMove, onMouseUp,changeZIndexUp и broadcast класса Observer", () => {
     spyOn(thumb, "onMouseMove");
     spyOn(thumb, "onMouseUp");
-    spyOn(thumb, "findPosition");
+    spyOn(thumb, "changeZIndexUp");
     const mousedown = new MouseEvent("mousedown", { bubbles: true });
     const mousemove = new MouseEvent("mousemove", { bubbles: true });
     const mouseup = new MouseEvent("mouseup", { bubbles: true });
@@ -100,33 +97,27 @@ describe("Thumb", () => {
     expect(thumb.onMouseMove).toHaveBeenCalled();
     expect(thumb.onMouseUp).toHaveBeenCalled();
     expect(thumb.observer.broadcast).toHaveBeenCalled();
-    expect(thumb.findPosition).toHaveBeenCalled();
-  });
-
-  it("проверка метода onMouseMove", () => {
+    expect(thumb.changeZIndexUp).toHaveBeenCalled()
+  })
+  it("метод onMouseMove вызывает ф-ю moveHandle", () => {
     spyOn(thumb, "moveHandle");
     const mousemove = new MouseEvent("mousemove", { bubbles: true });
     thumb.onMouseMove(mousemove);
-
     expect(thumb.moveHandle).toHaveBeenCalled();
   });
-  it("проверка метода moveHandle", () => {
-    spyOn(thumb, "findPosition");
+  it("метод moveHandle вызывает метод broadcast класса Observer", () => {
     const mousemove = new MouseEvent("mousemove", { bubbles: true });
     thumb.moveHandle(mousemove);
-
     expect(thumb.observer.broadcast).toHaveBeenCalled();
-    expect(thumb.findPosition).toHaveBeenCalled();
   });
-  it("проверка метода onMouseUp", () => {
-    spyOn(thumb, "findPosition");
+  it("метод onMouseUp отвязывает обработчики событий, вызывает ф-ии changeZIndexDown и broadcast класса Observer ", () => {
+    spyOn(thumb, "changeZIndexDown");
     const mouseup = new MouseEvent("mouseup", { bubbles: true });
     thumb.onMouseUp(mouseup);
-
     expect(document.onmousemove).toBeNull();
     expect(document.onmouseup).toBeNull();
     expect(thumb.observer.broadcast).toHaveBeenCalled();
-    expect(thumb.findPosition).toHaveBeenCalled();
+    expect(thumb.changeZIndexDown).toHaveBeenCalled()
   });
 
   describe("проверка метода findPosition", () => {
@@ -243,10 +234,18 @@ describe("Thumb", () => {
       expect(returnedValue).toEqual(expectedValue);
     });
   });
-  it('Проверка метода updateConfigThumb', () => {
-    const spyForOrientation = spyOn<any>(thumb, 'checkOrientation');
+  it('метод changeZIndexUp добавляет контейнеру бегунка класс thumb_zIndex_up', () => {
+    thumb.changeZIndexUp();
+    expect(thumb.thumb).toHaveClass('thumb_zIndex_up')
+  })
+  it('метод changeZIndexDown удаляет у контейнера бегунка класс thumb_zIndex_up', () => {
+    thumb.changeZIndexDown();
+    expect(thumb.thumb).not.toHaveClass('thumb_zIndex_up')
+  })
+  it('метод updateConfigThumb обновляет конфиг класса, вызывает ф-ции checkOrientation и update касса Label', () => {
+    spyOn(thumb, 'checkOrientation');
     thumb.updateConfigThumb({});
     expect(thumb.label.update).toHaveBeenCalled();
-    expect(spyForOrientation).toHaveBeenCalled()
+    expect(thumb.checkOrientation).toHaveBeenCalled()
   })
 });

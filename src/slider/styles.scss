@@ -92,13 +92,12 @@
     position: absolute;
     bottom: 20px;
     left: -15px;
-
     height: 30px;
     padding: 5px;
     box-sizing: border-box;
     background: linear-gradient(180deg, #6fcf97 0%, #66d2ea 100%);
     border-radius: 6px;
-
+    z-index: 1;
     text-align: center;
     color: #ffffff;
     &_vertical {
@@ -116,6 +115,9 @@
   }
   &_horizontal {
     top: -5.4px !important;
+  }
+  &_zIndex_up {
+    z-index: 5;
   }
 }
 
