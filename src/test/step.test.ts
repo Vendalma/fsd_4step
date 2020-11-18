@@ -3,7 +3,7 @@ const config = {
   min: 0,
   max: 100,
   step: 1,
-  orientation: "horisontal",
+  orientation: "horizontal",
 };
 const container = $("<div>");
 const blockMin = $("<div>");
@@ -62,8 +62,8 @@ describe("Step", () => {
         step.container.removeChild(elem);
       });
     });
-    it("orientation = horisontal", () => {
-      step.config.orientation = "horisontal";
+    it("orientation = horizontal", () => {
+      step.config.orientation = "horizontal";
       step.addStepLine(data);
       let stepBlocks = step.container.querySelectorAll(".slider__step-block");
 

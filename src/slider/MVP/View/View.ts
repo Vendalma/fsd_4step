@@ -86,18 +86,26 @@ class View {
   }
 
   getSliderSize() {
-    if (this.config.orientation == "horisontal")
+    if (this.config.orientation == "horizontal")
       this.observer.broadcast("sliderSize", this.sliderContainer.offsetWidth);
 
     if (this.config.orientation == "vertical")
       this.observer.broadcast("sliderSize", this.sliderContainer.offsetHeight);
   }
-
+  updateFromToAttr() {
+    if (this.config.positionFrom !== Number(this.sliderContainer.dataset.from)) {
+      this.sliderContainer.dataset.from = String(this.config.positionFrom)
+    }
+    if (this.config.positionTo !== Number(this.sliderContainer.dataset.to)) {
+      this.sliderContainer.dataset.to = String(this.config.positionTo)
+    }
+  }
   updateConfig(data: any) {
     this.config = data;
     this.sliderBlock.updateConfig(data);
+    this.updateFromToAttr()
   }
-  changeOrientaion(data: any) {
+  changeOrientation(data: any) {
     this.updateConfig(data);
     this.getSliderSize();
   }

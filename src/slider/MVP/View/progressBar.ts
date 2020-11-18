@@ -16,7 +16,7 @@ class progressBar {
   }
 
   setPositionForThumbOne(position: number) {
-    if (this.config.orientation == "horisontal") {
+    if (this.config.orientation == "horizontal") {
       if (!this.config.range) {
         this.progressBar.style.width = position + 2 + "px";
       } else {
@@ -43,7 +43,7 @@ class progressBar {
     }
   }
   setPositionForThumbTwo(position: number) {
-    if (this.config.orientation == "horisontal") {
+    if (this.config.orientation == "horizontal") {
       this.progressBar.style.width =
         position - parseInt(this.progressBar.style.left) + 7 + "px";
     }
@@ -54,20 +54,20 @@ class progressBar {
   }
 
   checkOrientation() {
-    if (this.config.orientation == "horisontal") {
+    if (this.config.orientation == "horizontal") {
       this.progressBar.classList.remove("progress-bar_vertical");
-      this.progressBar.classList.add("progress-bar_horisontal");
+      this.progressBar.classList.add("progress-bar_horizontal");
     }
     if (this.config.orientation == "vertical") {
       this.progressBar.classList.add("progress-bar_vertical");
-      this.progressBar.classList.remove("progress-bar_horisontal");
+      this.progressBar.classList.remove("progress-bar_horizontal");
     }
   }
 
   setOnloadProgressBarPosition(data: any) {
     let onloadPositionThumbOne = data.thumbData.onloadPositionThumbOne;
     let onloadPositionThumbTwo = data.thumbData.onloadPositionThumbTwo;
-    if (this.config.orientation == "horisontal") {
+    if (this.config.orientation == "horizontal") {
       this.progressBar.removeAttribute("style");
       if (!this.config.range) {
         this.progressBar.style.left = "0px";

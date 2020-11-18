@@ -7,7 +7,7 @@ const config = {
   positionTo: 30,
   label: true,
   step: 1,
-  orientation: "horisontal",
+  orientation: "horizontal",
 };
 const block = $("<div>");
 beforeEach(function () {
@@ -91,12 +91,12 @@ describe("View", () => {
         value: "50",
       };
     });
-    it("при data_num = 1 на sliderContainer обновляетс атрибут data-from", () => {
+    it("при data_num = 1 на sliderContainer обновляет атрибут data-from", () => {
       view.setPositionMoveThumb(data);
       expect(view.sliderBlock.setPositionMoveThumb).toHaveBeenCalled();
       expect(view.sliderContainer).toHaveAttr("data-from", data.value);
     });
-    it("при data_num = 2 на sliderContainer обновляетс атрибут data-to", () => {
+    it("при data_num = 2 на sliderContainer обновляет атрибут data-to", () => {
       data.data_num = "2";
       view.setPositionMoveThumb(data);
       expect(view.sliderBlock.setPositionMoveThumb).toHaveBeenCalled();
@@ -126,15 +126,15 @@ describe("View", () => {
     beforeAll(function () {
       let view: View = new View(config, block[0]);
     });
-    it("при ресайзе окна вызывается observer.broadcast в ф-ции getSliderSize во View ", () => {
+    it("при resize окна вызывается observer.broadcast в ф-ции getSliderSize во View ", () => {
       const event = new UIEvent("resize", {});
       window.dispatchEvent(event);
       expect(view.observer.broadcast).toHaveBeenCalled();
     });
   });
   describe("метод getSliderSize", () => {
-    it("при orientation = horisontal вызывается observer.broadcast", () => {
-      view.config.orientation = "horisontal";
+    it("при orientation = horizontal вызывается observer.broadcast", () => {
+      view.config.orientation = "horizontal";
       view.getSliderSize();
       expect(view.observer.broadcast).toHaveBeenCalled();
     });
@@ -142,6 +142,20 @@ describe("View", () => {
       view.config.orientation = "vertical";
       view.getSliderSize();
       expect(view.observer.broadcast).toHaveBeenCalled();
+    });
+  });
+  describe("метод updateFromToAttr", () => {
+    it("при positionFrom !== атрибуту data-from, метод уравнивает значения", () => {
+      view.config.positionFrom = 99;
+      view.sliderContainer.dataset.from = '10'
+      view.updateFromToAttr()
+      expect(view.sliderContainer).toHaveAttr('data-from', '99');
+    });
+    it("при positionTo !== атрибуту data-to, метод уравнивает значения", () => {
+      view.config.positionTo = 200;
+      view.sliderContainer.dataset.to = '50'
+      view.updateFromToAttr()
+      expect(view.sliderContainer).toHaveAttr('data-to', '200');
     });
   });
   it("метод updateConfig обновляет конфиг  View и вызывает ф-ю updateConfig в sliderBlock", () => {
@@ -159,10 +173,10 @@ describe("View", () => {
     expect(view.config).toEqual(newConf);
     expect(view.sliderBlock.updateConfig).toHaveBeenCalled();
   });
-  it("метод changeOrientaion вызывает методы getSliderSize и updateConfig", () => {
+  it("метод changeOrientation вызывает методы getSliderSize и updateConfig", () => {
     spyOn(view, "getSliderSize");
     spyOn(view, "updateConfig");
-    view.changeOrientaion({});
+    view.changeOrientation({});
     expect(view.updateConfig).toHaveBeenCalled();
     expect(view.getSliderSize).toHaveBeenCalled();
   });

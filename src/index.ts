@@ -14,7 +14,7 @@ $(".app3").rangeSlider({
   max: 110,
   step: 0.5,
   min: -110,
-  positionFrom: 10,
-  positionTo: 55,
+  positionFrom: 5.5,
+  positionTo: 99.5,
   label: false
 });

@@ -41,75 +41,62 @@ class Thumb {
     this.zIndex = 1;
 
     this.checkOrientation();
-    this.moveThumb(this.thumb);
+    this.moveThumb();
   }
   addFollower(follower: any) {
     this.observer.subscribe(follower);
   }
-  private checkOrientation() {
-    if (this.config.orientation == "horisontal") {
-      this.thumb.classList.add("thumb_horisontal");
+  checkOrientation() {
+    if (this.config.orientation == "horizontal") {
+      this.thumb.classList.add("thumb_horizontal");
       this.thumb.classList.remove("thumb_vertical");
     }
 
     if (this.config.orientation == "vertical") {
-      this.thumb.classList.remove("thumb_horisontal");
+      this.thumb.classList.remove("thumb_horizontal");
       this.thumb.classList.add("thumb_vertical");
     }
   }
-
-  moveThumb(elem: HTMLElement) {
-    elem.addEventListener("mousedown", this.mouseDown.bind(this));
+  moveThumb() {
+    this.thumb.addEventListener("mousedown", this.mouseDown.bind(this));
   }
-
-  mouseDown(e: any = MouseEvent) {
-    if (e instanceof MouseEvent) {
-      e = e || window.event;
-      e.preventDefault();
-
-      document.onmousemove = (e) => this.onMouseMove(e);
-      document.onmouseup = (e) => this.onMouseUp(e);
-
-      this.zIndex++;
-      this.thumb.style.zIndex = this.zIndex.toString();
-      this.observer.broadcast("mouseMove", this.findPosition(e));
-    }
+  mouseDown(e: MouseEvent) {
+    e.preventDefault();
+    document.onmousemove = (e) => this.onMouseMove(e);
+    document.onmouseup = (e) => this.onMouseUp(e);
+    this.zIndex++;
+    this.thumb.style.zIndex = this.zIndex.toString();
+    this.observer.broadcast("mouseMove", this.findPosition(e));
   }
-
-  onMouseMove = (e: any = MouseEvent) => {
-    if (e instanceof MouseEvent) e = e || window.event;
+  onMouseMove = (e: MouseEvent) => {
     e.preventDefault();
     this.moveHandle(e);
   };
-
-  moveHandle(e: any = MouseEvent) {
+  moveHandle(e: MouseEvent) {
     this.observer.broadcast("mouseMove", this.findPosition(e));
   }
-
-  onMouseUp = (e: any = MouseEvent) => {
+  onMouseUp = (e: MouseEvent) => {
     document.onmousemove = null;
     document.onmouseup = null;
     this.observer.broadcast("mouseMove", this.findPosition(e));
   };
-
-  findPosition(e: any) {
-    if (this.config.orientation == "horisontal") {
-      return this.findPositionForHorisontal(e);
+  findPosition(e: MouseEvent) {
+    if (this.config.orientation == "horizontal") {
+      return this.findPositionForHorizontal(e);
     }
 
     if (this.config.orientation == "vertical") {
       return this.findPositionForVertical(e);
     }
   }
-
-  private findPositionForHorisontal(e: MouseEvent) {
+  findPositionForHorizontal(e: MouseEvent) {
     let thumbFirst = this.slider.querySelector(".thumb_first") as HTMLElement;
     let thumbSecond = this.slider.querySelector(".thumb_second") as HTMLElement;
     if (this.thumb.dataset.num == "1") {
       return {
         clientXY: e.clientX,
-        "slider_client_react": this.slider.getBoundingClientRect().left,
-        "data_num": this.thumb.dataset.num,
+        slider_client_react: this.slider.getBoundingClientRect().left,
+        data_num: this.thumb.dataset.num,
         positionThumbSecond: this.config.range
           ? parseInt(thumbSecond.style.left)
           : null,
@@ -117,21 +104,20 @@ class Thumb {
     } else if (this.thumb.dataset.num == "2") {
       return {
         clientXY: e.clientX,
-        "slider_client_react": this.slider.getBoundingClientRect().left,
-        "data_num": this.thumb.dataset.num,
+        slider_client_react: this.slider.getBoundingClientRect().left,
+        data_num: this.thumb.dataset.num,
         positionThumbFirst: parseInt(thumbFirst.style.left),
       };
     }
   }
-
-  private findPositionForVertical(e: MouseEvent) {
+  findPositionForVertical(e: MouseEvent) {
     let thumbFirst = this.slider.querySelector(".thumb_first") as HTMLElement;
     let thumbSecond = this.slider.querySelector(".thumb_second") as HTMLElement;
     if (this.thumb.dataset.num == "1") {
       return {
         clientXY: e.clientY,
-        "slider_client_react": this.slider.getBoundingClientRect().top,
-        "data_num": this.thumb.dataset.num,
+        slider_client_react: this.slider.getBoundingClientRect().top,
+        data_num: this.thumb.dataset.num,
         positionThumbSecond: this.config.range
           ? parseInt(thumbSecond.style.top)
           : null,
@@ -139,26 +125,23 @@ class Thumb {
     } else if (this.thumb.dataset.num == "2") {
       return {
         clientXY: e.clientY,
-        "slider_client_react": this.slider.getBoundingClientRect().top,
-        "data_num": this.thumb.dataset.num,
+        slider_client_react: this.slider.getBoundingClientRect().top,
+        data_num: this.thumb.dataset.num,
         positionThumbFirst: parseInt(thumbFirst.style.top),
       };
     }
   }
-
   setPosition(position: number) {
-    if (this.config.orientation == "horisontal") {
+    if (this.config.orientation == "horizontal") {
       this.thumb.style.left = position + "px";
     }
     if (this.config.orientation == "vertical") {
       this.thumb.style.top = position + "px";
     }
   }
-
   setLabelValue(value: number) {
     this.label.setLabelValue(value);
   }
-
   removeThis() {
     this.slider.removeChild(this.thumb);
   }

@@ -1,13 +1,13 @@
-interface IconfigStep {
+interface IConfigStep {
   min: number;
   max: number;
   orientation: string;
 }
 class Step {
-  config: IconfigStep;
+  config: IConfigStep;
   container: HTMLElement;
-  constructor(IconfigStep: any, container: HTMLElement) {
-    this.config = IconfigStep;
+  constructor(IConfigStep: any, container: HTMLElement) {
+    this.config = IConfigStep;
     this.container = container;
   }
   addStepLine(data: any) {
@@ -36,7 +36,7 @@ class Step {
           stepBlock.style.top = stepSize * i - 17 + "px";
         }
       }
-      if (this.config.orientation == "horisontal") {
+      if (this.config.orientation == "horizontal") {
         stepBlock.style.left = stepSize * i + "px";
         stepBlock.classList.remove("slider__step-block_vertical");
       }

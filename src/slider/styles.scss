@@ -105,13 +105,16 @@
       top: -10px;
       left: 20px;
     }
+    &_hidden {
+      display: none;
+    }
   }
   &_vertical {
     transform: translateY(-50%);
     right: -5px;
     left: -5px !important;
   }
-  &_horisontal {
+  &_horizontal {
     top: -5.4px !important;
   }
 }
@@ -124,7 +127,7 @@
     width: 7px;
     right: 0px;
   }
-  &_horisontal {
+  &_horizontal {
     top: 0px;
     height: 7px;
   }

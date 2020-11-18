@@ -1,7 +1,7 @@
 import { progressBar } from "../slider/MVP/View/progressBar";
 const config = {
   range: true,
-  orientation: "horisontal",
+  orientation: "horizontal",
 };
 const block = $("<div>");
 const secondThumb = $("<div>");
@@ -26,19 +26,19 @@ describe("ProgressBar", () => {
     expect(ProgressBar.progressBar).toHaveClass("progress-bar");
   });
   describe("метода checkOrientation", () => {
-    it("при orientaion = vertical устанавливает блоку класс progress-bar_vertical и удаляет класс progress-bar_horisontal", () => {
+    it("при orientation = vertical устанавливает блоку класс progress-bar_vertical и удаляет класс progress-bar_horizontal", () => {
       ProgressBar.config.orientation = "vertical";
       ProgressBar.checkOrientation();
       expect(ProgressBar.progressBar).toHaveClass("progress-bar_vertical");
       expect(ProgressBar.progressBar).not.toHaveClass(
-        "progress-bar_horisontal"
+        "progress-bar_horizontal"
       );
     });
-    it("при orientaion = horisontal устанавливает блоку класс progress-bar_horisontal и удаляет класс progress-bar_vertical", () => {
-      ProgressBar.config.orientation = "horisontal";
+    it("при orientation = horizontal устанавливает блоку класс progress-bar_horizontal и удаляет класс progress-bar_vertical", () => {
+      ProgressBar.config.orientation = "horizontal";
       ProgressBar.checkOrientation();
       expect(ProgressBar.progressBar).not.toHaveClass("progress-bar_vertical");
-      expect(ProgressBar.progressBar).toHaveClass("progress-bar_horisontal");
+      expect(ProgressBar.progressBar).toHaveClass("progress-bar_horizontal");
     });
   });
 
@@ -56,18 +56,18 @@ describe("ProgressBar", () => {
       onloadPositionThumbOne = data.thumbData.onloadPositionThumbOne;
       onloadPositionThumbTwo = data.thumbData.onloadPositionThumbTwo;
     });
-    it("при orientation = horisontal, range = false устанавливает style.left и style.width", () => {
+    it("при orientation = horizontal, range = false устанавливает style.left и style.width", () => {
       ProgressBar.config.range = false;
-      ProgressBar.config.orientation = "horisontal";
+      ProgressBar.config.orientation = "horizontal";
       ProgressBar.setOnloadProgressBarPosition(data);
       expect(ProgressBar.progressBar).toHaveCss({ left: "0px" });
       expect(ProgressBar.progressBar).toHaveCss({
         width: onloadPositionThumbOne + 2 + "px",
       });
     });
-    it("при orientation = horisontal, range = true  устанавливает style.left и style.width", () => {
+    it("при orientation = horizontal, range = true  устанавливает style.left и style.width", () => {
       ProgressBar.config.range = true;
-      ProgressBar.config.orientation = "horisontal";
+      ProgressBar.config.orientation = "horizontal";
       ProgressBar.setOnloadProgressBarPosition(data);
       expect(ProgressBar.progressBar).toHaveCss({
         left: onloadPositionThumbOne + "px",
@@ -106,16 +106,16 @@ describe("ProgressBar", () => {
         ".thumb_second"
       ) as HTMLElement;
     });
-    it("при orientation = horisontal, range = false устанавливает style.width для блока", () => {
+    it("при orientation = horizontal, range = false устанавливает style.width для блока", () => {
       ProgressBar.config.range = false;
-      ProgressBar.config.orientation = "horisontal";
+      ProgressBar.config.orientation = "horizontal";
       ProgressBar.setPositionForThumbOne(position);
       expect(ProgressBar.progressBar).toHaveCss({ width: position + 2 + "px" });
     });
 
-    it("при orientation = horisontal, range = true устанавливает блоку style.width и style.left", () => {
+    it("при orientation = horizontal, range = true устанавливает блоку style.width и style.left", () => {
       ProgressBar.config.range = true;
-      ProgressBar.config.orientation = "horisontal";
+      ProgressBar.config.orientation = "horizontal";
       secondThumb.style.left = "170px";
       ProgressBar.setPositionForThumbOne(position);
       expect(ProgressBar.progressBar).toHaveCss({ left: position + "px" });
@@ -149,8 +149,8 @@ describe("ProgressBar", () => {
       ProgressBar.progressBar.style.left = "100px";
       ProgressBar.progressBar.style.top = "30px";
     });
-    it("при orientation = horisontal устанавливает блоку style.width", () => {
-      ProgressBar.config.orientation = "horisontal";
+    it("при orientation = horizontal устанавливает блоку style.width", () => {
+      ProgressBar.config.orientation = "horizontal";
       ProgressBar.setPositionForThumbTwo(position);
       expect(ProgressBar.progressBar).toHaveCss({
         width:

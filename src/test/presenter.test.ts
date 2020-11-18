@@ -8,7 +8,7 @@ const config = {
   positionTo: 30,
   label: true,
   step: 1,
-  orientation: "horisontal",
+  orientation: "horizontal",
 };
 describe("Presenter", () => {
   const SpyModel = jasmine.createSpyObj("model", [
@@ -22,7 +22,7 @@ describe("Presenter", () => {
     "addFollower",
     "setOnloadView",
     "updateConfig",
-    "changeOrientaion",
+    "changeOrientation",
   ]);
   const block = $("<div>");
   beforeEach(function () {
@@ -67,9 +67,9 @@ describe("Presenter", () => {
       presenter.update("changeConfig", data);
       expect(presenter.view.updateConfig).toHaveBeenCalled();
     });
-    it(" type = changeOrientation должно вызывать ф-ю changeOrientaion в View", () => {
+    it(" type = changeOrientation должно вызывать ф-ю changeOrientation в View", () => {
       presenter.update("changeOrientation", data);
-      expect(presenter.view.changeOrientaion).toHaveBeenCalled();
+      expect(presenter.view.changeOrientation).toHaveBeenCalled();
     });
   });
 });

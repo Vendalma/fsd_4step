@@ -5,7 +5,7 @@ const config = {
   min: 5,
   max: 10,
   step: 1,
-  orientation: "horisontal",
+  orientation: "horizontal",
 };
 
 describe("Label", () => {
@@ -29,9 +29,9 @@ describe("Label", () => {
     label.setLabelValue(4);
     expect(label.elementLabel).toContainText("4");
   });
-  describe("метода CheckLabelOrientation", () => {
-    it("при orientation = horisontal у блока удаляеся класс thumb__label_vertical", () => {
-      label.config.orientation = "horisontal";
+  describe("метод changeLabelOrientation", () => {
+    it("при orientation = horizontal у блока удаляется класс thumb__label_vertical", () => {
+      label.config.orientation = "horizontal";
       label.changeLabelOrientation()
       expect(label.elementLabel).not.toHaveClass("thumb__label_vertical");
     });
@@ -41,16 +41,16 @@ describe("Label", () => {
       expect(label.elementLabel).toHaveClass("thumb__label_vertical");
     });
   });
-  describe("метод checkVisibleLabel", () => {
-    it("если config.label = true, то блок имеет style.display = block", () => {
+  describe("метод changeVisibleLabel", () => {
+    it("если config.label = true, то блок не имеет класса thumb__label_hidden", () => {
       label.config.label = true;
       label.changeVisibleLabel()
-      expect(label.elementLabel).toHaveCss({ display: "block" });
+      expect(label.elementLabel).not.toHaveClass('thumb__label_hidden');
     });
-    it("если config.label = false, то блок имеет style.display = none", () => {
+    it("если config.label = false, то блоку присваивается класс thumb__label_hidden", () => {
       label.config.label = false;
       label.changeVisibleLabel()
-      expect(label.elementLabel).toHaveCss({ display: "none" });
+      expect(label.elementLabel).toHaveClass('thumb__label_hidden');
     });
   });
   it("метод update обновляет конфиг, вызывает ф-ции changeVisibleLabel и changeLabelOrientation", () => {

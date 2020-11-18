@@ -1,5 +1,5 @@
 import * as $ from "jquery";
-import { MutationObserverClass } from '../mutationObserver';
+import { MutationObserverClass } from "../mutationObserver";
 import "./panelController.scss";
 interface ISettings {
   range: boolean;
@@ -20,13 +20,13 @@ class PanelController {
   inputMax: HTMLInputElement;
   inputStep: HTMLInputElement;
   inputLabel: HTMLInputElement;
-  inputHorisontal: HTMLInputElement;
+  inputHorizontal: HTMLInputElement;
   inputVertical: HTMLInputElement;
   inputSingle: HTMLInputElement;
   inputDouble: HTMLInputElement;
   $slider: JQuery;
   config: ISettings;
-  mutationObserver: MutationObserverClass
+  mutationObserver: MutationObserverClass;
   constructor(parent: HTMLElement, config: ISettings) {
     this.parent = parent;
     this.config = config;
@@ -50,8 +50,8 @@ class PanelController {
     this.inputLabel = this.parent.querySelector(
       ".panel__checkbox_label"
     ) as HTMLInputElement;
-    this.inputHorisontal = this.parent.querySelector(
-      ".panel__radio_horisontal"
+    this.inputHorizontal = this.parent.querySelector(
+      ".panel__radio_horizontal"
     ) as HTMLInputElement;
     this.inputVertical = this.parent.querySelector(
       ".panel__radio_vertical"
@@ -64,7 +64,7 @@ class PanelController {
     ) as HTMLInputElement;
 
     this.$slider = $(this.parent);
-    this.mutationObserver = new MutationObserverClass(this, this.$slider[0])
+    this.mutationObserver = new MutationObserverClass(this, this.$slider[0]);
     this.init();
     this.change();
     this.checkRange();
@@ -78,8 +78,8 @@ class PanelController {
     this.inputStep.value = this.config.step.toString();
     if (this.config.label) this.inputLabel.checked = true;
     if (!this.config.label) this.inputLabel.checked = false;
-    if (this.config.orientation == "horisontal")
-      this.inputHorisontal.checked = true;
+    if (this.config.orientation == "horizontal")
+      this.inputHorizontal.checked = true;
     if (this.config.orientation == "vertical")
       this.inputVertical.checked = true;
     if (this.config.range) this.inputDouble.checked = true;
@@ -93,8 +93,8 @@ class PanelController {
         this.$slider.rangeSlider("update", { label: isLabelVisible });
       }
 
-      if (e.target == this.inputHorisontal && this.inputHorisontal.checked) {
-        this.$slider.rangeSlider("update", { orientation: "horisontal" });
+      if (e.target == this.inputHorizontal && this.inputHorizontal.checked) {
+        this.$slider.rangeSlider("update", { orientation: "horizontal" });
       }
 
       if (e.target == this.inputVertical && this.inputVertical.checked) {

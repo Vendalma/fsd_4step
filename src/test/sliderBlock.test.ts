@@ -7,7 +7,7 @@ const config = {
   positionTo: 30,
   label: true,
   step: 1,
-  orientation: "horisontal",
+  orientation: "horizontal",
 };
 const block = $("<div>");
 const secondThumb = $("<div>");
@@ -63,7 +63,7 @@ describe("Slider Block", () => {
     sliderBlock.addStep({});
     expect(sliderBlock.step.addStepLine).toHaveBeenCalled();
   });
-  it("метод updateConfig обновляет конфиг, вызывает методы changeRange, changeOrientation, передает новый когфиг классам step, thumbOne, thumbTwo, progressBar", () => {
+  it("метод updateConfig обновляет конфиг, вызывает методы changeRange, changeOrientation, передает новый конфиг классам step, thumbOne, thumbTwo, progressBar", () => {
     spyOn(sliderBlock, "changeOrientation");
     spyOn(sliderBlock, "changeRange");
     sliderBlock.updateConfig({});
@@ -95,13 +95,13 @@ describe("Slider Block", () => {
     });
   });
   describe("метод changeOrientation", () => {
-    it("при orientation = vertical блоку присваевается класс slider__block_vertical", () => {
+    it("при orientation = vertical блоку присваивается класс slider__block_vertical", () => {
       sliderBlock.config.orientation = "vertical";
       sliderBlock.changeOrientation();
       expect(sliderBlock.sliderBlock).toHaveClass("slider__block_vertical");
     });
-    it("при orientation = horisontal у блока удаляется класс slider__block_vertical", () => {
-      sliderBlock.config.orientation = "horisontal";
+    it("при orientation = horizontal у блока удаляется класс slider__block_vertical", () => {
+      sliderBlock.config.orientation = "horizontal";
       sliderBlock.changeOrientation();
       expect(sliderBlock.sliderBlock).not.toHaveClass("slider__block_vertical");
     });
@@ -183,9 +183,9 @@ describe("Slider Block", () => {
     beforeEach(function () {
       event = new MouseEvent("click", { bubbles: true });
     });
-    describe("orientation = horisontal", () => {
+    describe("orientation = horizontal", () => {
       beforeAll(function () {
-        sliderBlock.config.orientation = "horisontal";
+        sliderBlock.config.orientation = "horizontal";
         sliderBlock.thumbOne.thumb = sliderBlock.sliderBlock.querySelector(
           ".thumb_first"
         ) as HTMLElement;

@@ -2,25 +2,18 @@ import { PanelController } from "./panelController/panelController";
 class MutationObserverClass {
   container: HTMLElement | null;
   panel: PanelController;
-  constructor(
-    panel: PanelController,
-    container: HTMLElement
-  ) {
+  constructor(panel: PanelController, container: HTMLElement) {
     this.container = container;
     this.panel = panel;
-
     this.init();
   }
   private init() {
     let that = this;
-    let target = this.container?.lastChild as HTMLElement
+    let target = this.container?.lastChild as HTMLElement;
     const config = {
       attributes: true,
       subtree: true,
-      attributeFilter: [
-        "data-from",
-        "data-to",
-      ],
+      attributeFilter: ["data-from", "data-to"],
     };
     const callback = function (mutationsList: any, observer: any) {
       for (let mutation of mutationsList) {
@@ -30,11 +23,9 @@ class MutationObserverClass {
 
           if (name == "data-from") {
             that.panel.updateInputFrom(value);
-
           }
           if (name == "data-to") {
             that.panel.updateInputTo(value);
-
           }
         }
       }

@@ -3,7 +3,7 @@ const config = {
   range: true,
   positionFrom: 15,
   positionTo: 30,
-  orientation: "horisontal",
+  orientation: "horizontal",
 };
 const block = $("<div>");
 beforeEach(function () {
@@ -49,8 +49,8 @@ describe("Thumb", () => {
     expect(thumb.thumb).toBeInDOM();
   });
   describe("проверка метода setPosition", () => {
-    it("orientation = horisontal", () => {
-      thumb.config.orientation = "horisontal";
+    it("orientation = horizontal", () => {
+      thumb.config.orientation = "horizontal";
       thumb.setPosition(8);
       expect(thumb.thumb).toHaveCss({ left: "8px" });
     });
@@ -66,13 +66,13 @@ describe("Thumb", () => {
       const spy = spyOn<any>(thumb, 'checkOrientation').and.callThrough();
       spy.call(thumb)
       expect(thumb.thumb).toHaveClass("thumb_vertical");
-      expect(thumb.thumb).not.toHaveClass("thumb_horisontal");
+      expect(thumb.thumb).not.toHaveClass("thumb_horizontal");
     });
-    it("orientation = horisontal", () => {
-      thumb.config.orientation = 'horisontal'
+    it("orientation = horizontal", () => {
+      thumb.config.orientation = 'horizontal'
       const spy = spyOn<any>(thumb, 'checkOrientation').and.callThrough();
       spy.call(thumb)
-      expect(thumb.thumb).toHaveClass("thumb_horisontal");
+      expect(thumb.thumb).toHaveClass("thumb_horizontal");
       expect(thumb.thumb).not.toHaveClass("thumb_vertical");
     });
   });
@@ -81,7 +81,7 @@ describe("Thumb", () => {
     spyOn(thumb, "mouseDown");
     const mousedown = new MouseEvent("mousedown", { bubbles: true });
 
-    thumb.moveThumb(thumb.thumb);
+    thumb.moveThumb();
     thumb.thumb.dispatchEvent(mousedown);
     expect(thumb.mouseDown).toHaveBeenCalled();
   });
@@ -153,9 +153,9 @@ describe("Thumb", () => {
 
       spyOn(thumb, "findPosition").and.callThrough();
     });
-    it("orientation = horisontal, range = false", () => {
+    it("orientation = horizontal, range = false", () => {
       thumb.config.range = false;
-      thumb.config.orientation = "horisontal";
+      thumb.config.orientation = "horizontal";
 
       let expectedValue = {
         clientXY: 100,
@@ -167,9 +167,9 @@ describe("Thumb", () => {
       let returnedValue = thumb.findPosition(event);
       expect(returnedValue).toEqual(expectedValue);
     });
-    it("orientation = horisontal, range = true, data-num = 1", () => {
+    it("orientation = horizontal, range = true, data-num = 1", () => {
       thumb.config.range = true;
-      thumb.config.orientation = "horisontal";
+      thumb.config.orientation = "horizontal";
       thumb.thumb.dataset.num = "1";
 
       let expectedValue = {
@@ -182,9 +182,9 @@ describe("Thumb", () => {
       let returnedValue = thumb.findPosition(event);
       expect(returnedValue).toEqual(expectedValue);
     });
-    it("orientation = horisontal, range = true, data-num = 2", () => {
+    it("orientation = horizontal, range = true, data-num = 2", () => {
       thumb.config.range = true;
-      thumb.config.orientation = "horisontal";
+      thumb.config.orientation = "horizontal";
       thumb.thumb.dataset.num = "2";
 
       let expectedValue = {

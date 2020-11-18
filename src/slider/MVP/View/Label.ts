@@ -27,14 +27,14 @@ class Label {
     if (this.config.orientation == "vertical")
       this.elementLabel.classList.add("thumb__label_vertical");
 
-    if (this.config.orientation == "horisontal")
+    if (this.config.orientation == "horizontal")
       this.elementLabel.classList.remove("thumb__label_vertical");
   }
 
   changeVisibleLabel() {
     this.config.label
-      ? (this.elementLabel.style.display = "block")
-      : (this.elementLabel.style.display = "none");
+      ? (this.elementLabel.classList.remove('thumb__label_hidden'))
+      : (this.elementLabel.classList.add('thumb__label_hidden'));
   }
   update(data: any) {
     this.config = data;

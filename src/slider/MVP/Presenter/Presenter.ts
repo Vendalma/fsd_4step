@@ -25,11 +25,9 @@ class Presenter {
     } else if (type == "changeConfig") {
       this.view.updateConfig(data);
     } else if (type == "changeOrientation") {
-      this.view.changeOrientaion(data);
+      this.view.changeOrientation(data);
     }
   }
 }
-
-
 export { Presenter };
 

@@ -75,7 +75,7 @@ class SliderBlock {
     if (this.config.orientation == "vertical") {
       this.sliderBlock?.classList.add("slider__block_vertical");
     }
-    if (this.config.orientation == "horisontal") {
+    if (this.config.orientation == "horizontal") {
       this.sliderBlock?.classList.remove("slider__block_vertical");
     }
   }
@@ -117,7 +117,7 @@ class SliderBlock {
     this.sliderBlock.addEventListener("click", this.onSliderClick.bind(this));
   }
   onSliderClick(e: MouseEvent): any {
-    if (this.config.orientation == "horisontal") {
+    if (this.config.orientation == "horizontal") {
       if (!this.config.range) {
         this.thumbOne.onMouseUp(e);
       } else if (this.config.range) {

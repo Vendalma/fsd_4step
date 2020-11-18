@@ -55,7 +55,7 @@ interface MethodsObject {
           label: true,
           range: true,
           step: 1,
-          orientation: "horisontal",
+          orientation: "horizontal",
           positionFrom: 10,
           positionTo: 50,
         },
