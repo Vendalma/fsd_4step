@@ -1,7 +1,0 @@
-{
-  "parserOptions": {
-    "ecmaVersion": 6
-  },
-  "plugins": ["fsd"],
-  "extends": ["airbnb-base", "plugin:fsd/all"]
-}
