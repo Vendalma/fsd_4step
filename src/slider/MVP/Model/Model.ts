@@ -24,22 +24,23 @@ class Model {
   addFollower(follower: any) {
     this.observer.subscribe(follower);
   }
-  fundThumbPosition(data: any) {
-    this.calcThumbPosition(data);
-  }
   updateConfig(data: any) {
     if (this.validator.validationConfig(data) === true) {
-      Object.assign(this.config, data);
       let key = Object.keys(data)[0];
+      Object.assign(this.config, data);
       if (key == "orientation") {
         this.observer.broadcast("changeOrientation", this.config);
       } else {
         if (key == "range" || key == "min" || key == "max") {
-          this.recalcPosition();
+          this.calcPositionFrom();
+          this.calcPositionTo();
+          this.calcParams(this.sliderSize);
         } else if (key == "positionFrom") {
-          this.changePositionFrom();
+          this.calcPositionFrom();
+          this.calcParams(this.sliderSize);
         } else if (key == "positionTo") {
-          this.changePositionTo();
+          this.calcPositionTo();
+          this.calcParams(this.sliderSize);
         }
         this.observer.broadcast("changeConfig", this.config);
       }
@@ -49,22 +50,22 @@ class Model {
     if (this.validator.validationConfig(this.config) === true)
       return this.config;
   }
-  setOnloadData(data: number) {
+  calcParams(data: number) {
     this.sliderSize = data;
     this.observer.broadcast("onloadPosition", {
       stepData: this.calcStepData(),
       thumbData: this.calcOnloadThumbPosition(),
     });
   }
-  calcThumbPosition(data: any) {
-    let clientX = data.clientXY;
+  fundMoveThumbPosition(data: any) {
+    let clientXY = data.clientXY;
     let sliderClientReact = data.slider_client_react;
     let data_num = data.data_num;
     let firstThumbPosition = data.positionThumbFirst;
     let secondThumbPosition = data.positionThumbSecond;
 
     let stepSize = this.config.step / this.calcPixelSize();
-    let position = clientX - sliderClientReact;
+    let position = clientXY - sliderClientReact;
     let positionMove = this.checkSliderSizeMax(
       Math.round(position / stepSize) * stepSize
     );
@@ -78,9 +79,11 @@ class Model {
     }
     let rightValueForRange = this.calcValue(secondThumbPosition);
     let leftValueForRange = this.calcValue(firstThumbPosition);
-
-    if (!this.config.range) {
-      let right = this.sliderSize;
+    if (data_num == "1") {
+      let right: number;
+      this.config.range
+        ? (right = secondThumbPosition)
+        : (right = this.sliderSize);
       this.config.positionFrom = value;
       if (position <= 0) {
         this.observer.broadcast("position", {
@@ -88,9 +91,36 @@ class Model {
           data_num: data_num,
           value: this.config.min,
         });
-      } else if (position > right) {
+      } else if (!this.config.range && position > right) {
         this.observer.broadcast("position", {
           position: right,
+          data_num: data_num,
+          value: this.config.max,
+        });
+      } else if (this.config.range && position > right) {
+        this.observer.broadcast("position", {
+          position: right,
+          data_num: data_num,
+          value: rightValueForRange,
+        });
+      } else {
+        this.observer.broadcast("position", {
+          position: positionMove,
+          data_num: data_num,
+          value: value,
+        });
+      }
+    } else if (data_num == "2") {
+      this.config.positionTo = value;
+      if (position < firstThumbPosition) {
+        this.observer.broadcast("position", {
+          position: firstThumbPosition,
+          data_num: data_num,
+          value: leftValueForRange,
+        });
+      } else if (position > this.sliderSize) {
+        this.observer.broadcast("position", {
+          position: this.sliderSize,
           data_num: data_num,
           value: this.config.max,
         });
@@ -101,67 +131,7 @@ class Model {
           value: value,
         });
       }
-    } else if (this.config.range) {
-      if (data_num == "1") {
-        let right = secondThumbPosition;
-        this.config.positionFrom = value;
-        if (position <= 0) {
-          this.observer.broadcast("position", {
-            position: 0,
-            data_num: data_num,
-            value: this.config.min,
-          });
-        } else if (position > right) {
-          this.observer.broadcast("position", {
-            position: right,
-            data_num: data_num,
-            value: rightValueForRange,
-          });
-        } else {
-          this.observer.broadcast("position", {
-            position: positionMove,
-            data_num: data_num,
-            value: value,
-          });
-        }
-      } else if (data_num == "2") {
-        let left = firstThumbPosition;
-        let right = this.sliderSize;
-        this.config.positionTo = value;
-        if (position < left) {
-          this.observer.broadcast("position", {
-            position: left,
-            data_num: data_num,
-            value: leftValueForRange,
-          });
-        } else if (position > right) {
-          this.observer.broadcast("position", {
-            position: right,
-            data_num: data_num,
-            value: this.config.max,
-          });
-        } else {
-          this.observer.broadcast("position", {
-            position: positionMove,
-            data_num: data_num,
-            value: value,
-          });
-        }
-      }
     }
-  }
-  recalcPosition() {
-    this.calcPositionFrom();
-    this.calcPositionTo();
-    this.setOnloadData(this.sliderSize);
-  }
-  changePositionFrom() {
-    this.calcPositionFrom();
-    this.setOnloadData(this.sliderSize);
-  }
-  changePositionTo() {
-    this.calcPositionTo();
-    this.setOnloadData(this.sliderSize);
   }
   calcPositionFrom() {
     if (this.config.positionFrom < this.config.min) {
@@ -203,23 +173,20 @@ class Model {
   checkValueWithMin(value: number) {
     if (value >= this.config.min) {
       return value;
-    } else {
-      return this.config.min;
     }
+    return this.config.min;
   }
   checkValueWithMax(value: number) {
     if (value <= this.config.max) {
       return value;
-    } else {
-      return this.config.max;
     }
+    return this.config.max;
   }
   checkSliderSizeMax(value: number) {
-    if (value <= this.sliderSize - 3) {
+    if (value <= this.sliderSize) {
       return value;
-    } else {
-      return this.sliderSize;
     }
+    return this.sliderSize;
   }
   calcValue(position: number) {
     return (

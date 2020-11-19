@@ -12,10 +12,10 @@ const config = {
 };
 describe("Presenter", () => {
   const SpyModel = jasmine.createSpyObj("model", [
-    "fundThumbPosition",
+    "fundMoveThumbPosition",
     "addFollower",
     "getConfig",
-    "setOnloadData",
+    "calcParams",
   ]);
   const view = jasmine.createSpyObj("view", [
     "setPositionMoveThumb",
@@ -49,7 +49,7 @@ describe("Presenter", () => {
   describe("Метод update", () => {
     it(" type = mouseMove должно вызывать ф-ю fundThumbPosition в Model", () => {
       presenter.update("mouseMove", data);
-      expect(presenter.model.fundThumbPosition).toHaveBeenCalled();
+      expect(presenter.model.fundMoveThumbPosition).toHaveBeenCalled();
     });
     it(" type = position должно вызывать ф-ю setPositionMoveThumb в View", () => {
       presenter.update("position", data);
@@ -61,7 +61,7 @@ describe("Presenter", () => {
     });
     it(" type = sliderSize должно вызывать ф-ю setOnloadData в View", () => {
       presenter.update("sliderSize", data);
-      expect(presenter.model.setOnloadData).toHaveBeenCalled();
+      expect(presenter.model.calcParams).toHaveBeenCalled();
     });
     it(" type = changeConfig должно вызывать ф-ю updateConfig в View", () => {
       presenter.update("changeConfig", data);

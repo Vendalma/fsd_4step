@@ -15,13 +15,13 @@ class Presenter {
   }
   update(type: string, data: any) {
     if (type == "mouseMove") {
-      this.model.fundThumbPosition(data);
+      this.model.fundMoveThumbPosition(data);
     } else if (type == "position") {
       this.view.setPositionMoveThumb(data);
     } else if (type == "onloadPosition") {
       this.view.setOnloadView(data);
     } else if (type == "sliderSize") {
-      this.model.setOnloadData(data);
+      this.model.calcParams(data);
     } else if (type == "changeConfig") {
       this.view.updateConfig(data);
     } else if (type == "changeOrientation") {

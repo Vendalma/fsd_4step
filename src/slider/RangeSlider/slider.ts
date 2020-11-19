@@ -37,7 +37,6 @@ interface MethodsObject {
     },
     update: function (options: any) {
       return this.each(function (this: HTMLElement) {
-        //console.log($(this).data('sliderData'))
         $(this).data('sliderData').instanceSlider.updateConfig(options)
       })
     },

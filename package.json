@@ -39,7 +39,6 @@
     "karma-jasmine": "^4.0.1",
     "karma-jasmine-jquery-2": "^0.1.1",
     "karma-jquery": "^0.2.4",
-    "karma-scss-preprocessor": "^4.0.0",
     "karma-spec-reporter": "0.0.32",
     "karma-typescript": "^5.2.0",
     "karma-webpack": "^4.0.2",
