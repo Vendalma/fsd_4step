@@ -3,11 +3,11 @@ export class Observer {
   constructor() {
     this.observers = [];
   }
-  subscribe(fn: object) {
+  subscribe(fn: Object) {
     this.observers.push(fn);
   }
 
-  unsubscribe(fn: object) {
+  unsubscribe(fn: Object) {
     this.observers = this.observers.filter((subscriber) => subscriber !== fn);
   }
 

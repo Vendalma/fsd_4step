@@ -6,6 +6,14 @@ interface IConfigThumb {
   positionFrom: number;
   positionTo: number;
   orientation: string;
+  label: boolean;
+}
+interface IDataThumbMove {
+  clientXY: number;
+  slider_client_react: number;
+  data_num: string;
+  positionThumbFirst?: number;
+  positionThumbSecond?: number;
 }
 class Thumb {
   config: IConfigThumb;
@@ -13,25 +21,25 @@ class Thumb {
   thumb: HTMLElement;
   countThumbs: string;
   observer: Observer;
-  data_num: number;
+  data_num: string;
   label: Label;
 
   constructor(
-    IConfigThumb: any,
+    IConfigThumb: IConfigThumb,
     countThumbs: string,
     slider: HTMLElement,
-    data_num: number
+    data_num: string
   ) {
     this.config = IConfigThumb;
     this.slider = slider;
     this.countThumbs = countThumbs;
+    this.data_num = data_num;
 
     this.thumb = document.createElement("div");
     this.thumb.classList.add("thumb");
     this.thumb.classList.add(this.countThumbs);
 
-    this.data_num = data_num;
-    this.thumb.setAttribute("data-num", data_num + "");
+    this.thumb.setAttribute("data-num", this.data_num);
     this.slider.append(this.thumb);
 
     this.observer = new Observer();
@@ -60,29 +68,28 @@ class Thumb {
     e.preventDefault();
     document.onmousemove = (e) => this.onMouseMove(e);
     document.onmouseup = (e) => this.onMouseUp(e);
-    this.changeZIndexUp()
+    this.changeZIndexUp();
     this.observer.broadcast("mouseMove", this.findPosition(e));
   }
-  onMouseMove = (e: MouseEvent) => {
+  onMouseMove(e: MouseEvent) {
     e.preventDefault();
     this.moveHandle(e);
-  };
+  }
   moveHandle(e: MouseEvent) {
     this.observer.broadcast("mouseMove", this.findPosition(e));
   }
-  onMouseUp = (e: MouseEvent) => {
+  onMouseUp(e: MouseEvent) {
     document.onmousemove = null;
     document.onmouseup = null;
     this.observer.broadcast("mouseMove", this.findPosition(e));
-    this.changeZIndexDown()
-  };
+    this.changeZIndexDown();
+  }
   findPosition(e: MouseEvent) {
     if (this.config.orientation == "horizontal") {
-      return this.findPositionForHorizontal(e);
+      return this.findPositionForHorizontal(e) as IDataThumbMove;
     }
-
     if (this.config.orientation == "vertical") {
-      return this.findPositionForVertical(e);
+      return this.findPositionForVertical(e) as IDataThumbMove;
     }
   }
   findPositionForHorizontal(e: MouseEvent) {
@@ -96,14 +103,14 @@ class Thumb {
         positionThumbSecond: this.config.range
           ? parseInt(thumbSecond.style.left)
           : null,
-      };
+      } as IDataThumbMove;
     } else if (this.thumb.dataset.num == "2") {
       return {
         clientXY: e.clientX,
         slider_client_react: this.slider.getBoundingClientRect().left,
         data_num: this.thumb.dataset.num,
         positionThumbFirst: parseInt(thumbFirst.style.left),
-      };
+      } as IDataThumbMove;
     }
   }
   findPositionForVertical(e: MouseEvent) {
@@ -117,14 +124,14 @@ class Thumb {
         positionThumbSecond: this.config.range
           ? parseInt(thumbSecond.style.top)
           : null,
-      };
+      } as IDataThumbMove;
     } else if (this.thumb.dataset.num == "2") {
       return {
         clientXY: e.clientY,
         slider_client_react: this.slider.getBoundingClientRect().top,
         data_num: this.thumb.dataset.num,
         positionThumbFirst: parseInt(thumbFirst.style.top),
-      };
+      } as IDataThumbMove;
     }
   }
   setPosition(position: number) {
@@ -145,14 +152,14 @@ class Thumb {
     this.slider.append(this.thumb);
   }
   changeZIndexUp() {
-    this.thumb.classList.add('thumb_zIndex_up')
+    this.thumb.classList.add("thumb_zIndex_up");
   }
   changeZIndexDown() {
-    this.thumb.classList.remove('thumb_zIndex_up')
+    this.thumb.classList.remove("thumb_zIndex_up");
   }
-  updateConfigThumb(data: any) {
+  updateConfigThumb(data: IConfigThumb) {
     this.config = data;
-    this.label.update(data);
+    this.label.updateConfig(data);
     this.checkOrientation();
   }
 }

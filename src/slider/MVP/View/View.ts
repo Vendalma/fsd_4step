@@ -10,14 +10,20 @@ interface IConfigView {
   step: number;
   label: boolean;
 }
+interface IDataThumbMove {
+  clientXY: number;
+  slider_client_react: number;
+  data_num: string;
+  positionThumbFirst: number;
+  positionThumbSecond: number;
+}
 class View {
   config: IConfigView;
   wrapper: HTMLElement;
   sliderContainer: HTMLElement;
   observer: Observer;
   sliderBlock: SliderBlock;
-
-  constructor(IConfigView: any, wrapper: HTMLElement) {
+  constructor(IConfigView: IConfigView, wrapper: HTMLElement) {
     this.config = IConfigView;
     this.wrapper = wrapper;
     this.wrapper.classList.add("wrapper");
@@ -55,26 +61,19 @@ class View {
   subscribeOnUpdate() {
     this.sliderBlock.addFollower(this);
   }
-  update(type: string, data: any) {
+  update(type: string, data: IDataThumbMove) {
     this.observer.broadcast("mouseMove", data);
   }
-  setPositionMoveThumb(data: any) {
-    this.sliderBlock.setPositionMoveThumb(data);
-    let data_num = data.data_num;
-    let valueThumb = data.value;
-    if (data_num == "1") {
-      this.sliderContainer.setAttribute("data-from", valueThumb);
+  setPositionThumb(data: any) {
+    this.sliderBlock.setPositionThumb(data);
+    if (data.dataFirstThumb) {
+      this.sliderContainer.setAttribute("data-from", data.dataFirstThumb.valueFrom);
     }
-
-    if (data_num == "2") {
-      this.sliderContainer.setAttribute("data-to", valueThumb);
+    if (data.dataSecondThumb) {
+      this.sliderContainer.setAttribute("data-to", data.dataSecondThumb.valueTo);
     }
   }
-  setOnloadView(data: any) {
-    this.sliderBlock.setOnloadThumbPosition(data);
-    this.sliderBlock.addStep(data);
-  }
-  addFollower(follower: any) {
+  addFollower(follower: Object) {
     this.observer.subscribe(follower);
   }
   onloadWindow() {
@@ -100,12 +99,12 @@ class View {
       this.sliderContainer.dataset.to = String(this.config.positionTo)
     }
   }
-  updateConfig(data: any) {
+  updateConfig(data: IConfigView) {
     this.config = data;
     this.sliderBlock.updateConfig(data);
     this.updateFromToAttr()
   }
-  changeOrientation(data: any) {
+  changeOrientation(data: IConfigView) {
     this.updateConfig(data);
     this.getSliderSize();
   }

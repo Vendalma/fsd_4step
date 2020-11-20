@@ -7,16 +7,14 @@ class Label {
   elementLabel: HTMLElement;
   config: IConfigLabel;
 
-  constructor(config: any, thumb: HTMLElement) {
+  constructor(config: IConfigLabel, thumb: HTMLElement) {
     this.thumb = thumb;
     this.elementLabel = document.createElement("div");
     this.elementLabel.classList.add("thumb__label");
     this.thumb.append(this.elementLabel);
 
     this.config = config;
-    this.changeVisibleLabel();
-    this.changeLabelOrientation();
-    this.update(this.config);
+    this.updateConfig(this.config);
   }
 
   setLabelValue(value: number) {
@@ -36,7 +34,7 @@ class Label {
       ? (this.elementLabel.classList.remove('thumb__label_hidden'))
       : (this.elementLabel.classList.add('thumb__label_hidden'));
   }
-  update(data: any) {
+  updateConfig(data: IConfigLabel) {
     this.config = data;
     this.changeVisibleLabel();
     this.changeLabelOrientation();

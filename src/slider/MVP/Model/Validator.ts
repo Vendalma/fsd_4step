@@ -58,7 +58,7 @@ class Validator {
     }
     return true;
   }
-  validationConfig(data: any) {
+  validationConfig(data: Object) {
     Object.assign(this.config, data);
     if (
       this.validationMaxValue() === true &&

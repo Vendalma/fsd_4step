@@ -30,7 +30,6 @@ class MutationObserverClass {
         }
       }
     };
-
     const observer = new MutationObserver(callback);
     if (target) observer.observe(target, config);
   }

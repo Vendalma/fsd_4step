@@ -6,14 +6,14 @@ interface IConfigStep {
 class Step {
   config: IConfigStep;
   container: HTMLElement;
-  constructor(IConfigStep: any, container: HTMLElement) {
+  constructor(IConfigStep: IConfigStep, container: HTMLElement) {
     this.config = IConfigStep;
     this.container = container;
   }
   addStepLine(data: any) {
     this.deleteElements();
     const fragment = document.createDocumentFragment();
-    let stepSize = data.stepData;
+    let stepSize = data;
 
     for (let i = 0; i < 21; i++) {
       let stepBlock = document.createElement("div");
@@ -67,7 +67,7 @@ class Step {
     });
   }
 
-  updateConfigStep(data: any) {
+  updateConfigStep(data: IConfigStep) {
     this.config = data;
     this.changeMinValue();
     this.changeMaxValue();
