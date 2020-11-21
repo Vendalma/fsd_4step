@@ -64,7 +64,7 @@ class SliderBlock {
 
   updateConfig(data: IConfig) {
     this.config = data;
-    this.changeRange();
+    this.setThumbTwo();
     this.changeOrientation();
     this.step.updateConfigStep(data);
     this.thumbOne.updateConfigThumb(data);
@@ -72,17 +72,6 @@ class SliderBlock {
     this.progressBar.updateBarConfig(data);
   }
 
-  changeRange() {
-    const secondThumb = this.sliderBlock.querySelector(
-      ".thumb_second"
-    ) as HTMLElement;
-    if (secondThumb !== null) {
-      this.setThumbTwo();
-    }
-    if (this.config.range) {
-      let thumbTwo = this.thumbTwo?.addThis();
-    }
-  }
   changeOrientation() {
     if (this.config.orientation == "vertical") {
       this.sliderBlock?.classList.add("slider__block_vertical");
@@ -92,22 +81,19 @@ class SliderBlock {
     }
   }
   setPositionThumb(data: any) {
-    if (data.dataSecondThumb) {
-      this.thumbTwo?.setPosition(data.dataSecondThumb.positionTo);
-      this.thumbTwo?.setLabelValue(data.dataSecondThumb.valueTo);
-      if (!data.dataFirstThumb)
-        this.progressBar.setPositionForThumbTwo(
-          data.dataSecondThumb.positionTo
-        );
-    }
     if (data.dataFirstThumb) {
       this.thumbOne.setPosition(data.dataFirstThumb.positionFrom);
       this.thumbOne.setLabelValue(data.dataFirstThumb.valueFrom);
-      this.progressBar.setPositionForThumbOne(data.dataFirstThumb.positionFrom);
+    }
+    if (data.dataSecondThumb && this.config.range) {
+      this.thumbTwo?.setPosition(data.dataSecondThumb.positionTo);
+      this.thumbTwo?.setLabelValue(data.dataSecondThumb.valueTo);
     }
     if (data.stepData) {
       this.step.addStepLine(data.stepData);
+      this.progressBar.removeStyles();
     }
+    this.progressBar.addBar(data);
   }
 
   sliderClick() {
@@ -154,7 +140,14 @@ class SliderBlock {
     this.thumbTwo?.addFollower(this);
   }
   setThumbTwo() {
-    this.config.range ? null : this.thumbTwo?.removeThis();
+    let secondThumb = this.sliderBlock.querySelector(
+      ".thumb_second"
+    ) as HTMLElement;
+    if (this.config.range) {
+      this.thumbTwo?.addThis();
+    } else if (!this.config.range && secondThumb !== null) {
+      this.thumbTwo?.removeThis();
+    }
   }
   update(type: string, data: IDataThumbMove) {
     this.observer.broadcast("mouseMove", data);

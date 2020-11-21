@@ -14,42 +14,33 @@ class ProgressBar {
     this.slider.prepend(this.progressBar);
     this.checkOrientation();
   }
-
-  setPositionForThumbOne(position: number) {
-    let secondThumb = this.slider.querySelector(".thumb_second") as HTMLElement;
+  addBar(data: any) {
     if (this.config.orientation == "horizontal") {
       if (!this.config.range) {
         this.progressBar.style.left = "0px";
-        this.progressBar.style.width = position + 2 + "px";
+        this.progressBar.style.width = data.dataFirstThumb.positionFrom + "px";
       } else {
-        console.log(secondThumb.style.left);
-        this.progressBar.style.left = position + "px";
+        this.progressBar.style.left = data.dataFirstThumb.positionFrom + "px";
         this.progressBar.style.width =
-          parseInt(secondThumb.style.left) - position + "px";
+          data.dataSecondThumb.positionTo -
+          data.dataFirstThumb.positionFrom +
+          "px";
       }
     }
-
     if (this.config.orientation == "vertical") {
       if (!this.config.range) {
-        this.progressBar.style.top = "-1px";
-        this.progressBar.style.height = position + 2 + "px";
+        this.progressBar.style.top = "0px";
+        this.progressBar.style.height = data.dataFirstThumb.positionFrom + "px";
       } else {
-        this.progressBar.style.top = position + "px";
+        this.progressBar.style.top = data.dataFirstThumb.positionFrom + "px";
         this.progressBar.style.height =
-          parseInt(secondThumb.style.top) - position + "px";
+          data.dataSecondThumb.positionTo -
+          data.dataFirstThumb.positionFrom +
+          "px";
       }
     }
   }
-  setPositionForThumbTwo(position: number) {
-    if (this.config.orientation == "horizontal") {
-      this.progressBar.style.width =
-        position - parseInt(this.progressBar.style.left) + 7 + "px";
-    }
-    if (this.config.orientation == "vertical") {
-      this.progressBar.style.height =
-        position - parseInt(this.progressBar.style.top) + 5 + "px";
-    }
-  }
+
   checkOrientation() {
     if (this.config.orientation == "horizontal") {
       this.progressBar.classList.remove("progress-bar_vertical");
@@ -59,6 +50,9 @@ class ProgressBar {
       this.progressBar.classList.add("progress-bar_vertical");
       this.progressBar.classList.remove("progress-bar_horizontal");
     }
+  }
+  removeStyles() {
+    this.progressBar.removeAttribute("style");
   }
   updateBarConfig(data: IConfigBar) {
     this.config = data;

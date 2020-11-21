@@ -23,33 +23,6 @@ class Validator {
     }
     return false;
   }
-  validationPositionFrom() {
-    if (this.config.positionFrom < this.config.min) {
-      return false;
-    } else if (
-      this.config.range &&
-      this.config.positionFrom > this.config.positionTo
-    ) {
-      return false;
-    } else if (
-      !this.config.range &&
-      this.config.positionFrom > this.config.max
-    ) {
-      return false;
-    }
-    return true;
-  }
-  validationPositionTo() {
-    if (this.config.range && this.config.positionTo > this.config.max) {
-      return false;
-    } else if (
-      this.config.range &&
-      this.config.positionTo < this.config.positionFrom
-    ) {
-      return false;
-    }
-    return true;
-  }
   validationStepValue() {
     if (this.config.step <= 0) {
       return false;
@@ -63,8 +36,6 @@ class Validator {
     if (
       this.validationMaxValue() === true &&
       this.validationMinValue() === true &&
-      this.validationPositionFrom() === true &&
-      this.validationPositionTo() === true &&
       this.validationStepValue() === true
     ) {
       return true;

@@ -146,7 +146,8 @@ class Thumb {
     this.label.setLabelValue(value);
   }
   removeThis() {
-    this.slider.removeChild(this.thumb);
+    if (this.thumb !== null)
+      this.slider.removeChild(this.thumb);
   }
   addThis() {
     this.slider.append(this.thumb);

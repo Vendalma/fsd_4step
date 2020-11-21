@@ -39,14 +39,14 @@ class Model {
       if (key == "orientation") {
         this.observer.broadcast("changeOrientation", this.config);
       } else {
-        if (key == "range" || key == "min" || key == "max") {
+        if (
+          key == "range" ||
+          key == "min" ||
+          key == "max" ||
+          key == "positionFrom" ||
+          key == "positionTo"
+        ) {
           this.calcPositionFrom();
-          this.calcPositionTo();
-          this.calcParams(this.sliderSize);
-        } else if (key == "positionFrom") {
-          this.calcPositionFrom();
-          this.calcParams(this.sliderSize);
-        } else if (key == "positionTo") {
           this.calcPositionTo();
           this.calcParams(this.sliderSize);
         }
@@ -92,6 +92,10 @@ class Model {
             positionFrom: 0,
             valueFrom: this.config.min,
           },
+          dataSecondThumb: {
+            positionTo: this.calcOnloadSecondThumbPosition(),
+            valueTo: this.config.positionTo,
+          },
         });
       } else if (!this.config.range && position > right) {
         this.observer.broadcast("positionThumb", {
@@ -106,6 +110,10 @@ class Model {
             positionFrom: right,
             valueFrom: rightValueForRange,
           },
+          dataSecondThumb: {
+            positionTo: this.calcOnloadSecondThumbPosition(),
+            valueTo: this.config.positionTo,
+          },
         });
       } else {
         this.observer.broadcast("positionThumb", {
@@ -113,12 +121,20 @@ class Model {
             positionFrom: positionMove,
             valueFrom: value,
           },
+          dataSecondThumb: {
+            positionTo: this.calcOnloadSecondThumbPosition(),
+            valueTo: this.config.positionTo,
+          },
         });
       }
     } else if (data_num == "2") {
       this.config.positionTo = value;
       if (position < firstThumbPosition) {
         this.observer.broadcast("positionThumb", {
+          dataFirstThumb: {
+            positionFrom: this.calcOnloadFirstThumbPosition(),
+            valueFrom: this.config.positionFrom,
+          },
           dataSecondThumb: {
             positionTo: firstThumbPosition,
             valueTo: leftValueForRange,
@@ -126,6 +142,10 @@ class Model {
         });
       } else if (position > this.sliderSize) {
         this.observer.broadcast("positionThumb", {
+          dataFirstThumb: {
+            positionFrom: this.calcOnloadFirstThumbPosition(),
+            valueFrom: this.config.positionFrom,
+          },
           dataSecondThumb: {
             positionTo: this.sliderSize,
             valueTo: this.config.max,
@@ -133,6 +153,10 @@ class Model {
         });
       } else {
         this.observer.broadcast("positionThumb", {
+          dataFirstThumb: {
+            positionFrom: this.calcOnloadFirstThumbPosition(),
+            valueFrom: this.config.positionFrom,
+          },
           dataSecondThumb: {
             positionTo: positionMove,
             valueTo: value,
@@ -162,7 +186,7 @@ class Model {
       this.config.range &&
       this.config.positionFrom > this.config.positionTo
     ) {
-      this.config.positionTo = this.config.positionFrom + this.config.step;
+      this.config.positionFrom = this.config.positionTo - this.config.step;
     } else if (
       !this.config.range &&
       this.config.positionFrom > this.config.max
@@ -172,6 +196,9 @@ class Model {
   }
   calcPositionTo() {
     if (this.config.range && this.config.positionTo > this.config.max) {
+      this.config.positionTo = this.config.max;
+    }
+    if (this.config.range && this.config.positionTo < this.config.min) {
       this.config.positionTo = this.config.max;
     }
   }
