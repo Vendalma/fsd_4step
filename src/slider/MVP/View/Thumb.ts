@@ -55,7 +55,6 @@ class Thumb {
       this.thumb.classList.add("thumb_horizontal");
       this.thumb.classList.remove("thumb_vertical");
     }
-
     if (this.config.orientation == "vertical") {
       this.thumb.classList.remove("thumb_horizontal");
       this.thumb.classList.add("thumb_vertical");
@@ -69,7 +68,6 @@ class Thumb {
     document.onmousemove = (e) => this.onMouseMove(e);
     document.onmouseup = (e) => this.onMouseUp(e);
     this.changeZIndexUp();
-    this.observer.broadcast("mouseMove", this.findPosition(e));
   }
   onMouseMove(e: MouseEvent) {
     e.preventDefault();
@@ -102,7 +100,7 @@ class Thumb {
         data_num: this.thumb.dataset.num,
         positionThumbSecond: this.config.range
           ? parseInt(thumbSecond.style.left)
-          : null,
+          : undefined,
       } as IDataThumbMove;
     } else if (this.thumb.dataset.num == "2") {
       return {
@@ -122,8 +120,7 @@ class Thumb {
         slider_client_react: this.slider.getBoundingClientRect().top,
         data_num: this.thumb.dataset.num,
         positionThumbSecond: this.config.range
-          ? parseInt(thumbSecond.style.top)
-          : null,
+          ? parseInt(thumbSecond.style.top) : undefined
       } as IDataThumbMove;
     } else if (this.thumb.dataset.num == "2") {
       return {
@@ -158,10 +155,13 @@ class Thumb {
   changeZIndexDown() {
     this.thumb.classList.remove("thumb_zIndex_up");
   }
+  cleanStyleAttr() {
+    this.thumb.removeAttribute('style')
+  }
   updateConfigThumb(data: IConfigThumb) {
     this.config = data;
     this.label.updateConfig(data);
-    this.checkOrientation();
+    this.checkOrientation()
   }
 }
 export { Thumb };

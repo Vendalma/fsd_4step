@@ -36,18 +36,18 @@ class Model {
     if (this.validator.validationConfig(data) === true) {
       let key = Object.keys(data)[0];
       Object.assign(this.config, data);
-      if (key == "orientation") {
-        this.observer.broadcast("changeOrientation", this.config);
+      if (key == "orientation" || key == "range") {
+        this.calcPositionTo();
+        this.observer.broadcast("changeOrientationOrRange", this.config);
       } else {
         if (
-          key == "range" ||
           key == "min" ||
           key == "max" ||
           key == "positionFrom" ||
           key == "positionTo"
         ) {
-          this.calcPositionFrom();
           this.calcPositionTo();
+          this.calcPositionFrom();
           this.calcParams(this.sliderSize);
         }
         this.observer.broadcast("changeConfig", this.config);
@@ -92,10 +92,6 @@ class Model {
             positionFrom: 0,
             valueFrom: this.config.min,
           },
-          dataSecondThumb: {
-            positionTo: this.calcOnloadSecondThumbPosition(),
-            valueTo: this.config.positionTo,
-          },
         });
       } else if (!this.config.range && position > right) {
         this.observer.broadcast("positionThumb", {
@@ -110,10 +106,6 @@ class Model {
             positionFrom: right,
             valueFrom: rightValueForRange,
           },
-          dataSecondThumb: {
-            positionTo: this.calcOnloadSecondThumbPosition(),
-            valueTo: this.config.positionTo,
-          },
         });
       } else {
         this.observer.broadcast("positionThumb", {
@@ -121,20 +113,12 @@ class Model {
             positionFrom: positionMove,
             valueFrom: value,
           },
-          dataSecondThumb: {
-            positionTo: this.calcOnloadSecondThumbPosition(),
-            valueTo: this.config.positionTo,
-          },
         });
       }
     } else if (data_num == "2") {
       this.config.positionTo = value;
       if (position < firstThumbPosition) {
         this.observer.broadcast("positionThumb", {
-          dataFirstThumb: {
-            positionFrom: this.calcOnloadFirstThumbPosition(),
-            valueFrom: this.config.positionFrom,
-          },
           dataSecondThumb: {
             positionTo: firstThumbPosition,
             valueTo: leftValueForRange,
@@ -142,10 +126,6 @@ class Model {
         });
       } else if (position > this.sliderSize) {
         this.observer.broadcast("positionThumb", {
-          dataFirstThumb: {
-            positionFrom: this.calcOnloadFirstThumbPosition(),
-            valueFrom: this.config.positionFrom,
-          },
           dataSecondThumb: {
             positionTo: this.sliderSize,
             valueTo: this.config.max,
@@ -153,10 +133,6 @@ class Model {
         });
       } else {
         this.observer.broadcast("positionThumb", {
-          dataFirstThumb: {
-            positionFrom: this.calcOnloadFirstThumbPosition(),
-            valueFrom: this.config.positionFrom,
-          },
           dataSecondThumb: {
             positionTo: positionMove,
             valueTo: value,
@@ -183,11 +159,6 @@ class Model {
     if (this.config.positionFrom < this.config.min) {
       this.config.positionFrom = this.config.min;
     } else if (
-      this.config.range &&
-      this.config.positionFrom > this.config.positionTo
-    ) {
-      this.config.positionFrom = this.config.positionTo - this.config.step;
-    } else if (
       !this.config.range &&
       this.config.positionFrom > this.config.max
     ) {
@@ -195,10 +166,12 @@ class Model {
     }
   }
   calcPositionTo() {
-    if (this.config.range && this.config.positionTo > this.config.max) {
-      this.config.positionTo = this.config.max;
+    if (this.config.range && this.config.positionTo <= this.config.positionFrom) {
+      this.config.positionTo = this.config.positionFrom;
+      this.config.positionFrom = this.config.positionTo - this.config.step;
+      this.calcPositionFrom()
     }
-    if (this.config.range && this.config.positionTo < this.config.min) {
+    if (this.config.range && this.config.positionTo > this.config.max) {
       this.config.positionTo = this.config.max;
     }
   }

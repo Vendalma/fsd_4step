@@ -10,11 +10,11 @@ class Step {
     this.config = IConfigStep;
     this.container = container;
   }
-  addStepLine(data: any) {
-    this.deleteElements();
+  addStepLine(data: number) {
+    let thumb = this.container.querySelector('.thumb_first') as HTMLElement
+    this.deleteStep();
     const fragment = document.createDocumentFragment();
     let stepSize = data;
-
     for (let i = 0; i < 21; i++) {
       let stepBlock = document.createElement("div");
       stepBlock.classList.add("slider__step-block");
@@ -31,9 +31,9 @@ class Step {
         stepBlock.classList.add("slider__step-block_vertical");
         stepBlock.style.top = stepSize * i + "px";
         if (i == 0) {
-          stepBlock.style.top = stepSize * i - 17 + "px";
+          stepBlock.style.top = stepSize * i - thumb.offsetWidth + "px";
         } else if (i == 20) {
-          stepBlock.style.top = stepSize * i - 17 + "px";
+          stepBlock.style.top = stepSize * i - thumb.offsetWidth + "px";
         }
       }
       if (this.config.orientation == "horizontal") {
@@ -58,7 +58,7 @@ class Step {
     blockMax.innerHTML = this.config.max.toString();
   }
 
-  deleteElements() {
+  deleteStep() {
     let steps = this.container.querySelectorAll(
       ".slider__step-block"
     ) as NodeListOf<HTMLElement>;

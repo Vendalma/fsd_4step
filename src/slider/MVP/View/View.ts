@@ -66,12 +66,16 @@ class View {
   }
   setPositionThumb(data: any) {
     this.sliderBlock.setPositionThumb(data);
-    if (data.dataFirstThumb) {
-      this.sliderContainer.setAttribute("data-from", data.dataFirstThumb.valueFrom);
-    }
-    if (data.dataSecondThumb) {
-      this.sliderContainer.setAttribute("data-to", data.dataSecondThumb.valueTo);
-    }
+    if (data.dataFirstThumb)
+      this.sliderContainer.setAttribute(
+        "data-from",
+        data.dataFirstThumb.valueFrom
+      );
+    if (data.dataSecondThumb)
+      this.sliderContainer.setAttribute(
+        "data-to",
+        data.dataSecondThumb.valueTo
+      );
   }
   addFollower(follower: Object) {
     this.observer.subscribe(follower);
@@ -92,19 +96,21 @@ class View {
       this.observer.broadcast("sliderSize", this.sliderContainer.offsetHeight);
   }
   updateFromToAttr() {
-    if (this.config.positionFrom !== Number(this.sliderContainer.dataset.from)) {
-      this.sliderContainer.dataset.from = String(this.config.positionFrom)
+    if (
+      this.config.positionFrom !== Number(this.sliderContainer.dataset.from)
+    ) {
+      this.sliderContainer.dataset.from = String(this.config.positionFrom);
     }
     if (this.config.positionTo !== Number(this.sliderContainer.dataset.to)) {
-      this.sliderContainer.dataset.to = String(this.config.positionTo)
+      this.sliderContainer.dataset.to = String(this.config.positionTo);
     }
   }
   updateConfig(data: IConfigView) {
     this.config = data;
     this.sliderBlock.updateConfig(data);
-    this.updateFromToAttr()
+    this.updateFromToAttr();
   }
-  changeOrientation(data: IConfigView) {
+  changeOrientationOrRange(data: IConfigView) {
     this.updateConfig(data);
     this.getSliderSize();
   }

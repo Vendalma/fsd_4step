@@ -31,8 +31,8 @@ class Presenter {
       this.model.calcParams(data);
     } else if (type == "changeConfig") {
       this.view.updateConfig(data);
-    } else if (type == "changeOrientation") {
-      this.view.changeOrientation(data);
+    } else if (type == "changeOrientationOrRange") {
+      this.view.changeOrientationOrRange(data);
     }
   }
 }

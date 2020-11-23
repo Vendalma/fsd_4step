@@ -14,33 +14,34 @@ class ProgressBar {
     this.slider.prepend(this.progressBar);
     this.checkOrientation();
   }
-  addBar(data: any) {
+  addBar() {
+    let thumbFirst = this.slider.querySelector(".thumb_first") as HTMLElement;
+    let thumbSecond = this.slider.querySelector(".thumb_second") as HTMLElement;
     if (this.config.orientation == "horizontal") {
       if (!this.config.range) {
         this.progressBar.style.left = "0px";
-        this.progressBar.style.width = data.dataFirstThumb.positionFrom + "px";
+        this.progressBar.style.width = thumbFirst.style.left;
       } else {
-        this.progressBar.style.left = data.dataFirstThumb.positionFrom + "px";
+        this.progressBar.style.left = thumbFirst.style.left;
         this.progressBar.style.width =
-          data.dataSecondThumb.positionTo -
-          data.dataFirstThumb.positionFrom +
+          parseInt(thumbSecond.style.left) -
+          parseInt(thumbFirst.style.left) +
           "px";
       }
     }
     if (this.config.orientation == "vertical") {
       if (!this.config.range) {
         this.progressBar.style.top = "0px";
-        this.progressBar.style.height = data.dataFirstThumb.positionFrom + "px";
+        this.progressBar.style.height = thumbFirst.style.top;
       } else {
-        this.progressBar.style.top = data.dataFirstThumb.positionFrom + "px";
+        this.progressBar.style.top = thumbFirst.style.top;
         this.progressBar.style.height =
-          data.dataSecondThumb.positionTo -
-          data.dataFirstThumb.positionFrom +
+          parseInt(thumbSecond.style.top) -
+          parseInt(thumbFirst.style.top) +
           "px";
       }
     }
   }
-
   checkOrientation() {
     if (this.config.orientation == "horizontal") {
       this.progressBar.classList.remove("progress-bar_vertical");
@@ -51,12 +52,12 @@ class ProgressBar {
       this.progressBar.classList.remove("progress-bar_horizontal");
     }
   }
-  removeStyles() {
-    this.progressBar.removeAttribute("style");
+  cleanStyleAttr() {
+    this.progressBar.removeAttribute('style')
   }
   updateBarConfig(data: IConfigBar) {
     this.config = data;
-    this.checkOrientation();
+    this.checkOrientation()
   }
 }
 export { ProgressBar };

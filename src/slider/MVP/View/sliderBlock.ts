@@ -55,7 +55,7 @@ class SliderBlock {
     this.setThumbTwo();
     this.subscribeOnUpdate();
     this.sliderClick();
-    this.changeOrientation();
+    this.checkOrientation();
   }
 
   addFollower(follower: Object) {
@@ -65,14 +65,14 @@ class SliderBlock {
   updateConfig(data: IConfig) {
     this.config = data;
     this.setThumbTwo();
-    this.changeOrientation();
+    this.checkOrientation();
     this.step.updateConfigStep(data);
     this.thumbOne.updateConfigThumb(data);
     this.thumbTwo?.updateConfigThumb(data);
     this.progressBar.updateBarConfig(data);
   }
 
-  changeOrientation() {
+  checkOrientation() {
     if (this.config.orientation == "vertical") {
       this.sliderBlock?.classList.add("slider__block_vertical");
     }
@@ -81,57 +81,65 @@ class SliderBlock {
     }
   }
   setPositionThumb(data: any) {
+    if (data.stepData) {
+      this.step.addStepLine(data.stepData);
+      this.progressBar.cleanStyleAttr();
+      this.thumbOne.cleanStyleAttr();
+      this.thumbTwo?.cleanStyleAttr();
+    }
     if (data.dataFirstThumb) {
       this.thumbOne.setPosition(data.dataFirstThumb.positionFrom);
       this.thumbOne.setLabelValue(data.dataFirstThumb.valueFrom);
     }
-    if (data.dataSecondThumb && this.config.range) {
+
+    if (data.dataSecondThumb) {
       this.thumbTwo?.setPosition(data.dataSecondThumb.positionTo);
       this.thumbTwo?.setLabelValue(data.dataSecondThumb.valueTo);
     }
-    if (data.stepData) {
-      this.step.addStepLine(data.stepData);
-      this.progressBar.removeStyles();
-    }
-    this.progressBar.addBar(data);
+    this.progressBar.addBar();
   }
-
   sliderClick() {
     this.sliderBlock.addEventListener("click", this.onSliderClick.bind(this));
   }
   onSliderClick(e: MouseEvent) {
     if (this.config.orientation == "horizontal") {
-      if (!this.config.range) {
-        this.thumbOne.onMouseUp(e);
-      } else if (this.config.range) {
-        let thumbFirst = Math.abs(
-          this.thumbOne.thumb.getBoundingClientRect().x - e.clientX
-        );
-        let thumbSecond = Math.abs(
-          (this.thumbTwo?.thumb.getBoundingClientRect().x as number) - e.clientX
-        );
-        if (thumbFirst < thumbSecond) {
-          this.thumbOne.onMouseUp(e);
-        } else {
-          this.thumbTwo?.onMouseUp(e);
-        }
-      }
+      this.fundClickPlaceHoriz(e)
     }
     if (this.config.orientation == "vertical") {
-      if (!this.config.range) {
+      this.fundChickPlaceVert(e)
+    }
+  }
+  fundClickPlaceHoriz(e: MouseEvent) {
+    if (!this.config.range) {
+      this.thumbOne.onMouseUp(e);
+    } else if (this.config.range) {
+      let thumbFirst = Math.abs(
+        this.thumbOne.thumb.getBoundingClientRect().x - e.clientX
+      );
+      let thumbSecond = Math.abs(
+        (this.thumbTwo?.thumb.getBoundingClientRect().x as number) - e.clientX
+      );
+      if (thumbFirst < thumbSecond) {
         this.thumbOne.onMouseUp(e);
-      } else if (this.config.range) {
-        let thumbFirst = Math.abs(
-          this.thumbOne.thumb.getBoundingClientRect().y - e.clientY
-        );
-        let thumbSecond = Math.abs(
-          (this.thumbTwo?.thumb.getBoundingClientRect().y as number) - e.clientY
-        );
-        if (thumbFirst < thumbSecond) {
-          this.thumbOne.onMouseUp(e);
-        } else {
-          this.thumbTwo?.onMouseUp(e);
-        }
+      } else {
+        this.thumbTwo?.onMouseUp(e);
+      }
+    }
+  }
+  fundChickPlaceVert(e: MouseEvent) {
+    if (!this.config.range) {
+      this.thumbOne.onMouseUp(e);
+    } else if (this.config.range) {
+      let thumbFirst = Math.abs(
+        this.thumbOne.thumb.getBoundingClientRect().y - e.clientY
+      );
+      let thumbSecond = Math.abs(
+        (this.thumbTwo?.thumb.getBoundingClientRect().y as number) - e.clientY
+      );
+      if (thumbFirst < thumbSecond) {
+        this.thumbOne.onMouseUp(e);
+      } else {
+        this.thumbTwo?.onMouseUp(e);
       }
     }
   }
