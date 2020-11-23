@@ -1,6 +1,7 @@
-import "./slider/RangeSlider/slider";
-$(".app").rangeSlider({});
-$(".app2").rangeSlider({
+import './slider/RangeSlider/slider';
+
+$('.app').rangeSlider({});
+$('.app2').rangeSlider({
   range: false,
   min: -9999,
   max: 9999,
@@ -8,13 +9,13 @@ $(".app2").rangeSlider({
   positionTo: 3000,
   label: true,
   step: 1000,
-  orientation: "vertical",
+  orientation: 'vertical',
 });
-$(".app3").rangeSlider({
+$('.app3').rangeSlider({
   max: 110,
   step: 0.5,
   min: -110,
   positionFrom: 5.5,
   positionTo: 99.5,
-  label: false
+  label: false,
 });

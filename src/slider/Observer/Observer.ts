@@ -1,8 +1,10 @@
-export class Observer {
+class Observer {
   private observers: Array<any>;
+
   constructor() {
     this.observers = [];
   }
+
   subscribe(fn: Object) {
     this.observers.push(fn);
   }
@@ -15,3 +17,4 @@ export class Observer {
     this.observers.forEach((subscriber) => subscriber.update(type, data));
   }
 }
+export default Observer;

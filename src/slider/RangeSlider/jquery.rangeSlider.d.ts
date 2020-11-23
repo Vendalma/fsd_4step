@@ -1,3 +1,3 @@
 interface JQuery {
-	rangeSlider: any;
+  rangeSlider: any;
 }

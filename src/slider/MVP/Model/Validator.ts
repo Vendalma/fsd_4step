@@ -8,40 +8,42 @@ interface IConfigValidator {
 }
 class Validator {
   config: IConfigValidator;
+
   constructor(config: IConfigValidator) {
     this.config = config;
   }
-  validationMaxValue() {
+
+  validationMaxValue(): boolean {
     if (this.config.max > this.config.min) {
       return true;
     }
     return false;
   }
-  validationMinValue() {
+
+  validationMinValue(): boolean {
     if (this.config.min < this.config.max) {
       return true;
     }
     return false;
   }
-  validationStepValue() {
+
+  validationStepValue(): boolean {
     if (this.config.step <= 0) {
       return false;
-    } else if (this.config.step > this.config.max - this.config.min) {
+    }
+    if (this.config.step > this.config.max - this.config.min) {
       return false;
     }
     return true;
   }
-  validationConfig(data: Object) {
+
+  validationConfig(data: IConfigValidator): boolean {
     Object.assign(this.config, data);
-    if (
-      this.validationMaxValue() === true &&
-      this.validationMinValue() === true &&
-      this.validationStepValue() === true
-    ) {
+    const isMinMaxValid = this.validationMaxValue() === true && this.validationMinValue() === true;
+    if (isMinMaxValid && this.validationStepValue() === true) {
       return true;
     }
     return false;
   }
 }
-export { Validator };
-
+export default Validator;

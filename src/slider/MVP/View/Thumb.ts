@@ -1,5 +1,5 @@
-import { Observer } from "../../Observer/Observer";
-import { Label } from "./Label";
+import Observer from '../../Observer/Observer';
+import Label from './Label';
 
 interface IConfigThumb {
   range: boolean;
@@ -10,18 +10,24 @@ interface IConfigThumb {
 }
 interface IDataThumbMove {
   clientXY: number;
-  slider_client_react: number;
-  data_num: string;
+  sliderClientReact: number;
+  dataNum: string;
   positionThumbFirst?: number;
   positionThumbSecond?: number;
 }
 class Thumb {
   config: IConfigThumb;
+
   slider: HTMLElement;
+
   thumb: HTMLElement;
+
   countThumbs: string;
+
   observer: Observer;
-  data_num: string;
+
+  dataNum: string;
+
   label: Label;
 
   constructor(
@@ -33,13 +39,13 @@ class Thumb {
     this.config = IConfigThumb;
     this.slider = slider;
     this.countThumbs = countThumbs;
-    this.data_num = data_num;
+    this.dataNum = data_num;
 
-    this.thumb = document.createElement("div");
-    this.thumb.classList.add("thumb");
+    this.thumb = document.createElement('div');
+    this.thumb.classList.add('thumb');
     this.thumb.classList.add(this.countThumbs);
 
-    this.thumb.setAttribute("data-num", this.data_num);
+    this.thumb.setAttribute('data-num', this.dataNum);
     this.slider.append(this.thumb);
 
     this.observer = new Observer();
@@ -47,122 +53,145 @@ class Thumb {
     this.checkOrientation();
     this.moveThumb();
   }
-  addFollower(follower: any) {
+
+  addFollower(follower: any): void {
     this.observer.subscribe(follower);
   }
-  checkOrientation() {
-    if (this.config.orientation == "horizontal") {
-      this.thumb.classList.add("thumb_horizontal");
-      this.thumb.classList.remove("thumb_vertical");
+
+  checkOrientation(): void {
+    if (this.config.orientation === 'horizontal') {
+      this.thumb.classList.add('thumb_horizontal');
+      this.thumb.classList.remove('thumb_vertical');
     }
-    if (this.config.orientation == "vertical") {
-      this.thumb.classList.remove("thumb_horizontal");
-      this.thumb.classList.add("thumb_vertical");
+    if (this.config.orientation === 'vertical') {
+      this.thumb.classList.remove('thumb_horizontal');
+      this.thumb.classList.add('thumb_vertical');
     }
   }
-  moveThumb() {
-    this.thumb.addEventListener("mousedown", this.mouseDown.bind(this));
+
+  moveThumb(): void {
+    this.thumb.addEventListener('mousedown', this.mouseDown.bind(this));
   }
-  mouseDown(e: MouseEvent) {
+
+  mouseDown(e: MouseEvent): void {
     e.preventDefault();
     document.onmousemove = (e) => this.onMouseMove(e);
     document.onmouseup = (e) => this.onMouseUp(e);
     this.changeZIndexUp();
   }
-  onMouseMove(e: MouseEvent) {
+
+  onMouseMove(e: MouseEvent): void {
     e.preventDefault();
     this.moveHandle(e);
   }
-  moveHandle(e: MouseEvent) {
-    this.observer.broadcast("mouseMove", this.findPosition(e));
+
+  moveHandle(e: MouseEvent): void {
+    this.observer.broadcast('mouseMove', this.findPosition(e));
   }
-  onMouseUp(e: MouseEvent) {
+
+  onMouseUp(e: MouseEvent): void {
     document.onmousemove = null;
     document.onmouseup = null;
-    this.observer.broadcast("mouseMove", this.findPosition(e));
+    this.observer.broadcast('mouseMove', this.findPosition(e));
     this.changeZIndexDown();
   }
-  findPosition(e: MouseEvent) {
-    if (this.config.orientation == "horizontal") {
+
+  findPosition(e: MouseEvent): IDataThumbMove | undefined {
+    if (this.config.orientation === 'horizontal') {
       return this.findPositionForHorizontal(e) as IDataThumbMove;
     }
-    if (this.config.orientation == "vertical") {
+    if (this.config.orientation === 'vertical') {
       return this.findPositionForVertical(e) as IDataThumbMove;
     }
   }
-  findPositionForHorizontal(e: MouseEvent) {
-    let thumbFirst = this.slider.querySelector(".thumb_first") as HTMLElement;
-    let thumbSecond = this.slider.querySelector(".thumb_second") as HTMLElement;
-    if (this.thumb.dataset.num == "1") {
+
+  findPositionForHorizontal(e: MouseEvent): IDataThumbMove | undefined {
+    const thumbFirst = this.slider.querySelector('.thumb_first') as HTMLElement;
+    const thumbSecond = this.slider.querySelector(
+      '.thumb_second'
+    ) as HTMLElement;
+    if (this.thumb.dataset.num === '1') {
       return {
         clientXY: e.clientX,
-        slider_client_react: this.slider.getBoundingClientRect().left,
-        data_num: this.thumb.dataset.num,
+        sliderClientReact: this.slider.getBoundingClientRect().left,
+        dataNum: this.thumb.dataset.num,
         positionThumbSecond: this.config.range
           ? parseInt(thumbSecond.style.left)
           : undefined,
       } as IDataThumbMove;
-    } else if (this.thumb.dataset.num == "2") {
+    }
+    if (this.thumb.dataset.num === '2') {
       return {
         clientXY: e.clientX,
-        slider_client_react: this.slider.getBoundingClientRect().left,
-        data_num: this.thumb.dataset.num,
+        sliderClientReact: this.slider.getBoundingClientRect().left,
+        dataNum: this.thumb.dataset.num,
         positionThumbFirst: parseInt(thumbFirst.style.left),
       } as IDataThumbMove;
     }
   }
-  findPositionForVertical(e: MouseEvent) {
-    let thumbFirst = this.slider.querySelector(".thumb_first") as HTMLElement;
-    let thumbSecond = this.slider.querySelector(".thumb_second") as HTMLElement;
-    if (this.thumb.dataset.num == "1") {
+
+  findPositionForVertical(e: MouseEvent): IDataThumbMove | undefined {
+    const thumbFirst = this.slider.querySelector('.thumb_first') as HTMLElement;
+    const thumbSecond = this.slider.querySelector(
+      '.thumb_second'
+    ) as HTMLElement;
+    if (this.thumb.dataset.num === '1') {
       return {
         clientXY: e.clientY,
-        slider_client_react: this.slider.getBoundingClientRect().top,
-        data_num: this.thumb.dataset.num,
+        sliderClientReact: this.slider.getBoundingClientRect().top,
+        dataNum: this.thumb.dataset.num,
         positionThumbSecond: this.config.range
-          ? parseInt(thumbSecond.style.top) : undefined
+          ? parseInt(thumbSecond.style.top)
+          : undefined,
       } as IDataThumbMove;
-    } else if (this.thumb.dataset.num == "2") {
+    }
+    if (this.thumb.dataset.num === '2') {
       return {
         clientXY: e.clientY,
-        slider_client_react: this.slider.getBoundingClientRect().top,
-        data_num: this.thumb.dataset.num,
+        sliderClientReact: this.slider.getBoundingClientRect().top,
+        dataNum: this.thumb.dataset.num,
         positionThumbFirst: parseInt(thumbFirst.style.top),
       } as IDataThumbMove;
     }
   }
-  setPosition(position: number) {
-    if (this.config.orientation == "horizontal") {
-      this.thumb.style.left = position + "px";
+
+  setPosition(position: number): void {
+    if (this.config.orientation === 'horizontal') {
+      this.thumb.style.left = `${position}px`;
     }
-    if (this.config.orientation == "vertical") {
-      this.thumb.style.top = position + "px";
+    if (this.config.orientation === 'vertical') {
+      this.thumb.style.top = `${position}px`;
     }
   }
-  setLabelValue(value: number) {
+
+  setLabelValue(value: number): void {
     this.label.setLabelValue(value);
   }
-  removeThis() {
-    if (this.thumb !== null)
-      this.slider.removeChild(this.thumb);
+
+  removeThis(): void {
+    if (this.thumb !== null) this.slider.removeChild(this.thumb);
   }
-  addThis() {
+
+  addThis(): void {
     this.slider.append(this.thumb);
   }
-  changeZIndexUp() {
-    this.thumb.classList.add("thumb_zIndex_up");
+
+  changeZIndexUp(): void {
+    this.thumb.classList.add('thumb_zIndex_up');
   }
-  changeZIndexDown() {
-    this.thumb.classList.remove("thumb_zIndex_up");
+
+  changeZIndexDown(): void {
+    this.thumb.classList.remove('thumb_zIndex_up');
   }
-  cleanStyleAttr() {
-    this.thumb.removeAttribute('style')
+
+  cleanStyleAttr(): void {
+    this.thumb.removeAttribute('style');
   }
-  updateConfigThumb(data: IConfigThumb) {
+
+  updateConfigThumb(data: IConfigThumb): void {
     this.config = data;
     this.label.updateConfig(data);
-    this.checkOrientation()
+    this.checkOrientation();
   }
 }
-export { Thumb };
-
+export default Thumb;

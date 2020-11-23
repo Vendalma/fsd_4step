@@ -1,7 +1,7 @@
-import { Observer } from "../../Observer/Observer";
-import { ProgressBar } from "./progressBar";
-import { Step } from "./Step";
-import { Thumb } from "./Thumb";
+import Observer from '../../Observer/Observer';
+import ProgressBar from './progressBar';
+import Step from './Step';
+import Thumb from './Thumb';
 
 interface IConfig {
   min: number;
@@ -14,39 +14,47 @@ interface IConfig {
 }
 interface IDataThumbMove {
   clientXY: number;
-  slider_client_react: number;
-  data_num: string;
-  positionThumbFirst: number;
-  positionThumbSecond: number;
+  sliderClientReact: number;
+  dataNum: string;
+  positionThumbFirst?: number;
+  positionThumbSecond?: number;
 }
 class SliderBlock {
   config: IConfig;
+
   sliderContainer: HTMLElement;
+
   sliderBlock: HTMLElement;
+
   thumbOne: Thumb;
+
   thumbTwo: Thumb | null | undefined;
+
   observer: Observer;
+
   step: Step;
+
   progressBar: ProgressBar;
-  constructor(IConfig: IConfig, sliderContainer: HTMLElement) {
-    this.config = IConfig;
+
+  constructor(config: IConfig, sliderContainer: HTMLElement) {
+    this.config = config;
     this.sliderContainer = sliderContainer;
-    this.sliderBlock = document.createElement("div");
-    this.sliderBlock.classList.add("slider__block");
+    this.sliderBlock = document.createElement('div');
+    this.sliderBlock.classList.add('slider__block');
     this.sliderContainer.append(this.sliderBlock);
 
     this.observer = new Observer();
     this.thumbOne = new Thumb(
       this.config,
-      "thumb_first",
+      'thumb_first',
       this.sliderBlock,
-      "1"
+      '1',
     );
     this.thumbTwo = new Thumb(
       this.config,
-      "thumb_second",
+      'thumb_second',
       this.sliderBlock,
-      "2"
+      '2',
     );
 
     this.progressBar = new ProgressBar(this.config, this.sliderBlock);
@@ -58,11 +66,11 @@ class SliderBlock {
     this.checkOrientation();
   }
 
-  addFollower(follower: Object) {
+  addFollower(follower: Object): void {
     this.observer.subscribe(follower);
   }
 
-  updateConfig(data: IConfig) {
+  updateConfig(data: IConfig): void {
     this.config = data;
     this.setThumbTwo();
     this.checkOrientation();
@@ -72,15 +80,16 @@ class SliderBlock {
     this.progressBar.updateBarConfig(data);
   }
 
-  checkOrientation() {
-    if (this.config.orientation == "vertical") {
-      this.sliderBlock?.classList.add("slider__block_vertical");
+  checkOrientation(): void {
+    if (this.config.orientation === 'vertical') {
+      this.sliderBlock?.classList.add('slider__block_vertical');
     }
-    if (this.config.orientation == "horizontal") {
-      this.sliderBlock?.classList.remove("slider__block_vertical");
+    if (this.config.orientation === 'horizontal') {
+      this.sliderBlock?.classList.remove('slider__block_vertical');
     }
   }
-  setPositionThumb(data: any) {
+
+  setPositionThumb(data: any): void {
     if (data.stepData) {
       this.step.addStepLine(data.stepData);
       this.progressBar.cleanStyleAttr();
@@ -98,26 +107,29 @@ class SliderBlock {
     }
     this.progressBar.addBar();
   }
-  sliderClick() {
-    this.sliderBlock.addEventListener("click", this.onSliderClick.bind(this));
+
+  sliderClick(): void {
+    this.sliderBlock.addEventListener('click', this.onSliderClick.bind(this));
   }
-  onSliderClick(e: MouseEvent) {
-    if (this.config.orientation == "horizontal") {
-      this.fundClickPlaceHorizon(e)
+
+  onSliderClick(e: MouseEvent): void {
+    if (this.config.orientation === 'horizontal') {
+      this.fundClickPlaceHorizon(e);
     }
-    if (this.config.orientation == "vertical") {
-      this.fundClickPlaceVert(e)
+    if (this.config.orientation === 'vertical') {
+      this.fundClickPlaceVert(e);
     }
   }
-  fundClickPlaceHorizon(e: MouseEvent) {
+
+  fundClickPlaceHorizon(e: MouseEvent): void {
     if (!this.config.range) {
       this.thumbOne.onMouseUp(e);
     } else if (this.config.range) {
-      let thumbFirst = Math.abs(
-        this.thumbOne.thumb.getBoundingClientRect().x - e.clientX
+      const thumbFirst = Math.abs(
+        this.thumbOne.thumb.getBoundingClientRect().x - e.clientX,
       );
-      let thumbSecond = Math.abs(
-        (this.thumbTwo?.thumb.getBoundingClientRect().x as number) - e.clientX
+      const thumbSecond = Math.abs(
+        (this.thumbTwo?.thumb.getBoundingClientRect().x as number) - e.clientX,
       );
       if (thumbFirst < thumbSecond) {
         this.thumbOne.onMouseUp(e);
@@ -126,15 +138,16 @@ class SliderBlock {
       }
     }
   }
-  fundClickPlaceVert(e: MouseEvent) {
+
+  fundClickPlaceVert(e: MouseEvent): void {
     if (!this.config.range) {
       this.thumbOne.onMouseUp(e);
     } else if (this.config.range) {
-      let thumbFirst = Math.abs(
-        this.thumbOne.thumb.getBoundingClientRect().y - e.clientY
+      const thumbFirst = Math.abs(
+        this.thumbOne.thumb.getBoundingClientRect().y - e.clientY,
       );
-      let thumbSecond = Math.abs(
-        (this.thumbTwo?.thumb.getBoundingClientRect().y as number) - e.clientY
+      const thumbSecond = Math.abs(
+        (this.thumbTwo?.thumb.getBoundingClientRect().y as number) - e.clientY,
       );
       if (thumbFirst < thumbSecond) {
         this.thumbOne.onMouseUp(e);
@@ -143,13 +156,15 @@ class SliderBlock {
       }
     }
   }
-  subscribeOnUpdate() {
+
+  subscribeOnUpdate(): void {
     this.thumbOne.addFollower(this);
     this.thumbTwo?.addFollower(this);
   }
-  setThumbTwo() {
-    let secondThumb = this.sliderBlock.querySelector(
-      ".thumb_second"
+
+  setThumbTwo(): void {
+    const secondThumb = this.sliderBlock.querySelector(
+      '.thumb_second',
     ) as HTMLElement;
     if (this.config.range) {
       this.thumbTwo?.addThis();
@@ -157,9 +172,9 @@ class SliderBlock {
       this.thumbTwo?.removeThis();
     }
   }
-  update(type: string, data: IDataThumbMove) {
-    this.observer.broadcast("mouseMove", data);
+
+  update(type: string, data: IDataThumbMove): void {
+    this.observer.broadcast('mouseMove', data);
   }
 }
-export { SliderBlock };
-
+export default SliderBlock;

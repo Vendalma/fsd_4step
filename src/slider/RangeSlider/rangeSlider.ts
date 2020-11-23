@@ -1,5 +1,6 @@
-import { Model } from "../MVP/Model/Model";
-import { Presenter } from "../MVP/Presenter/Presenter";
+import Model from '../MVP/Model/Model';
+import Presenter from '../MVP/Presenter/Presenter';
+
 interface ISettings {
   min: number;
   max: number;
@@ -12,13 +13,14 @@ interface ISettings {
 }
 class RangeSlider {
   model: Model;
+  presenter: Presenter;
   constructor(container: HTMLElement, settings: ISettings) {
     this.model = new Model(settings);
-    new Presenter(this.model, container);
+    this.presenter = new Presenter(this.model, container);
   }
-  updateConfig(data: Object) {
-    this.model.updateConfig(data)
+
+  updateConfig(data: ISettings): void {
+    this.model.updateConfig(data);
   }
 }
-export { RangeSlider };
-
+export default RangeSlider;

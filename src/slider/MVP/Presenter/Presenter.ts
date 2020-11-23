@@ -1,5 +1,6 @@
-import { Model } from "../Model/Model";
-import { View } from "../View/View";
+import Model from '../Model/Model';
+import View from '../View/View';
+
 interface IConfig {
   min: number;
   max: number;
@@ -12,29 +13,32 @@ interface IConfig {
 }
 class Presenter {
   view: View;
+
   model: Model;
+
   constructor(model: Model, container: HTMLElement) {
     this.model = model;
     this.view = new View(this.model.getConfig() as IConfig, container);
     this.subscribeOnUpdate();
   }
-  subscribeOnUpdate() {
+
+  subscribeOnUpdate(): void {
     this.view.addFollower(this);
     this.model.addFollower(this);
   }
-  update(type: string, data: any) {
-    if (type == "mouseMove") {
+
+  update(type: string, data: any): void {
+    if (type === 'mouseMove') {
       this.model.fundMoveThumbPosition(data);
-    } else if (type == "positionThumb") {
+    } else if (type === 'positionThumb') {
       this.view.setPositionThumb(data);
-    } else if (type == "sliderSize") {
+    } else if (type === 'sliderSize') {
       this.model.calcParams(data);
-    } else if (type == "changeConfig") {
+    } else if (type === 'changeConfig') {
       this.view.updateConfig(data);
-    } else if (type == "changeOrientationOrRange") {
+    } else if (type === 'changeOrientationOrRange') {
       this.view.changeOrientationOrRange(data);
     }
   }
 }
-export { Presenter };
-
+export default Presenter;

@@ -1,7 +1,40 @@
 {
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "@typescript-eslint",
+    "fsd"
+  ],
   "parserOptions": {
     "ecmaVersion": 6
   },
-  "plugins": ["fsd"],
-  "extends": ["airbnb-base", "plugin:fsd/all"]
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [
+          ".ts",
+          ".tsx"
+        ]
+      }
+    }
+  },
+  "rules": {
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ]
+  },
+  "extends": [
+    "airbnb-base",
+    "plugin:fsd/all",
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended"
+  ]
 }

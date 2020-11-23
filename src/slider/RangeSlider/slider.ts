@@ -1,6 +1,7 @@
-import { PanelController } from "../../panel/panelController/panelController";
-import "../styles.scss";
-import { RangeSlider } from "./rangeSlider";
+import PanelController from '../../panel/panelController/panelController';
+import '../styles.scss';
+import RangeSlider from './rangeSlider';
+
 interface ISettings {
   min: number;
   max: number;
@@ -15,51 +16,49 @@ interface MethodsObject {
   [key: string]: any;
 }
 (function ($) {
-  let slider: RangeSlider;
   const methods: MethodsObject = {
-    init: function (options: any) {
+    init(options: ISettings) {
       return this.each(function (this: HTMLElement) {
-        let $this = $(this);
-        let data = $this.data("sliderData");
-        let instanceSlider = new RangeSlider(this, options);
-        let panel = new PanelController(this, options);
-        $(this).data("sliderData", {
-          instanceSlider: instanceSlider,
+        const $this = $(this);
+        const data = $this.data('sliderData');
+        const instanceSlider = new RangeSlider(this, options);
+        const panel = new PanelController(this, options);
+        $(this).data('sliderData', {
+          instanceSlider,
         });
       });
     },
-    update: function (options: Object) {
+    update(options: Object) {
       return this.each(function (this: HTMLElement) {
-        $(this).data("sliderData").instanceSlider.updateConfig(options);
+        $(this).data('sliderData').instanceSlider.updateConfig(options);
       });
     },
   };
   $.fn.rangeSlider = function (
     method: string,
-    settings: Object | ISettings | undefined
+    settings: ISettings | undefined,
   ) {
     if (methods[method]) {
       return methods[method].apply(
         this,
-        Array.prototype.slice.call(arguments, 1)
+        Array.prototype.slice.call(arguments, 1),
       );
-    } else if (typeof method === "object" || !method) {
-      let defaultSettings = $.extend(
+    } if (typeof method === 'object' || !method) {
+      const defaultSettings = $.extend(
         {
           min: 0,
           max: 100,
           label: true,
           range: true,
           step: 1,
-          orientation: "horizontal",
+          orientation: 'horizontal',
           positionFrom: 10,
           positionTo: 50,
         },
-        method
+        method,
       );
       return methods.init.call(this, defaultSettings);
-    } else {
-      $.error("Метод с именем " + method + " не существует");
     }
+    $.error(`Метод с именем ${method} не существует`);
   };
-})(jQuery);
+}(jQuery));
