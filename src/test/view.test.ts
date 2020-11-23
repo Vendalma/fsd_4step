@@ -19,9 +19,7 @@ let view: View = new View(config, block[0]);
 let observer = jasmine.createSpyObj("observer", ["broadcast", "subscribe"]);
 let sliderBlock = jasmine.createSpyObj("sliderBlock", [
   "addFollower",
-  "setPositionMoveThumb",
-  "setOnloadThumbPosition",
-  "addStep",
+  "setPositionThumb",
   "updateConfig",
 ]);
 view.observer = observer;
@@ -80,33 +78,40 @@ describe("View", () => {
     expect(view.sliderBlock.addFollower).toHaveBeenCalled();
   });
   it("метод update вызывает ф-ю broadcast в Observer", () => {
-    view.update("mouse", {});
+    const data = {
+      clientXY: 100,
+      slider_client_react: 5,
+      data_num: "2",
+      positionThumbFirst: 30,
+      positionThumbSecond: 45,
+    };
+    view.update("mouse", data);
     expect(view.observer.broadcast).toHaveBeenCalled();
   });
-  describe("метод setPositionMoveThumb вызывает ф-ю setPositionMoveThumb в sliderBlock", () => {
+  describe("метод setPositionThumb", () => {
     let data: any;
     beforeEach(function () {
       data = {
-        data_num: "1",
-        value: "50",
+        dataFirstThumb: {
+          valueFrom: 10,
+        },
+        dataSecondThumb: {
+          valueTo: 30,
+        },
       };
     });
-    it("при data_num = 1 на sliderContainer обновляет атрибут data-from", () => {
-      view.setPositionMoveThumb(data);
-      expect(view.sliderBlock.setPositionMoveThumb).toHaveBeenCalled();
-      expect(view.sliderContainer).toHaveAttr("data-from", data.value);
+    it("должна вызваться ф-я setPositionThumb в sliderBlock и обновиться атрибуты sliderContainer", () => {
+      view.setPositionThumb(data);
+      expect(view.sliderBlock.setPositionThumb).toHaveBeenCalled();
+      expect(view.sliderContainer).toHaveAttr(
+        "data-from",
+        String(data.dataFirstThumb.valueFrom)
+      );
+      expect(view.sliderContainer).toHaveAttr(
+        "data-to",
+        String(data.dataSecondThumb.valueTo)
+      );
     });
-    it("при data_num = 2 на sliderContainer обновляет атрибут data-to", () => {
-      data.data_num = "2";
-      view.setPositionMoveThumb(data);
-      expect(view.sliderBlock.setPositionMoveThumb).toHaveBeenCalled();
-      expect(view.sliderContainer).toHaveAttr("data-to", data.value);
-    });
-  });
-  it("метода setOnloadView вызывает ф-ции setOnloadThumbPosition и addStep в sliderBlock", () => {
-    view.setOnloadView({});
-    expect(view.sliderBlock.setOnloadThumbPosition).toHaveBeenCalled();
-    expect(view.sliderBlock.addStep).toHaveBeenCalled();
   });
   it("метод addFollower вызывает ф-ю subscribe в Observer", () => {
     view.addFollower({});
@@ -147,15 +152,15 @@ describe("View", () => {
   describe("метод updateFromToAttr", () => {
     it("при positionFrom !== атрибуту data-from, метод уравнивает значения", () => {
       view.config.positionFrom = 99;
-      view.sliderContainer.dataset.from = '10'
-      view.updateFromToAttr()
-      expect(view.sliderContainer).toHaveAttr('data-from', '99');
+      view.sliderContainer.dataset.from = "10";
+      view.updateFromToAttr();
+      expect(view.sliderContainer).toHaveAttr("data-from", "99");
     });
     it("при positionTo !== атрибуту data-to, метод уравнивает значения", () => {
       view.config.positionTo = 200;
-      view.sliderContainer.dataset.to = '50'
-      view.updateFromToAttr()
-      expect(view.sliderContainer).toHaveAttr('data-to', '200');
+      view.sliderContainer.dataset.to = "50";
+      view.updateFromToAttr();
+      expect(view.sliderContainer).toHaveAttr("data-to", "200");
     });
   });
   it("метод updateConfig обновляет конфиг  View и вызывает ф-ю updateConfig в sliderBlock", () => {
@@ -174,9 +179,19 @@ describe("View", () => {
     expect(view.sliderBlock.updateConfig).toHaveBeenCalled();
   });
   it("метод changeOrientation вызывает методы getSliderSize и updateConfig", () => {
+    const newConf = {
+      min: -5,
+      max: 105,
+      label: false,
+      orientation: "vertical",
+      positionFrom: 5,
+      positionTo: 10,
+      range: false,
+      step: 1,
+    };
     spyOn(view, "getSliderSize");
     spyOn(view, "updateConfig");
-    view.changeOrientation({});
+    view.changeOrientationOrRange(newConf);
     expect(view.updateConfig).toHaveBeenCalled();
     expect(view.getSliderSize).toHaveBeenCalled();
   });

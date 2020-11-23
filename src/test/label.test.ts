@@ -32,31 +32,35 @@ describe("Label", () => {
   describe("метод changeLabelOrientation", () => {
     it("при orientation = horizontal у блока удаляется класс thumb__label_vertical", () => {
       label.config.orientation = "horizontal";
-      label.changeLabelOrientation()
+      label.changeLabelOrientation();
       expect(label.elementLabel).not.toHaveClass("thumb__label_vertical");
     });
     it("при orientation = vertical блоку устанавливается класс thumb__label_vertical", () => {
       label.config.orientation = "vertical";
-      label.changeLabelOrientation()
+      label.changeLabelOrientation();
       expect(label.elementLabel).toHaveClass("thumb__label_vertical");
     });
   });
   describe("метод changeVisibleLabel", () => {
     it("если config.label = true, то блок не имеет класса thumb__label_hidden", () => {
       label.config.label = true;
-      label.changeVisibleLabel()
-      expect(label.elementLabel).not.toHaveClass('thumb__label_hidden');
+      label.changeVisibleLabel();
+      expect(label.elementLabel).not.toHaveClass("thumb__label_hidden");
     });
     it("если config.label = false, то блоку присваивается класс thumb__label_hidden", () => {
       label.config.label = false;
-      label.changeVisibleLabel()
-      expect(label.elementLabel).toHaveClass('thumb__label_hidden');
+      label.changeVisibleLabel();
+      expect(label.elementLabel).toHaveClass("thumb__label_hidden");
     });
   });
   it("метод update обновляет конфиг, вызывает ф-ции changeVisibleLabel и changeLabelOrientation", () => {
+    const newConf = {
+      label: false,
+      orientation: "vertical",
+    };
     spyOn(label, "changeLabelOrientation");
     spyOn(label, "changeVisibleLabel");
-    label.update({});
+    label.updateConfig(newConf);
     expect(label.changeLabelOrientation).toHaveBeenCalled();
     expect(label.changeVisibleLabel).toHaveBeenCalled();
   });

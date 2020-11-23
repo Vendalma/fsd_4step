@@ -43,68 +43,6 @@ describe("Validator", () => {
       expect(validator.validationMinValue()).toBeFalse();
     });
   });
-  describe("метод validationPositionFrom", () => {
-    beforeEach(function () {
-      validator.config = config;
-    })
-    it("если positionFrom < min, ф-я вернет false", () => {
-      validator.config.positionFrom = 0;
-      validator.config.min = 10;
-      expect(validator.validationPositionFrom()).toBeFalse();
-    });
-    it("если range = true и positionFrom > positionTo, ф-я вернет false", () => {
-      validator.config.range = true;
-      validator.config.positionFrom = 10;
-      validator.config.positionTo = 1;
-      expect(validator.validationPositionFrom()).toBeFalse();
-    });
-    it("если range = false и positionFrom > max, ф-я вернет false", () => {
-      validator.config.range = true;
-      validator.config.positionFrom = 10;
-      validator.config.max = 1;
-      expect(validator.validationPositionFrom()).toBeFalse();
-    });
-    it("при заданных параметрах, ф-я вернет true", () => {
-      validator.config.range = true;
-      validator.config.min = 0;
-      validator.config.max = 100;
-      validator.config.positionFrom = 10;
-      validator.config.positionTo = 20;
-      expect(validator.validationPositionFrom()).toBeTrue();
-    });
-    it("при заданных параметрах, ф-я вернет true", () => {
-      validator.config.range = false;
-      validator.config.min = 0;
-      validator.config.max = 100;
-      validator.config.positionFrom = 10;
-      expect(validator.validationPositionFrom()).toBeTrue();
-    });
-  });
-  describe("метод validationPositionTo", () => {
-    beforeEach(function () {
-      validator.config = config;
-    })
-    it("если range = true и positionTo > max, ф-я вернет false", () => {
-      validator.config.range = true;
-      validator.config.positionTo = 10;
-      validator.config.max = 1;
-      expect(validator.validationPositionTo()).toBeFalse();
-    });
-    it("если range = true и positionTo < positionFrom, ф-я вернет false", () => {
-      validator.config.range = true;
-      validator.config.positionFrom = 10;
-      validator.config.positionTo = 1;
-      expect(validator.validationPositionTo()).toBeFalse();
-    });
-    it("при заданных параметрах, ф-я вернет true", () => {
-      validator.config.range = true;
-      validator.config.min = 0;
-      validator.config.max = 100;
-      validator.config.positionFrom = 10;
-      validator.config.positionTo = 20;
-      expect(validator.validationPositionTo()).toBeTrue();
-    });
-  });
   describe("метод validationStepValue", () => {
     beforeEach(function () {
       validator.config = config;
@@ -123,7 +61,7 @@ describe("Validator", () => {
       validator.config.min = 0;
       validator.config.max = 100;
       validator.config.step = 2;
-      expect(validator.validationPositionFrom()).toBeTrue();
+      expect(validator.validationStepValue()).toBeTrue();
     });
   });
   describe("метод validationConfig", () => {

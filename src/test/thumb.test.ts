@@ -4,6 +4,7 @@ const config = {
   positionFrom: 15,
   positionTo: 30,
   orientation: "horizontal",
+  label: false,
 };
 const block = $("<div>");
 beforeEach(function () {
@@ -11,9 +12,9 @@ beforeEach(function () {
   $(document.body).append(block);
 });
 
-let thumb: Thumb = new Thumb(config, "thumb_first", block[0], 1);
+let thumb: Thumb = new Thumb(config, "thumb_first", block[0], '1');
 let observer = jasmine.createSpyObj("observer", ["broadcast", "subscribe"]);
-let label = jasmine.createSpyObj("label", ["update", 'setLabelValue']);
+let label = jasmine.createSpyObj("label", ["updateConfig", "setLabelValue"]);
 
 describe("Thumb", () => {
   thumb.observer = observer;
@@ -62,14 +63,14 @@ describe("Thumb", () => {
   });
   describe("метод checkOrientation", () => {
     it("при orientation = vertical добавляет контейнеру бегунка класс thumb_vertical и удаляет класс thumb_horizontal", () => {
-      thumb.config.orientation = 'vertical'
-      thumb.checkOrientation()
+      thumb.config.orientation = "vertical";
+      thumb.checkOrientation();
       expect(thumb.thumb).toHaveClass("thumb_vertical");
       expect(thumb.thumb).not.toHaveClass("thumb_horizontal");
     });
     it("при orientation = horizontal добавляет контейнеру бегунка класс thumb_horizontal и удаляет класс thumb_vertical", () => {
-      thumb.config.orientation = 'horizontal'
-      thumb.checkOrientation()
+      thumb.config.orientation = "horizontal";
+      thumb.checkOrientation();
       expect(thumb.thumb).toHaveClass("thumb_horizontal");
       expect(thumb.thumb).not.toHaveClass("thumb_vertical");
     });
@@ -83,7 +84,7 @@ describe("Thumb", () => {
     expect(thumb.mouseDown).toHaveBeenCalled();
   });
 
-  it("метод mouseDown вызывает ф-ции onMouseMove, onMouseUp,changeZIndexUp и broadcast класса Observer", () => {
+  it("метод mouseDown вызывает ф-ции onMouseMove, onMouseUp,changeZIndexUp", () => {
     spyOn(thumb, "onMouseMove");
     spyOn(thumb, "onMouseUp");
     spyOn(thumb, "changeZIndexUp");
@@ -96,9 +97,8 @@ describe("Thumb", () => {
     document.dispatchEvent(mouseup);
     expect(thumb.onMouseMove).toHaveBeenCalled();
     expect(thumb.onMouseUp).toHaveBeenCalled();
-    expect(thumb.observer.broadcast).toHaveBeenCalled();
-    expect(thumb.changeZIndexUp).toHaveBeenCalled()
-  })
+    expect(thumb.changeZIndexUp).toHaveBeenCalled();
+  });
   it("метод onMouseMove вызывает ф-ю moveHandle", () => {
     spyOn(thumb, "moveHandle");
     const mousemove = new MouseEvent("mousemove", { bubbles: true });
@@ -117,7 +117,7 @@ describe("Thumb", () => {
     expect(document.onmousemove).toBeNull();
     expect(document.onmouseup).toBeNull();
     expect(thumb.observer.broadcast).toHaveBeenCalled();
-    expect(thumb.changeZIndexDown).toHaveBeenCalled()
+    expect(thumb.changeZIndexDown).toHaveBeenCalled();
   });
 
   describe("проверка метода findPosition", () => {
@@ -152,7 +152,7 @@ describe("Thumb", () => {
         clientXY: 100,
         slider_client_react: thumb.slider.getBoundingClientRect().left,
         data_num: "1",
-        positionThumbSecond: null,
+        positionThumbSecond: undefined,
       };
       thumb.findPosition(event);
       let returnedValue = thumb.findPosition(event);
@@ -197,7 +197,7 @@ describe("Thumb", () => {
         clientXY: 105,
         slider_client_react: thumb.slider.getBoundingClientRect().top,
         data_num: "1",
-        positionThumbSecond: null,
+        positionThumbSecond: undefined,
       };
       thumb.findPosition(event);
       let returnedValue = thumb.findPosition(event);
@@ -234,18 +234,29 @@ describe("Thumb", () => {
       expect(returnedValue).toEqual(expectedValue);
     });
   });
-  it('метод changeZIndexUp добавляет контейнеру бегунка класс thumb_zIndex_up', () => {
+  it("метод changeZIndexUp добавляет контейнеру бегунка класс thumb_zIndex_up", () => {
     thumb.changeZIndexUp();
-    expect(thumb.thumb).toHaveClass('thumb_zIndex_up')
-  })
-  it('метод changeZIndexDown удаляет у контейнера бегунка класс thumb_zIndex_up', () => {
+    expect(thumb.thumb).toHaveClass("thumb_zIndex_up");
+  });
+  it("метод changeZIndexDown удаляет у контейнера бегунка класс thumb_zIndex_up", () => {
     thumb.changeZIndexDown();
-    expect(thumb.thumb).not.toHaveClass('thumb_zIndex_up')
-  })
-  it('метод updateConfigThumb обновляет конфиг класса, вызывает ф-ции checkOrientation и update касса Label', () => {
-    spyOn(thumb, 'checkOrientation');
-    thumb.updateConfigThumb({});
-    expect(thumb.label.update).toHaveBeenCalled();
-    expect(thumb.checkOrientation).toHaveBeenCalled()
-  })
+    expect(thumb.thumb).not.toHaveClass("thumb_zIndex_up");
+  });
+  it("метод cleanStyleAttr удаляет у контейнера бегунка атрибут style", () => {
+    thumb.cleanStyleAttr();
+    expect(thumb.thumb).not.toHaveAttr("style");
+  });
+  it("метод updateConfigThumb обновляет конфиг класса, вызывает ф-ции checkOrientation и updateConfig касса Label", () => {
+    const newConf = {
+      range: false,
+      positionFrom: 10,
+      positionTo: 15,
+      orientation: "vertical",
+      label: true,
+    };
+    spyOn(thumb, "checkOrientation");
+    thumb.updateConfigThumb(newConf);
+    expect(thumb.label.updateConfig).toHaveBeenCalled();
+    expect(thumb.checkOrientation).toHaveBeenCalled();
+  });
 });

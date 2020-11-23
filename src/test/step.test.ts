@@ -6,9 +6,12 @@ const config = {
   orientation: "horizontal",
 };
 const container = $("<div>");
+const thumb = $("<div>");
 const blockMin = $("<div>");
 const blockMax = $("<div>");
 beforeEach(function () {
+  thumb[0].classList.add("thumb_first");
+  container.append(thumb);
   blockMin[0].classList.add("slider__step-block_min");
   blockMin[0].classList.add("slider__step-block");
   blockMin[0].innerHTML = step.config.min + "";
@@ -30,27 +33,25 @@ describe("Step", () => {
   });
   it("метода changeMinValue изменяет innerHTML блока min", () => {
     step.config.min = 104;
-    step.changeMinValue()
+    step.changeMinValue();
     expect(blockMin[0]).toBeInDOM();
     expect(blockMin).toContainText("4");
   });
   it("метод changeMaxValue изменяет innerHTML блока max", () => {
     step.config.max = 104;
-    step.changeMaxValue()
+    step.changeMaxValue();
     expect(blockMax[0]).toBeInDOM();
     expect(blockMax).toContainText("104");
   });
   describe("метода addStepLine добавляет шкалу значений", () => {
     let data: any;
-    let stepCount: number;
     let stepSize: number;
 
     beforeAll(function () {
       data = {
-        stepSize: 14,
+        stepData: 30.5,
       };
-      stepCount = data["stepCount"];
-      stepSize = data["stepSize"];
+      stepSize = data.stepData;
       step.config.min = 7;
       step.config.max = 11;
     });
@@ -64,7 +65,7 @@ describe("Step", () => {
     });
     it("orientation = horizontal", () => {
       step.config.orientation = "horizontal";
-      step.addStepLine(data);
+      step.addStepLine(data.stepData);
       let stepBlocks = step.container.querySelectorAll(".slider__step-block");
 
       expect(stepBlocks.length).toEqual(21);
@@ -82,7 +83,7 @@ describe("Step", () => {
     });
     it("orientation = vertical", () => {
       step.config.orientation = "vertical";
-      step.addStepLine(data);
+      step.addStepLine(data.stepData);
       let stepBlocks = step.container.querySelectorAll(
         ".slider__step-block"
       ) as NodeListOf<HTMLElement>;
@@ -101,14 +102,19 @@ describe("Step", () => {
       }
     });
   });
-  it('метод deleteElements удаляет все эл-ты с классом slider__step-block', () => {
-    step.deleteElements()
-    expect(step.container).not.toContainElement('div.slider__step-block')
-  })
+  it("метод deleteStep удаляет все эл-ты с классом slider__step-block", () => {
+    step.deleteStep();
+    expect(step.container).not.toContainElement("div.slider__step-block");
+  });
   it("метод updateConfigStep обновляет конфиг и вызывает ф-ции changeMinValue и changeMaxValue", () => {
+    const newConf = {
+      min: 0,
+      max: 10,
+      orientation: "vertical",
+    };
     spyOn(step, "changeMinValue");
     spyOn(step, "changeMaxValue");
-    step.updateConfigStep({});
+    step.updateConfigStep(newConf);
     expect(step.changeMinValue).toHaveBeenCalled();
     expect(step.changeMaxValue).toHaveBeenCalled();
   });

@@ -103,13 +103,13 @@ class SliderBlock {
   }
   onSliderClick(e: MouseEvent) {
     if (this.config.orientation == "horizontal") {
-      this.fundClickPlaceHoriz(e)
+      this.fundClickPlaceHorizon(e)
     }
     if (this.config.orientation == "vertical") {
-      this.fundChickPlaceVert(e)
+      this.fundClickPlaceVert(e)
     }
   }
-  fundClickPlaceHoriz(e: MouseEvent) {
+  fundClickPlaceHorizon(e: MouseEvent) {
     if (!this.config.range) {
       this.thumbOne.onMouseUp(e);
     } else if (this.config.range) {
@@ -126,7 +126,7 @@ class SliderBlock {
       }
     }
   }
-  fundChickPlaceVert(e: MouseEvent) {
+  fundClickPlaceVert(e: MouseEvent) {
     if (!this.config.range) {
       this.thumbOne.onMouseUp(e);
     } else if (this.config.range) {

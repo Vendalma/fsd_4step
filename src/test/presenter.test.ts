@@ -18,11 +18,10 @@ describe("Presenter", () => {
     "calcParams",
   ]);
   const view = jasmine.createSpyObj("view", [
-    "setPositionMoveThumb",
+    "setPositionThumb",
     "addFollower",
-    "setOnloadView",
     "updateConfig",
-    "changeOrientation",
+    "changeOrientationOrRange",
   ]);
   const block = $("<div>");
   beforeEach(function () {
@@ -52,13 +51,10 @@ describe("Presenter", () => {
       expect(presenter.model.fundMoveThumbPosition).toHaveBeenCalled();
     });
     it(" type = position должно вызывать ф-ю setPositionMoveThumb в View", () => {
-      presenter.update("position", data);
-      expect(presenter.view.setPositionMoveThumb).toHaveBeenCalled();
+      presenter.update("positionThumb", data);
+      expect(presenter.view.setPositionThumb).toHaveBeenCalled();
     });
-    it(" type = onloadPosition должно вызывать ф-ю setOnloadView в View", () => {
-      presenter.update("onloadPosition", data);
-      expect(presenter.view.setOnloadView).toHaveBeenCalled();
-    });
+
     it(" type = sliderSize должно вызывать ф-ю setOnloadData в View", () => {
       presenter.update("sliderSize", data);
       expect(presenter.model.calcParams).toHaveBeenCalled();
@@ -68,8 +64,8 @@ describe("Presenter", () => {
       expect(presenter.view.updateConfig).toHaveBeenCalled();
     });
     it(" type = changeOrientation должно вызывать ф-ю changeOrientation в View", () => {
-      presenter.update("changeOrientation", data);
-      expect(presenter.view.changeOrientation).toHaveBeenCalled();
+      presenter.update("changeOrientationOrRange", data);
+      expect(presenter.view.changeOrientationOrRange).toHaveBeenCalled();
     });
   });
 });
