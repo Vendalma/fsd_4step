@@ -1,7 +1,7 @@
 import './slider/RangeSlider/slider';
 
-$('.app').rangeSlider({});
-$('.app2').rangeSlider({
+$('.js-app').rangeSlider({});
+$('.js-app2').rangeSlider({
   range: false,
   min: -9999,
   max: 9999,
@@ -11,7 +11,7 @@ $('.app2').rangeSlider({
   step: 1000,
   orientation: 'vertical',
 });
-$('.app3').rangeSlider({
+$('.js-app3').rangeSlider({
   max: 110,
   step: 0.5,
   min: -110,

@@ -24,7 +24,7 @@ interface MethodsObject {
         $(this).data('sliderData', {
           instanceSlider,
         });
-        const panel = new PanelController($this, options);
+        const panel = new PanelController(this, options);
       });
     },
     update(options: ISettings) {
