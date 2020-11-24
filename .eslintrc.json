@@ -1,4 +1,8 @@
 {
+  "env": {
+    "browser": true,
+    "es6": true
+  },
   "root": true,
   "parser": "@typescript-eslint/parser",
   "plugins": [
@@ -6,16 +10,33 @@
     "fsd"
   ],
   "parserOptions": {
-    "ecmaVersion": 6
+    "ecmaVersion": 6,
+    "sourceType": "module"
   },
+  "extends": [
+    "airbnb-base",
+    "plugin:fsd/all",
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier/@typescript-eslint",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:import/typescript",
+    "plugin:prettier/recommended"
+  ],
   "settings": {
-    "import/resolver": {
-      "node": {
-        "extensions": [
-          ".ts",
-          ".tsx"
-        ]
-      }
+    "import/extensions": [
+      ".js",
+      ".jsx",
+      ".ts",
+      ".tsx"
+    ],
+    "import/parsers": {
+      "@typescript-eslint/parser": [
+        ".ts",
+        ".tsx"
+      ]
     }
   },
   "rules": {
@@ -28,13 +49,7 @@
         "ts": "never",
         "tsx": "never"
       }
-    ]
-  },
-  "extends": [
-    "airbnb-base",
-    "plugin:fsd/all",
-    "eslint:recommended",
-    "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended"
-  ]
+    ],
+    "no-unused-vars": "off"
+  }
 }

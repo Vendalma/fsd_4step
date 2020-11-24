@@ -48,23 +48,17 @@ class Step {
   }
 
   changeMinValue(): void {
-    const blockMin = this.container.querySelector(
-      '.slider__step-block_min',
-    ) as HTMLElement;
+    const blockMin = this.container.querySelector('.slider__step-block_min') as HTMLElement;
     blockMin.innerHTML = this.config.min.toString();
   }
 
   changeMaxValue(): void {
-    const blockMax = this.container.querySelector(
-      '.slider__step-block_max',
-    ) as HTMLElement;
+    const blockMax = this.container.querySelector('.slider__step-block_max') as HTMLElement;
     blockMax.innerHTML = this.config.max.toString();
   }
 
   deleteStep(): void {
-    const steps = this.container.querySelectorAll(
-      '.slider__step-block',
-    ) as NodeListOf<HTMLElement>;
+    const steps = this.container.querySelectorAll('.slider__step-block') as NodeListOf<HTMLElement>;
     steps.forEach((elem) => {
       this.container.removeChild(elem);
     });

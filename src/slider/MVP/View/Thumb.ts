@@ -30,16 +30,11 @@ class Thumb {
 
   label: Label;
 
-  constructor(
-    IConfigThumb: IConfigThumb,
-    countThumbs: string,
-    slider: HTMLElement,
-    data_num: string
-  ) {
-    this.config = IConfigThumb;
+  constructor(config: IConfigThumb, countThumbs: string, slider: HTMLElement, dataNum: string) {
+    this.config = config;
     this.slider = slider;
     this.countThumbs = countThumbs;
-    this.dataNum = data_num;
+    this.dataNum = dataNum;
 
     this.thumb = document.createElement('div');
     this.thumb.classList.add('thumb');
@@ -54,7 +49,7 @@ class Thumb {
     this.moveThumb();
   }
 
-  addFollower(follower: any): void {
+  addFollower(follower: unknown): void {
     this.observer.subscribe(follower);
   }
 
@@ -75,8 +70,8 @@ class Thumb {
 
   mouseDown(e: MouseEvent): void {
     e.preventDefault();
-    document.onmousemove = (e) => this.onMouseMove(e);
-    document.onmouseup = (e) => this.onMouseUp(e);
+    document.onmousemove = (event) => this.onMouseMove(event);
+    document.onmouseup = (event) => this.onMouseUp(event);
     this.changeZIndexUp();
   }
 
@@ -103,21 +98,18 @@ class Thumb {
     if (this.config.orientation === 'vertical') {
       return this.findPositionForVertical(e) as IDataThumbMove;
     }
+    return undefined;
   }
 
   findPositionForHorizontal(e: MouseEvent): IDataThumbMove | undefined {
     const thumbFirst = this.slider.querySelector('.thumb_first') as HTMLElement;
-    const thumbSecond = this.slider.querySelector(
-      '.thumb_second'
-    ) as HTMLElement;
+    const thumbSecond = this.slider.querySelector('.thumb_second') as HTMLElement;
     if (this.thumb.dataset.num === '1') {
       return {
         clientXY: e.clientX,
         sliderClientReact: this.slider.getBoundingClientRect().left,
         dataNum: this.thumb.dataset.num,
-        positionThumbSecond: this.config.range
-          ? parseInt(thumbSecond.style.left)
-          : undefined,
+        positionThumbSecond: this.config.range ? parseInt(thumbSecond.style.left, 10) : undefined,
       } as IDataThumbMove;
     }
     if (this.thumb.dataset.num === '2') {
@@ -125,24 +117,21 @@ class Thumb {
         clientXY: e.clientX,
         sliderClientReact: this.slider.getBoundingClientRect().left,
         dataNum: this.thumb.dataset.num,
-        positionThumbFirst: parseInt(thumbFirst.style.left),
+        positionThumbFirst: parseInt(thumbFirst.style.left, 10),
       } as IDataThumbMove;
     }
+    return undefined;
   }
 
   findPositionForVertical(e: MouseEvent): IDataThumbMove | undefined {
     const thumbFirst = this.slider.querySelector('.thumb_first') as HTMLElement;
-    const thumbSecond = this.slider.querySelector(
-      '.thumb_second'
-    ) as HTMLElement;
+    const thumbSecond = this.slider.querySelector('.thumb_second') as HTMLElement;
     if (this.thumb.dataset.num === '1') {
       return {
         clientXY: e.clientY,
         sliderClientReact: this.slider.getBoundingClientRect().top,
         dataNum: this.thumb.dataset.num,
-        positionThumbSecond: this.config.range
-          ? parseInt(thumbSecond.style.top)
-          : undefined,
+        positionThumbSecond: this.config.range ? parseInt(thumbSecond.style.top, 10) : undefined,
       } as IDataThumbMove;
     }
     if (this.thumb.dataset.num === '2') {
@@ -150,9 +139,10 @@ class Thumb {
         clientXY: e.clientY,
         sliderClientReact: this.slider.getBoundingClientRect().top,
         dataNum: this.thumb.dataset.num,
-        positionThumbFirst: parseInt(thumbFirst.style.top),
+        positionThumbFirst: parseInt(thumbFirst.style.top, 10),
       } as IDataThumbMove;
     }
+    return undefined;
   }
 
   setPosition(position: number): void {

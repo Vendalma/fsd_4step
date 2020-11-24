@@ -1,19 +1,19 @@
 class Observer {
-  private observers: Array<any>;
+  private observers: Array<any>; /* eslint-disable-line */
 
   constructor() {
     this.observers = [];
   }
 
-  subscribe(fn: Object) {
+  subscribe(fn: unknown): void {
     this.observers.push(fn);
   }
 
-  unsubscribe(fn: Object) {
+  unsubscribe(fn: unknown): void {
     this.observers = this.observers.filter((subscriber) => subscriber !== fn);
   }
 
-  broadcast(type: string, data: any) {
+  broadcast(type: string, data: unknown | number | undefined): void {
     this.observers.forEach((subscriber) => subscriber.update(type, data));
   }
 }

@@ -20,30 +20,24 @@ interface MethodsObject {
     init(options: ISettings) {
       return this.each(function (this: HTMLElement) {
         const $this = $(this);
-        const data = $this.data('sliderData');
         const instanceSlider = new RangeSlider(this, options);
-        const panel = new PanelController(this, options);
         $(this).data('sliderData', {
           instanceSlider,
         });
+        const panel = new PanelController($this, options);
       });
     },
-    update(options: Object) {
+    update(options: ISettings) {
       return this.each(function (this: HTMLElement) {
         $(this).data('sliderData').instanceSlider.updateConfig(options);
       });
     },
   };
-  $.fn.rangeSlider = function (
-    method: string,
-    settings: ISettings | undefined,
-  ) {
+  $.fn.rangeSlider = function (method: string, settings: ISettings | undefined) {
     if (methods[method]) {
-      return methods[method].apply(
-        this,
-        Array.prototype.slice.call(arguments, 1),
-      );
-    } if (typeof method === 'object' || !method) {
+      return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
+    }
+    if (typeof method === 'object' || !method) {
       const defaultSettings = $.extend(
         {
           min: 0,
@@ -61,4 +55,4 @@ interface MethodsObject {
     }
     $.error(`Метод с именем ${method} не существует`);
   };
-}(jQuery));
+})(jQuery);

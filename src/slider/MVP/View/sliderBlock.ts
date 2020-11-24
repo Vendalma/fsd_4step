@@ -19,6 +19,17 @@ interface IDataThumbMove {
   positionThumbFirst?: number;
   positionThumbSecond?: number;
 }
+interface IPosition {
+  dataFirstThumb?: {
+    positionFrom: number;
+    valueFrom: number;
+  };
+  dataSecondThumb?: {
+    positionTo: number;
+    valueTo: number;
+  };
+  stepData?: number;
+}
 class SliderBlock {
   config: IConfig;
 
@@ -44,18 +55,8 @@ class SliderBlock {
     this.sliderContainer.append(this.sliderBlock);
 
     this.observer = new Observer();
-    this.thumbOne = new Thumb(
-      this.config,
-      'thumb_first',
-      this.sliderBlock,
-      '1',
-    );
-    this.thumbTwo = new Thumb(
-      this.config,
-      'thumb_second',
-      this.sliderBlock,
-      '2',
-    );
+    this.thumbOne = new Thumb(this.config, 'thumb_first', this.sliderBlock, '1');
+    this.thumbTwo = new Thumb(this.config, 'thumb_second', this.sliderBlock, '2');
 
     this.progressBar = new ProgressBar(this.config, this.sliderBlock);
 
@@ -66,7 +67,7 @@ class SliderBlock {
     this.checkOrientation();
   }
 
-  addFollower(follower: Object): void {
+  addFollower(follower: unknown): void {
     this.observer.subscribe(follower);
   }
 
@@ -89,7 +90,7 @@ class SliderBlock {
     }
   }
 
-  setPositionThumb(data: any): void {
+  setPositionThumb(data: IPosition): void {
     if (data.stepData) {
       this.step.addStepLine(data.stepData);
       this.progressBar.cleanStyleAttr();
@@ -125,12 +126,8 @@ class SliderBlock {
     if (!this.config.range) {
       this.thumbOne.onMouseUp(e);
     } else if (this.config.range) {
-      const thumbFirst = Math.abs(
-        this.thumbOne.thumb.getBoundingClientRect().x - e.clientX,
-      );
-      const thumbSecond = Math.abs(
-        (this.thumbTwo?.thumb.getBoundingClientRect().x as number) - e.clientX,
-      );
+      const thumbFirst = Math.abs(this.thumbOne.thumb.getBoundingClientRect().x - e.clientX);
+      const thumbSecond = Math.abs((this.thumbTwo?.thumb.getBoundingClientRect().x as number) - e.clientX);
       if (thumbFirst < thumbSecond) {
         this.thumbOne.onMouseUp(e);
       } else {
@@ -143,12 +140,8 @@ class SliderBlock {
     if (!this.config.range) {
       this.thumbOne.onMouseUp(e);
     } else if (this.config.range) {
-      const thumbFirst = Math.abs(
-        this.thumbOne.thumb.getBoundingClientRect().y - e.clientY,
-      );
-      const thumbSecond = Math.abs(
-        (this.thumbTwo?.thumb.getBoundingClientRect().y as number) - e.clientY,
-      );
+      const thumbFirst = Math.abs(this.thumbOne.thumb.getBoundingClientRect().y - e.clientY);
+      const thumbSecond = Math.abs((this.thumbTwo?.thumb.getBoundingClientRect().y as number) - e.clientY);
       if (thumbFirst < thumbSecond) {
         this.thumbOne.onMouseUp(e);
       } else {
@@ -163,9 +156,7 @@ class SliderBlock {
   }
 
   setThumbTwo(): void {
-    const secondThumb = this.sliderBlock.querySelector(
-      '.thumb_second',
-    ) as HTMLElement;
+    const secondThumb = this.sliderBlock.querySelector('.thumb_second') as HTMLElement;
     if (this.config.range) {
       this.thumbTwo?.addThis();
     } else if (!this.config.range && secondThumb !== null) {

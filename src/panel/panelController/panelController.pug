@@ -1,55 +1,55 @@
 mixin panel-controller(id='')
-    .slider__panel.panel(id=id)
+    .slider__panel.panel.js-panel(id=id)
         .panel__block_column Количество ползунков
                 -const range = `range${id}`
                 .panel__block_row
                     .panel__block
                         label.panel__label 
-                            input(type="radio"  name=range class='panel__radio panel__radio_single')
+                            input(type="radio"  name=range class='panel__radio panel__radio-single js-panel__radio-single')
                             span Один
                     .panel__block
                         label.panel__label 
-                            input(type="radio"  name=range class='panel__radio panel__radio_double')  
+                            input(type="radio"  name=range class='panel__radio panel__radio-double js-panel__radio-double')  
                             span Два       
         .panel__block_column Вид слайдера
                 -const orientation = `orientation${id}`
                 .panel__block_row
                     .panel__block
                         label.panel__label 
-                            input(type="radio"  name=orientation class='panel__radio panel__radio_horizontal')
+                            input(type="radio"  name=orientation class='panel__radio panel__radio-horizontal js-panel__radio-horizontal')
                             span Горизонтальный
                     .panel__block
                         label.panel__label 
-                            input(type="radio"  name=orientation class='panel__radio panel__radio_vertical')
+                            input(type="radio"  name=orientation class='panel__radio panel__radio-vertical js-panel__radio-vertical')
                             span Вертикальный
         .panel__block_column
             .panel__block
                 label.panel__label
-                    input(type="checkbox", name="label"  class='panel__checkbox panel__checkbox_label')
+                    input(type="checkbox", name="label"  class='panel__checkbox panel__checkbox-label js-panel__checkbox-label')
                     span Показать значение ползунка
         .panel__block_column
             .panel__block_row
                 label.panel__label.panel__label_flex  
                     span Min
-                    input(type="number" step = 'any'  class='panel__input panel__input_medium panel__input_min')
+                    input(type="number" step = 'any'  class='panel__input panel__input_medium panel__input-min js-panel__input-min')
             .panel__block_row
                 label.panel__label.panel__label_flex  
                     span Max
-                    input(type="number" step = 'any' class='panel__input panel__input_medium panel__input_max')
+                    input(type="number" step = 'any' class='panel__input panel__input_medium panel__input-max js-panel__input-max')
         .panel__block_column
             .panel__block_row
                 label.panel__label.panel__label_flex 
                     span Шаг
-                    input(type="number" step = 'any' class='panel__input panel__input_medium panel__input_step')
+                    input(type="number" step = 'any' class='panel__input panel__input_medium panel__input-step js-panel__input-step')
         .panel__block_column
             .panel__block_row
                 label.panel__label.panel__label_flex
                     span Ползунок №1 
-                    input(type='number' step = 'any' id='thumb-one-position' class='panel__input panel__input_short panel__input_from')
+                    input(type='number' step = 'any' id='thumb-one-position' class='panel__input panel__input_short panel__input-from js-panel__input-from')
             .panel__block_row
                 label.panel__label.panel__label_flex
                     span Ползунок №2
-                    input(type='number' step = 'any' class='panel__input panel__input_short panel__input_to panel__input_disabled')
+                    input(type='number' step = 'any' class='panel__input panel__input_short panel__input-to js-panel__input-to panel__input_disabled js-panel__input_disabled')
             
             
 

@@ -27,8 +27,9 @@ class ProgressBar {
         this.progressBar.style.width = thumbFirst.style.left;
       } else {
         this.progressBar.style.left = thumbFirst.style.left;
-        this.progressBar.style.width = `${parseInt(thumbSecond.style.left)
-          - parseInt(thumbFirst.style.left)}px`;
+        this.progressBar.style.width = `${
+          parseInt(thumbSecond.style.left, 10) - parseInt(thumbFirst.style.left, 10)
+        }px`;
       }
     }
     if (this.config.orientation === 'vertical') {
@@ -37,8 +38,7 @@ class ProgressBar {
         this.progressBar.style.height = thumbFirst.style.top;
       } else {
         this.progressBar.style.top = thumbFirst.style.top;
-        this.progressBar.style.height = `${parseInt(thumbSecond.style.top)
-          - parseInt(thumbFirst.style.top)}px`;
+        this.progressBar.style.height = `${parseInt(thumbSecond.style.top, 10) - parseInt(thumbFirst.style.top, 10)}px`;
       }
     }
   }

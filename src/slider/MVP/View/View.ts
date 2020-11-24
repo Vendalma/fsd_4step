@@ -18,6 +18,17 @@ interface IDataThumbMove {
   positionThumbFirst?: number;
   positionThumbSecond?: number;
 }
+interface IPosition {
+  dataFirstThumb?: {
+    positionFrom: number;
+    valueFrom: number;
+  };
+  dataSecondThumb?: {
+    positionTo: number;
+    valueTo: number;
+  };
+  stepData?: number;
+}
 class View {
   config: IConfigView;
 
@@ -29,8 +40,8 @@ class View {
 
   sliderBlock: SliderBlock;
 
-  constructor(IConfigView: IConfigView, wrapper: HTMLElement) {
-    this.config = IConfigView;
+  constructor(config: IConfigView, wrapper: HTMLElement) {
+    this.config = config;
     this.wrapper = wrapper;
     this.wrapper.classList.add('wrapper');
     this.sliderContainer = document.createElement('div');
@@ -50,19 +61,10 @@ class View {
     this.sliderContainer.setAttribute('data-max', String(this.config.max));
     this.sliderContainer.setAttribute('data-step', String(this.config.step));
     this.sliderContainer.setAttribute('data-label', String(this.config.label));
-    this.sliderContainer.setAttribute(
-      'data-orientation',
-      String(this.config.orientation),
-    );
+    this.sliderContainer.setAttribute('data-orientation', String(this.config.orientation));
     this.sliderContainer.setAttribute('data-range', String(this.config.range));
-    this.sliderContainer.setAttribute(
-      'data-from',
-      String(this.config.positionFrom),
-    );
-    this.sliderContainer.setAttribute(
-      'data-to',
-      String(this.config.positionTo),
-    );
+    this.sliderContainer.setAttribute('data-from', String(this.config.positionFrom));
+    this.sliderContainer.setAttribute('data-to', String(this.config.positionTo));
   }
 
   subscribeOnUpdate(): void {
@@ -73,23 +75,17 @@ class View {
     this.observer.broadcast('mouseMove', data);
   }
 
-  setPositionThumb(data: any): void {
+  setPositionThumb(data: IPosition): void {
     this.sliderBlock.setPositionThumb(data);
     if (data.dataFirstThumb) {
-      this.sliderContainer.setAttribute(
-        'data-from',
-        data.dataFirstThumb.valueFrom,
-      );
+      this.sliderContainer.setAttribute('data-from', data.dataFirstThumb.valueFrom.toString());
     }
     if (data.dataSecondThumb) {
-      this.sliderContainer.setAttribute(
-        'data-to',
-        data.dataSecondThumb.valueTo,
-      );
+      this.sliderContainer.setAttribute('data-to', data.dataSecondThumb.valueTo.toString());
     }
   }
 
-  addFollower(follower: Object): void {
+  addFollower(follower: unknown): void {
     this.observer.subscribe(follower);
   }
 
@@ -102,15 +98,15 @@ class View {
   }
 
   getSliderSize(): void {
-    if (this.config.orientation === 'horizontal') this.observer.broadcast('sliderSize', this.sliderContainer.offsetWidth);
+    if (this.config.orientation === 'horizontal')
+      this.observer.broadcast('sliderSize', this.sliderContainer.offsetWidth);
 
-    if (this.config.orientation === 'vertical') this.observer.broadcast('sliderSize', this.sliderContainer.offsetHeight);
+    if (this.config.orientation === 'vertical')
+      this.observer.broadcast('sliderSize', this.sliderContainer.offsetHeight);
   }
 
   updateFromToAttr(): void {
-    if (
-      this.config.positionFrom !== Number(this.sliderContainer.dataset.from)
-    ) {
+    if (this.config.positionFrom !== Number(this.sliderContainer.dataset.from)) {
       this.sliderContainer.dataset.from = String(this.config.positionFrom);
     }
     if (this.config.positionTo !== Number(this.sliderContainer.dataset.to)) {
