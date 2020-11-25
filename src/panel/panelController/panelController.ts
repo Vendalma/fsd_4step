@@ -51,7 +51,7 @@ class PanelController {
     this.observer = new Observer();
     this.init();
     this.setConfig();
-    this.change();
+    this.clickPanel();
     this.checkRange();
     this.$slider.data('sliderData').instanceSlider.addFollower(this);
   }
@@ -84,65 +84,84 @@ class PanelController {
     if (!this.config.range) this.inputSingle.checked = true;
   }
 
-  private change() {
-    this.panel?.addEventListener('click', (e) => {
-      if (e.target === this.inputLabel) {
-        const isLabelVisible = this.inputLabel.checked;
-        this.$slider.rangeSlider('update', { label: isLabelVisible });
-      }
+  clickPanel(): void {
+    this.panel.addEventListener('click', this.onClickPanel.bind(this));
+  }
 
-      if (e.target === this.inputHorizontal && this.inputHorizontal.checked) {
-        this.$slider.rangeSlider('update', { orientation: 'horizontal' });
-      }
+  onClickPanel(e: MouseEvent): void {
+    if (e.target === this.inputLabel) {
+      const isLabelVisible = this.inputLabel.checked;
+      this.$slider.rangeSlider('update', { label: isLabelVisible });
+    }
 
-      if (e.target === this.inputVertical && this.inputVertical.checked) {
-        this.$slider.rangeSlider('update', { orientation: 'vertical' });
-      }
+    if (e.target === this.inputHorizontal && this.inputHorizontal.checked) {
+      this.$slider.rangeSlider('update', { orientation: 'horizontal' });
+    }
 
-      if (e.target === this.inputSingle && this.inputSingle.checked) {
-        this.$slider.rangeSlider('update', { range: false });
-        this.config.range = false;
-        this.checkRange();
-      }
+    if (e.target === this.inputVertical && this.inputVertical.checked) {
+      this.$slider.rangeSlider('update', { orientation: 'vertical' });
+    }
 
-      if (e.target === this.inputDouble && this.inputDouble.checked) {
-        this.$slider.rangeSlider('update', { range: true });
-        this.config.range = true;
-        this.checkRange();
-      }
-      this.inputMin.addEventListener('blur', () => {
-        this.$slider.rangeSlider('update', {
-          min: Number(this.inputMin.value),
-        });
-      });
+    if (e.target === this.inputSingle && this.inputSingle.checked) {
+      this.$slider.rangeSlider('update', { range: false });
+      this.config.range = false;
+      this.checkRange();
+    }
 
-      this.inputMax.addEventListener('blur', () => {
-        this.$slider.rangeSlider('update', {
-          max: Number(this.inputMax.value),
-        });
-      });
+    if (e.target === this.inputDouble && this.inputDouble.checked) {
+      this.$slider.rangeSlider('update', { range: true });
+      this.config.range = true;
+      this.checkRange();
+    }
+    if (e.target === this.inputMin) {
+      this.inputMin.addEventListener('blur', this.changeMin.bind(this));
+    }
+    if (e.target === this.inputMax) {
+      this.inputMax.addEventListener('blur', this.changeMax.bind(this));
+    }
+    if (e.target === this.inputStep) {
+      this.inputStep.addEventListener('blur', this.changeStep.bind(this));
+    }
+    if (e.target === this.inputFrom) {
+      this.inputFrom.addEventListener('blur', this.changePositionFrom.bind(this));
+    }
+    if (e.target === this.inputTo) {
+      this.inputTo.addEventListener('blur', this.changePositionTo.bind(this));
+    }
+  }
 
-      this.inputStep.addEventListener('blur', () => {
-        this.$slider.rangeSlider('update', {
-          step: Number(this.inputStep.value),
-        });
-      });
-
-      this.inputFrom.addEventListener('blur', () => {
-        this.$slider.rangeSlider('update', {
-          positionFrom: Number(this.inputFrom.value),
-        });
-      });
-      this.inputTo.addEventListener('blur', () => {
-        this.$slider.rangeSlider('update', {
-          positionTo: Number(this.inputTo.value),
-        });
-      });
+  changeMin(): void {
+    this.$slider.rangeSlider('update', {
+      min: Number(this.inputMin.value),
     });
   }
 
-  checkRange() {
-    const disabledBlock = this.parent.querySelector('.panel__input_disabled') as HTMLInputElement;
+  changeMax(): void {
+    this.$slider.rangeSlider('update', {
+      max: Number(this.inputMax.value),
+    });
+  }
+
+  changeStep(): void {
+    this.$slider.rangeSlider('update', {
+      step: Number(this.inputStep.value),
+    });
+  }
+
+  changePositionFrom(): void {
+    this.$slider.rangeSlider('update', {
+      positionFrom: Number(this.inputFrom.value),
+    });
+  }
+
+  changePositionTo(): void {
+    this.$slider.rangeSlider('update', {
+      positionTo: Number(this.inputTo.value),
+    });
+  }
+
+  checkRange(): void {
+    const disabledBlock = this.parent.querySelector('.js-panel__input_disabled') as HTMLInputElement;
     if (!this.config.range) disabledBlock.disabled = true;
     if (this.config.range) disabledBlock.disabled = false;
   }
