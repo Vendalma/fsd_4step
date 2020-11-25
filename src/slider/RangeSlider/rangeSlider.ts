@@ -23,6 +23,9 @@ interface IPosition {
   };
   stepData?: number;
 }
+interface IUpdateConfig {
+  [key: string]: boolean | string | number;
+}
 class RangeSlider {
   model: Model;
 
@@ -41,7 +44,7 @@ class RangeSlider {
     this.model.addFollower(this);
   }
 
-  updateConfig(data: ISettings): void {
+  updateConfig(data: IUpdateConfig): void {
     this.model.updateConfig(data);
   }
 

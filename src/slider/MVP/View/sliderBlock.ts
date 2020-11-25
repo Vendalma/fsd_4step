@@ -91,18 +91,18 @@ class SliderBlock {
   }
 
   setPositionThumb(data: IPosition): void {
-    if (data.stepData) {
+    if (data.stepData !== undefined) {
       this.step.addStepLine(data.stepData);
       this.progressBar.cleanStyleAttr();
       this.thumbOne.cleanStyleAttr();
       this.thumbTwo?.cleanStyleAttr();
     }
-    if (data.dataFirstThumb) {
+    if (data.dataFirstThumb !== undefined) {
       this.thumbOne.setPosition(data.dataFirstThumb.positionFrom);
       this.thumbOne.setLabelValue(data.dataFirstThumb.valueFrom);
     }
 
-    if (data.dataSecondThumb) {
+    if (data.dataSecondThumb !== undefined) {
       this.thumbTwo?.setPosition(data.dataSecondThumb.positionTo);
       this.thumbTwo?.setLabelValue(data.dataSecondThumb.valueTo);
     }

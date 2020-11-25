@@ -1,6 +1,9 @@
 import Observer from '../../Observer/Observer';
 import Validator from './Validator';
 
+interface IUpdateConfig {
+  [key: string]: boolean | string | number;
+}
 interface IConfigModel {
   min: number;
   max: number;
@@ -39,7 +42,7 @@ class Model {
     this.observer.subscribe(follower);
   }
 
-  updateConfig(data: IConfigModel): void {
+  updateConfig(data: IUpdateConfig): void {
     if (this.validator.validationConfig(data) === true) {
       const key = Object.keys(data)[0];
       Object.assign(this.config, data);

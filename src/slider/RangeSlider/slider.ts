@@ -13,7 +13,10 @@ interface ISettings {
   orientation: string;
 }
 interface MethodsObject {
-  [key: string]: any;
+  [key: string]: Function;
+}
+interface IUpdateConfig {
+  [key: string]: boolean | string | number;
 }
 (function ($) {
   const methods: MethodsObject = {
@@ -27,13 +30,13 @@ interface MethodsObject {
         const panel = new PanelController(this, options);
       });
     },
-    update(options: ISettings) {
+    update(options: IUpdateConfig) {
       return this.each(function (this: HTMLElement) {
         $(this).data('sliderData').instanceSlider.updateConfig(options);
       });
     },
   };
-  $.fn.rangeSlider = function (method: string, settings: ISettings | undefined) {
+  $.fn.rangeSlider = function (method: string, settings: ISettings | IUpdateConfig | undefined) {
     if (methods[method]) {
       return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
     }

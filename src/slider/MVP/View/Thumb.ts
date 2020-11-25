@@ -57,8 +57,7 @@ class Thumb {
     if (this.config.orientation === 'horizontal') {
       this.thumb.classList.add('slider__thumb_horizontal');
       this.thumb.classList.remove('slider__thumb_vertical');
-    }
-    if (this.config.orientation === 'vertical') {
+    } else if (this.config.orientation === 'vertical') {
       this.thumb.classList.remove('slider__thumb_horizontal');
       this.thumb.classList.add('slider__thumb_vertical');
     }

@@ -3,13 +3,15 @@
     [
       "@babel/preset-env",
       {
-        "modules": false
+        "modules": true
       }
     ],
     [
       "babel-preset-airbnb",
       {
-        "presets": ["airbnb"]
+        "presets": [
+          "airbnb"
+        ]
       }
     ]
   ]

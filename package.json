@@ -34,6 +34,7 @@
     "eslint-import-resolver-webpack": "^0.13.0",
     "eslint-plugin-fsd": "^1.0.1",
     "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jasmine": "^4.1.1",
     "eslint-plugin-prettier": "^3.1.4",
     "html-webpack-plugin": "^4.5.0",
     "istanbul-instrumenter-loader": "^3.0.1",

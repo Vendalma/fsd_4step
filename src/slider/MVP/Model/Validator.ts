@@ -6,6 +6,9 @@ interface IConfigValidator {
   positionTo: number;
   step: number;
 }
+interface IUpdateConfig {
+  [key: string]: boolean | string | number;
+}
 class Validator {
   config: IConfigValidator;
 
@@ -37,7 +40,7 @@ class Validator {
     return true;
   }
 
-  validationConfig(data: IConfigValidator): boolean {
+  validationConfig(data: IUpdateConfig | IConfigValidator): boolean {
     Object.assign(this.config, data);
     const isMinMaxValid = this.validationMaxValue() === true && this.validationMinValue() === true;
     if (isMinMaxValid && this.validationStepValue() === true) {

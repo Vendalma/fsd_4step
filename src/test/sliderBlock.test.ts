@@ -1,4 +1,16 @@
-import { SliderBlock } from "../slider/MVP/View/sliderBlock";
+import SliderBlock from '../slider/MVP/View/sliderBlock';
+
+interface IPosition {
+  dataFirstThumb?: {
+    positionFrom: number;
+    valueFrom: number;
+  };
+  dataSecondThumb?: {
+    positionTo: number;
+    valueTo: number;
+  };
+  stepData?: number;
+}
 const config = {
   range: true,
   min: 0,
@@ -7,60 +19,60 @@ const config = {
   positionTo: 30,
   label: true,
   step: 1,
-  orientation: "horizontal",
+  orientation: 'horizontal',
 };
-const block = $("<div>");
-const secondThumb = $("<div>");
-beforeEach(function () {
-  secondThumb[0].classList.add("thumb_second");
-  block.append(secondThumb);
-  block[0].classList.add("slider__container");
-  $(document.body).append(block);
-});
-const sliderBlock: SliderBlock = new SliderBlock(config, block[0]);
-const observer = jasmine.createSpyObj("observer", ["subscribe", "broadcast"]);
-const progressBar = jasmine.createSpyObj("progressBar", [
-  "addBar",
-  "cleanStyleAttr",
-  "updateBarConfig",
-]);
-const step = jasmine.createSpyObj("step", ["updateConfigStep", "addStepLine"]);
-const thumbOne = jasmine.createSpyObj("thumbOne", [
-  "addFollower",
-  "setPosition",
-  "setLabelValue",
-  "updateConfigThumb",
-  "onMouseUp",
-  "cleanStyleAttr",
-]);
-const thumbTwo = jasmine.createSpyObj("thumbTwo", [
-  "addFollower",
-  "setPosition",
-  "setLabelValue",
-  "addThis",
-  "removeThis",
-  "updateConfigThumb",
-  "onMouseUp",
-  "cleanStyleAttr",
-]);
 
-sliderBlock.observer = observer;
-sliderBlock.progressBar = progressBar;
-sliderBlock.step = step;
-sliderBlock.thumbOne = thumbOne;
-sliderBlock.thumbTwo = thumbTwo;
-describe("Slider Block", () => {
-  it("Инициализация Slider Block", () => {
+describe('Slider Block', () => {
+  const block = $('<div>');
+  const secondThumb = $('<div>');
+  beforeEach(function () {
+    secondThumb[0].classList.add('js-slider__thumb-second');
+    block.append(secondThumb);
+    block[0].classList.add('slider__container');
+    $(document.body).append(block);
+  });
+  const sliderBlock: SliderBlock = new SliderBlock(config, block[0]);
+  const observer = jasmine.createSpyObj('observer', ['subscribe', 'broadcast']);
+  const progressBar = jasmine.createSpyObj('progressBar', ['addBar', 'cleanStyleAttr', 'updateBarConfig']);
+  const step = jasmine.createSpyObj('step', ['updateConfigStep', 'addStepLine']);
+  const thumbOne = jasmine.createSpyObj('thumbOne', [
+    'addFollower',
+    'setPosition',
+    'setLabelValue',
+    'updateConfigThumb',
+    'onMouseUp',
+    'cleanStyleAttr',
+  ]);
+  const thumbTwo = jasmine.createSpyObj('thumbTwo', [
+    'addFollower',
+    'setPosition',
+    'setLabelValue',
+    'addThis',
+    'removeThis',
+    'updateConfigThumb',
+    'onMouseUp',
+    'cleanStyleAttr',
+  ]);
+
+  sliderBlock.observer = observer;
+  sliderBlock.progressBar = progressBar;
+  sliderBlock.step = step;
+  sliderBlock.thumbOne = thumbOne;
+  sliderBlock.thumbTwo = thumbTwo;
+  it('Инициализация Slider Block', () => {
     expect(sliderBlock).toBeDefined();
     expect(sliderBlock.config).toEqual(config);
     expect(sliderBlock.sliderBlock).toBeInDOM();
-    expect(sliderBlock.sliderBlock).toHaveClass("slider__block");
+    expect(sliderBlock.sliderBlock).toHaveClass('slider__block');
   });
-  it("метод addFollower вызывает observer.subscribe", () => {
+
+  it('метод addFollower вызывает observer.subscribe', () => {
     sliderBlock.addFollower({});
-    expect(sliderBlock.observer.subscribe).toHaveBeenCalled();
+
+    expect(sliderBlock.observer.subscribe).toHaveBeenCalledWith({});
   });
-  it("метод updateConfig обновляет конфиг, вызывает методы changeRange, changeOrientation, передает новый конфиг классам step, thumbOne, thumbTwo, progressBar", () => {
+
+  it('метод updateConfig обновляет конфиг, вызывает методы changeRange, changeOrientation, передает новый конфиг классам step, thumbOne, thumbTwo, progressBar', () => {
     const newConf = {
       min: -5,
       max: 40,
@@ -68,198 +80,237 @@ describe("Slider Block", () => {
       positionFrom: 0,
       positionTo: 10,
       label: false,
-      orientation: "vertical",
+      orientation: 'vertical',
     };
-    spyOn(sliderBlock, "checkOrientation");
-    spyOn(sliderBlock, "setThumbTwo");
+    spyOn(sliderBlock, 'checkOrientation');
+    spyOn(sliderBlock, 'setThumbTwo');
     sliderBlock.updateConfig(newConf);
-    expect(sliderBlock.checkOrientation).toHaveBeenCalled();
-    expect(sliderBlock.setThumbTwo).toHaveBeenCalled();
-    expect(step.updateConfigStep).toHaveBeenCalled();
-    expect(thumbOne.updateConfigThumb).toHaveBeenCalled();
-    expect(thumbTwo?.updateConfigThumb).toHaveBeenCalled();
-    expect(progressBar.updateBarConfig).toHaveBeenCalled();
+
+    expect(sliderBlock.checkOrientation).toHaveBeenCalledWith();
+    expect(sliderBlock.setThumbTwo).toHaveBeenCalledWith();
+    expect(step.updateConfigStep).toHaveBeenCalledWith(newConf);
+    expect(thumbOne.updateConfigThumb).toHaveBeenCalledWith(newConf);
+    expect(thumbTwo?.updateConfigThumb).toHaveBeenCalledWith(newConf);
+    expect(progressBar.updateBarConfig).toHaveBeenCalledWith(newConf);
   });
-  describe("метод checkOrientation", () => {
-    it("при orientation = vertical блоку присваивается класс slider__block_vertical", () => {
-      sliderBlock.config.orientation = "vertical";
+
+  describe('метод checkOrientation', () => {
+    it('при orientation = vertical блоку присваивается класс slider__block_vertical', () => {
+      sliderBlock.config.orientation = 'vertical';
       sliderBlock.checkOrientation();
-      expect(sliderBlock.sliderBlock).toHaveClass("slider__block_vertical");
-    });
-    it("при orientation = horizontal у блока удаляется класс slider__block_vertical", () => {
-      sliderBlock.config.orientation = "horizontal";
-      sliderBlock.checkOrientation();
-      expect(sliderBlock.sliderBlock).not.toHaveClass("slider__block_vertical");
-    });
-  });
-  describe("метод setPositionThumb всегда вызывает ф-ю addBar класса progressBar", () => {
-    let data: any;
-    beforeEach(function () {
-      data = {
-        stepData: 30.5,
-        dataFirstThumb: {},
-        dataSecondThumb: {},
-      };
+
+      expect(sliderBlock.sliderBlock).toHaveClass('slider__block_vertical');
     });
 
-    it("при data.stepData !== undefined вызываются ф-ции addStepLine класса Step и cleanStyleAttr в классах thumbOne, thumbTwo, progressBar", () => {
-      sliderBlock.setPositionThumb(data);
-      expect(sliderBlock.step.addStepLine).toHaveBeenCalled();
-      expect(sliderBlock.thumbOne.cleanStyleAttr).toHaveBeenCalled();
-      expect(sliderBlock.thumbTwo?.cleanStyleAttr).toHaveBeenCalled();
-      expect(sliderBlock.progressBar.cleanStyleAttr).toHaveBeenCalled();
-      expect(sliderBlock.progressBar.addBar).toHaveBeenCalled();
-    });
-    it("при data.dataFirstThumb !== undefined вызываются ф-ции setPosition,setLabelValue класса thumbOne", () => {
-      sliderBlock.setPositionThumb(data);
-      expect(sliderBlock.thumbOne.setPosition).toHaveBeenCalled();
-      expect(sliderBlock.thumbOne.setLabelValue).toHaveBeenCalled();
-      expect(sliderBlock.progressBar.addBar).toHaveBeenCalled();
-    });
-    it("при data.dataSecondThumb !== undefined вызываются ф-ции setPosition,setLabelValue класса thumbTwo", () => {
-      sliderBlock.setPositionThumb(data);
-      expect(sliderBlock.thumbTwo?.setPosition).toHaveBeenCalled();
-      expect(sliderBlock.thumbTwo?.setLabelValue).toHaveBeenCalled();
-      expect(sliderBlock.progressBar.addBar).toHaveBeenCalled();
+    it('при orientation = horizontal у блока удаляется класс slider__block_vertical', () => {
+      sliderBlock.config.orientation = 'horizontal';
+      sliderBlock.checkOrientation();
+
+      expect(sliderBlock.sliderBlock).not.toHaveClass('slider__block_vertical');
     });
   });
-  it("метод subscribeOnUpdate вызывает ф-ю addFollower в классах thumbOne, thumbTwo", () => {
+
+  describe('метод setPositionThumb всегда вызывает ф-ю addBar класса progressBar', () => {
+    it('при data.stepData !== undefined вызываются ф-ции addStepLine класса Step и cleanStyleAttr в классах thumbOne, thumbTwo, progressBar', () => {
+      const data = {
+        stepData: 30.5,
+      };
+      sliderBlock.setPositionThumb(data);
+
+      expect(sliderBlock.step.addStepLine).toHaveBeenCalledWith(data.stepData);
+      expect(sliderBlock.thumbOne.cleanStyleAttr).toHaveBeenCalledWith();
+      expect(sliderBlock.thumbTwo?.cleanStyleAttr).toHaveBeenCalledWith();
+      expect(sliderBlock.progressBar.cleanStyleAttr).toHaveBeenCalledWith();
+      expect(sliderBlock.progressBar.addBar).toHaveBeenCalledWith();
+    });
+
+    it('при data.dataFirstThumb !== undefined вызываются ф-ции setPosition,setLabelValue класса thumbOne', () => {
+      const data = {
+        dataFirstThumb: {
+          positionFrom: 100,
+          valueFrom: 5,
+        },
+      };
+      sliderBlock.setPositionThumb(data);
+
+      expect(sliderBlock.thumbOne.setPosition).toHaveBeenCalledWith(data.dataFirstThumb.positionFrom);
+      expect(sliderBlock.thumbOne.setLabelValue).toHaveBeenCalledWith(data.dataFirstThumb.valueFrom);
+      expect(sliderBlock.progressBar.addBar).toHaveBeenCalledWith();
+    });
+
+    it('при data.dataSecondThumb !== undefined вызываются ф-ции setPosition,setLabelValue класса thumbTwo', () => {
+      const data = {
+        dataSecondThumb: {
+          positionTo: 100,
+          valueTo: 5,
+        },
+      };
+      sliderBlock.setPositionThumb(data);
+
+      expect(sliderBlock.thumbTwo?.setPosition).toHaveBeenCalledWith(data.dataSecondThumb.positionTo);
+      expect(sliderBlock.thumbTwo?.setLabelValue).toHaveBeenCalledWith(data.dataSecondThumb.valueTo);
+      expect(sliderBlock.progressBar.addBar).toHaveBeenCalledWith();
+    });
+  });
+
+  it('метод subscribeOnUpdate вызывает ф-ю addFollower в классах thumbOne, thumbTwo', () => {
     sliderBlock.subscribeOnUpdate();
-    expect(sliderBlock.thumbOne.addFollower).toHaveBeenCalled();
-    expect(sliderBlock.thumbTwo?.addFollower).toHaveBeenCalled();
+
+    expect(sliderBlock.thumbOne.addFollower).toHaveBeenCalledWith(sliderBlock);
+    expect(sliderBlock.thumbTwo?.addFollower).toHaveBeenCalledWith(sliderBlock);
   });
-  describe("метод setThumbTwo", () => {
-    let secondThumb: HTMLElement;
+
+  describe('метод setThumbTwo', () => {
+    let thumbSecond: HTMLElement;
     beforeAll(function () {
-      secondThumb = sliderBlock.sliderBlock.querySelector(
-        ".thumb_second"
-      ) as HTMLElement;
+      thumbSecond = sliderBlock.sliderBlock.querySelector('.js-slider__thumb-second') as HTMLElement;
     });
-    it("при range = true вызывает ф-ю addThis в классе thumbTwo", () => {
+
+    it('при range = true вызывает ф-ю addThis в классе thumbTwo', () => {
       sliderBlock.config.range = true;
       sliderBlock.setThumbTwo();
-      expect(sliderBlock.thumbTwo?.addThis).toHaveBeenCalled();
+
+      expect(sliderBlock.thumbTwo?.addThis).toHaveBeenCalledWith();
     });
-    it("при range = false вызывает ф-ю removeThis в классе thumbTwo", () => {
+
+    it('при range = false вызывает ф-ю removeThis в классе thumbTwo', () => {
       sliderBlock.config.range = false;
       sliderBlock.setThumbTwo();
-      expect(sliderBlock.thumbTwo?.removeThis).toHaveBeenCalled();
+
+      expect(sliderBlock.thumbTwo?.removeThis).toHaveBeenCalledWith();
     });
   });
 
-  it("метод update вызывает ф-ю broadcast класса observer", () => {
+  it('метод update вызывает ф-ю broadcast класса observer', () => {
     const data = {
       clientXY: 100,
-      slider_client_react: 5,
-      data_num: "2",
+      sliderClientReact: 5,
+      dataNum: '2',
       positionThumbFirst: 30,
       positionThumbSecond: 45,
     };
-    sliderBlock.update("mouse", data);
-    expect(sliderBlock.observer.broadcast).toHaveBeenCalled();
+    sliderBlock.update('mouse', data);
+
+    expect(sliderBlock.observer.broadcast).toHaveBeenCalledWith('mouseMove', data);
   });
-  describe("метод sliderClick добавляет контейнеру обработчик событий", () => {
+
+  describe('метод sliderClick добавляет контейнеру обработчик событий', () => {
     let event: MouseEvent;
     beforeEach(function () {
-      event = new MouseEvent("click", { bubbles: true });
+      event = new MouseEvent('click', { bubbles: true });
     });
-    it("при orientation = horizontal вызывается ф-я fundClickPlaceHorizon", () => {
-      sliderBlock.config.orientation = "horizontal";
-      spyOn(sliderBlock, "fundClickPlaceHorizon");
 
-      sliderBlock.sliderClick()
+    it('при orientation = horizontal вызывается ф-я fundClickPlaceHorizon', () => {
+      sliderBlock.config.orientation = 'horizontal';
+      spyOn(sliderBlock, 'fundClickPlaceHorizon');
+
+      sliderBlock.sliderClick();
       sliderBlock.sliderBlock.dispatchEvent(event);
-      expect(sliderBlock.fundClickPlaceHorizon).toHaveBeenCalled();
+
+      expect(sliderBlock.fundClickPlaceHorizon).toHaveBeenCalledWith(event);
     });
-    it("при orientation = vertical вызывается ф-я fundClickPlaceVert", () => {
-      sliderBlock.config.orientation = "vertical";
-      spyOn(sliderBlock, "fundClickPlaceVert");
+
+    it('при orientation = vertical вызывается ф-я fundClickPlaceVert', () => {
+      sliderBlock.config.orientation = 'vertical';
+      spyOn(sliderBlock, 'fundClickPlaceVert');
       sliderBlock.sliderBlock.dispatchEvent(event);
-      expect(sliderBlock.fundClickPlaceVert).toHaveBeenCalled();
+
+      expect(sliderBlock.fundClickPlaceVert).toHaveBeenCalledWith(event);
     });
   });
+
   describe('метод onSliderClick', () => {
     let event: MouseEvent;
     beforeEach(function () {
-      event = new MouseEvent("click", { bubbles: true });
+      event = new MouseEvent('click', { bubbles: true });
     });
-    it("при orientation = horizontal вызывается ф-я fundClickPlaceHorizon", () => {
-      sliderBlock.config.orientation = "horizontal";
-      spyOn(sliderBlock, "fundClickPlaceHorizon");
-      sliderBlock.onSliderClick(event)
-      expect(sliderBlock.fundClickPlaceHorizon).toHaveBeenCalled();
-    });
-    it("при orientation = vertical вызывается ф-я fundClickPlaceVert", () => {
-      sliderBlock.config.orientation = "vertical";
-      spyOn(sliderBlock, "fundClickPlaceVert");
+
+    it('если orientation = horizontal вызывается ф-я fundClickPlaceHorizon', () => {
+      sliderBlock.config.orientation = 'horizontal';
+      spyOn(sliderBlock, 'fundClickPlaceHorizon');
       sliderBlock.onSliderClick(event);
-      expect(sliderBlock.fundClickPlaceVert).toHaveBeenCalled();
+
+      expect(sliderBlock.fundClickPlaceHorizon).toHaveBeenCalledWith(event);
     });
-  })
-  describe("метод fundClickPlaceHorizon", () => {
-    let event: MouseEvent;
-    beforeAll(function () {
-      event = new MouseEvent("click", { bubbles: true });
-      sliderBlock.config.orientation = "horizontal";
-      sliderBlock.thumbOne.thumb = sliderBlock.sliderBlock.querySelector(
-        ".thumb_first"
-      ) as HTMLElement;
-      if (sliderBlock.thumbTwo)
-        sliderBlock.thumbTwo.thumb = sliderBlock.sliderBlock.querySelector(
-          ".thumb_second"
-        ) as HTMLElement;
-    });
-    it("при range = false вызывается метод onMouseUp класса thumbOne", () => {
-      sliderBlock.config.range = false;
-      sliderBlock.fundClickPlaceHorizon(event);
-      expect(sliderBlock.thumbOne.onMouseUp).toHaveBeenCalled();
-    });
-    it("при range = true thumbFirst < thumbSecond вызывается метод onMouseUp класса thumbOne", () => {
-      sliderBlock.config.range = true;
-      let thumbFirst = 40;
-      let thumbSecond = 100;
-      sliderBlock.fundClickPlaceHorizon(event);
-      expect(sliderBlock.thumbOne.onMouseUp).toHaveBeenCalled();
-    });
-    it("при range = true thumbFirst > thumbSecond вызывается метод onMouseUp класса thumbTwo", () => {
-      sliderBlock.config.range = true;
-      let thumbFirst = 100;
-      let thumbSecond = 30;
-      sliderBlock.fundClickPlaceHorizon(event);
-      expect(sliderBlock.thumbTwo?.onMouseUp).toHaveBeenCalled();
+
+    it('при orientation = vertical вызывается метод fundClickPlaceVert', () => {
+      sliderBlock.config.orientation = 'vertical';
+      spyOn(sliderBlock, 'fundClickPlaceVert');
+      sliderBlock.onSliderClick(event);
+
+      expect(sliderBlock.fundClickPlaceVert).toHaveBeenCalledWith(event);
     });
   });
-  describe("метод fundChickPlaceVert", () => {
+
+  describe('метод fundClickPlaceHorizon', () => {
     let event: MouseEvent;
     beforeAll(function () {
-      event = new MouseEvent("click", { bubbles: true });
-      sliderBlock.config.orientation = "vertical";
-      sliderBlock.thumbOne.thumb = sliderBlock.sliderBlock.querySelector(
-        ".thumb_first"
-      ) as HTMLElement;
+      event = new MouseEvent('click', { bubbles: true });
+      sliderBlock.config.orientation = 'horizontal';
+      sliderBlock.thumbOne.thumb = sliderBlock.sliderBlock.querySelector('.js-slider__thumb-first') as HTMLElement;
       if (sliderBlock.thumbTwo)
-        sliderBlock.thumbTwo.thumb = sliderBlock.sliderBlock.querySelector(
-          ".thumb_second"
-        ) as HTMLElement;
+        sliderBlock.thumbTwo.thumb = sliderBlock.sliderBlock.querySelector('.js-slider__thumb-second') as HTMLElement;
     });
-    it("при range = false вызывается метод onMouseUp класса thumbOne", () => {
+
+    it('при range = false вызывается метод onMouseUp класса thumbOne', () => {
       sliderBlock.config.range = false;
       sliderBlock.fundClickPlaceHorizon(event);
-      expect(sliderBlock.thumbOne.onMouseUp).toHaveBeenCalled();
+
+      expect(sliderBlock.thumbOne.onMouseUp).toHaveBeenCalledWith(event);
     });
-    it("при range = true thumbFirst < thumbSecond вызывается метод onMouseUp класса thumbOne", () => {
+
+    it('при range = true thumbFirst < thumbSecond вызывается метод onMouseUp класса thumbOne', () => {
       sliderBlock.config.range = true;
-      let thumbFirst = 40;
-      let thumbSecond = 100;
+      const thumbFirst = 40;
+      const thumbSecond = 100;
       sliderBlock.fundClickPlaceHorizon(event);
-      expect(sliderBlock.thumbOne.onMouseUp).toHaveBeenCalled();
+
+      expect(sliderBlock.thumbOne.onMouseUp).toHaveBeenCalledWith(event);
     });
-    it("при range = true thumbFirst > thumbSecond вызывается метод onMouseUp класса thumbTwo", () => {
+
+    it('при range = true thumbFirst > thumbSecond вызывается метод onMouseUp класса thumbTwo', () => {
       sliderBlock.config.range = true;
-      let thumbFirst = 100;
-      let thumbSecond = 30;
+      const thumbFirst = 100;
+      const thumbSecond = 30;
       sliderBlock.fundClickPlaceHorizon(event);
-      expect(sliderBlock.thumbTwo?.onMouseUp).toHaveBeenCalled();
+
+      expect(sliderBlock.thumbTwo?.onMouseUp).toHaveBeenCalledWith(event);
+    });
+  });
+
+  describe('метод fundChickPlaceVert', () => {
+    let event: MouseEvent;
+    beforeAll(function () {
+      event = new MouseEvent('click', { bubbles: true });
+      sliderBlock.config.orientation = 'vertical';
+      sliderBlock.thumbOne.thumb = sliderBlock.sliderBlock.querySelector('.js-slider__thumb-first') as HTMLElement;
+      if (sliderBlock.thumbTwo)
+        sliderBlock.thumbTwo.thumb = sliderBlock.sliderBlock.querySelector('.js-slider__thumb-second') as HTMLElement;
+    });
+
+    it('если range = false вызывается метод onMouseUp класса thumbOne', () => {
+      sliderBlock.config.range = false;
+      sliderBlock.fundClickPlaceHorizon(event);
+
+      expect(sliderBlock.thumbOne.onMouseUp).toHaveBeenCalledWith(event);
+    });
+
+    it('если range = true thumbFirst < thumbSecond вызывается метод onMouseUp класса thumbOne', () => {
+      sliderBlock.config.range = true;
+      const thumbFirst = 40;
+      const thumbSecond = 100;
+      sliderBlock.fundClickPlaceHorizon(event);
+
+      expect(sliderBlock.thumbOne.onMouseUp).toHaveBeenCalledWith(event);
+    });
+
+    it('если range = true thumbFirst > thumbSecond вызывается метод onMouseUp класса thumbTwo', () => {
+      sliderBlock.config.range = true;
+      const thumbFirst = 100;
+      const thumbSecond = 30;
+      sliderBlock.fundClickPlaceHorizon(event);
+
+      expect(sliderBlock.thumbTwo?.onMouseUp).toHaveBeenCalledWith(event);
     });
   });
 });
