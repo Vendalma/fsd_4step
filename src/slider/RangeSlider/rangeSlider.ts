@@ -50,12 +50,14 @@ class RangeSlider {
   }
 
   update(type: string, data: IPosition): void {
-    if (type === 'positionThumb')
+    if (type === 'positionThumb') {
       if (data.dataFirstThumb) {
         this.observer.broadcast('firstThumb', data.dataFirstThumb.valueFrom);
-      } else if (data.dataSecondThumb) {
+      }
+      if (data.dataSecondThumb) {
         this.observer.broadcast('secondThumb', data.dataSecondThumb.valueTo);
       }
+    }
   }
 }
 export default RangeSlider;

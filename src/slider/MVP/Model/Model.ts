@@ -170,13 +170,18 @@ class Model {
   }
 
   calcPositionTo(): void {
-    if (this.config.range && this.config.positionTo <= this.config.positionFrom) {
-      this.config.positionTo = this.config.positionFrom;
-      this.config.positionFrom = this.config.positionTo - this.config.step;
-      this.calcPositionFrom();
-    }
-    if (this.config.range && this.config.positionTo > this.config.max) {
-      this.config.positionTo = this.config.max;
+    if (this.config.range) {
+      if (this.config.positionTo <= this.config.positionFrom && this.config.max - this.config.min > this.config.step) {
+        this.config.positionTo = this.config.positionFrom;
+        this.config.positionFrom = this.config.positionTo - this.config.step;
+        this.calcPositionFrom();
+      }
+      if (this.config.positionTo <= this.config.positionFrom && this.config.max - this.config.min <= this.config.step) {
+        this.config.positionTo = this.config.max;
+      }
+      if (this.config.positionTo > this.config.max) {
+        this.config.positionTo = this.config.max;
+      }
     }
   }
 

@@ -1,0 +1,3 @@
+*.js
+src/slider/RangeSlider/slider.ts
+src/slider/RangeSlider/jquery.rangeSlider.d.ts
