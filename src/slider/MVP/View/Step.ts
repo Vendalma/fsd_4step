@@ -14,7 +14,7 @@ class Step {
   }
 
   addStepLine(data: number): void {
-    const thumb = this.container.querySelector('.thumb_first') as HTMLElement;
+    const thumb = this.container.querySelector('.js-slider__thumb-first') as HTMLElement;
     this.deleteStep();
     const fragment = document.createDocumentFragment();
     const stepSize = data;

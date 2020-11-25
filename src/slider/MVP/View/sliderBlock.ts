@@ -55,8 +55,8 @@ class SliderBlock {
     this.sliderContainer.append(this.sliderBlock);
 
     this.observer = new Observer();
-    this.thumbOne = new Thumb(this.config, 'thumb_first', this.sliderBlock, '1');
-    this.thumbTwo = new Thumb(this.config, 'thumb_second', this.sliderBlock, '2');
+    this.thumbOne = new Thumb(this.config, 'js-slider__thumb-first', this.sliderBlock, '1');
+    this.thumbTwo = new Thumb(this.config, 'js-slider__thumb-second', this.sliderBlock, '2');
 
     this.progressBar = new ProgressBar(this.config, this.sliderBlock);
 
@@ -156,7 +156,7 @@ class SliderBlock {
   }
 
   setThumbTwo(): void {
-    const secondThumb = this.sliderBlock.querySelector('.thumb_second') as HTMLElement;
+    const secondThumb = this.sliderBlock.querySelector('.js-slider__thumb-second') as HTMLElement;
     if (this.config.range) {
       this.thumbTwo?.addThis();
     } else if (!this.config.range && secondThumb !== null) {

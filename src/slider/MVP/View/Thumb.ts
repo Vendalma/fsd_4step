@@ -37,7 +37,7 @@ class Thumb {
     this.dataNum = dataNum;
 
     this.thumb = document.createElement('div');
-    this.thumb.classList.add('thumb');
+    this.thumb.classList.add('slider__thumb');
     this.thumb.classList.add(this.countThumbs);
 
     this.thumb.setAttribute('data-num', this.dataNum);
@@ -55,12 +55,12 @@ class Thumb {
 
   checkOrientation(): void {
     if (this.config.orientation === 'horizontal') {
-      this.thumb.classList.add('thumb_horizontal');
-      this.thumb.classList.remove('thumb_vertical');
+      this.thumb.classList.add('slider__thumb_horizontal');
+      this.thumb.classList.remove('slider__thumb_vertical');
     }
     if (this.config.orientation === 'vertical') {
-      this.thumb.classList.remove('thumb_horizontal');
-      this.thumb.classList.add('thumb_vertical');
+      this.thumb.classList.remove('slider__thumb_horizontal');
+      this.thumb.classList.add('slider__thumb_vertical');
     }
   }
 
@@ -102,8 +102,8 @@ class Thumb {
   }
 
   findPositionForHorizontal(e: MouseEvent): IDataThumbMove | undefined {
-    const thumbFirst = this.slider.querySelector('.thumb_first') as HTMLElement;
-    const thumbSecond = this.slider.querySelector('.thumb_second') as HTMLElement;
+    const thumbFirst = this.slider.querySelector('.js-slider__thumb-first') as HTMLElement;
+    const thumbSecond = this.slider.querySelector('.js-slider__thumb-second') as HTMLElement;
     if (this.thumb.dataset.num === '1') {
       return {
         clientXY: e.clientX,
@@ -124,8 +124,8 @@ class Thumb {
   }
 
   findPositionForVertical(e: MouseEvent): IDataThumbMove | undefined {
-    const thumbFirst = this.slider.querySelector('.thumb_first') as HTMLElement;
-    const thumbSecond = this.slider.querySelector('.thumb_second') as HTMLElement;
+    const thumbFirst = this.slider.querySelector('.js-slider__thumb-first') as HTMLElement;
+    const thumbSecond = this.slider.querySelector('.js-slider__thumb-second') as HTMLElement;
     if (this.thumb.dataset.num === '1') {
       return {
         clientXY: e.clientY,
@@ -167,11 +167,11 @@ class Thumb {
   }
 
   changeZIndexUp(): void {
-    this.thumb.classList.add('thumb_zIndex_up');
+    this.thumb.classList.add('slider__thumb_zIndex-up');
   }
 
   changeZIndexDown(): void {
-    this.thumb.classList.remove('thumb_zIndex_up');
+    this.thumb.classList.remove('slider__thumb_zIndex-up');
   }
 
   cleanStyleAttr(): void {

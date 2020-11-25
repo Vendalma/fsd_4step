@@ -13,14 +13,14 @@ class ProgressBar {
     this.config = config;
     this.slider = slider;
     this.progressBar = document.createElement('div');
-    this.progressBar.classList.add('progress-bar');
+    this.progressBar.classList.add('slider__progress-bar');
     this.slider.prepend(this.progressBar);
     this.checkOrientation();
   }
 
   addBar(): void {
-    const thumbFirst = this.slider.querySelector('.thumb_first') as HTMLElement;
-    const thumbSecond = this.slider.querySelector('.thumb_second') as HTMLElement;
+    const thumbFirst = this.slider.querySelector('.js-slider__thumb-first') as HTMLElement;
+    const thumbSecond = this.slider.querySelector('.js-slider__thumb-second') as HTMLElement;
     if (this.config.orientation === 'horizontal') {
       if (!this.config.range) {
         this.progressBar.style.left = '0px';
@@ -45,12 +45,12 @@ class ProgressBar {
 
   checkOrientation(): void {
     if (this.config.orientation === 'horizontal') {
-      this.progressBar.classList.remove('progress-bar_vertical');
-      this.progressBar.classList.add('progress-bar_horizontal');
+      this.progressBar.classList.remove('slider__progress-bar_vertical');
+      this.progressBar.classList.add('slider__progress-bar_horizontal');
     }
     if (this.config.orientation === 'vertical') {
-      this.progressBar.classList.add('progress-bar_vertical');
-      this.progressBar.classList.remove('progress-bar_horizontal');
+      this.progressBar.classList.add('slider__progress-bar_vertical');
+      this.progressBar.classList.remove('slider__progress-bar_horizontal');
     }
   }
 

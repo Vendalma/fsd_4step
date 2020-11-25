@@ -12,7 +12,7 @@ class Label {
   constructor(config: IConfigLabel, thumb: HTMLElement) {
     this.thumb = thumb;
     this.elementLabel = document.createElement('div');
-    this.elementLabel.classList.add('thumb__label');
+    this.elementLabel.classList.add('slider__label');
     this.thumb.append(this.elementLabel);
 
     this.config = config;
@@ -20,24 +20,24 @@ class Label {
   }
 
   setLabelValue(value: number): void {
-    this.elementLabel.innerHTML = value.toString();
+    this.elementLabel.innerHTML = `${value}`;
   }
 
   changeLabelOrientation(): void {
     if (this.config.orientation === 'vertical') {
-      this.elementLabel.classList.add('thumb__label_vertical');
+      this.elementLabel.classList.add('slider__label_vertical');
     }
 
     if (this.config.orientation === 'horizontal') {
-      this.elementLabel.classList.remove('thumb__label_vertical');
+      this.elementLabel.classList.remove('slider__label_vertical');
     }
   }
 
   changeVisibleLabel(): void {
     if (this.config.label) {
-      this.elementLabel.classList.remove('thumb__label_hidden');
+      this.elementLabel.classList.remove('slider__label_hidden');
     } else {
-      this.elementLabel.classList.add('thumb__label_hidden');
+      this.elementLabel.classList.add('slider__label_hidden');
     }
   }
 
