@@ -59,4 +59,5 @@ $('#id').rangeSlider({
 ## Диаграмма
 
 ![alt text](uml/uml-1.jpg)
+____
 ![alt text](uml/uml-2.jpg)
