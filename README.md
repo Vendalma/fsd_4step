@@ -51,7 +51,7 @@ $('#id').rangeSlider({
 | positionFrom | number  |          10           | Начальная позиция первого бегунка           |
 | positionTo   | number  |          50           | Начальная позиция второго бегунка           |
 | range        | boolean |         true          | Одинарный/двойной слайдер                   |
-| orientation  | string  |      horizontal       | Ориентация слайдера (horizontal / vertical) |
+| orientation  | string  |      horizontal       | Ориентация слайдера. Возможные значения: "horizontal", "vertical" |
 | label        | boolean |         true          | Отображение значения бегунка                |
 
 ## Диаграмма
