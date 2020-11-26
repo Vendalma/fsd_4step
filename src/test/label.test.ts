@@ -31,17 +31,17 @@ describe('Label', () => {
     expect(label.elementLabel).toContainText('4');
   });
 
-  describe('метод changeLabelOrientation', () => {
+  describe('метод checkOrientation', () => {
     it('при orientation = horizontal у блока удаляется класс slider__label_vertical', () => {
       label.config.orientation = 'horizontal';
-      label.changeLabelOrientation();
+      label.checkOrientation();
 
       expect(label.elementLabel).not.toHaveClass('slider__label_vertical');
     });
 
     it('при orientation = vertical блоку устанавливается класс slider__label_vertical', () => {
       label.config.orientation = 'vertical';
-      label.changeLabelOrientation();
+      label.checkOrientation();
 
       expect(label.elementLabel).toHaveClass('slider__label_vertical');
     });
@@ -63,16 +63,16 @@ describe('Label', () => {
     });
   });
 
-  it('метод update обновляет конфиг, вызывает ф-ции changeVisibleLabel и changeLabelOrientation', () => {
+  it('метод update обновляет конфиг, вызывает ф-ции changeVisibleLabel и checkOrientation', () => {
     const newConf = {
       label: false,
       orientation: 'vertical',
     };
-    spyOn(label, 'changeLabelOrientation');
+    spyOn(label, 'checkOrientation');
     spyOn(label, 'changeVisibleLabel');
     label.updateConfig(newConf);
 
-    expect(label.changeLabelOrientation).toHaveBeenCalledWith();
+    expect(label.checkOrientation).toHaveBeenCalledWith();
     expect(label.changeVisibleLabel).toHaveBeenCalledWith();
   });
 });

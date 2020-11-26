@@ -12,7 +12,7 @@ const config = {
   orientation: 'horizontal',
 };
 describe('Presenter', () => {
-  const SpyModel = jasmine.createSpyObj('model', ['fundMoveThumbPosition', 'addFollower', 'getConfig', 'calcParams']);
+  const SpyModel = jasmine.createSpyObj('model', ['findMoveThumbPosition', 'addFollower', 'getConfig', 'calcParams']);
   const view = jasmine.createSpyObj('view', [
     'setPositionThumb',
     'addFollower',
@@ -44,7 +44,7 @@ describe('Presenter', () => {
   });
 
   describe('Метод update', () => {
-    it(' type = mouseMove должно вызывать ф-ю fundThumbPosition в Model', () => {
+    it(' type = mouseMove должно вызывать ф-ю findThumbPosition в Model', () => {
       const dataPosition = {
         clientXY: 100,
         sliderClientReact: 205,
@@ -54,7 +54,7 @@ describe('Presenter', () => {
       };
       presenter.update('mouseMove', dataPosition);
 
-      expect(presenter.model.fundMoveThumbPosition).toHaveBeenCalledWith(dataPosition);
+      expect(presenter.model.findMoveThumbPosition).toHaveBeenCalledWith(dataPosition);
     });
 
     it(' type = positionThumb должно вызывать ф-ю setPositionMoveThumb в View', () => {

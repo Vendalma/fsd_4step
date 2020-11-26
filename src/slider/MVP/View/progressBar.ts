@@ -58,7 +58,7 @@ class ProgressBar {
     this.progressBar.removeAttribute('style');
   }
 
-  updateBarConfig(data: IConfigBar): void {
+  updateConfig(data: IConfigBar): void {
     this.config = data;
     this.checkOrientation();
   }

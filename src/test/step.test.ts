@@ -118,7 +118,7 @@ describe('Step', () => {
     };
     spyOn(step, 'changeMinValue');
     spyOn(step, 'changeMaxValue');
-    step.updateConfigStep(newConf);
+    step.updateConfig(newConf);
 
     expect(step.changeMinValue).toHaveBeenCalledWith();
     expect(step.changeMaxValue).toHaveBeenCalledWith();

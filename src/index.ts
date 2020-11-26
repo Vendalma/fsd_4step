@@ -1,6 +1,6 @@
 import './slider/RangeSlider/slider';
 
-$('.js-app').rangeSlider({});
+$('.js-app').rangeSlider();
 $('.js-app2').rangeSlider({
   range: false,
   min: -9999,

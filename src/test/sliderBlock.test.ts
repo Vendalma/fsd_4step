@@ -33,13 +33,13 @@ describe('Slider Block', () => {
   });
   const sliderBlock: SliderBlock = new SliderBlock(config, block[0]);
   const observer = jasmine.createSpyObj('observer', ['subscribe', 'broadcast']);
-  const progressBar = jasmine.createSpyObj('progressBar', ['addBar', 'cleanStyleAttr', 'updateBarConfig']);
-  const step = jasmine.createSpyObj('step', ['updateConfigStep', 'addStepLine']);
+  const progressBar = jasmine.createSpyObj('progressBar', ['addBar', 'cleanStyleAttr', 'updateConfig']);
+  const step = jasmine.createSpyObj('step', ['updateConfig', 'addStepLine']);
   const thumbOne = jasmine.createSpyObj('thumbOne', [
     'addFollower',
     'setPosition',
     'setLabelValue',
-    'updateConfigThumb',
+    'updateConfig',
     'onMouseUp',
     'cleanStyleAttr',
   ]);
@@ -49,7 +49,7 @@ describe('Slider Block', () => {
     'setLabelValue',
     'addThis',
     'removeThis',
-    'updateConfigThumb',
+    'updateConfig',
     'onMouseUp',
     'cleanStyleAttr',
   ]);
@@ -88,10 +88,10 @@ describe('Slider Block', () => {
 
     expect(sliderBlock.checkOrientation).toHaveBeenCalledWith();
     expect(sliderBlock.setThumbTwo).toHaveBeenCalledWith();
-    expect(step.updateConfigStep).toHaveBeenCalledWith(newConf);
-    expect(thumbOne.updateConfigThumb).toHaveBeenCalledWith(newConf);
-    expect(thumbTwo?.updateConfigThumb).toHaveBeenCalledWith(newConf);
-    expect(progressBar.updateBarConfig).toHaveBeenCalledWith(newConf);
+    expect(step.updateConfig).toHaveBeenCalledWith(newConf);
+    expect(thumbOne.updateConfig).toHaveBeenCalledWith(newConf);
+    expect(thumbTwo?.updateConfig).toHaveBeenCalledWith(newConf);
+    expect(progressBar.updateConfig).toHaveBeenCalledWith(newConf);
   });
 
   describe('метод checkOrientation', () => {
@@ -200,22 +200,22 @@ describe('Slider Block', () => {
       event = new MouseEvent('click', { bubbles: true });
     });
 
-    it('при orientation = horizontal вызывается ф-я fundClickPlaceHorizon', () => {
+    it('при orientation = horizontal вызывается ф-я findClickPlaceHorizon', () => {
       sliderBlock.config.orientation = 'horizontal';
-      spyOn(sliderBlock, 'fundClickPlaceHorizon');
+      spyOn(sliderBlock, 'findClickPlaceHorizon');
 
       sliderBlock.sliderClick();
       sliderBlock.sliderBlock.dispatchEvent(event);
 
-      expect(sliderBlock.fundClickPlaceHorizon).toHaveBeenCalledWith(event);
+      expect(sliderBlock.findClickPlaceHorizon).toHaveBeenCalledWith(event);
     });
 
-    it('при orientation = vertical вызывается ф-я fundClickPlaceVert', () => {
+    it('при orientation = vertical вызывается ф-я findClickPlaceVert', () => {
       sliderBlock.config.orientation = 'vertical';
-      spyOn(sliderBlock, 'fundClickPlaceVert');
+      spyOn(sliderBlock, 'findClickPlaceVert');
       sliderBlock.sliderBlock.dispatchEvent(event);
 
-      expect(sliderBlock.fundClickPlaceVert).toHaveBeenCalledWith(event);
+      expect(sliderBlock.findClickPlaceVert).toHaveBeenCalledWith(event);
     });
   });
 
@@ -225,24 +225,24 @@ describe('Slider Block', () => {
       event = new MouseEvent('click', { bubbles: true });
     });
 
-    it('если orientation = horizontal вызывается ф-я fundClickPlaceHorizon', () => {
+    it('если orientation = horizontal вызывается ф-я findClickPlaceHorizon', () => {
       sliderBlock.config.orientation = 'horizontal';
-      spyOn(sliderBlock, 'fundClickPlaceHorizon');
+      spyOn(sliderBlock, 'findClickPlaceHorizon');
       sliderBlock.onSliderClick(event);
 
-      expect(sliderBlock.fundClickPlaceHorizon).toHaveBeenCalledWith(event);
+      expect(sliderBlock.findClickPlaceHorizon).toHaveBeenCalledWith(event);
     });
 
-    it('при orientation = vertical вызывается метод fundClickPlaceVert', () => {
+    it('при orientation = vertical вызывается метод findClickPlaceVert', () => {
       sliderBlock.config.orientation = 'vertical';
-      spyOn(sliderBlock, 'fundClickPlaceVert');
+      spyOn(sliderBlock, 'findClickPlaceVert');
       sliderBlock.onSliderClick(event);
 
-      expect(sliderBlock.fundClickPlaceVert).toHaveBeenCalledWith(event);
+      expect(sliderBlock.findClickPlaceVert).toHaveBeenCalledWith(event);
     });
   });
 
-  describe('метод fundClickPlaceHorizon', () => {
+  describe('метод findClickPlaceHorizon', () => {
     let event: MouseEvent;
     beforeAll(function () {
       event = new MouseEvent('click', { bubbles: true });
@@ -254,7 +254,7 @@ describe('Slider Block', () => {
 
     it('при range = false вызывается метод onMouseUp класса thumbOne', () => {
       sliderBlock.config.range = false;
-      sliderBlock.fundClickPlaceHorizon(event);
+      sliderBlock.findClickPlaceHorizon(event);
 
       expect(sliderBlock.thumbOne.onMouseUp).toHaveBeenCalledWith(event);
     });
@@ -263,7 +263,7 @@ describe('Slider Block', () => {
       sliderBlock.config.range = true;
       const thumbFirst = 40;
       const thumbSecond = 100;
-      sliderBlock.fundClickPlaceHorizon(event);
+      sliderBlock.findClickPlaceHorizon(event);
 
       expect(sliderBlock.thumbOne.onMouseUp).toHaveBeenCalledWith(event);
     });
@@ -272,13 +272,13 @@ describe('Slider Block', () => {
       sliderBlock.config.range = true;
       const thumbFirst = 100;
       const thumbSecond = 30;
-      sliderBlock.fundClickPlaceHorizon(event);
+      sliderBlock.findClickPlaceHorizon(event);
 
       expect(sliderBlock.thumbTwo?.onMouseUp).toHaveBeenCalledWith(event);
     });
   });
 
-  describe('метод fundChickPlaceVert', () => {
+  describe('метод findChickPlaceVert', () => {
     let event: MouseEvent;
     beforeAll(function () {
       event = new MouseEvent('click', { bubbles: true });
@@ -290,7 +290,7 @@ describe('Slider Block', () => {
 
     it('если range = false вызывается метод onMouseUp класса thumbOne', () => {
       sliderBlock.config.range = false;
-      sliderBlock.fundClickPlaceHorizon(event);
+      sliderBlock.findClickPlaceHorizon(event);
 
       expect(sliderBlock.thumbOne.onMouseUp).toHaveBeenCalledWith(event);
     });
@@ -299,7 +299,7 @@ describe('Slider Block', () => {
       sliderBlock.config.range = true;
       const thumbFirst = 40;
       const thumbSecond = 100;
-      sliderBlock.fundClickPlaceHorizon(event);
+      sliderBlock.findClickPlaceHorizon(event);
 
       expect(sliderBlock.thumbOne.onMouseUp).toHaveBeenCalledWith(event);
     });
@@ -308,7 +308,7 @@ describe('Slider Block', () => {
       sliderBlock.config.range = true;
       const thumbFirst = 100;
       const thumbSecond = 30;
-      sliderBlock.fundClickPlaceHorizon(event);
+      sliderBlock.findClickPlaceHorizon(event);
 
       expect(sliderBlock.thumbTwo?.onMouseUp).toHaveBeenCalledWith(event);
     });

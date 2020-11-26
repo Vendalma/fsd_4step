@@ -112,7 +112,7 @@ describe('ProgressBar', () => {
       orientation: 'vertical',
     };
     spyOn(bar, 'checkOrientation');
-    bar.updateBarConfig(newConf);
+    bar.updateConfig(newConf);
 
     expect(bar.checkOrientation).toHaveBeenCalledWith();
   });

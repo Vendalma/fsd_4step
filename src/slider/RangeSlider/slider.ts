@@ -12,11 +12,11 @@ interface ISettings {
   step: number;
   orientation: string;
 }
-interface MethodsObject {
-  [key: string]: Function;
-}
 interface IUpdateConfig {
   [key: string]: boolean | string | number;
+}
+interface MethodsObject {
+  [key: string]: any; /* eslint-disable-line */
 }
 (function ($) {
   const methods: MethodsObject = {
@@ -36,9 +36,12 @@ interface IUpdateConfig {
       });
     },
   };
-  $.fn.rangeSlider = function (method: string, settings: ISettings | IUpdateConfig | undefined) {
-    if (methods[method]) {
-      return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
+  jQuery.fn.rangeSlider = function (/* eslint-disable-line */
+    method?: string | unknown | undefined,
+    settings?: ISettings | IUpdateConfig | undefined,
+  ) {
+    if (methods[method as string]) {
+      return methods[method as string].apply(this, Array.prototype.slice.call(arguments, 1));  /* eslint-disable-line */
     }
     if (typeof method === 'object' || !method) {
       const defaultSettings = $.extend(

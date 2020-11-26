@@ -300,7 +300,7 @@ describe('Thumb', () => {
       label: true,
     };
     spyOn(thumb, 'checkOrientation');
-    thumb.updateConfigThumb(newConf);
+    thumb.updateConfig(newConf);
 
     expect(thumb.label.updateConfig).toHaveBeenCalledWith(newConf);
     expect(thumb.checkOrientation).toHaveBeenCalledWith();

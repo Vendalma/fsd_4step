@@ -33,7 +33,6 @@ class Model {
 
   constructor(config: IConfigModel) {
     this.config = config;
-    this.sliderSize = 0;
     this.observer = new Observer();
     this.validator = new Validator({ ...this.config });
   }
@@ -67,7 +66,7 @@ class Model {
     return undefined;
   }
 
-  fundMoveThumbPosition(data: IDataThumbMove): void {
+  findMoveThumbPosition(data: IDataThumbMove): void {
     const { clientXY } = data;
     const { sliderClientReact } = data;
     const { dataNum } = data;

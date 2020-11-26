@@ -161,7 +161,7 @@ describe('Model', () => {
     expect(result).toEqual(expectConfig);
   });
 
-  describe('проверка метода fundMoveThumbPosition', () => {
+  describe('проверка метода findMoveThumbPosition', () => {
     let data: IDataThumbMove;
     beforeEach(function () {
       data = {
@@ -181,7 +181,7 @@ describe('Model', () => {
 
       it('при position < 0, вызывается ф-я broadcast класса Observer', () => {
         data.sliderClientReact = 110;
-        model.fundMoveThumbPosition(data);
+        model.findMoveThumbPosition(data);
 
         expect(model.observer.broadcast).toHaveBeenCalledWith('positionThumb', {
           dataFirstThumb: {
@@ -194,7 +194,7 @@ describe('Model', () => {
       it('при position > sliderSize, вызывается ф-я broadcast класса Observer', () => {
         data.clientXY = 410;
         model.sliderSize = 300;
-        model.fundMoveThumbPosition(data);
+        model.findMoveThumbPosition(data);
 
         expect(model.observer.broadcast).toHaveBeenCalledWith('positionThumb', {
           dataFirstThumb: {
@@ -205,7 +205,7 @@ describe('Model', () => {
       });
 
       it('при position, вызывается ф-я broadcast класса Observer', () => {
-        model.fundMoveThumbPosition(data);
+        model.findMoveThumbPosition(data);
 
         expect(model.observer.broadcast).toHaveBeenCalledWith('positionThumb', {
           dataFirstThumb: {
@@ -224,7 +224,7 @@ describe('Model', () => {
 
       it('если position < 0, вызывается метод broadcast класса Observer', () => {
         data.sliderClientReact = 110;
-        model.fundMoveThumbPosition(data);
+        model.findMoveThumbPosition(data);
 
         expect(model.observer.broadcast).toHaveBeenCalledWith('positionThumb', {
           dataFirstThumb: {
@@ -236,7 +236,7 @@ describe('Model', () => {
 
       it('при position > secondThumbPosition, вызывается ф-я broadcast класса Observer', () => {
         data.clientXY = 410;
-        model.fundMoveThumbPosition(data);
+        model.findMoveThumbPosition(data);
 
         expect(model.observer.broadcast).toHaveBeenCalledWith('positionThumb', {
           dataFirstThumb: {
@@ -247,7 +247,7 @@ describe('Model', () => {
       });
 
       it('при position, вызывается метод broadcast класса Observer', () => {
-        model.fundMoveThumbPosition(data);
+        model.findMoveThumbPosition(data);
 
         expect(model.observer.broadcast).toHaveBeenCalledWith('positionThumb', {
           dataFirstThumb: {
@@ -266,7 +266,7 @@ describe('Model', () => {
 
       it('при position < firstThumbPosition, вызывается ф-я broadcast класса Observer', () => {
         data.sliderClientReact = 110;
-        model.fundMoveThumbPosition(data);
+        model.findMoveThumbPosition(data);
 
         expect(model.observer.broadcast).toHaveBeenCalledWith('positionThumb', {
           dataSecondThumb: {
@@ -279,7 +279,7 @@ describe('Model', () => {
       it('если position > sliderSize, вызывается метод broadcast класса Observer', () => {
         data.clientXY = 410;
         model.sliderSize = 300;
-        model.fundMoveThumbPosition(data);
+        model.findMoveThumbPosition(data);
 
         expect(model.observer.broadcast).toHaveBeenCalledWith('positionThumb', {
           dataSecondThumb: {
@@ -290,7 +290,7 @@ describe('Model', () => {
       });
 
       it('если position, вызывается ф-я broadcast класса Observer', () => {
-        model.fundMoveThumbPosition(data);
+        model.findMoveThumbPosition(data);
 
         expect(model.observer.broadcast).toHaveBeenCalledWith('positionThumb', {
           dataSecondThumb: {

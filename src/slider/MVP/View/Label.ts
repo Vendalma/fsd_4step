@@ -23,7 +23,7 @@ class Label {
     this.elementLabel.innerHTML = `${value}`;
   }
 
-  changeLabelOrientation(): void {
+  checkOrientation(): void {
     if (this.config.orientation === 'vertical') {
       this.elementLabel.classList.add('slider__label_vertical');
     }
@@ -44,7 +44,7 @@ class Label {
   updateConfig(data: IConfigLabel): void {
     this.config = data;
     this.changeVisibleLabel();
-    this.changeLabelOrientation();
+    this.checkOrientation();
   }
 }
 export default Label;

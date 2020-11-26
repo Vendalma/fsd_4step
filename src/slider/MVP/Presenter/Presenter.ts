@@ -47,7 +47,7 @@ class Presenter {
 
   update(type: string, data: IDataThumbMove | IConfig | IPosition | number): void {
     if (type === 'mouseMove') {
-      this.model.fundMoveThumbPosition(data as IDataThumbMove);
+      this.model.findMoveThumbPosition(data as IDataThumbMove);
     } else if (type === 'positionThumb') {
       this.view.setPositionThumb(data as IPosition);
     } else if (type === 'sliderSize') {

@@ -64,7 +64,7 @@ class Step {
     });
   }
 
-  updateConfigStep(data: IConfigStep): void {
+  updateConfig(data: IConfigStep): void {
     this.config = data;
     this.changeMinValue();
     this.changeMaxValue();

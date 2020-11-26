@@ -75,10 +75,10 @@ class SliderBlock {
     this.config = data;
     this.setThumbTwo();
     this.checkOrientation();
-    this.step.updateConfigStep(data);
-    this.thumbOne.updateConfigThumb(data);
-    this.thumbTwo?.updateConfigThumb(data);
-    this.progressBar.updateBarConfig(data);
+    this.step.updateConfig(data);
+    this.thumbOne.updateConfig(data);
+    this.thumbTwo?.updateConfig(data);
+    this.progressBar.updateConfig(data);
   }
 
   checkOrientation(): void {
@@ -115,14 +115,14 @@ class SliderBlock {
 
   onSliderClick(e: MouseEvent): void {
     if (this.config.orientation === 'horizontal') {
-      this.fundClickPlaceHorizon(e);
+      this.findClickPlaceHorizon(e);
     }
     if (this.config.orientation === 'vertical') {
-      this.fundClickPlaceVert(e);
+      this.findClickPlaceVert(e);
     }
   }
 
-  fundClickPlaceHorizon(e: MouseEvent): void {
+  findClickPlaceHorizon(e: MouseEvent): void {
     if (!this.config.range) {
       this.thumbOne.onMouseUp(e);
     } else if (this.config.range) {
@@ -136,7 +136,7 @@ class SliderBlock {
     }
   }
 
-  fundClickPlaceVert(e: MouseEvent): void {
+  findClickPlaceVert(e: MouseEvent): void {
     if (!this.config.range) {
       this.thumbOne.onMouseUp(e);
     } else if (this.config.range) {

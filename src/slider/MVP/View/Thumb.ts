@@ -177,7 +177,7 @@ class Thumb {
     this.thumb.removeAttribute('style');
   }
 
-  updateConfigThumb(data: IConfigThumb): void {
+  updateConfig(data: IConfigThumb): void {
     this.config = data;
     this.label.updateConfig(data);
     this.checkOrientation();
