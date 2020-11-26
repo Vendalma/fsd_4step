@@ -58,4 +58,4 @@ $('#id').rangeSlider({
 
 ![alt text](uml/uml1.jpg)
 ____
-![alt text](uml/uml-1.jpg)
+![alt text](uml/uml2.jpg)
