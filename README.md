@@ -32,7 +32,6 @@ npm test
 
 ```
 $('#id').rangeSlider()
-
 ```
 
 При инициализации плагина можно указать необходимые параметры:
@@ -42,7 +41,6 @@ $('#id').rangeSlider({
   step: 5,
   range: false
 })
-
 ```
 
 | Опции        |   Тип   | Значение по умолчанию | Описание                                    |
@@ -53,10 +51,11 @@ $('#id').rangeSlider({
 | positionFrom | number  |          10           | Начальная позиция первого бегунка           |
 | positionTo   | number  |          50           | Начальная позиция второго бегунка           |
 | range        | boolean |         true          | Одинарный/двойной слайдер                   |
-| orientation  | string  |      horizontal       | Ориентация слайдера (horizontal / vertical) |
+| orientation  | string  |      horizontal       | Ориентация слайдера. Возможные значения: "horizontal", "vertical" |
 | label        | boolean |         true          | Отображение значения бегунка                |
 
 ## Диаграмма
 
-![alt text](uml/uml-1.jpg)
-![alt text](uml/uml-2.jpg)
+![alt text](uml/uml1.jpg)
+____
+![alt text](uml/uml2.jpg)
