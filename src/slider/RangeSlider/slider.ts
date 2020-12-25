@@ -1,4 +1,3 @@
-import PanelController from '../../panel/panelController/panelController';
 import '../styles.scss';
 import RangeSlider from './rangeSlider';
 
@@ -23,22 +22,24 @@ interface MethodsObject {
     init(options: ISettings) {
       return this.each(function (this: HTMLElement) {
         const $this = $(this);
-        const instanceSlider = new RangeSlider(this, options);
-        $(this).data('sliderData', {
-          instanceSlider,
-        });
-        const panel = new PanelController(this, options);
+        const rangeSlider = new RangeSlider(this, options);
+        $this.data('sliderData', { rangeSlider });
       });
     },
-    update(options: IUpdateConfig) {
+    returnPosition(subscriber: unknown) {
       return this.each(function (this: HTMLElement) {
-        $(this).data('sliderData').instanceSlider.updateConfig(options);
+        $(this).data('sliderData').rangeSlider.addFollower(subscriber);
+      });
+    },
+    updateConfig(options: IUpdateConfig) {
+      return this.each(function (this: HTMLElement) {
+        $(this).data('sliderData').rangeSlider.updateConfig(options);
       });
     },
   };
   jQuery.fn.rangeSlider = function (/* eslint-disable-line */
     method?: string | unknown | undefined,
-    settings?: ISettings | IUpdateConfig | undefined,
+    settings?: ISettings | IUpdateConfig | unknown | undefined,
   ) {
     if (methods[method as string]) {
       return methods[method as string].apply(this, Array.prototype.slice.call(arguments, 1));  /* eslint-disable-line */

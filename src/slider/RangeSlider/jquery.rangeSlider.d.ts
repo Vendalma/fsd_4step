@@ -12,5 +12,5 @@ interface IUpdateConfig {
   [key: string]: boolean | string | number;
 }
 interface JQuery {
-  rangeSlider: (method?: string | undefined | unknown, settings?: ISettings | IUpdateConfig | undefined) => JQuery;
+  rangeSlider: (method?: string | undefined | unknown, settings?: ISettings | IUpdateConfig | unknown | undefined) => JQuery;
 }
