@@ -37,26 +37,27 @@ class PanelController {
 
   inputDouble: HTMLInputElement;
 
-  $slider: JQuery;
+  $slider: JQuery<HTMLElement>;
 
-  config: ISettings;
+  slid: JQuery<HTMLElement>;
+
+  config: any;
 
   observer: Observer;
 
-  constructor(parent: HTMLElement, config: ISettings) {
-    this.parent = parent;
-    this.config = config;
-    this.$slider = $(this.parent);
+  container: HTMLElement;
 
+  constructor(container: HTMLElement) {
+    this.container = container;
     this.observer = new Observer();
     this.init();
     this.setConfig();
     this.clickPanel();
     this.checkRange();
-    this.$slider.data('sliderData').instanceSlider.addFollower(this);
   }
 
   init(): void {
+    this.parent = this.container.parentElement as HTMLElement;
     this.panel = this.parent.querySelector('.js-panel') as HTMLElement;
     this.inputFrom = this.parent.querySelector('.js-panel__input-from') as HTMLInputElement;
     this.inputTo = this.parent.querySelector('.js-panel__input-to') as HTMLInputElement;
@@ -68,6 +69,9 @@ class PanelController {
     this.inputVertical = this.parent.querySelector('.js-panel__radio-vertical') as HTMLInputElement;
     this.inputSingle = this.parent.querySelector('.js-panel__radio-single') as HTMLInputElement;
     this.inputDouble = this.parent.querySelector('.js-panel__radio-double') as HTMLInputElement;
+    this.$slider = $(this.parent);
+    this.config = this.$slider.data('sliderData').rangeSlider.getConf();
+    this.$slider.rangeSlider('returnPosition', this);
   }
 
   setConfig(): void {
@@ -91,26 +95,24 @@ class PanelController {
   onClickPanel(e: MouseEvent): void {
     if (e.target === this.inputLabel) {
       const isLabelVisible = this.inputLabel.checked;
-      this.$slider.rangeSlider('update', { label: isLabelVisible });
+      this.$slider.rangeSlider('updateConfig', { label: isLabelVisible });
     }
 
     if (e.target === this.inputHorizontal && this.inputHorizontal.checked) {
-      this.$slider.rangeSlider('update', { orientation: 'horizontal' });
+      this.$slider.rangeSlider('updateConfig', { orientation: 'horizontal' });
     }
 
     if (e.target === this.inputVertical && this.inputVertical.checked) {
-      this.$slider.rangeSlider('update', { orientation: 'vertical' });
+      this.$slider.rangeSlider('updateConfig', { orientation: 'vertical' });
     }
 
     if (e.target === this.inputSingle && this.inputSingle.checked) {
-      this.$slider.rangeSlider('update', { range: false });
-      this.config.range = false;
+      this.$slider.rangeSlider('updateConfig', { range: false });
       this.checkRange();
     }
 
     if (e.target === this.inputDouble && this.inputDouble.checked) {
-      this.$slider.rangeSlider('update', { range: true });
-      this.config.range = true;
+      this.$slider.rangeSlider('updateConfig', { range: true });
       this.checkRange();
     }
     if (e.target === this.inputMin) {
@@ -131,31 +133,31 @@ class PanelController {
   }
 
   changeMin(): void {
-    this.$slider.rangeSlider('update', {
+    this.$slider.rangeSlider('updateConfig', {
       min: Number(this.inputMin.value),
     });
   }
 
   changeMax(): void {
-    this.$slider.rangeSlider('update', {
+    this.$slider.rangeSlider('updateConfig', {
       max: Number(this.inputMax.value),
     });
   }
 
   changeStep(): void {
-    this.$slider.rangeSlider('update', {
+    this.$slider.rangeSlider('updateConfig', {
       step: Number(this.inputStep.value),
     });
   }
 
   changePositionFrom(): void {
-    this.$slider.rangeSlider('update', {
+    this.$slider.rangeSlider('updateConfig', {
       positionFrom: Number(this.inputFrom.value),
     });
   }
 
   changePositionTo(): void {
-    this.$slider.rangeSlider('update', {
+    this.$slider.rangeSlider('updateConfig', {
       positionTo: Number(this.inputTo.value),
     });
   }
@@ -166,21 +168,26 @@ class PanelController {
     if (this.config.range) disabledBlock.disabled = false;
   }
 
-  updateInputFrom(data: number): void {
+  updateConfigInputFrom(data: number): void {
     this.inputFrom.value = `${data}`;
   }
 
-  updateInputTo(data: number): void {
+  updateConfigInputTo(data: number): void {
     this.inputTo.value = `${data}`;
   }
 
-  update(type: string, data: number): void {
-    if (type === 'firstThumb') {
-      this.updateInputFrom(data);
-    } else if (type === 'secondThumb') {
-      this.updateInputTo(data);
-    }
+  update(data: any): void {
+    this.updateConfigInputFrom(data.from);
+    if (data.to) this.updateConfigInputTo(data.to);
   }
 }
 
 export default PanelController;
+
+window.addEventListener('load', initPanelClass.bind(this));
+function initPanelClass() {
+  const panels = document.querySelectorAll('.js-panel');
+  panels.forEach((panel) => {
+    new PanelController(panel as HTMLElement);
+  });
+}

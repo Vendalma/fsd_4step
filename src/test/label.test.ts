@@ -18,61 +18,23 @@ describe('Label', () => {
 
   it('Инициализация класса Label', () => {
     expect(label).toBeDefined();
-    expect(label.config).toEqual(config);
-    expect(label.thumb).toBeInstanceOf(HTMLElement);
-    expect(label.thumb).toContainElement('div.slider__label');
-    expect(label.elementLabel).toBeInDOM();
-    expect(label.elementLabel).toHaveClass('slider__label');
   });
 
   it('метод setLabelValue устанавливает переданное значение для innerHTML блока лейбла', () => {
     label.setLabelValue(4);
+    const elementLabel = block[0].querySelector('.slider__label');
 
-    expect(label.elementLabel).toContainText('4');
+    expect(elementLabel).toHaveText('4');
   });
 
-  describe('метод checkOrientation', () => {
-    it('при orientation = horizontal у блока удаляется класс slider__label_vertical', () => {
-      label.config.orientation = 'horizontal';
-      label.checkOrientation();
-
-      expect(label.elementLabel).not.toHaveClass('slider__label_vertical');
-    });
-
-    it('при orientation = vertical блоку устанавливается класс slider__label_vertical', () => {
-      label.config.orientation = 'vertical';
-      label.checkOrientation();
-
-      expect(label.elementLabel).toHaveClass('slider__label_vertical');
-    });
-  });
-
-  describe('метод changeVisibleLabel', () => {
-    it('если config.label = true, то блок не имеет класса slider__label_hidden', () => {
-      label.config.label = true;
-      label.changeVisibleLabel();
-
-      expect(label.elementLabel).not.toHaveClass('slider__label_hidden');
-    });
-
-    it('если config.label = false, то блоку присваивается класс slider__label_hidden', () => {
-      label.config.label = false;
-      label.changeVisibleLabel();
-
-      expect(label.elementLabel).toHaveClass('slider__label_hidden');
-    });
-  });
-
-  it('метод update обновляет конфиг, вызывает ф-ции changeVisibleLabel и checkOrientation', () => {
+  it('метод update обновляет конфиг', () => {
     const newConf = {
       label: false,
       orientation: 'vertical',
     };
-    spyOn(label, 'checkOrientation');
-    spyOn(label, 'changeVisibleLabel');
+    const elementLabel = block[0].querySelector('.slider__label');
     label.updateConfig(newConf);
 
-    expect(label.checkOrientation).toHaveBeenCalledWith();
-    expect(label.changeVisibleLabel).toHaveBeenCalledWith();
+    expect(elementLabel).toHaveClass('slider__label_vertical');
   });
 });

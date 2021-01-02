@@ -1,7 +1,18 @@
 import Model from '../slider/MVP/Model/Model';
 import Presenter from '../slider/MVP/Presenter/Presenter';
+import View from '../slider/MVP/View/View';
 
-const config = {
+interface IConfig {
+  min: number;
+  max: number;
+  range: boolean;
+  positionFrom: number;
+  positionTo: number;
+  orientation: 'vertical' | 'horizontal';
+  step: number;
+  label: boolean;
+}
+const config: IConfig = {
   range: true,
   min: 0,
   max: 100,
@@ -11,106 +22,48 @@ const config = {
   step: 1,
   orientation: 'horizontal',
 };
+const block = $('<div>');
+$(document.body).append(block);
+const model: Model = new Model(config);
+class ChildPresenter extends Presenter {
+  public view: View;
+
+  constructor() {
+    super(model, block[0]);
+  }
+}
 describe('Presenter', () => {
-  const SpyModel = jasmine.createSpyObj('model', ['findMoveThumbPosition', 'addFollower', 'getConfig', 'calcParams']);
-  const view = jasmine.createSpyObj('view', [
-    'setPositionThumb',
-    'addFollower',
-    'updateConfig',
-    'changeOrientationOrRange',
-  ]);
-  const block = $('<div>');
-  beforeEach(function () {
-    $(document.body).append(block);
-  });
-  const model: Model = new Model(config);
-  const presenter: Presenter = new Presenter(model, block[0]);
-  presenter.view = view;
-  presenter.model = SpyModel;
-  const data = { a: 1 };
+  const presenter: ChildPresenter = new ChildPresenter();
   it('Инициализация Presenter', () => {
     expect(presenter).toBeDefined();
-    expect(presenter.model).toEqual(SpyModel);
-    expect(presenter.view).toEqual(view);
   });
 
-  describe('Метод subscribeOnUpdate', () => {
-    it('должен вызвать ф-цию addFollower в Model и View', () => {
-      presenter.subscribeOnUpdate();
+  it('При загрузке окна браузера Presenter вызывает ф-ю calcOnloadPosition класса Model', () => {
+    spyOn(model, 'calcOnloadPosition');
+    const event = new UIEvent('load', { bubbles: true });
+    window.dispatchEvent(event);
 
-      expect(presenter.view.addFollower).toHaveBeenCalledWith(presenter);
-      expect(presenter.model.addFollower).toHaveBeenCalledWith(presenter);
+    expect(model.calcOnloadPosition).toHaveBeenCalled();
+  }),
+    it('При обновлении конфига Model Presenter вызывает ф-ю updateConfig во View', () => {
+      spyOn(presenter.view, 'updateConfig');
+      model.updateConfig({ label: false });
+
+      expect(presenter.view.updateConfig).toHaveBeenCalled();
     });
+  it('При изменении в конфиге св-в orientation или range в Model Presenter вызывает ф-ю changeOrientationOrRange во View', () => {
+    spyOn(presenter.view, 'changeOrientationOrRange');
+    model.updateConfig({ orientation: 'vertical' });
+
+    expect(presenter.view.changeOrientationOrRange).toHaveBeenCalled();
   });
 
-  describe('Метод update', () => {
-    it(' type = mouseMove должно вызывать ф-ю findThumbPosition в Model', () => {
-      const dataPosition = {
-        clientXY: 100,
-        sliderClientReact: 205,
-        dataNum: '1',
-        positionThumbFirst: 10,
-        positionThumbSecond: 50,
-      };
-      presenter.update('mouseMove', dataPosition);
+  it('При нажатии на бегунок вызывается ф-я findMoveThumbPosition в Model', () => {
+    const thumb = block[0].querySelector('.js-slider__thumb-first') as HTMLElement;
+    const event = new MouseEvent('click', { bubbles: true });
+    spyOn(model, 'findMoveThumbPosition');
+    thumb.dispatchEvent(event);
 
-      expect(presenter.model.findMoveThumbPosition).toHaveBeenCalledWith(dataPosition);
-    });
-
-    it(' type = positionThumb должно вызывать ф-ю setPositionMoveThumb в View', () => {
-      const newData = {
-        dataFirstThumb: {
-          positionFrom: 105,
-          valueFrom: 10,
-        },
-        dataSecondThumb: {
-          positionTo: 200,
-          valueTo: 15,
-        },
-        stepData: 30.5,
-      };
-      presenter.update('positionThumb', newData);
-
-      expect(presenter.view.setPositionThumb).toHaveBeenCalledWith(newData);
-    });
-
-    it(' type = sliderSize должно вызывать ф-ю setOnloadData в View', () => {
-      const updateData = 300;
-      presenter.update('sliderSize', updateData);
-
-      expect(presenter.model.calcParams).toHaveBeenCalledWith(updateData);
-    });
-
-    it(' type = changeConfig должно вызывать ф-ю updateConfig в View', () => {
-      const newConf = {
-        min: -5,
-        max: 105,
-        label: false,
-        orientation: 'vertical',
-        positionFrom: 5,
-        positionTo: 10,
-        range: false,
-        step: 1,
-      };
-      presenter.update('changeConfig', newConf);
-
-      expect(presenter.view.updateConfig).toHaveBeenCalledWith(newConf);
-    });
-
-    it(' type = changeOrientationOrRange должно вызывать ф-ю changeOrientationOrRange в View', () => {
-      const newConf = {
-        min: -5,
-        max: 105,
-        label: false,
-        orientation: 'vertical',
-        positionFrom: 5,
-        positionTo: 10,
-        range: false,
-        step: 1,
-      };
-      presenter.update('changeOrientationOrRange', newConf);
-
-      expect(presenter.view.changeOrientationOrRange).toHaveBeenCalledWith(newConf);
-    });
+    expect(model.findMoveThumbPosition).toHaveBeenCalled();
   });
 });

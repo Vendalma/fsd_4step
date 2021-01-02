@@ -3,11 +3,11 @@ interface IConfigLabel {
   orientation: string;
 }
 class Label {
-  thumb: HTMLElement;
+  private thumb: HTMLElement;
 
-  elementLabel: HTMLElement;
+  private elementLabel: HTMLElement;
 
-  config: IConfigLabel;
+  private config: IConfigLabel;
 
   constructor(config: IConfigLabel, thumb: HTMLElement) {
     this.thumb = thumb;
@@ -23,7 +23,7 @@ class Label {
     this.elementLabel.innerHTML = `${value}`;
   }
 
-  checkOrientation(): void {
+  private checkOrientation(): void {
     if (this.config.orientation === 'vertical') {
       this.elementLabel.classList.add('slider__label_vertical');
     }
@@ -33,7 +33,7 @@ class Label {
     }
   }
 
-  changeVisibleLabel(): void {
+  private changeVisibleLabel(): void {
     if (this.config.label) {
       this.elementLabel.classList.remove('slider__label_hidden');
     } else {

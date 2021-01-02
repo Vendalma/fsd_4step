@@ -13,8 +13,8 @@ class Observer {
     this.observers = this.observers.filter((subscriber) => subscriber !== fn);
   }
 
-  broadcast(type: string, data: number | unknown): void {
-    this.observers.forEach((subscriber) => subscriber.update(type, data));
+  broadcast(data: number | unknown, type?: string): void {
+    this.observers.forEach((subscriber) => subscriber.update(data, type));
   }
 }
 export default Observer;

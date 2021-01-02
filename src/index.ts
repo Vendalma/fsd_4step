@@ -1,3 +1,4 @@
+import './panel/panelController/panelController';
 import './slider/RangeSlider/slider';
 
 $('.js-app').rangeSlider();

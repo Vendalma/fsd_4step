@@ -9,7 +9,7 @@ interface ISettings {
   range: boolean;
   label: boolean;
   step: number;
-  orientation: string;
+  orientation: 'vertical' | 'horizontal';
 }
 interface IUpdateConfig {
   [key: string]: boolean | string | number;

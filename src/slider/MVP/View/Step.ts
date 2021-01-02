@@ -4,9 +4,9 @@ interface IConfigStep {
   orientation: string;
 }
 class Step {
-  config: IConfigStep;
+  private config: IConfigStep;
 
-  container: HTMLElement;
+  private container: HTMLElement;
 
   constructor(config: IConfigStep, container: HTMLElement) {
     this.config = config;
@@ -23,10 +23,10 @@ class Step {
       stepBlock.classList.add('slider__step-block');
       fragment.append(stepBlock);
       if (i === 0) {
-        stepBlock.innerHTML = this.config.min.toString();
+        stepBlock.innerHTML = `${this.config.min}`;
         stepBlock.classList.add('slider__step-block_min');
       } else if (i === 20) {
-        stepBlock.innerHTML = this.config.max.toString();
+        stepBlock.innerHTML = `${this.config.max}`;
         stepBlock.classList.add('slider__step-block_max');
       }
 
@@ -47,17 +47,17 @@ class Step {
     this.container.append(fragment);
   }
 
-  changeMinValue(): void {
-    const blockMin = this.container.querySelector('.slider__step-block_min') as HTMLElement;
-    blockMin.innerHTML = this.config.min.toString();
+  private changeMinValue(): void {
+    const blockMin = this.container.querySelector('.slider__step-block_min');
+    if (blockMin) blockMin.innerHTML = `${this.config.min}`;
   }
 
-  changeMaxValue(): void {
-    const blockMax = this.container.querySelector('.slider__step-block_max') as HTMLElement;
-    blockMax.innerHTML = this.config.max.toString();
+  private changeMaxValue(): void {
+    const blockMax = this.container.querySelector('.slider__step-block_max');
+    if (blockMax) blockMax.innerHTML = `${this.config.max}`;
   }
 
-  deleteStep(): void {
+  private deleteStep(): void {
     const steps = this.container.querySelectorAll('.slider__step-block') as NodeListOf<HTMLElement>;
     steps.forEach((elem) => {
       this.container.removeChild(elem);
@@ -66,8 +66,8 @@ class Step {
 
   updateConfig(data: IConfigStep): void {
     this.config = data;
-    this.changeMinValue();
     this.changeMaxValue();
+    this.changeMinValue();
   }
 }
 export default Step;

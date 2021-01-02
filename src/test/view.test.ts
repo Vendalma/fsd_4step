@@ -1,4 +1,6 @@
+import SliderBlock from '../slider/MVP/View/sliderBlock';
 import View from '../slider/MVP/View/View';
+import Observer from '../slider/Observer/Observer';
 
 interface IPosition {
   dataFirstThumb?: {
@@ -22,52 +24,32 @@ const config = {
   orientation: 'horizontal',
 };
 
+class ChildView extends View {
+  public observer: Observer;
+
+  public sliderBlock: SliderBlock;
+
+  constructor() {
+    super(config, block[0]);
+  }
+}
 const block = $('<div>');
-block[0].classList.add('slider__block');
 $(document.body).append(block);
-const view: View = new View(config, block[0]);
+const view: ChildView = new ChildView();
 const observer = jasmine.createSpyObj('observer', ['broadcast', 'subscribe']);
-const sliderBlock = jasmine.createSpyObj('sliderBlock', ['addFollower', 'setPositionThumb', 'updateConfig']);
+const sliderBlock = jasmine.createSpyObj('sliderBlock', ['setPositionThumb', 'updateConfig']);
 view.observer = observer;
 view.sliderBlock = sliderBlock;
 describe('View', () => {
   it('Инициализация View', () => {
     expect(view).toBeDefined();
-    expect(view.config).toEqual(config);
-  });
-
-  it('Инициализация блока div.slider', () => {
-    expect(view.wrapper).toBeInstanceOf(HTMLElement);
-    expect(view.wrapper).toContainElement('div.slider');
-    expect(view.wrapper).toHaveClass('slider__wrapper');
-
-    expect(view.sliderContainer).toBeInstanceOf(HTMLElement);
-    expect(view.sliderContainer).toHaveClass('slider');
-  });
-
-  it('метод subscribeOnUpdate должен вызывать ф-ю addFollower в sliderBlock', () => {
-    view.subscribeOnUpdate();
-
-    expect(view.sliderBlock.addFollower).toHaveBeenCalledWith(view);
-  });
-
-  it('метод update вызывает ф-ю broadcast в Observer', () => {
-    const data = {
-      clientXY: 100,
-      sliderClientReact: 5,
-      dataNum: '2',
-      positionThumbFirst: 30,
-      positionThumbSecond: 45,
-    };
-    view.update('mouse', data);
-
-    expect(view.observer.broadcast).toHaveBeenCalledWith('mouseMove', data);
   });
 
   describe('метод setPositionThumb', () => {
     let data: IPosition;
-    beforeEach(function () {
+    it('должна вызваться ф-я setPositionThumb, которая передает данные в класс sliderBlock', () => {
       data = {
+        stepData: 20,
         dataFirstThumb: {
           positionFrom: 50,
           valueFrom: 10,
@@ -77,56 +59,77 @@ describe('View', () => {
           valueTo: 30,
         },
       };
-    });
-
-    it('должна вызваться ф-я setPositionThumb в sliderBlock и обновиться атрибуты sliderContainer', () => {
       view.setPositionThumb(data);
 
-      expect(view.sliderBlock.setPositionThumb).toHaveBeenCalledWith(data);
+      expect(view.sliderBlock.setPositionThumb).toHaveBeenCalled();
+    });
+
+    it('должна вызваться ф-я setPositionThumb, которая передает данные в класс sliderBlock', () => {
+      data = {
+        stepData: 30.5,
+        dataFirstThumb: undefined,
+        dataSecondThumb: undefined,
+      };
+      view.setPositionThumb(data);
+
+      expect(view.sliderBlock.setPositionThumb).toHaveBeenCalled();
+    });
+
+    it('должна вызваться ф-я setPositionThumb, которая передает данные в класс sliderBlock', () => {
+      data = {
+        dataFirstThumb: {
+          positionFrom: 100,
+          valueFrom: 5,
+        },
+        dataSecondThumb: undefined,
+        stepData: undefined,
+      };
+      view.setPositionThumb(data);
+
+      expect(view.sliderBlock.setPositionThumb).toHaveBeenCalled();
+    });
+
+    it('должна вызваться ф-я setPositionThumb, которая передает данные в класс sliderBlock', () => {
+      data = {
+        dataSecondThumb: {
+          positionTo: 100,
+          valueTo: 5,
+        },
+        dataFirstThumb: undefined,
+        stepData: undefined,
+      };
+
+      view.setPositionThumb(data);
+
+      expect(view.sliderBlock.setPositionThumb).toHaveBeenCalled();
     });
   });
 
-  it('метод addFollower вызывает ф-ю subscribe в Observer', () => {
+  it('метод addFollower подписывает на обновления класса View', () => {
     view.addFollower({});
 
-    expect(view.observer.subscribe).toHaveBeenCalledWith({});
+    expect(view.observer.subscribe).toHaveBeenCalled();
   });
 
   describe('метод onloadWindow', () => {
-    it('при загрузке окна вызывается observer.broadcast в ф-ции getSliderSize во View', () => {
+    it('при загрузке окна передает данные о размере контейнера', () => {
       const event = new UIEvent('load', { bubbles: true });
       window.dispatchEvent(event);
 
-      expect(view.observer.broadcast).toHaveBeenCalledWith('sliderSize', 1250);
+      expect(view.observer.broadcast).toHaveBeenCalled();
     });
   });
 
-  describe('метод resizeWindow', () => {
-    it('при resize окна вызывается observer.broadcast в ф-ции getSliderSize во View ', () => {
+  describe('метод resizeWindow передает данные о размере контейнера', () => {
+    it('при resize ', () => {
       const event = new UIEvent('resize', {});
       window.dispatchEvent(event);
 
-      expect(view.observer.broadcast).toHaveBeenCalledWith('sliderSize', 1250);
+      expect(view.observer.broadcast).toHaveBeenCalled();
     });
   });
 
-  describe('метод getSliderSize', () => {
-    it('при orientation = horizontal вызывается observer.broadcast', () => {
-      view.config.orientation = 'horizontal';
-      view.getSliderSize();
-
-      expect(view.observer.broadcast).toHaveBeenCalledWith('sliderSize', 1250);
-    });
-
-    it('при orientation = vertical вызывается observer.broadcast', () => {
-      view.config.orientation = 'vertical';
-      view.getSliderSize();
-
-      expect(view.observer.broadcast).toHaveBeenCalledWith('sliderSize', 1250);
-    });
-  });
-
-  it('метод updateConfig обновляет конфиг  View и вызывает ф-ю updateConfig в sliderBlock', () => {
+  it('метод updateConfig обновляет конфиг View', () => {
     const newConf = {
       range: false,
       min: -100,
@@ -139,13 +142,12 @@ describe('View', () => {
     };
     view.updateConfig(newConf);
 
-    expect(view.config).toEqual(newConf);
-    expect(view.sliderBlock.updateConfig).toHaveBeenCalledWith(newConf);
+    expect(view.sliderBlock.updateConfig).toHaveBeenCalled();
   });
 
-  it('метод changeOrientation вызывает методы getSliderSize и updateConfig', () => {
+  it('метод changeOrientation вызывает метод updateConfig', () => {
     const newConf = {
-      min: -5,
+      min: 0,
       max: 105,
       label: false,
       orientation: 'vertical',
@@ -154,11 +156,10 @@ describe('View', () => {
       range: false,
       step: 1,
     };
-    spyOn(view, 'getSliderSize');
     spyOn(view, 'updateConfig');
     view.changeOrientationOrRange(newConf);
 
     expect(view.updateConfig).toHaveBeenCalledWith(newConf);
-    expect(view.getSliderSize).toHaveBeenCalledWith();
+    expect(view.sliderBlock.updateConfig).toHaveBeenCalled();
   });
 });

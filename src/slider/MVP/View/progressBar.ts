@@ -3,11 +3,11 @@ interface IConfigBar {
   orientation: string;
 }
 class ProgressBar {
-  config: IConfigBar;
+  private config: IConfigBar;
 
-  slider: HTMLElement;
+  private slider: HTMLElement;
 
-  progressBar: HTMLElement;
+  private progressBar: HTMLElement;
 
   constructor(config: IConfigBar, slider: HTMLElement) {
     this.config = config;
@@ -43,7 +43,7 @@ class ProgressBar {
     }
   }
 
-  checkOrientation(): void {
+  private checkOrientation(): void {
     if (this.config.orientation === 'horizontal') {
       this.progressBar.classList.remove('slider__progress-bar_vertical');
       this.progressBar.classList.add('slider__progress-bar_horizontal');

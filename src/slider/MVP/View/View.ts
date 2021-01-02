@@ -30,15 +30,15 @@ interface IPosition {
   stepData?: number;
 }
 class View {
-  config: IConfigView;
+  private config: IConfigView;
 
-  wrapper: HTMLElement;
+  private wrapper: HTMLElement;
 
-  sliderContainer: HTMLElement;
+  private sliderContainer: HTMLElement;
 
-  observer: Observer;
+  protected observer: Observer;
 
-  sliderBlock: SliderBlock;
+  protected sliderBlock: SliderBlock;
 
   constructor(config: IConfigView, wrapper: HTMLElement) {
     this.config = config;
@@ -55,12 +55,12 @@ class View {
     this.subscribeOnUpdate();
   }
 
-  subscribeOnUpdate(): void {
+  private subscribeOnUpdate(): void {
     this.sliderBlock.addFollower(this);
   }
 
-  update(type: string, data: IDataThumbMove): void {
-    this.observer.broadcast('mouseMove', data);
+  private update(data: IDataThumbMove): void {
+    this.observer.broadcast(data, 'mouseMove');
   }
 
   setPositionThumb(data: IPosition): void {
@@ -71,20 +71,20 @@ class View {
     this.observer.subscribe(follower);
   }
 
-  onloadWindow(): void {
+  private onloadWindow(): void {
     window.addEventListener('load', this.getSliderSize.bind(this));
   }
 
-  resizeWindow(): void {
+  private resizeWindow(): void {
     window.addEventListener('resize', this.getSliderSize.bind(this));
   }
 
-  getSliderSize(): void {
+  private getSliderSize(): void {
     if (this.config.orientation === 'horizontal')
-      this.observer.broadcast('sliderSize', this.sliderContainer.offsetWidth);
+      this.observer.broadcast(this.sliderContainer.offsetWidth, 'sliderSize');
 
     if (this.config.orientation === 'vertical')
-      this.observer.broadcast('sliderSize', this.sliderContainer.offsetHeight);
+      this.observer.broadcast(this.sliderContainer.offsetHeight, 'sliderSize');
   }
 
   updateConfig(data: IConfigView): void {

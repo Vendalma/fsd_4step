@@ -7,7 +7,7 @@ interface IConfig {
   range: boolean;
   positionFrom: number;
   positionTo: number;
-  orientation: string;
+  orientation: 'vertical' | 'horizontal';
   step: number;
   label: boolean;
 }
@@ -30,9 +30,9 @@ interface IPosition {
   stepData?: number;
 }
 class Presenter {
-  view: View;
+  protected view: View;
 
-  model: Model;
+  private model: Model;
 
   constructor(model: Model, container: HTMLElement) {
     this.model = model;
@@ -40,18 +40,18 @@ class Presenter {
     this.subscribeOnUpdate();
   }
 
-  subscribeOnUpdate(): void {
+  private subscribeOnUpdate(): void {
     this.view.addFollower(this);
     this.model.addFollower(this);
   }
 
-  update(type: string, data: IDataThumbMove | IConfig | IPosition | number): void {
+  private update(data: IDataThumbMove | IConfig | IPosition | number, type: string): void {
     if (type === 'mouseMove') {
       this.model.findMoveThumbPosition(data as IDataThumbMove);
     } else if (type === 'positionThumb') {
       this.view.setPositionThumb(data as IPosition);
     } else if (type === 'sliderSize') {
-      this.model.calcParams(data as number);
+      this.model.calcOnloadPosition(data as number);
     } else if (type === 'changeConfig') {
       this.view.updateConfig(data as IConfig);
     } else if (type === 'changeOrientationOrRange') {

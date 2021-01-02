@@ -4,33 +4,35 @@ interface IConfigValidator {
   range: boolean;
   positionFrom: number;
   positionTo: number;
+  orientation: string;
   step: number;
+  label: boolean;
 }
 interface IUpdateConfig {
   [key: string]: boolean | string | number;
 }
 class Validator {
-  config: IConfigValidator;
+  private config: IConfigValidator;
 
   constructor(config: IConfigValidator) {
     this.config = config;
   }
 
-  validationMaxValue(): boolean {
+  private validationMaxValue(): boolean {
     if (this.config.max > this.config.min) {
       return true;
     }
     return false;
   }
 
-  validationMinValue(): boolean {
+  private validationMinValue(): boolean {
     if (this.config.min < this.config.max) {
       return true;
     }
     return false;
   }
 
-  validationStepValue(): boolean {
+  private validationStepValue(): boolean {
     if (this.config.step <= 0) {
       return false;
     }

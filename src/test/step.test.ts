@@ -11,64 +11,39 @@ describe('Step', () => {
   const container = $('<div>');
   const step: Step = new Step(config, container[0]);
   const thumb = $('<div>');
-  const blockMin = $('<div>');
-  const blockMax = $('<div>');
-  beforeEach(function () {
+  beforeAll(function () {
     thumb[0].classList.add('js-slider__thumb-first');
     container.append(thumb);
-    blockMin[0].classList.add('slider__step-block_min');
-    blockMin[0].classList.add('slider__step-block');
-    blockMin[0].innerHTML = `${step.config.min}`;
-    blockMax[0].classList.add('slider__step-block_max');
-    blockMax[0].classList.add('slider__step-block');
-    blockMax[0].innerHTML = `${step.config.max}`;
-    container.append(blockMin);
-    container.append(blockMax);
     $(document.body).append(container);
   });
 
   it('инициализация класса Step', () => {
     expect(step).toBeDefined();
-    expect(step.config).toEqual(config);
-    expect(step.container).toBeInstanceOf(HTMLElement);
-  });
-
-  it('метода changeMinValue изменяет innerHTML блока min', () => {
-    step.config.min = 104;
-    step.changeMinValue();
-
-    expect(blockMin[0]).toBeInDOM();
-    expect(blockMin).toContainText('4');
-  });
-
-  it('метод changeMaxValue изменяет innerHTML блока max', () => {
-    step.config.max = 104;
-    step.changeMaxValue();
-
-    expect(blockMax[0]).toBeInDOM();
-    expect(blockMax).toContainText('104');
   });
 
   describe('метода addStepLine добавляет шкалу значений', () => {
     let stepSize: number;
-
     beforeAll(function () {
       stepSize = 30.5;
-      step.config.min = 7;
-      step.config.max = 11;
     });
 
     beforeEach(function () {
-      const blocks = step.container.querySelectorAll('.slider__step-block') as NodeListOf<HTMLElement>;
+      const blocks = container[0].querySelectorAll('.slider__step-block') as NodeListOf<HTMLElement>;
       blocks.forEach((elem) => {
-        step.container.removeChild(elem);
+        container[0].removeChild(elem);
       });
     });
 
     it('orientation = horizontal', () => {
-      step.config.orientation = 'horizontal';
+      const conf = {
+        min: 7,
+        max: 11,
+        step: 1,
+        orientation: 'horizontal',
+      };
+      step.updateConfig(conf);
       step.addStepLine(stepSize);
-      const stepBlocks = step.container.querySelectorAll('.slider__step-block');
+      const stepBlocks = container[0].querySelectorAll('.slider__step-block');
 
       expect(stepBlocks.length).toEqual(21);
       for (let i = 0; i < stepBlocks.length; i += 1) {
@@ -85,9 +60,15 @@ describe('Step', () => {
     });
 
     it('orientation = vertical', () => {
-      step.config.orientation = 'vertical';
+      const conf = {
+        min: 7,
+        max: 11,
+        step: 1,
+        orientation: 'vertical',
+      };
+      step.updateConfig(conf);
       step.addStepLine(stepSize);
-      const stepBlocks = step.container.querySelectorAll('.slider__step-block') as NodeListOf<HTMLElement>;
+      const stepBlocks = container[0].querySelectorAll('.slider__step-block') as NodeListOf<HTMLElement>;
 
       expect(stepBlocks.length).toEqual(21);
       for (let i = 0; i < stepBlocks.length; i += 1) {
@@ -104,23 +85,17 @@ describe('Step', () => {
     });
   });
 
-  it('метод deleteStep удаляет все эл-ты с классом slider__step-block', () => {
-    step.deleteStep();
-
-    expect(step.container).not.toContainElement('div.slider__step-block');
-  });
-
-  it('метод updateConfigStep обновляет конфиг и вызывает ф-ции changeMinValue и changeMaxValue', () => {
+  it('метод updateConfig обновляет конфиг, изменяет значения min, max', () => {
     const newConf = {
       min: 0,
       max: 10,
       orientation: 'vertical',
     };
-    spyOn(step, 'changeMinValue');
-    spyOn(step, 'changeMaxValue');
     step.updateConfig(newConf);
+    const blockMax = container[0].querySelector('.slider__step-block_max') as HTMLElement;
+    const blockMin = container[0].querySelector('.slider__step-block_min') as HTMLElement;
 
-    expect(step.changeMinValue).toHaveBeenCalledWith();
-    expect(step.changeMaxValue).toHaveBeenCalledWith();
+    expect(blockMax).toContainText('10');
+    expect(blockMin).toContainText('0');
   });
 });

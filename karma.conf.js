@@ -42,7 +42,7 @@ module.exports = function (config) {
       'text/x-typescript': ['ts', 'tsx'],
     },
     browsers: ['Firefox'],
-    port: 9000,
+    port: 8000,
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,

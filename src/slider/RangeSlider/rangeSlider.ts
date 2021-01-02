@@ -10,7 +10,7 @@ interface ISettings {
   range: boolean;
   label: boolean;
   step: number;
-  orientation: string;
+  orientation: 'vertical' | 'horizontal';
 }
 interface IPosition {
   dataFirstThumb?: {
@@ -40,6 +40,10 @@ class RangeSlider {
     this.subscribeOnUpdate();
   }
 
+  getConf() {
+    return this.model.getConfig();
+  }
+
   subscribeOnUpdate(): void {
     this.model.addFollower(this);
   }
@@ -52,15 +56,11 @@ class RangeSlider {
     this.observer.subscribe(follower);
   }
 
-  update(type: string, data: IPosition): void {
-    if (type === 'positionThumb') {
-      if (data.dataFirstThumb) {
-        this.observer.broadcast('firstThumb', data.dataFirstThumb.valueFrom);
-      }
-      if (data.dataSecondThumb) {
-        this.observer.broadcast('secondThumb', data.dataSecondThumb.valueTo);
-      }
-    }
+  update(data: IPosition): void {
+    this.observer.broadcast({
+      from: this.getConf()?.positionFrom,
+      to: this.getConf()?.positionTo,
+    });
   }
 }
 export default RangeSlider;
