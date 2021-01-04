@@ -25,7 +25,7 @@ const config: IConfig = {
 const block = $('<div>');
 $(document.body).append(block);
 const model: Model = new Model(config);
-class ChildPresenter extends Presenter {
+class TestPresenter extends Presenter {
   public view: View;
 
   constructor() {
@@ -33,7 +33,7 @@ class ChildPresenter extends Presenter {
   }
 }
 describe('Presenter', () => {
-  const presenter: ChildPresenter = new ChildPresenter();
+  const presenter: TestPresenter = new TestPresenter();
   it('Инициализация Presenter', () => {
     expect(presenter).toBeDefined();
   });
@@ -44,13 +44,15 @@ describe('Presenter', () => {
     window.dispatchEvent(event);
 
     expect(model.calcOnloadPosition).toHaveBeenCalled();
-  }),
-    it('При обновлении конфига Model Presenter вызывает ф-ю updateConfig во View', () => {
-      spyOn(presenter.view, 'updateConfig');
-      model.updateConfig({ label: false });
+  });
 
-      expect(presenter.view.updateConfig).toHaveBeenCalled();
-    });
+  it('При обновлении конфига Model Presenter вызывает ф-ю updateConfig во View', () => {
+    spyOn(presenter.view, 'updateConfig');
+    model.updateConfig({ label: false });
+
+    expect(presenter.view.updateConfig).toHaveBeenCalled();
+  });
+
   it('При изменении в конфиге св-в orientation или range в Model Presenter вызывает ф-ю changeOrientationOrRange во View', () => {
     spyOn(presenter.view, 'changeOrientationOrRange');
     model.updateConfig({ orientation: 'vertical' });

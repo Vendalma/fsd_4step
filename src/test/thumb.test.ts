@@ -9,7 +9,7 @@ const config = {
   label: false,
 };
 const block = $('<div>');
-class ChildThumb extends Thumb {
+class TestThumb extends Thumb {
   public observer: Observer;
 
   constructor() {
@@ -17,7 +17,7 @@ class ChildThumb extends Thumb {
   }
 }
 describe('Thumb', () => {
-  const thumb: ChildThumb = new ChildThumb();
+  const thumb: TestThumb = new TestThumb();
   const observer = jasmine.createSpyObj('observer', ['broadcast', 'subscribe']);
   beforeAll(function () {
     block[0].classList.add('slider__block');
@@ -25,11 +25,9 @@ describe('Thumb', () => {
   });
   const slider = block[0];
   thumb.observer = observer;
+  const thumbBlock = block[0].querySelector('.js-slider__thumb-first') as HTMLElement;
   it('инициализация класса Thumb', () => {
     expect(thumb).toBeDefined();
-    expect(thumb.thumb).toBeInstanceOf(HTMLElement);
-    expect(thumb.thumb).toBeInDOM();
-    expect(thumb.thumb).toHaveAttr('data-num', '1');
   });
 
   it('метод addFollower вызывает ф-ю subscribe в классе Observer', () => {
@@ -49,49 +47,48 @@ describe('Thumb', () => {
     thumb.removeThis();
 
     expect(slider).not.toContainElement('div.js-slider__thumb-first');
-    expect(thumb.thumb).not.toBeInDOM();
+    expect(thumbBlock).not.toBeInDOM();
   });
 
   it('метод addThis добавляет блок бегунка в родительский блок', () => {
     thumb.addThis();
 
     expect(slider).toContainElement('div.js-slider__thumb-first');
-    expect(thumb.thumb).toBeInDOM();
+    expect(thumbBlock).toBeInDOM();
   });
 
   describe('метод setPosition', () => {
     it('при orientation = horizontal устанавливает бегунку style.left', () => {
       thumb.setPosition(8);
 
-      expect(thumb.thumb).toHaveCss({ left: '8px' });
+      expect(thumbBlock).toHaveCss({ left: '8px' });
     });
 
     it('при orientation = vertical устанавливает бегунку style.top', () => {
-      const config = {
+      thumb.updateConfig({
         range: true,
         positionFrom: 15,
         positionTo: 30,
         orientation: 'vertical',
         label: false,
-      };
-      thumb.updateConfig(config);
+      });
       thumb.setPosition(8);
 
-      expect(thumb.thumb).toHaveCss({ top: '8px' });
+      expect(thumbBlock).toHaveCss({ top: '8px' });
     });
   });
 
   it('при нажатии на бегунок изменяется zIndex контейнера', () => {
     const mousedown = new MouseEvent('mousedown', { bubbles: true });
-    thumb.thumb.dispatchEvent(mousedown);
+    thumbBlock.dispatchEvent(mousedown);
 
-    expect(thumb.thumb).toHaveClass('slider__thumb_zIndex-up');
+    expect(thumbBlock).toHaveClass('slider__thumb_zIndex-up');
   });
 
   describe('при перемещении мыши, вычисляется позиция бегунка', () => {
     const mousedown = new MouseEvent('mousedown', { bubbles: true });
     const mousemove = new MouseEvent('mousemove', { bubbles: true });
-    thumb.thumb.dispatchEvent(mousedown);
+    thumbBlock.dispatchEvent(mousedown);
 
     const thumbTwo = $('<div>');
     thumbTwo[0].classList.add('js-slider__thumb-second');
@@ -113,14 +110,13 @@ describe('Thumb', () => {
 
     describe('horizontal', () => {
       it('range = false', () => {
-        const config = {
+        thumb.updateConfig({
           range: false,
           positionFrom: 15,
           positionTo: 30,
           orientation: 'horizontal',
           label: false,
-        };
-        thumb.updateConfig(config);
+        });
         const expectedValue = {
           clientXY: 0,
           sliderClientReact: slider.getBoundingClientRect().left,
@@ -133,15 +129,14 @@ describe('Thumb', () => {
       });
 
       it('range = true, data-num = 1', () => {
-        const config = {
+        thumb.updateConfig({
           range: true,
           positionFrom: 15,
           positionTo: 30,
           orientation: 'horizontal',
           label: false,
-        };
-        thumb.updateConfig(config);
-        thumb.thumb.dataset.num = '1';
+        });
+        thumbBlock.dataset.num = '1';
 
         const expectedValue = {
           clientXY: 0,
@@ -156,15 +151,14 @@ describe('Thumb', () => {
       });
 
       it('range = true, data-num = 2', () => {
-        const config = {
+        thumb.updateConfig({
           range: false,
           positionFrom: 15,
           positionTo: 30,
           orientation: 'horizontal',
           label: false,
-        };
-        thumb.updateConfig(config);
-        thumb.thumb.dataset.num = '2';
+        });
+        thumbBlock.dataset.num = '2';
 
         const expectedValue = {
           clientXY: 0,
@@ -181,15 +175,14 @@ describe('Thumb', () => {
 
     describe('orientation = vertical', () => {
       it('range = false', () => {
-        const config = {
+        thumb.updateConfig({
           range: false,
           positionFrom: 15,
           positionTo: 30,
           orientation: 'vertical',
           label: false,
-        };
-        thumb.updateConfig(config);
-        thumb.thumb.dataset.num = '1';
+        });
+        thumbBlock.dataset.num = '1';
 
         const expectedValue = {
           clientXY: 0,
@@ -203,15 +196,14 @@ describe('Thumb', () => {
       });
 
       it('range = true, data-num = 1', () => {
-        const config = {
+        thumb.updateConfig({
           range: true,
           positionFrom: 15,
           positionTo: 30,
           orientation: 'vertical',
           label: false,
-        };
-        thumb.updateConfig(config);
-        thumb.thumb.dataset.num = '1';
+        });
+        thumbBlock.dataset.num = '1';
 
         const expectedValue = {
           clientXY: 0,
@@ -225,15 +217,14 @@ describe('Thumb', () => {
       });
 
       it('range = true, data-num = 2', () => {
-        const config = {
+        thumb.updateConfig({
           range: true,
           positionFrom: 15,
           positionTo: 30,
           orientation: 'vertical',
           label: false,
-        };
-        thumb.updateConfig(config);
-        thumb.thumb.dataset.num = '2';
+        });
+        thumbBlock.dataset.num = '2';
 
         const expectedValue = {
           clientXY: 0,
@@ -250,7 +241,7 @@ describe('Thumb', () => {
 
   describe('метод onMouseUp отвязывает обработчики событий, уменьшается zIndex контейнера бегунка, вызывает ф-ии changeZIndexDown и broadcast класса Observer ', () => {
     const mousedown = new MouseEvent('mousedown', { bubbles: true });
-    thumb.thumb.dispatchEvent(mousedown);
+    thumbBlock.dispatchEvent(mousedown);
     const mouseup = new MouseEvent('mouseup', { bubbles: true });
 
     const thumbTwo = $('<div>');
@@ -271,14 +262,13 @@ describe('Thumb', () => {
 
     describe('horizontal', () => {
       it('range = false', () => {
-        const config = {
+        thumb.updateConfig({
           range: false,
           positionFrom: 15,
           positionTo: 30,
           orientation: 'horizontal',
           label: false,
-        };
-        thumb.updateConfig(config);
+        });
         const expectedValue = {
           clientXY: 0,
           sliderClientReact: slider.getBoundingClientRect().left,
@@ -288,19 +278,18 @@ describe('Thumb', () => {
         document.dispatchEvent(mouseup);
 
         expect(thumb.observer.broadcast).toHaveBeenCalledWith(expectedValue);
-        expect(thumb.thumb).not.toHaveClass('slider__thumb_zIndex-up');
+        expect(thumbBlock).not.toHaveClass('slider__thumb_zIndex-up');
       });
 
       it('range = true, data-num = 1', () => {
-        const config = {
+        thumb.updateConfig({
           range: true,
           positionFrom: 15,
           positionTo: 30,
           orientation: 'horizontal',
           label: false,
-        };
-        thumb.updateConfig(config);
-        thumb.thumb.dataset.num = '1';
+        });
+        thumbBlock.dataset.num = '1';
 
         const expectedValue = {
           clientXY: 0,
@@ -312,19 +301,18 @@ describe('Thumb', () => {
         document.dispatchEvent(mouseup);
 
         expect(thumb.observer.broadcast).toHaveBeenCalledWith(expectedValue);
-        expect(thumb.thumb).not.toHaveClass('slider__thumb_zIndex-up');
+        expect(thumbBlock).not.toHaveClass('slider__thumb_zIndex-up');
       });
 
       it('range = true, data-num = 2', () => {
-        const config = {
+        thumb.updateConfig({
           range: true,
           positionFrom: 15,
           positionTo: 30,
           orientation: 'horizontal',
           label: false,
-        };
-        thumb.updateConfig(config);
-        thumb.thumb.dataset.num = '2';
+        });
+        thumbBlock.dataset.num = '2';
 
         const expectedValue = {
           clientXY: 0,
@@ -336,21 +324,20 @@ describe('Thumb', () => {
         document.dispatchEvent(mouseup);
 
         expect(thumb.observer.broadcast).toHaveBeenCalledWith(expectedValue);
-        expect(thumb.thumb).not.toHaveClass('slider__thumb_zIndex-up');
+        expect(thumbBlock).not.toHaveClass('slider__thumb_zIndex-up');
       });
     });
 
     describe('orientation = vertical', () => {
       it('range = false', () => {
-        const config = {
+        thumb.updateConfig({
           range: false,
           positionFrom: 15,
           positionTo: 30,
           orientation: 'vertical',
           label: false,
-        };
-        thumb.updateConfig(config);
-        thumb.thumb.dataset.num = '1';
+        });
+        thumbBlock.dataset.num = '1';
 
         const expectedValue = {
           clientXY: 0,
@@ -361,19 +348,18 @@ describe('Thumb', () => {
         document.dispatchEvent(mouseup);
 
         expect(thumb.observer.broadcast).toHaveBeenCalledWith(expectedValue);
-        expect(thumb.thumb).not.toHaveClass('slider__thumb_zIndex-up');
+        expect(thumbBlock).not.toHaveClass('slider__thumb_zIndex-up');
       });
 
       it('range = true, data-num = 1', () => {
-        const config = {
+        thumb.updateConfig({
           range: true,
           positionFrom: 15,
           positionTo: 30,
           orientation: 'vertical',
           label: false,
-        };
-        thumb.updateConfig(config);
-        thumb.thumb.dataset.num = '1';
+        });
+        thumbBlock.dataset.num = '1';
 
         const expectedValue = {
           clientXY: 0,
@@ -384,19 +370,18 @@ describe('Thumb', () => {
         document.dispatchEvent(mouseup);
 
         expect(thumb.observer.broadcast).toHaveBeenCalledWith(expectedValue);
-        expect(thumb.thumb).not.toHaveClass('slider__thumb_zIndex-up');
+        expect(thumbBlock).not.toHaveClass('slider__thumb_zIndex-up');
       });
 
       it('range = true, data-num = 2', () => {
-        const config = {
+        thumb.updateConfig({
           range: true,
           positionFrom: 15,
           positionTo: 30,
           orientation: 'vertical',
           label: false,
-        };
-        thumb.updateConfig(config);
-        thumb.thumb.dataset.num = '2';
+        });
+        thumbBlock.dataset.num = '2';
 
         const expectedValue = {
           clientXY: 0,
@@ -407,7 +392,7 @@ describe('Thumb', () => {
         document.dispatchEvent(mouseup);
 
         expect(thumb.observer.broadcast).toHaveBeenCalledWith(expectedValue);
-        expect(thumb.thumb).not.toHaveClass('slider__thumb_zIndex-up');
+        expect(thumbBlock).not.toHaveClass('slider__thumb_zIndex-up');
       });
     });
   });
@@ -415,36 +400,34 @@ describe('Thumb', () => {
   it('метод cleanStyleAttr удаляет у контейнера бегунка атрибут style', () => {
     thumb.cleanStyleAttr();
 
-    expect(thumb.thumb).not.toHaveAttr('style');
+    expect(thumbBlock).not.toHaveAttr('style');
   });
 
   describe('метод updateConfigThumb обновляет конфиг класса, вызывает ф-цию updateConfig касса Label', () => {
     it('при orientation = vertical', () => {
-      const newConf = {
+      thumb.updateConfig({
         range: false,
         positionFrom: 10,
         positionTo: 15,
         orientation: 'vertical',
         label: true,
-      };
-      thumb.updateConfig(newConf);
+      });
 
-      expect(thumb.thumb).toHaveClass('slider__thumb_vertical');
-      expect(thumb.thumb).not.toHaveClass('slider__thumb_horizontal');
+      expect(thumbBlock).toHaveClass('slider__thumb_vertical');
+      expect(thumbBlock).not.toHaveClass('slider__thumb_horizontal');
     });
 
     it('при orientation = horizontal', () => {
-      const newConf = {
+      thumb.updateConfig({
         range: false,
         positionFrom: 10,
         positionTo: 15,
         orientation: 'horizontal',
         label: true,
-      };
-      thumb.updateConfig(newConf);
+      });
 
-      expect(thumb.thumb).not.toHaveClass('slider__thumb_vertical');
-      expect(thumb.thumb).toHaveClass('slider__thumb_horizontal');
+      expect(thumbBlock).not.toHaveClass('slider__thumb_vertical');
+      expect(thumbBlock).toHaveClass('slider__thumb_horizontal');
     });
   });
 });

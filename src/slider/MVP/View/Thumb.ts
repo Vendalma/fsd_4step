@@ -20,7 +20,7 @@ class Thumb {
 
   private slider: HTMLElement;
 
-  public thumb: HTMLElement;
+  private thumb: HTMLElement;
 
   private thumbHtmlClass: string;
 
@@ -79,7 +79,7 @@ class Thumb {
   };
 
   onMouseUp = (e: MouseEvent): void => {
-    e.preventDefault;
+    e.preventDefault; /* eslint-disable-line */
     document.removeEventListener('mousemove', this.moveHandle);
     document.removeEventListener('mouseup', this.onMouseUp);
     this.observer.broadcast(this.findPosition(e));

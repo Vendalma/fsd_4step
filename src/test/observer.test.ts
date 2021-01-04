@@ -1,9 +1,11 @@
 import Observer from '../slider/Observer/Observer';
 
 class ClassA {
-  constructor() {}
+  testA: { [key: string]: number };
 
-  update(data: { [key: string]: number }, type: string) {}
+  update(data: { [key: string]: number }, type: string) {
+    this.testA = data;
+  }
 }
 class ClassB {
   classA: ClassA;

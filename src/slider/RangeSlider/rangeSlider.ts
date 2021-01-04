@@ -40,7 +40,7 @@ class RangeSlider {
     this.subscribeOnUpdate();
   }
 
-  getConf() {
+  getConf(): ISettings | undefined {
     return this.model.getConfig();
   }
 
@@ -58,8 +58,8 @@ class RangeSlider {
 
   update(data: IPosition): void {
     this.observer.broadcast({
-      from: this.getConf()?.positionFrom,
-      to: this.getConf()?.positionTo,
+      positionFrom: this.getConf()?.positionFrom,
+      positionTo: this.getConf()?.positionTo,
     });
   }
 }

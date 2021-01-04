@@ -121,13 +121,14 @@ class SliderBlock {
   }
 
   private findClickPlaceHorizon(e: MouseEvent): void {
+    const thumbFirst = this.sliderBlock.querySelector('.js-slider__thumb-first') as HTMLElement;
+    const thumbSecond = this.sliderBlock.querySelector('.js-slider__thumb-second') as HTMLElement;
     if (!this.config.range) {
       this.thumbOne.onMouseUp(e);
     } else if (this.config.range) {
-      const thumbFirst = Math.abs(this.thumbOne.thumb.getBoundingClientRect().x - e.clientX);
-      const thumbSecond = Math.abs((this.thumbTwo?.thumb.getBoundingClientRect().x as number) - e.clientX);
-      console.log(thumbFirst, thumbSecond)
-      if (thumbFirst < thumbSecond) {
+      const thumbFirstPosition = Math.abs(thumbFirst.getBoundingClientRect().x - e.clientX);
+      const thumbSecondPosition = Math.abs(thumbSecond.getBoundingClientRect().x - e.clientX);
+      if (thumbFirstPosition < thumbSecondPosition) {
         this.thumbOne.onMouseUp(e);
       } else {
         this.thumbTwo?.onMouseUp(e);
@@ -136,12 +137,14 @@ class SliderBlock {
   }
 
   private findClickPlaceVert(e: MouseEvent): void {
+    const thumbFirst = this.sliderBlock.querySelector('.js-slider__thumb-first') as HTMLElement;
+    const thumbSecond = this.sliderBlock.querySelector('.js-slider__thumb-second') as HTMLElement;
     if (!this.config.range) {
       this.thumbOne.onMouseUp(e);
     } else if (this.config.range) {
-      const thumbFirst = Math.abs(this.thumbOne.thumb.getBoundingClientRect().y - e.clientY);
-      const thumbSecond = Math.abs((this.thumbTwo?.thumb.getBoundingClientRect().y as number) - e.clientY);
-      if (thumbFirst < thumbSecond) {
+      const thumbFirstPosition = Math.abs(thumbFirst.getBoundingClientRect().y - e.clientY);
+      const thumbSecondPosition = Math.abs(thumbSecond.getBoundingClientRect().y - e.clientY);
+      if (thumbFirstPosition < thumbSecondPosition) {
         this.thumbOne.onMouseUp(e);
       } else {
         this.thumbTwo?.onMouseUp(e);

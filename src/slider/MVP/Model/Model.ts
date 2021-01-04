@@ -74,9 +74,8 @@ class Model {
         }
         this.observer.broadcast(this.config, 'changeConfig');
       }
-    } else {
-      return undefined;
     }
+    return undefined;
   }
 
   getConfig(): IConfigModel | undefined {
@@ -90,7 +89,7 @@ class Model {
     this.observer.broadcast(this.calcThumbPosition(data), 'positionThumb');
   }
 
-  calcOnloadPosition(data: number) {
+  calcOnloadPosition(data: number): void {
     this.observer.broadcast(this.calcParams(data), 'positionThumb');
   }
 
@@ -173,6 +172,7 @@ class Model {
         },
       };
     }
+    return undefined;
   }
 
   private calcValue(position: number): number {
@@ -227,7 +227,6 @@ class Model {
     } else if (this.config.range && this.config.positionFrom > this.config.max) {
       this.config.positionFrom = this.config.min;
     }
-    console.log(this.config.positionFrom);
   }
 
   private calcPositionTo(): void {
@@ -244,7 +243,6 @@ class Model {
         this.config.positionTo = this.config.max;
       }
     }
-    console.log(this.config.positionTo);
   }
 
   private calcPixelSize(): number {

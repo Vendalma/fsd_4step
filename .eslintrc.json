@@ -55,6 +55,13 @@
     ],
     "func-names": "off",
     "@typescript-eslint/no-unused-vars": "off",
-    "jasmine/no-unsafe-spy": 0
+    "jasmine/no-unsafe-spy": 0,
+    "jasmine/prefer-toHaveBeenCalledWith": 0,
+    "jasmine/no-spec-dupes": 0,
+    "jasmine/no-suite-dupes": 0,
+    "max-classes-per-file": [
+      "error",
+      2
+    ]
   }
 }

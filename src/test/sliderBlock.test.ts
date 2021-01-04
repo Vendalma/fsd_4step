@@ -13,14 +13,15 @@ const config = {
 };
 const block = $('<div>');
 $(document.body).append(block);
-class ChildSliderBlock extends SliderBlock {
+class TestSliderBlock extends SliderBlock {
   public observer: Observer;
+
   constructor() {
     super(config, block[0]);
   }
 }
 describe('Slider Block', () => {
-  const sliderBlock: ChildSliderBlock = new ChildSliderBlock();
+  const sliderBlock: TestSliderBlock = new TestSliderBlock();
   const observer = jasmine.createSpyObj('observer', ['subscribe', 'broadcast']);
   sliderBlock.observer = observer;
   let blockSlider: HTMLElement;
@@ -33,12 +34,14 @@ describe('Slider Block', () => {
     thumbOne = blockSlider.querySelector('.js-slider__thumb-first') as HTMLElement;
     thumbSecond = blockSlider.querySelector('.js-slider__thumb-second') as HTMLElement;
   });
+
   it('Инициализация Slider Block', () => {
     expect(sliderBlock).toBeDefined();
   });
 
   it('метод addFollower вызывает observer.subscribe', () => {
     sliderBlock.addFollower({});
+
     expect(sliderBlock.observer.subscribe).toHaveBeenCalledWith({});
   });
 
@@ -56,6 +59,7 @@ describe('Slider Block', () => {
         },
       };
       sliderBlock.setPositionThumb(data);
+
       expect(blockSlider).toContainElement('div.slider__step-block');
       expect(blockSlider).toContainElement('div.slider__progress-bar');
       expect(thumbOne).toHaveCss({ left: '100px' });
@@ -69,6 +73,7 @@ describe('Slider Block', () => {
         dataSecondThumb: undefined,
       };
       sliderBlock.setPositionThumb(data);
+
       expect(blockSlider).toContainElement('div.slider__step-block');
       expect(blockSlider).toContainElement('div.slider__progress-bar');
     });
@@ -83,6 +88,7 @@ describe('Slider Block', () => {
         stepData: undefined,
       };
       sliderBlock.setPositionThumb(data);
+
       expect(blockSlider).toContainElement('div.slider__progress-bar');
       expect(thumbOne).toHaveCss({ left: '110px' });
     });
@@ -97,6 +103,7 @@ describe('Slider Block', () => {
         stepData: undefined,
       };
       sliderBlock.setPositionThumb(data);
+
       expect(blockSlider).toContainElement('div.slider__progress-bar');
       expect(thumbSecond).toHaveCss({ left: '210px' });
     });
@@ -115,10 +122,12 @@ describe('Slider Block', () => {
           orientation: 'vertical',
         };
         sliderBlock.updateConfig(newConf);
+
         expect(blockSlider).toHaveClass('slider__block_vertical');
         expect(progressBar).toHaveClass('slider__progress-bar_vertical');
         expect(blockSlider).not.toContainElement('div.js-slider__thumb-second');
       });
+
       it('если range = true контейнер второго бегунка добавляется в слайдер', () => {
         const newConf = {
           min: -5,
@@ -130,11 +139,13 @@ describe('Slider Block', () => {
           orientation: 'vertical',
         };
         sliderBlock.updateConfig(newConf);
+
         expect(blockSlider).toHaveClass('slider__block_vertical');
         expect(progressBar).toHaveClass('slider__progress-bar_vertical');
         expect(blockSlider).toContainElement('div.js-slider__thumb-second');
       });
     });
+
     describe('при orientation = horizontal контейнер слайдера не должен иметь класс slider__block_vertical', () => {
       it('если range = true добавляется контейнер второго бегунка', () => {
         const newConf = {
@@ -147,10 +158,12 @@ describe('Slider Block', () => {
           orientation: 'horizontal',
         };
         sliderBlock.updateConfig(newConf);
+
         expect(blockSlider).not.toHaveClass('slider__block_vertical');
         expect(progressBar).toHaveClass('slider__progress-bar_horizontal');
         expect(blockSlider).toContainElement('div.js-slider__thumb-second');
       });
+
       it('если range = false второй бегунок удаляется', () => {
         const newConf = {
           min: -5,
@@ -162,6 +175,7 @@ describe('Slider Block', () => {
           orientation: 'horizontal',
         };
         sliderBlock.updateConfig(newConf);
+
         expect(blockSlider).not.toHaveClass('slider__block_vertical');
         expect(progressBar).toHaveClass('slider__progress-bar_horizontal');
         expect(blockSlider).not.toContainElement('div.js-slider__thumb-second');
@@ -189,6 +203,7 @@ describe('Slider Block', () => {
           orientation: 'horizontal',
         });
         blockSlider.dispatchEvent(event);
+
         expect(spy).toHaveBeenTriggered();
       });
 
@@ -203,9 +218,11 @@ describe('Slider Block', () => {
           orientation: 'horizontal',
         });
         blockSlider.dispatchEvent(event);
+
         expect(spy).toHaveBeenTriggered();
       });
     });
+
     describe('при orientation = vertical', () => {
       it('если range = false', () => {
         sliderBlock.updateConfig({
@@ -218,9 +235,11 @@ describe('Slider Block', () => {
           orientation: 'vertical',
         });
         blockSlider.dispatchEvent(event);
+
         expect(spy).toHaveBeenTriggered();
       });
     });
+
     it('range = true', () => {
       sliderBlock.updateConfig({
         range: true,
@@ -232,6 +251,7 @@ describe('Slider Block', () => {
         orientation: 'vertical',
       });
       blockSlider.dispatchEvent(event);
+
       expect(spy).toHaveBeenTriggered();
     });
   });

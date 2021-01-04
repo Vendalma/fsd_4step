@@ -12,6 +12,10 @@ interface ISettings {
   step: number;
   label: boolean;
 }
+interface IPositionFromTo {
+  from: number;
+  to: number;
+}
 class PanelController {
   parent: HTMLElement;
 
@@ -41,7 +45,7 @@ class PanelController {
 
   slid: JQuery<HTMLElement>;
 
-  config: any;
+  config: ISettings;
 
   observer: Observer;
 
@@ -176,7 +180,7 @@ class PanelController {
     this.inputTo.value = `${data}`;
   }
 
-  update(data: any): void {
+  update(data: IPositionFromTo): void {
     this.updateConfigInputFrom(data.from);
     if (data.to) this.updateConfigInputTo(data.to);
   }
@@ -184,10 +188,10 @@ class PanelController {
 
 export default PanelController;
 
-window.addEventListener('load', initPanelClass.bind(this));
 function initPanelClass() {
   const panels = document.querySelectorAll('.js-panel');
   panels.forEach((panel) => {
-    new PanelController(panel as HTMLElement);
+    const sliderPanel = new PanelController(panel as HTMLElement);
   });
 }
+window.addEventListener('load', initPanelClass.bind(this));
