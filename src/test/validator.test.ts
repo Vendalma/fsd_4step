@@ -47,47 +47,47 @@ describe('Validator', () => {
       expect(validator.validationConfig(data)).toBeTrue();
     });
 
-    it('при заданных значения, ф-я вернет false', () => {
+    it('если max < min, ф-я вернет false', () => {
       data.max = -100;
 
       expect(validator.validationConfig(data)).toBeFalse();
     });
 
-    it('при заданных значения, ф-я вернет false', () => {
+    it('если min > max, ф-я вернет false', () => {
       data.min = 20;
 
       expect(validator.validationConfig(data)).toBeFalse();
     });
 
-    it('при заданных значения, ф-я вернет false', () => {
+    it('если step > max - min, ф-я вернет false', () => {
       data.step = 1000;
 
       expect(validator.validationConfig(data)).toBeFalse();
     });
 
-    it('при заданных значения, ф-я вернет false', () => {
+    it('если step = 0, ф-я вернет false', () => {
       data.step = 0;
 
       expect(validator.validationConfig(data)).toBeFalse();
     });
 
-    it('при заданных значения, ф-я вернет false', () => {
+    it('если step < 0, ф-я вернет false', () => {
       data.step = -10;
 
       expect(validator.validationConfig(data)).toBeFalse();
     });
 
-    it('при заданных значения, ф-я вернет true', () => {
+    it('при изменении параметров label, ф-я вернет true', () => {
       data.label = false;
 
       expect(validator.validationConfig(data)).toBeTrue();
     });
 
-    it('при заданных значения, ф-я вернет true', () => {
+    it('при изменении параметров orientation, ф-я вернет true', () => {
       expect(validator.validationConfig({ orientation: 'horizontal' })).toBeTrue();
     });
 
-    it('при заданных значения, ф-я вернет true', () => {
+    it('при изменении параметров positionTo, ф-я вернет true', () => {
       expect(validator.validationConfig({ positionTo: 5 })).toBeTrue();
     });
   });

@@ -15,7 +15,7 @@ interface IUpdateConfig {
   [key: string]: boolean | string | number;
 }
 interface MethodsObject {
-  [key: string]: any; /* eslint-disable-line */
+  [key: string]: any /* eslint-disable-line */;
 }
 (function ($) {
   const methods: MethodsObject = {
@@ -37,12 +37,13 @@ interface MethodsObject {
       });
     },
   };
-  jQuery.fn.rangeSlider = function (/* eslint-disable-line */
+  jQuery.fn.rangeSlider = function (
+    /* eslint-disable-line */
     method?: string | unknown | undefined,
     settings?: ISettings | IUpdateConfig | unknown | undefined,
   ) {
     if (methods[method as string]) {
-      return methods[method as string].apply(this, Array.prototype.slice.call(arguments, 1));  /* eslint-disable-line */
+      return methods[method as string].apply(this, Array.prototype.slice.call(arguments, 1)); /* eslint-disable-line */
     }
     if (typeof method === 'object' || !method) {
       const defaultSettings = $.extend(

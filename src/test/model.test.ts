@@ -99,7 +99,7 @@ describe('Model', () => {
       expect(model.observer.broadcast).toHaveBeenCalled();
     });
 
-    it('если в принимаемом объекте key = positionFrom, при не корректном значении, оно пересчитывается, затем вызывается ф-я broadcast класса Observer', () => {
+    it('если key = positionFrom, при не корректном значении, оно пересчитывается и вызывается ф-я broadcast класса Observer', () => {
       model.config.range = true;
       model.config.max = 30;
       const data = {

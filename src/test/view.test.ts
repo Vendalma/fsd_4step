@@ -47,7 +47,7 @@ describe('View', () => {
 
   describe('метод setPositionThumb', () => {
     let data: IPosition;
-    it('должна вызваться ф-я setPositionThumb, которая передает данные в класс sliderBlock', () => {
+    it('при заданных параметрах data, вызывается ф-я setPositionThumb, которая передает данные в класс sliderBlock', () => {
       data = {
         stepData: 20,
         dataFirstThumb: {
@@ -75,7 +75,7 @@ describe('View', () => {
       expect(view.sliderBlock.setPositionThumb).toHaveBeenCalled();
     });
 
-    it('должна вызваться ф-я setPositionThumb, которая передает данные в класс sliderBlock', () => {
+    it('метод вызывает ф-ю setPositionThumb в классе sliderBlock', () => {
       data = {
         dataFirstThumb: {
           positionFrom: 100,
@@ -89,7 +89,7 @@ describe('View', () => {
       expect(view.sliderBlock.setPositionThumb).toHaveBeenCalled();
     });
 
-    it('должна вызваться ф-я setPositionThumb, которая передает данные в класс sliderBlock', () => {
+    it('вызывается ф-я setPositionThumb, передающая данные в класс sliderBlock', () => {
       data = {
         dataSecondThumb: {
           positionTo: 100,
