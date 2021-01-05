@@ -23,18 +23,18 @@ const config = {
   step: 1,
   orientation: 'horizontal',
 };
-const block = $('<div>');
+const $block = $('<div>');
 class TestView extends View {
   public observer: Observer;
 
   public sliderBlock: SliderBlock;
 
   constructor() {
-    super(config, block[0]);
+    super(config, $block[0]);
   }
 }
 
-$(document.body).append(block);
+$(document.body).append($block);
 const view: TestView = new TestView();
 const observer = jasmine.createSpyObj('observer', ['broadcast', 'subscribe']);
 const sliderBlock = jasmine.createSpyObj('sliderBlock', ['setPositionThumb', 'updateConfig']);

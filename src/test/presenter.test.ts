@@ -22,14 +22,14 @@ const config: IConfig = {
   step: 1,
   orientation: 'horizontal',
 };
-const block = $('<div>');
-$(document.body).append(block);
+const $block = $('<div>');
+$(document.body).append($block);
 const model: Model = new Model(config);
 class TestPresenter extends Presenter {
   public view: View;
 
   constructor() {
-    super(model, block[0]);
+    super(model, $block[0]);
   }
 }
 describe('Presenter', () => {
@@ -61,7 +61,7 @@ describe('Presenter', () => {
   });
 
   it('При нажатии на бегунок вызывается ф-я findMoveThumbPosition в Model', () => {
-    const thumb = block[0].querySelector('.js-slider__thumb-first') as HTMLElement;
+    const thumb = $block[0].querySelector('.js-slider__thumb-first') as HTMLElement;
     const event = new MouseEvent('click', { bubbles: true });
     spyOn(model, 'findMoveThumbPosition');
     thumb.dispatchEvent(event);

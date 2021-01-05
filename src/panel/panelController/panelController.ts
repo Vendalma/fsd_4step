@@ -13,8 +13,8 @@ interface ISettings {
   label: boolean;
 }
 interface IPositionFromTo {
-  from: number;
-  to: number;
+  positionFrom: number;
+  positionTo: number;
 }
 class PanelController {
   parent: HTMLElement;
@@ -42,8 +42,6 @@ class PanelController {
   inputDouble: HTMLInputElement;
 
   $slider: JQuery<HTMLElement>;
-
-  slid: JQuery<HTMLElement>;
 
   config: ISettings;
 
@@ -181,8 +179,8 @@ class PanelController {
   }
 
   update(data: IPositionFromTo): void {
-    this.updateConfigInputFrom(data.from);
-    if (data.to) this.updateConfigInputTo(data.to);
+    this.updateConfigInputFrom(data.positionFrom);
+    if (data.positionTo) this.updateConfigInputTo(data.positionTo);
   }
 }
 

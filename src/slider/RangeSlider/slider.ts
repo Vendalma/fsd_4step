@@ -61,6 +61,6 @@ interface MethodsObject {
       );
       return methods.init.call(this, defaultSettings);
     }
-    $.error(`Метод с именем ${method} не существует`);
+    return $.error(`Метод с именем ${method} не существует`);
   };
 })(jQuery);

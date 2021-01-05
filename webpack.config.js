@@ -1,18 +1,27 @@
 const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
+const PATHS = {
+  src: path.join(__dirname, './src'),
+  dist: path.join(__dirname, './dist'),
+  assets: 'assets/',
+};
 const config = {
-  entry: './src/index.ts',
+  entry: `${PATHS.src}/main.ts`,
   output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js',
+    path: PATHS.dist,
+    filename: `${PATHS.assets}js/[name].js`,
   },
   devtool: 'inline-source-map',
   devServer: {
-    contentBase: path.join(__dirname, 'dist'),
+    contentBase: PATHS.dist,
     compress: true,
     port: 9000,
+    writeToDisk: true,
   },
   module: {
     rules: [
@@ -37,7 +46,26 @@ const config = {
       },
       {
         test: /\.scss$/,
-        use: ['style-loader', 'css-loader', 'sass-loader'],
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              publicPath: '../../',
+            },
+          },
+          {
+            loader: 'css-loader',
+            options: {
+              sourceMap: true,
+            },
+          },
+          {
+            loader: 'sass-loader',
+            options: {
+              sourceMap: true,
+            },
+          },
+        ],
       },
       {
         test: /\.pug$/,
@@ -46,12 +74,20 @@ const config = {
           name: '[name].pug',
         },
       },
+      {
+        test: /\.(svg|png|jpe?g|gif)$/,
+        loader: 'file-loader',
+      },
     ],
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
   },
   plugins: [
+    new CleanWebpackPlugin({}),
+    new MiniCssExtractPlugin({
+      filename: `${PATHS.assets}css/[name].css`,
+    }),
     new webpack.ProvidePlugin({
       $: 'jquery',
       jQuery: 'jquery',
@@ -59,6 +95,14 @@ const config = {
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: './src/index.pug',
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: `${PATHS.src}/${PATHS.assets}favicon`,
+          to: `${PATHS.assets}favicon`,
+        },
+      ],
     }),
   ],
 };

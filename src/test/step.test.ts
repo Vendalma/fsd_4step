@@ -10,10 +10,10 @@ const config = {
 describe('Step', () => {
   const container = $('<div>');
   const step: Step = new Step(config, container[0]);
-  const thumb = $('<div>');
+  const $thumb = $('<div>');
   beforeAll(function () {
-    thumb[0].classList.add('js-slider__thumb-first');
-    container.append(thumb);
+    $thumb[0].classList.add('js-slider__thumb-first');
+    container.append($thumb);
     $(document.body).append(container);
   });
 

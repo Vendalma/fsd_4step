@@ -8,24 +8,23 @@ const config = {
   orientation: 'horizontal',
   label: false,
 };
-const block = $('<div>');
+const $block = $('<div>');
 class TestThumb extends Thumb {
   public observer: Observer;
 
   constructor() {
-    super(config, 'js-slider__thumb-first', block[0], '1');
+    super(config, 'js-slider__thumb-first', $block[0], '1');
   }
 }
 describe('Thumb', () => {
   const thumb: TestThumb = new TestThumb();
   const observer = jasmine.createSpyObj('observer', ['broadcast', 'subscribe']);
   beforeAll(function () {
-    block[0].classList.add('slider__block');
-    $(document.body).append(block);
+    $block[0].classList.add('slider__block');
+    $(document.body).append($block);
   });
-  const slider = block[0];
   thumb.observer = observer;
-  const thumbBlock = block[0].querySelector('.js-slider__thumb-first') as HTMLElement;
+  const thumbBlock = $block[0].querySelector('.js-slider__thumb-first') as HTMLElement;
   it('инициализация класса Thumb', () => {
     expect(thumb).toBeDefined();
   });
@@ -38,7 +37,7 @@ describe('Thumb', () => {
 
   it('метод setLabelValue вызывает ф-ю setLabelValue в классе Label', () => {
     thumb.setLabelValue(8);
-    const elementLabel = block[0].querySelector('.slider__label');
+    const elementLabel = $block[0].querySelector('.slider__label');
 
     expect(elementLabel).toHaveText('8');
   });
@@ -46,14 +45,14 @@ describe('Thumb', () => {
   it('метод removeThis удаляет бегунок из родительского блока', () => {
     thumb.removeThis();
 
-    expect(slider).not.toContainElement('div.js-slider__thumb-first');
+    expect($block).not.toContainElement('div.js-slider__thumb-first');
     expect(thumbBlock).not.toBeInDOM();
   });
 
   it('метод addThis добавляет блок бегунка в родительский блок', () => {
     thumb.addThis();
 
-    expect(slider).toContainElement('div.js-slider__thumb-first');
+    expect($block).toContainElement('div.js-slider__thumb-first');
     expect(thumbBlock).toBeInDOM();
   });
 
@@ -90,16 +89,16 @@ describe('Thumb', () => {
     const mousemove = new MouseEvent('mousemove', { bubbles: true });
     thumbBlock.dispatchEvent(mousedown);
 
-    const thumbTwo = $('<div>');
-    thumbTwo[0].classList.add('js-slider__thumb-second');
-    thumbTwo[0].setAttribute('data-num', '2');
-    block.append(thumbTwo);
+    const $thumbTwo = $('<div>');
+    $thumbTwo[0].classList.add('js-slider__thumb-second');
+    $thumbTwo[0].setAttribute('data-num', '2');
+    $block.append($thumbTwo);
 
     let event: MouseEvent;
     beforeEach(function () {
       event = new MouseEvent('mousedown', { clientX: 100, clientY: 105 });
-      const thumbFirst = slider.querySelector('.js-slider__thumb-first') as HTMLElement;
-      const thumbSecond = slider.querySelector('.js-slider__thumb-second') as HTMLElement;
+      const thumbFirst = $block[0].querySelector('.js-slider__thumb-first') as HTMLElement;
+      const thumbSecond = $block[0].querySelector('.js-slider__thumb-second') as HTMLElement;
 
       thumbFirst.style.left = '101px';
       thumbFirst.style.top = '58px';
@@ -119,7 +118,7 @@ describe('Thumb', () => {
         });
         const expectedValue = {
           clientXY: 0,
-          sliderClientReact: slider.getBoundingClientRect().left,
+          sliderClientReact: $block[0].getBoundingClientRect().left,
           dataNum: '1',
           positionThumbSecond: undefined,
         };
@@ -140,7 +139,7 @@ describe('Thumb', () => {
 
         const expectedValue = {
           clientXY: 0,
-          sliderClientReact: slider.getBoundingClientRect().left,
+          sliderClientReact: $block[0].getBoundingClientRect().left,
           dataNum: '1',
           positionThumbSecond: 10,
         };
@@ -162,7 +161,7 @@ describe('Thumb', () => {
 
         const expectedValue = {
           clientXY: 0,
-          sliderClientReact: slider.getBoundingClientRect().left,
+          sliderClientReact: $block[0].getBoundingClientRect().left,
           dataNum: '2',
           positionThumbFirst: 101,
         };
@@ -186,7 +185,7 @@ describe('Thumb', () => {
 
         const expectedValue = {
           clientXY: 0,
-          sliderClientReact: slider.getBoundingClientRect().top,
+          sliderClientReact: $block[0].getBoundingClientRect().top,
           dataNum: '1',
           positionThumbSecond: undefined,
         };
@@ -207,7 +206,7 @@ describe('Thumb', () => {
 
         const expectedValue = {
           clientXY: 0,
-          sliderClientReact: slider.getBoundingClientRect().top,
+          sliderClientReact: $block[0].getBoundingClientRect().top,
           dataNum: '1',
           positionThumbSecond: 50,
         };
@@ -228,7 +227,7 @@ describe('Thumb', () => {
 
         const expectedValue = {
           clientXY: 0,
-          sliderClientReact: slider.getBoundingClientRect().top,
+          sliderClientReact: $block[0].getBoundingClientRect().top,
           dataNum: '2',
           positionThumbFirst: 58,
         };
@@ -244,15 +243,15 @@ describe('Thumb', () => {
     thumbBlock.dispatchEvent(mousedown);
     const mouseup = new MouseEvent('mouseup', { bubbles: true });
 
-    const thumbTwo = $('<div>');
-    thumbTwo[0].classList.add('js-slider__thumb-second');
-    thumbTwo[0].setAttribute('data-num', '2');
-    block.append(thumbTwo);
+    const $thumbTwo = $('<div>');
+    $thumbTwo[0].classList.add('js-slider__thumb-second');
+    $thumbTwo[0].setAttribute('data-num', '2');
+    $block.append($thumbTwo);
 
     let event: MouseEvent;
     beforeEach(function () {
-      const thumbFirst = slider.querySelector('.js-slider__thumb-first') as HTMLElement;
-      const thumbSecond = slider.querySelector('.js-slider__thumb-second') as HTMLElement;
+      const thumbFirst = $block[0].querySelector('.js-slider__thumb-first') as HTMLElement;
+      const thumbSecond = $block[0].querySelector('.js-slider__thumb-second') as HTMLElement;
       thumbFirst.style.left = '101px';
       thumbFirst.style.top = '58px';
 
@@ -271,7 +270,7 @@ describe('Thumb', () => {
         });
         const expectedValue = {
           clientXY: 0,
-          sliderClientReact: slider.getBoundingClientRect().left,
+          sliderClientReact: $block[0].getBoundingClientRect().left,
           dataNum: '1',
           positionThumbSecond: undefined,
         };
@@ -293,7 +292,7 @@ describe('Thumb', () => {
 
         const expectedValue = {
           clientXY: 0,
-          sliderClientReact: slider.getBoundingClientRect().left,
+          sliderClientReact: $block[0].getBoundingClientRect().left,
           dataNum: '1',
           positionThumbSecond: 10,
         };
@@ -316,7 +315,7 @@ describe('Thumb', () => {
 
         const expectedValue = {
           clientXY: 0,
-          sliderClientReact: slider.getBoundingClientRect().left,
+          sliderClientReact: $block[0].getBoundingClientRect().left,
           dataNum: '2',
           positionThumbFirst: 101,
         };
@@ -341,7 +340,7 @@ describe('Thumb', () => {
 
         const expectedValue = {
           clientXY: 0,
-          sliderClientReact: slider.getBoundingClientRect().top,
+          sliderClientReact: $block[0].getBoundingClientRect().top,
           dataNum: '1',
           positionThumbSecond: undefined,
         };
@@ -363,7 +362,7 @@ describe('Thumb', () => {
 
         const expectedValue = {
           clientXY: 0,
-          sliderClientReact: slider.getBoundingClientRect().top,
+          sliderClientReact: $block[0].getBoundingClientRect().top,
           dataNum: '1',
           positionThumbSecond: 50,
         };
@@ -385,7 +384,7 @@ describe('Thumb', () => {
 
         const expectedValue = {
           clientXY: 0,
-          sliderClientReact: slider.getBoundingClientRect().top,
+          sliderClientReact: $block[0].getBoundingClientRect().top,
           dataNum: '2',
           positionThumbFirst: 58,
         };

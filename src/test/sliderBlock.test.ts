@@ -11,13 +11,13 @@ const config = {
   step: 1,
   orientation: 'horizontal',
 };
-const block = $('<div>');
-$(document.body).append(block);
+const $block = $('<div>');
+$(document.body).append($block);
 class TestSliderBlock extends SliderBlock {
   public observer: Observer;
 
   constructor() {
-    super(config, block[0]);
+    super(config, $block[0]);
   }
 }
 describe('Slider Block', () => {
@@ -29,7 +29,7 @@ describe('Slider Block', () => {
   let thumbOne: HTMLElement;
   let thumbSecond: HTMLElement;
   beforeAll(function () {
-    blockSlider = block[0].querySelector('.slider__block') as HTMLElement;
+    blockSlider = $block[0].querySelector('.slider__block') as HTMLElement;
     progressBar = blockSlider.querySelector('.slider__progress-bar') as HTMLElement;
     thumbOne = blockSlider.querySelector('.js-slider__thumb-first') as HTMLElement;
     thumbSecond = blockSlider.querySelector('.js-slider__thumb-second') as HTMLElement;

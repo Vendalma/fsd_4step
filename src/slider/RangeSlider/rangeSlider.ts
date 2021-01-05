@@ -18,8 +18,8 @@ interface IPosition {
     valueFrom: number;
   };
   dataSecondThumb?: {
-    positionTo: number;
-    valueTo: number;
+    positionTo?: number;
+    valueTo?: number;
   };
   stepData?: number;
 }

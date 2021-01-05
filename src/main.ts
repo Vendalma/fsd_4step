@@ -1,3 +1,4 @@
+import './main.scss';
 import './panel/panelController/panelController';
 import './slider/RangeSlider/slider';
 
