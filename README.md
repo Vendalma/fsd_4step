@@ -8,13 +8,19 @@
 
 https://github.com/Vendalma/fsd_4step.git
 
-## Запуск приложения
+## NPM
 
-npm start
+`npm install ` - инициализация проекта
 
-## Запуск тестов
+`npm run build-dev` - development build
 
-npm test
+`npm run build-prod` - production build
+
+`npm run start` - запуск dev-server
+
+`npm run test` - запуск тестов
+
+`npm run lint` - запуск линтера
 
 ## Описание
 
@@ -43,19 +49,48 @@ $('#id').rangeSlider({
 })
 ```
 
-| Опции        |   Тип   | Значение по умолчанию | Описание                                    |
-| ------------ | :-----: | :-------------------: | ------------------------------------------- |
-| min          | number  |           0           | Минимальное значение                        |
-| max          | number  |          100          | Максимальное значение                       |
-| step         | number  |           1           | Размер шага                                 |
-| positionFrom | number  |          10           | Начальная позиция первого бегунка           |
-| positionTo   | number  |          50           | Начальная позиция второго бегунка           |
-| range        | boolean |         true          | Одинарный/двойной слайдер                   |
-| orientation  | string  |      horizontal       | Ориентация слайдера. Возможные значения: "horizontal", "vertical" |
-| label        | boolean |         true          | Отображение значения бегунка                |
+| Опции        |   Тип   | Значение по умолчанию | Описание                          |
+| ------------ | :-----: | :-------------------: | --------------------------------- |
+| min          | number  |           0           | Минимальное значение              |
+| max          | number  |          100          | Максимальное значение             |
+| step         | number  |           1           | Размер шага                       |
+| positionFrom | number  |          10           | Начальная позиция первого бегунка |
+| positionTo   | number  |          50           | Начальная позиция второго бегунка |
+| range        | boolean |         true          | Одинарный/двойной слайдер         |
+| vertical     | boolean |         false         | Ориентация слайдера               |
+| label        | boolean |         true          | Отображение значения бегунка      |
+
+## Методы плагина
+
+Слайдер имеет два метода
+
+```
+$('#id').rangeSlider()
+
+//Обновление параметров плагина
+$('#id').rangeSlider('updateConfig', {min: -100});
+
+//Получение позиций бегунков
+let object = {
+  update(data) {
+    console.log(data)
+  }
+}
+
+$('#id').rangeSlider('returnPosition', object);
+
+/*
+{
+  positionFrom: 0,
+  positionTo : 100
+}
+*/
+```
 
 ## Диаграмма
 
-![alt text](uml/uml1.jpg)
-____
-![alt text](uml/uml2.jpg)
+![alt text](uml/uml-1.jpg)
+
+---
+
+![alt text](uml/uml-2.jpg)
