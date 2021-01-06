@@ -4,7 +4,7 @@ const config = {
   min: 0,
   max: 100,
   step: 1,
-  orientation: 'horizontal',
+  vertical: false,
 };
 
 describe('Step', () => {
@@ -34,12 +34,12 @@ describe('Step', () => {
       });
     });
 
-    it('orientation = horizontal', () => {
+    it('vertical = false', () => {
       const conf = {
         min: 7,
         max: 11,
         step: 1,
-        orientation: 'horizontal',
+        vertical: false,
       };
       step.updateConfig(conf);
       step.addStepLine(stepSize);
@@ -59,12 +59,12 @@ describe('Step', () => {
       }
     });
 
-    it('orientation = vertical', () => {
+    it('vertical = true', () => {
       const conf = {
         min: 7,
         max: 11,
         step: 1,
-        orientation: 'vertical',
+        vertical: true,
       };
       step.updateConfig(conf);
       step.addStepLine(stepSize);
@@ -89,7 +89,7 @@ describe('Step', () => {
     const newConf = {
       min: 0,
       max: 10,
-      orientation: 'vertical',
+      vertical: true,
     };
     step.updateConfig(newConf);
     const blockMax = container[0].querySelector('.slider__step-block_max') as HTMLElement;

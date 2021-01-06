@@ -11,7 +11,7 @@ $('.js-app2').rangeSlider({
   positionTo: 3000,
   label: true,
   step: 1000,
-  orientation: 'vertical',
+  vertical: true,
 });
 $('.js-app3').rangeSlider({
   max: 110,

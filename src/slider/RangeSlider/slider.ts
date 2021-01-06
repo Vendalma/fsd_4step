@@ -9,10 +9,10 @@ interface ISettings {
   range: boolean;
   label: boolean;
   step: number;
-  orientation: 'vertical' | 'horizontal';
+  vertical: boolean;
 }
 interface IUpdateConfig {
-  [key: string]: boolean | string | number;
+  [key: string]: boolean | number;
 }
 interface MethodsObject {
   [key: string]: any /* eslint-disable-line */;
@@ -53,7 +53,7 @@ interface MethodsObject {
           label: true,
           range: true,
           step: 1,
-          orientation: 'horizontal',
+          vertical: false,
           positionFrom: 10,
           positionTo: 50,
         },

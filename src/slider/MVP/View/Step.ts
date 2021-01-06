@@ -1,7 +1,7 @@
 interface IConfigStep {
   min: number;
   max: number;
-  orientation: string;
+  vertical: boolean;
 }
 class Step {
   private config: IConfigStep;
@@ -30,7 +30,7 @@ class Step {
         stepBlock.classList.add('slider__step-block_max');
       }
 
-      if (this.config.orientation === 'vertical') {
+      if (this.config.vertical) {
         stepBlock.classList.add('slider__step-block_vertical');
         stepBlock.style.top = `${stepSize * i}px`;
         if (i === 0) {
@@ -39,12 +39,18 @@ class Step {
           stepBlock.style.top = `${stepSize * i - thumb.offsetWidth}px`;
         }
       }
-      if (this.config.orientation === 'horizontal') {
+      if (!this.config.vertical) {
         stepBlock.style.left = `${stepSize * i}px`;
         stepBlock.classList.remove('slider__step-block_vertical');
       }
     }
     this.container.append(fragment);
+  }
+
+  updateConfig(data: IConfigStep): void {
+    this.config = data;
+    this.changeMaxValue();
+    this.changeMinValue();
   }
 
   private changeMinValue(): void {
@@ -62,12 +68,6 @@ class Step {
     steps.forEach((elem) => {
       this.container.removeChild(elem);
     });
-  }
-
-  updateConfig(data: IConfigStep): void {
-    this.config = data;
-    this.changeMaxValue();
-    this.changeMinValue();
   }
 }
 export default Step;

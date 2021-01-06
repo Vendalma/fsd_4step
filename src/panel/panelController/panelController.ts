@@ -4,7 +4,7 @@ import './panelController.scss';
 
 interface ISettings {
   range: boolean;
-  orientation: string;
+  vertical: boolean;
   min: number;
   max: number;
   positionFrom: number;
@@ -72,7 +72,7 @@ class PanelController {
     this.inputSingle = this.parent.querySelector('.js-panel__radio-single') as HTMLInputElement;
     this.inputDouble = this.parent.querySelector('.js-panel__radio-double') as HTMLInputElement;
     this.$slider = $(this.parent);
-    this.config = this.$slider.data('sliderData').rangeSlider.getConf();
+    this.config = this.$slider.data('sliderData').rangeSlider.getConfig();
     this.$slider.rangeSlider('returnPosition', this);
   }
 
@@ -84,8 +84,8 @@ class PanelController {
     this.inputStep.value = `${this.config.step}`;
     if (this.config.label) this.inputLabel.checked = true;
     if (!this.config.label) this.inputLabel.checked = false;
-    if (this.config.orientation === 'horizontal') this.inputHorizontal.checked = true;
-    if (this.config.orientation === 'vertical') this.inputVertical.checked = true;
+    if (!this.config.vertical) this.inputHorizontal.checked = true;
+    if (this.config.vertical) this.inputVertical.checked = true;
     if (this.config.range) this.inputDouble.checked = true;
     if (!this.config.range) this.inputSingle.checked = true;
   }
@@ -101,11 +101,11 @@ class PanelController {
     }
 
     if (e.target === this.inputHorizontal && this.inputHorizontal.checked) {
-      this.$slider.rangeSlider('updateConfig', { orientation: 'horizontal' });
+      this.$slider.rangeSlider('updateConfig', { vertical: false });
     }
 
     if (e.target === this.inputVertical && this.inputVertical.checked) {
-      this.$slider.rangeSlider('updateConfig', { orientation: 'vertical' });
+      this.$slider.rangeSlider('updateConfig', { vertical: true });
     }
 
     if (e.target === this.inputSingle && this.inputSingle.checked) {

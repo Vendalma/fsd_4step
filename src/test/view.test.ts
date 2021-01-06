@@ -21,7 +21,7 @@ const config = {
   positionTo: 30,
   label: true,
   step: 1,
-  orientation: 'horizontal',
+  vertical: false,
 };
 const $block = $('<div>');
 class TestView extends View {
@@ -138,7 +138,7 @@ describe('View', () => {
       positionTo: 45,
       label: true,
       step: 0.1,
-      orientation: 'vertical',
+      vertical: true,
     };
     view.updateConfig(newConf);
 
@@ -150,7 +150,7 @@ describe('View', () => {
       min: 0,
       max: 105,
       label: false,
-      orientation: 'vertical',
+      vertical: true,
       positionFrom: 5,
       positionTo: 10,
       range: false,

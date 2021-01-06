@@ -7,12 +7,12 @@ interface IConfigModel {
   range: boolean;
   positionFrom: number;
   positionTo: number;
-  orientation: 'vertical' | 'horizontal';
+  vertical: boolean;
   step: number;
   label: boolean;
 }
 interface IUpdateConfig {
-  [key: string]: boolean | string | number;
+  [key: string]: boolean | number;
 }
 interface IDataThumbMove {
   clientXY: number;
@@ -34,13 +34,13 @@ interface IPosition {
   stepData?: number;
 }
 class Model {
-  protected config: IConfigModel;
-
   private sliderSize: number;
 
-  protected observer: Observer;
-
   private validator: Validator;
+
+  protected config: IConfigModel;
+
+  protected observer: Observer;
 
   constructor(config: IConfigModel) {
     this.config = config;
@@ -48,20 +48,15 @@ class Model {
     this.createValidator();
   }
 
-  private createValidator() {
-    const copyConf = {};
-    this.validator = new Validator(Object.assign(copyConf, this.config));
-  }
-
   addFollower(follower: unknown): void {
     this.observer.subscribe(follower);
   }
 
-  updateConfig(data: IUpdateConfig | ISettings): void | undefined {
+  updateConfig(data: IUpdateConfig | IConfigModel): void | undefined {
     if (this.validator.validationConfig(data) === true) {
       const key = Object.keys(data)[0];
       Object.assign(this.config, data);
-      if (key === 'orientation' || key === 'range') {
+      if (key === 'vertical' || key === 'range') {
         this.calcPositionTo();
         this.observer.broadcast(this.config, 'changeOrientationOrRange');
       } else {
@@ -91,6 +86,11 @@ class Model {
 
   calcOnloadPosition(data: number): void {
     this.observer.broadcast(this.calcParams(data), 'positionThumb');
+  }
+
+  private createValidator(): void {
+    const copyConf = {};
+    this.validator = new Validator(Object.assign(copyConf, this.config));
   }
 
   private calcThumbPosition(data: IDataThumbMove): IPosition | undefined {
@@ -175,35 +175,6 @@ class Model {
     return undefined;
   }
 
-  private calcValue(position: number): number {
-    return Math.round((position * this.calcPixelSize() + this.config.min) / this.config.step) * this.config.step;
-  }
-
-  private isIntegerStep(): boolean {
-    return Number.isInteger(this.config.step);
-  }
-
-  private checkValueWithMin(value: number): number {
-    if (value >= this.config.min) {
-      return value;
-    }
-    return this.config.min;
-  }
-
-  private checkValueWithMax(value: number): number {
-    if (value <= this.config.max) {
-      return value;
-    }
-    return this.config.max;
-  }
-
-  private checkValueWithSliderSize(value: number): number {
-    if (value <= this.sliderSize) {
-      return value;
-    }
-    return this.sliderSize;
-  }
-
   private calcParams(data: number): IPosition {
     this.sliderSize = data;
     return {
@@ -215,7 +186,7 @@ class Model {
         positionTo: this.calcOnloadSecondThumbPosition(),
         valueTo: this.config.positionTo,
       },
-      stepData: this.calcStepData(),
+      stepData: this.calcStep(),
     };
   }
 
@@ -249,7 +220,7 @@ class Model {
     return (this.config.max - this.config.min) / this.sliderSize;
   }
 
-  private calcStepData(): number {
+  private calcStep(): number {
     return this.sliderSize / 20;
   }
 
@@ -259,6 +230,35 @@ class Model {
 
   private calcOnloadSecondThumbPosition(): number {
     return (this.config.positionTo - this.config.min) / this.calcPixelSize();
+  }
+
+  private calcValue(position: number): number {
+    return Math.round((position * this.calcPixelSize() + this.config.min) / this.config.step) * this.config.step;
+  }
+
+  private isIntegerStep(): boolean {
+    return Number.isInteger(this.config.step);
+  }
+
+  private checkValueWithMin(value: number): number {
+    if (value >= this.config.min) {
+      return value;
+    }
+    return this.config.min;
+  }
+
+  private checkValueWithMax(value: number): number {
+    if (value <= this.config.max) {
+      return value;
+    }
+    return this.config.max;
+  }
+
+  private checkValueWithSliderSize(value: number): number {
+    if (value <= this.sliderSize) {
+      return value;
+    }
+    return this.sliderSize;
   }
 }
 export default Model;

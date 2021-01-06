@@ -9,7 +9,7 @@ const config = {
   positionTo: 30,
   label: true,
   step: 1,
-  orientation: 'horizontal',
+  vertical: false,
 };
 const $block = $('<div>');
 $(document.body).append($block);
@@ -110,7 +110,7 @@ describe('Slider Block', () => {
   });
 
   describe('метод updateConfig обновляет конфиг, передает новый его классам step, thumbOne, thumbTwo, progressBar', () => {
-    describe('При orientation = vertical контейнер слайдера должен иметь класс slider__block_vertical', () => {
+    describe('При vertical = true контейнер слайдера должен иметь класс slider__block_vertical', () => {
       it('если range = false контейнер второго бегунка удаляется', () => {
         const newConf = {
           min: -5,
@@ -119,7 +119,7 @@ describe('Slider Block', () => {
           positionFrom: 0,
           positionTo: 10,
           label: false,
-          orientation: 'vertical',
+          vertical: true,
         };
         sliderBlock.updateConfig(newConf);
 
@@ -136,7 +136,7 @@ describe('Slider Block', () => {
           positionFrom: 0,
           positionTo: 10,
           label: false,
-          orientation: 'vertical',
+          vertical: true,
         };
         sliderBlock.updateConfig(newConf);
 
@@ -146,7 +146,7 @@ describe('Slider Block', () => {
       });
     });
 
-    describe('при orientation = horizontal контейнер слайдера не должен иметь класс slider__block_vertical', () => {
+    describe('при vertical = false контейнер слайдера не должен иметь класс slider__block_vertical', () => {
       it('если range = true добавляется контейнер второго бегунка', () => {
         const newConf = {
           min: -5,
@@ -155,7 +155,7 @@ describe('Slider Block', () => {
           positionFrom: 0,
           positionTo: 10,
           label: false,
-          orientation: 'horizontal',
+          vertical: false,
         };
         sliderBlock.updateConfig(newConf);
 
@@ -172,7 +172,7 @@ describe('Slider Block', () => {
           positionFrom: 0,
           positionTo: 10,
           label: false,
-          orientation: 'horizontal',
+          vertical: false,
         };
         sliderBlock.updateConfig(newConf);
 
@@ -191,7 +191,7 @@ describe('Slider Block', () => {
       spy = spyOnEvent('.slider__block', 'click');
     });
 
-    describe('orientation = horizontal', () => {
+    describe('vertical = false', () => {
       it('range = false', () => {
         sliderBlock.updateConfig({
           range: false,
@@ -200,7 +200,7 @@ describe('Slider Block', () => {
           positionFrom: 15,
           positionTo: 30,
           label: true,
-          orientation: 'horizontal',
+          vertical: false,
         });
         blockSlider.dispatchEvent(event);
 
@@ -215,7 +215,7 @@ describe('Slider Block', () => {
           positionFrom: 15,
           positionTo: 30,
           label: true,
-          orientation: 'horizontal',
+          vertical: false,
         });
         blockSlider.dispatchEvent(event);
 
@@ -223,7 +223,7 @@ describe('Slider Block', () => {
       });
     });
 
-    describe('при orientation = vertical', () => {
+    describe('при vertical = true', () => {
       it('если range = false', () => {
         sliderBlock.updateConfig({
           range: false,
@@ -232,7 +232,7 @@ describe('Slider Block', () => {
           positionFrom: 15,
           positionTo: 30,
           label: true,
-          orientation: 'vertical',
+          vertical: true,
         });
         blockSlider.dispatchEvent(event);
 
@@ -248,7 +248,7 @@ describe('Slider Block', () => {
         positionFrom: 15,
         positionTo: 30,
         label: true,
-        orientation: 'vertical',
+        vertical: true,
       });
       blockSlider.dispatchEvent(event);
 

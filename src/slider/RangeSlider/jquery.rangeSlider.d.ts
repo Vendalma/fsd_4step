@@ -6,10 +6,10 @@ interface ISettings {
   range: boolean;
   label: boolean;
   step: number;
-  orientation: string;
+  vertical: boolean;
 }
 interface IUpdateConfig {
-  [key: string]: boolean | string | number;
+  [key: string]: boolean | number;
 }
 interface JQuery {
   rangeSlider: (

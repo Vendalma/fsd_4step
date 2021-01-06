@@ -4,18 +4,27 @@ interface IConfigValidator {
   range: boolean;
   positionFrom: number;
   positionTo: number;
-  orientation: string;
+  vertical: boolean;
   step: number;
   label: boolean;
 }
 interface IUpdateConfig {
-  [key: string]: boolean | string | number;
+  [key: string]: boolean | number;
 }
 class Validator {
   private config: IConfigValidator;
 
   constructor(config: IConfigValidator) {
     this.config = config;
+  }
+
+  validationConfig(data: IUpdateConfig | IConfigValidator): boolean {
+    Object.assign(this.config, data);
+    const isMinMaxValid = this.validationMaxValue() === true && this.validationMinValue() === true;
+    if (isMinMaxValid && this.validationStepValue() === true) {
+      return true;
+    }
+    return false;
   }
 
   private validationMaxValue(): boolean {
@@ -40,15 +49,6 @@ class Validator {
       return false;
     }
     return true;
-  }
-
-  validationConfig(data: IUpdateConfig | IConfigValidator): boolean {
-    Object.assign(this.config, data);
-    const isMinMaxValid = this.validationMaxValue() === true && this.validationMinValue() === true;
-    if (isMinMaxValid && this.validationStepValue() === true) {
-      return true;
-    }
-    return false;
   }
 }
 export default Validator;

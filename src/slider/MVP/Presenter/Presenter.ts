@@ -7,7 +7,7 @@ interface IConfig {
   range: boolean;
   positionFrom: number;
   positionTo: number;
-  orientation: 'vertical' | 'horizontal';
+  vertical: boolean;
   step: number;
   label: boolean;
 }
@@ -30,9 +30,9 @@ interface IPosition {
   stepData?: number;
 }
 class Presenter {
-  protected view: View;
-
   private model: Model;
+
+  protected view: View;
 
   constructor(model: Model, container: HTMLElement) {
     this.model = model;

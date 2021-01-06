@@ -5,7 +5,7 @@ const config = {
   range: true,
   positionFrom: 15,
   positionTo: 30,
-  orientation: 'horizontal',
+  vertical: false,
   label: false,
 };
 const $block = $('<div>');
@@ -43,32 +43,32 @@ describe('Thumb', () => {
   });
 
   it('метод removeThis удаляет бегунок из родительского блока', () => {
-    thumb.removeThis();
+    thumb.removeThumb();
 
     expect($block).not.toContainElement('div.js-slider__thumb-first');
     expect(thumbBlock).not.toBeInDOM();
   });
 
   it('метод addThis добавляет блок бегунка в родительский блок', () => {
-    thumb.addThis();
+    thumb.addThumb();
 
     expect($block).toContainElement('div.js-slider__thumb-first');
     expect(thumbBlock).toBeInDOM();
   });
 
   describe('метод setPosition', () => {
-    it('при orientation = horizontal устанавливает бегунку style.left', () => {
+    it('при vertical = false устанавливает бегунку style.left', () => {
       thumb.setPosition(8);
 
       expect(thumbBlock).toHaveCss({ left: '8px' });
     });
 
-    it('при orientation = vertical устанавливает бегунку style.top', () => {
+    it('при vertical= true устанавливает бегунку style.top', () => {
       thumb.updateConfig({
         range: true,
         positionFrom: 15,
         positionTo: 30,
-        orientation: 'vertical',
+        vertical: true,
         label: false,
       });
       thumb.setPosition(8);
@@ -107,13 +107,13 @@ describe('Thumb', () => {
       thumbSecond.style.top = '50px';
     });
 
-    describe('horizontal', () => {
+    describe('vertical = false', () => {
       it('range = false', () => {
         thumb.updateConfig({
           range: false,
           positionFrom: 15,
           positionTo: 30,
-          orientation: 'horizontal',
+          vertical: false,
           label: false,
         });
         const expectedValue = {
@@ -132,7 +132,7 @@ describe('Thumb', () => {
           range: true,
           positionFrom: 15,
           positionTo: 30,
-          orientation: 'horizontal',
+          vertical: false,
           label: false,
         });
         thumbBlock.dataset.num = '1';
@@ -154,7 +154,7 @@ describe('Thumb', () => {
           range: false,
           positionFrom: 15,
           positionTo: 30,
-          orientation: 'horizontal',
+          vertical: false,
           label: false,
         });
         thumbBlock.dataset.num = '2';
@@ -172,13 +172,13 @@ describe('Thumb', () => {
       });
     });
 
-    describe('orientation = vertical', () => {
+    describe('vertical= true', () => {
       it('range = false', () => {
         thumb.updateConfig({
           range: false,
           positionFrom: 15,
           positionTo: 30,
-          orientation: 'vertical',
+          vertical: true,
           label: false,
         });
         thumbBlock.dataset.num = '1';
@@ -199,7 +199,7 @@ describe('Thumb', () => {
           range: true,
           positionFrom: 15,
           positionTo: 30,
-          orientation: 'vertical',
+          vertical: true,
           label: false,
         });
         thumbBlock.dataset.num = '1';
@@ -220,7 +220,7 @@ describe('Thumb', () => {
           range: true,
           positionFrom: 15,
           positionTo: 30,
-          orientation: 'vertical',
+          vertical: true,
           label: false,
         });
         thumbBlock.dataset.num = '2';
@@ -259,13 +259,13 @@ describe('Thumb', () => {
       thumbSecond.style.top = '50px';
     });
 
-    describe('horizontal', () => {
+    describe('vertical= false', () => {
       it('range = false', () => {
         thumb.updateConfig({
           range: false,
           positionFrom: 15,
           positionTo: 30,
-          orientation: 'horizontal',
+          vertical: false,
           label: false,
         });
         const expectedValue = {
@@ -285,7 +285,7 @@ describe('Thumb', () => {
           range: true,
           positionFrom: 15,
           positionTo: 30,
-          orientation: 'horizontal',
+          vertical: false,
           label: false,
         });
         thumbBlock.dataset.num = '1';
@@ -308,7 +308,7 @@ describe('Thumb', () => {
           range: true,
           positionFrom: 15,
           positionTo: 30,
-          orientation: 'horizontal',
+          vertical: false,
           label: false,
         });
         thumbBlock.dataset.num = '2';
@@ -327,13 +327,13 @@ describe('Thumb', () => {
       });
     });
 
-    describe('orientation = vertical', () => {
+    describe('vertical= true', () => {
       it('range = false', () => {
         thumb.updateConfig({
           range: false,
           positionFrom: 15,
           positionTo: 30,
-          orientation: 'vertical',
+          vertical: true,
           label: false,
         });
         thumbBlock.dataset.num = '1';
@@ -355,7 +355,7 @@ describe('Thumb', () => {
           range: true,
           positionFrom: 15,
           positionTo: 30,
-          orientation: 'vertical',
+          vertical: true,
           label: false,
         });
         thumbBlock.dataset.num = '1';
@@ -377,7 +377,7 @@ describe('Thumb', () => {
           range: true,
           positionFrom: 15,
           positionTo: 30,
-          orientation: 'vertical',
+          vertical: true,
           label: false,
         });
         thumbBlock.dataset.num = '2';
@@ -403,12 +403,12 @@ describe('Thumb', () => {
   });
 
   describe('метод updateConfigThumb обновляет конфиг класса, вызывает ф-цию updateConfig касса Label', () => {
-    it('при orientation = vertical', () => {
+    it('при vertical = true', () => {
       thumb.updateConfig({
         range: false,
         positionFrom: 10,
         positionTo: 15,
-        orientation: 'vertical',
+        vertical: true,
         label: true,
       });
 
@@ -416,12 +416,12 @@ describe('Thumb', () => {
       expect(thumbBlock).not.toHaveClass('slider__thumb_horizontal');
     });
 
-    it('при orientation = horizontal', () => {
+    it('при vertical= false', () => {
       thumb.updateConfig({
         range: false,
         positionFrom: 10,
         positionTo: 15,
-        orientation: 'horizontal',
+        vertical: false,
         label: true,
       });
 

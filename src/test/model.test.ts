@@ -14,7 +14,7 @@ interface IConfigModel {
   range: boolean;
   positionFrom: number;
   positionTo: number;
-  orientation: 'vertical' | 'horizontal';
+  vertical: boolean;
   step: number;
   label: boolean;
 }
@@ -25,7 +25,7 @@ const config: IConfigModel = {
   positionFrom: 15,
   positionTo: 50,
   step: 1,
-  orientation: 'horizontal',
+  vertical: false,
   label: true,
 };
 class TestModel extends Model {
@@ -53,18 +53,18 @@ describe('Model', () => {
   });
 
   describe('метод updateConfig обновляет конфиг модели', () => {
-    it('если в принимаемом объекте key = orientation, то вызывается ф-я broadcast класса Observer', () => {
+    it('если в принимаемом объекте key = vertical, то вызывается ф-я broadcast класса Observer', () => {
       const data = {
-        orientation: 'vertical',
+        vertical: true,
       };
       model.updateConfig(data);
 
       expect(model.observer.broadcast).toHaveBeenCalled();
     });
 
-    it('если в принимаемом объекте key = orientation, вызывается ф-я broadcast класса Observer, при не корректном значении positionTo, оно пересчитывается', () => {
+    it('если в принимаемом объекте key = vertical, вызывается ф-я broadcast класса Observer, при не корректном значении positionTo, оно пересчитывается', () => {
       const data = {
-        orientation: 'vertical',
+        vertical: false,
       };
       model.config.positionTo = 101;
       model.updateConfig(data);
@@ -149,7 +149,7 @@ describe('Model', () => {
         positionFrom: 15,
         positionTo: 50,
         step: 1,
-        orientation: 'horizontal',
+        vertical: false,
         label: true,
       };
       model.updateConfig(expectConfig);

@@ -10,7 +10,7 @@ interface ISettings {
   range: boolean;
   label: boolean;
   step: number;
-  orientation: 'vertical' | 'horizontal';
+  vertical: boolean;
 }
 interface IPosition {
   dataFirstThumb?: {
@@ -24,14 +24,14 @@ interface IPosition {
   stepData?: number;
 }
 interface IUpdateConfig {
-  [key: string]: boolean | string | number;
+  [key: string]: boolean | number;
 }
 class RangeSlider {
-  model: Model;
+  private model: Model;
 
-  presenter: Presenter;
+  private presenter: Presenter;
 
-  observer: Observer;
+  private observer: Observer;
 
   constructor(container: HTMLElement, settings: ISettings) {
     this.model = new Model(settings);
@@ -40,12 +40,8 @@ class RangeSlider {
     this.subscribeOnUpdate();
   }
 
-  getConf(): ISettings | undefined {
+  getConfig(): ISettings | undefined {
     return this.model.getConfig();
-  }
-
-  subscribeOnUpdate(): void {
-    this.model.addFollower(this);
   }
 
   updateConfig(data: IUpdateConfig): void {
@@ -56,10 +52,14 @@ class RangeSlider {
     this.observer.subscribe(follower);
   }
 
-  update(data: IPosition): void {
+  private subscribeOnUpdate(): void {
+    this.model.addFollower(this);
+  }
+
+  private update(data: IPosition): void {
     this.observer.broadcast({
-      positionFrom: this.getConf()?.positionFrom,
-      positionTo: this.getConf()?.positionTo,
+      positionFrom: this.getConfig()?.positionFrom,
+      positionTo: this.getConfig()?.positionTo,
     });
   }
 }

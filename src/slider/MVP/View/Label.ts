@@ -1,6 +1,6 @@
 interface IConfigLabel {
   label: boolean;
-  orientation: string;
+  vertical: boolean;
 }
 class Label {
   private thumb: HTMLElement;
@@ -23,12 +23,18 @@ class Label {
     this.elementLabel.innerHTML = `${value}`;
   }
 
+  updateConfig(data: IConfigLabel): void {
+    this.config = data;
+    this.changeVisibleLabel();
+    this.checkOrientation();
+  }
+
   private checkOrientation(): void {
-    if (this.config.orientation === 'vertical') {
+    if (this.config.vertical) {
       this.elementLabel.classList.add('slider__label_vertical');
     }
 
-    if (this.config.orientation === 'horizontal') {
+    if (!this.config.vertical) {
       this.elementLabel.classList.remove('slider__label_vertical');
     }
   }
@@ -39,12 +45,6 @@ class Label {
     } else {
       this.elementLabel.classList.add('slider__label_hidden');
     }
-  }
-
-  updateConfig(data: IConfigLabel): void {
-    this.config = data;
-    this.changeVisibleLabel();
-    this.checkOrientation();
   }
 }
 export default Label;

@@ -9,7 +9,7 @@ interface IConfig {
   range: boolean;
   positionFrom: number;
   positionTo: number;
-  orientation: string;
+  vertical: boolean;
   label: boolean;
 }
 interface IDataThumbMove {
@@ -41,11 +41,11 @@ class SliderBlock {
 
   private thumbTwo: Thumb | null | undefined;
 
-  protected observer: Observer;
-
   private step: Step;
 
   private progressBar: ProgressBar;
+
+  protected observer: Observer;
 
   constructor(config: IConfig, sliderContainer: HTMLElement) {
     this.config = config;
@@ -81,14 +81,6 @@ class SliderBlock {
     this.step.updateConfig(data);
   }
 
-  private checkOrientation(): void {
-    if (this.config.orientation === 'vertical') {
-      this.sliderBlock.classList.add('slider__block_vertical');
-    } else if (this.config.orientation === 'horizontal') {
-      this.sliderBlock.classList.remove('slider__block_vertical');
-    }
-  }
-
   setPositionThumb(data: IPosition): void {
     if (data.stepData !== undefined) {
       this.progressBar.cleanStyleAttr();
@@ -108,14 +100,22 @@ class SliderBlock {
     this.progressBar.addBar();
   }
 
+  private checkOrientation(): void {
+    if (this.config.vertical) {
+      this.sliderBlock.classList.add('slider__block_vertical');
+    } else if (!this.config.vertical) {
+      this.sliderBlock.classList.remove('slider__block_vertical');
+    }
+  }
+
   private sliderClick(): void {
     this.sliderBlock.addEventListener('click', this.onSliderClick.bind(this));
   }
 
   private onSliderClick(e: MouseEvent): void {
-    if (this.config.orientation === 'horizontal') {
+    if (!this.config.vertical) {
       this.findClickPlaceHorizon(e);
-    } else if (this.config.orientation === 'vertical') {
+    } else if (this.config.vertical) {
       this.findClickPlaceVert(e);
     }
   }
@@ -160,9 +160,9 @@ class SliderBlock {
   private setThumbTwo(): void {
     const secondThumb = this.sliderBlock.querySelector('.js-slider__thumb-second') as HTMLElement;
     if (this.config.range) {
-      this.thumbTwo?.addThis();
+      this.thumbTwo?.addThumb();
     } else if (!this.config.range && secondThumb !== null) {
-      this.thumbTwo?.removeThis();
+      this.thumbTwo?.removeThumb();
     }
   }
 

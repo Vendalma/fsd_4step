@@ -2,7 +2,7 @@ import ProgressBar from '../slider/MVP/View/progressBar';
 
 const config = {
   range: true,
-  orientation: 'horizontal',
+  vertical: false,
 };
 
 describe('ProgressBar', () => {
@@ -31,9 +31,9 @@ describe('ProgressBar', () => {
       thumbSecond = $block[0].querySelector('.js-slider__thumb-second') as HTMLElement;
     });
 
-    describe('orientation = horizontal', () => {
+    describe('vertical = false', () => {
       it('при range = false', () => {
-        bar.updateConfig({ range: false, orientation: 'horizontal' });
+        bar.updateConfig({ range: false, vertical: false });
         thumbFirst.style.left = '50px';
         bar.addBar();
 
@@ -41,7 +41,7 @@ describe('ProgressBar', () => {
       });
 
       it('при range = true', () => {
-        bar.updateConfig({ range: true, orientation: 'horizontal' });
+        bar.updateConfig({ range: true, vertical: false });
         thumbFirst.style.left = '30px';
         thumbSecond.style.left = '100px';
         bar.addBar();
@@ -50,9 +50,9 @@ describe('ProgressBar', () => {
       });
     });
 
-    describe('orientation = vertical', () => {
+    describe('vertical = true', () => {
       it('если range = false', () => {
-        bar.updateConfig({ range: false, orientation: 'vertical' });
+        bar.updateConfig({ range: false, vertical: true });
         thumbFirst.style.top = '50px';
         bar.addBar();
 
@@ -60,7 +60,7 @@ describe('ProgressBar', () => {
       });
 
       it('если range = true', () => {
-        bar.updateConfig({ range: true, orientation: 'vertical' });
+        bar.updateConfig({ range: true, vertical: true });
         thumbFirst.style.top = '30px';
         thumbSecond.style.top = '100px';
         bar.addBar();
@@ -80,7 +80,7 @@ describe('ProgressBar', () => {
   it('метод updateBarConfig обновляет конфиг', () => {
     const newConf = {
       range: false,
-      orientation: 'vertical',
+      vertical: true,
     };
     const progressBar = $block[0].querySelector('.slider__progress-bar');
     bar.updateConfig(newConf);

@@ -8,7 +8,7 @@ interface IConfig {
   range: boolean;
   positionFrom: number;
   positionTo: number;
-  orientation: 'vertical' | 'horizontal';
+  vertical: boolean;
   step: number;
   label: boolean;
 }
@@ -20,7 +20,7 @@ const config: IConfig = {
   positionTo: 30,
   label: true,
   step: 1,
-  orientation: 'horizontal',
+  vertical: false,
 };
 const $block = $('<div>');
 $(document.body).append($block);
@@ -53,9 +53,9 @@ describe('Presenter', () => {
     expect(presenter.view.updateConfig).toHaveBeenCalled();
   });
 
-  it('При изменении в конфиге св-в orientation или range в Model Presenter вызывает ф-ю changeOrientationOrRange во View', () => {
+  it('При изменении в конфиге св-в vertical или range в Model Presenter вызывает ф-ю changeOrientationOrRange во View', () => {
     spyOn(presenter.view, 'changeOrientationOrRange');
-    model.updateConfig({ orientation: 'vertical' });
+    model.updateConfig({ vertical: true });
 
     expect(presenter.view.changeOrientationOrRange).toHaveBeenCalled();
   });

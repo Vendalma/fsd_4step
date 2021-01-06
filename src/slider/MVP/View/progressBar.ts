@@ -1,6 +1,6 @@
 interface IConfigBar {
   range: boolean;
-  orientation: string;
+  vertical: boolean;
 }
 class ProgressBar {
   private config: IConfigBar;
@@ -21,7 +21,7 @@ class ProgressBar {
   addBar(): void {
     const thumbFirst = this.slider.querySelector('.js-slider__thumb-first') as HTMLElement;
     const thumbSecond = this.slider.querySelector('.js-slider__thumb-second') as HTMLElement;
-    if (this.config.orientation === 'horizontal') {
+    if (!this.config.vertical) {
       if (!this.config.range) {
         this.progressBar.style.left = '0px';
         this.progressBar.style.width = thumbFirst.style.left;
@@ -32,7 +32,7 @@ class ProgressBar {
         }px`;
       }
     }
-    if (this.config.orientation === 'vertical') {
+    if (this.config.vertical) {
       if (!this.config.range) {
         this.progressBar.style.top = '0px';
         this.progressBar.style.height = thumbFirst.style.top;
@@ -43,17 +43,6 @@ class ProgressBar {
     }
   }
 
-  private checkOrientation(): void {
-    if (this.config.orientation === 'horizontal') {
-      this.progressBar.classList.remove('slider__progress-bar_vertical');
-      this.progressBar.classList.add('slider__progress-bar_horizontal');
-    }
-    if (this.config.orientation === 'vertical') {
-      this.progressBar.classList.add('slider__progress-bar_vertical');
-      this.progressBar.classList.remove('slider__progress-bar_horizontal');
-    }
-  }
-
   cleanStyleAttr(): void {
     this.progressBar.removeAttribute('style');
   }
@@ -61,6 +50,17 @@ class ProgressBar {
   updateConfig(data: IConfigBar): void {
     this.config = data;
     this.checkOrientation();
+  }
+
+  private checkOrientation(): void {
+    if (!this.config.vertical) {
+      this.progressBar.classList.remove('slider__progress-bar_vertical');
+      this.progressBar.classList.add('slider__progress-bar_horizontal');
+    }
+    if (this.config.vertical) {
+      this.progressBar.classList.add('slider__progress-bar_vertical');
+      this.progressBar.classList.remove('slider__progress-bar_horizontal');
+    }
   }
 }
 export default ProgressBar;

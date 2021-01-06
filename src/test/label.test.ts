@@ -5,7 +5,7 @@ const config = {
   min: 5,
   max: 10,
   step: 1,
-  orientation: 'horizontal',
+  vertical: false,
 };
 
 describe('Label', () => {
@@ -30,7 +30,7 @@ describe('Label', () => {
   it('метод update обновляет конфиг', () => {
     const newConf = {
       label: false,
-      orientation: 'vertical',
+      vertical: true,
     };
     const elementLabel = $block[0].querySelector('.slider__label');
     label.updateConfig(newConf);

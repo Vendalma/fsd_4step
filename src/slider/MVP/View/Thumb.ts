@@ -5,7 +5,7 @@ interface IConfigThumb {
   range: boolean;
   positionFrom: number;
   positionTo: number;
-  orientation: string;
+  vertical: boolean;
   label: boolean;
 }
 interface IDataThumbMove {
@@ -24,11 +24,11 @@ class Thumb {
 
   private thumbHtmlClass: string;
 
-  protected observer: Observer;
-
   private dataNum: string;
 
   private label: Label;
+
+  protected observer: Observer;
 
   constructor(config: IConfigThumb, thumbHtmlClass: string, slider: HTMLElement, dataNum: string) {
     this.config = config;
@@ -53,11 +53,50 @@ class Thumb {
     this.observer.subscribe(follower);
   }
 
+  onMouseUp = (e: MouseEvent): void => {
+    e.preventDefault; /* eslint-disable-line */
+    document.removeEventListener('mousemove', this.moveHandle);
+    document.removeEventListener('mouseup', this.onMouseUp);
+    this.observer.broadcast(this.findPosition(e));
+    this.changeZIndexDown();
+  };
+
+  setPosition(position: number): void {
+    if (!this.config.vertical) {
+      this.thumb.style.left = `${position}px`;
+    }
+    if (this.config.vertical) {
+      this.thumb.style.top = `${position}px`;
+    }
+  }
+
+  setLabelValue(value: number): void {
+    this.label.setLabelValue(value);
+  }
+
+  removeThumb(): void {
+    if (this.thumb !== null) this.slider.removeChild(this.thumb);
+  }
+
+  addThumb(): void {
+    this.slider.append(this.thumb);
+  }
+
+  cleanStyleAttr(): void {
+    this.thumb.removeAttribute('style');
+  }
+
+  updateConfig(data: IConfigThumb): void {
+    this.config = data;
+    this.label.updateConfig(data);
+    this.checkOrientation();
+  }
+
   private checkOrientation(): void {
-    if (this.config.orientation === 'horizontal') {
+    if (!this.config.vertical) {
       this.thumb.classList.add('slider__thumb_horizontal');
       this.thumb.classList.remove('slider__thumb_vertical');
-    } else if (this.config.orientation === 'vertical') {
+    } else if (this.config.vertical) {
       this.thumb.classList.remove('slider__thumb_horizontal');
       this.thumb.classList.add('slider__thumb_vertical');
     }
@@ -78,19 +117,11 @@ class Thumb {
     this.observer.broadcast(this.findPosition(e));
   };
 
-  onMouseUp = (e: MouseEvent): void => {
-    e.preventDefault; /* eslint-disable-line */
-    document.removeEventListener('mousemove', this.moveHandle);
-    document.removeEventListener('mouseup', this.onMouseUp);
-    this.observer.broadcast(this.findPosition(e));
-    this.changeZIndexDown();
-  };
-
   private findPosition(e: MouseEvent): IDataThumbMove | undefined {
-    if (this.config.orientation === 'horizontal') {
+    if (!this.config.vertical) {
       return this.findPositionForHorizontal(e) as IDataThumbMove;
     }
-    if (this.config.orientation === 'vertical') {
+    if (this.config.vertical) {
       return this.findPositionForVertical(e) as IDataThumbMove;
     }
     return undefined;
@@ -140,43 +171,12 @@ class Thumb {
     return undefined;
   }
 
-  setPosition(position: number): void {
-    if (this.config.orientation === 'horizontal') {
-      this.thumb.style.left = `${position}px`;
-    }
-    if (this.config.orientation === 'vertical') {
-      this.thumb.style.top = `${position}px`;
-    }
-  }
-
-  setLabelValue(value: number): void {
-    this.label.setLabelValue(value);
-  }
-
-  removeThis(): void {
-    if (this.thumb !== null) this.slider.removeChild(this.thumb);
-  }
-
-  addThis(): void {
-    this.slider.append(this.thumb);
-  }
-
   private changeZIndexUp(): void {
     this.thumb.classList.add('slider__thumb_zIndex-up');
   }
 
   private changeZIndexDown(): void {
     this.thumb.classList.remove('slider__thumb_zIndex-up');
-  }
-
-  cleanStyleAttr(): void {
-    this.thumb.removeAttribute('style');
-  }
-
-  updateConfig(data: IConfigThumb): void {
-    this.config = data;
-    this.label.updateConfig(data);
-    this.checkOrientation();
   }
 }
 export default Thumb;

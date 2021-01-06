@@ -6,7 +6,7 @@ interface IConfigValidator {
   range: boolean;
   positionFrom: number;
   positionTo: number;
-  orientation: string;
+  vertical: boolean;
   step: number;
   label: boolean;
 }
@@ -19,7 +19,7 @@ const config: IConfigValidator = {
   positionTo: 30,
   step: 1,
   label: true,
-  orientation: 'vertical',
+  vertical: true,
 };
 
 const validator: Validator = new Validator(config);
@@ -39,7 +39,7 @@ describe('Validator', () => {
         positionTo: 7,
         range: true,
         label: true,
-        orientation: 'vertical',
+        vertical: true,
       };
     });
 
@@ -77,17 +77,17 @@ describe('Validator', () => {
       expect(validator.validationConfig(data)).toBeFalse();
     });
 
-    it('при изменении параметров label, ф-я вернет true', () => {
+    it('при изменении параметра label, ф-я вернет true', () => {
       data.label = false;
 
       expect(validator.validationConfig(data)).toBeTrue();
     });
 
-    it('при изменении параметров orientation, ф-я вернет true', () => {
-      expect(validator.validationConfig({ orientation: 'horizontal' })).toBeTrue();
+    it('при изменении параметра vertical, ф-я вернет true', () => {
+      expect(validator.validationConfig({ vertical: false })).toBeTrue();
     });
 
-    it('при изменении параметров positionTo, ф-я вернет true', () => {
+    it('при изменении параметра positionTo, ф-я вернет true', () => {
       expect(validator.validationConfig({ positionTo: 5 })).toBeTrue();
     });
   });

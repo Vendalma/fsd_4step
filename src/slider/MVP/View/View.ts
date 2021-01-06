@@ -7,7 +7,7 @@ interface IConfigView {
   range: boolean;
   positionFrom: number;
   positionTo: number;
-  orientation: string;
+  vertical: boolean;
   step: number;
   label: boolean;
 }
@@ -55,20 +55,30 @@ class View {
     this.subscribeOnUpdate();
   }
 
-  private subscribeOnUpdate(): void {
-    this.sliderBlock.addFollower(this);
-  }
-
-  private update(data: IDataThumbMove): void {
-    this.observer.broadcast(data, 'mouseMove');
-  }
-
   setPositionThumb(data: IPosition): void {
     this.sliderBlock.setPositionThumb(data);
   }
 
   addFollower(follower: unknown): void {
     this.observer.subscribe(follower);
+  }
+
+  updateConfig(data: IConfigView): void {
+    this.config = data;
+    this.sliderBlock.updateConfig(data);
+  }
+
+  changeOrientationOrRange(data: IConfigView): void {
+    this.updateConfig(data);
+    this.getSliderSize();
+  }
+
+  private subscribeOnUpdate(): void {
+    this.sliderBlock.addFollower(this);
+  }
+
+  private update(data: IDataThumbMove): void {
+    this.observer.broadcast(data, 'mouseMove');
   }
 
   private onloadWindow(): void {
@@ -80,21 +90,9 @@ class View {
   }
 
   private getSliderSize(): void {
-    if (this.config.orientation === 'horizontal')
-      this.observer.broadcast(this.sliderContainer.offsetWidth, 'sliderSize');
+    if (!this.config.vertical) this.observer.broadcast(this.sliderContainer.offsetWidth, 'sliderSize');
 
-    if (this.config.orientation === 'vertical')
-      this.observer.broadcast(this.sliderContainer.offsetHeight, 'sliderSize');
-  }
-
-  updateConfig(data: IConfigView): void {
-    this.config = data;
-    this.sliderBlock.updateConfig(data);
-  }
-
-  changeOrientationOrRange(data: IConfigView): void {
-    this.updateConfig(data);
-    this.getSliderSize();
+    if (this.config.vertical) this.observer.broadcast(this.sliderContainer.offsetHeight, 'sliderSize');
   }
 }
 export default View;
