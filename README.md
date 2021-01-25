@@ -89,8 +89,8 @@ $('#id').rangeSlider('returnPosition', object);
 
 ## Диаграмма
 
-![alt text](uml/uml-1.jpg)
+![alt text](uml/uml1.jpg)
 
 ---
 
-![alt text](uml/uml-2.jpg)
+![alt text](uml/uml2.jpg)
