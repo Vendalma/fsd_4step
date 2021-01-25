@@ -2,34 +2,16 @@ import Model from '../slider/MVP/Model/Model';
 import Presenter from '../slider/MVP/Presenter/Presenter';
 import View from '../slider/MVP/View/View';
 
-interface IConfig {
-  min: number;
-  max: number;
-  range: boolean;
-  positionFrom: number;
-  positionTo: number;
-  vertical: boolean;
-  step: number;
-  label: boolean;
-}
-const config: IConfig = {
-  range: true,
-  min: 0,
-  max: 100,
-  positionFrom: 15,
-  positionTo: 30,
-  label: true,
-  step: 1,
-  vertical: false,
-};
 const $block = $('<div>');
 $(document.body).append($block);
-const model: Model = new Model(config);
+const model: Model = new Model();
+const view: View = new View($block[0]);
+
 class TestPresenter extends Presenter {
   public view: View;
 
   constructor() {
-    super(model, $block[0]);
+    super(model, view);
   }
 }
 describe('Presenter', () => {
@@ -38,34 +20,59 @@ describe('Presenter', () => {
     expect(presenter).toBeDefined();
   });
 
-  it('При загрузке окна браузера Presenter вызывает ф-ю calcOnloadPosition класса Model', () => {
-    spyOn(model, 'calcOnloadPosition');
-    const event = new UIEvent('load', { bubbles: true });
-    window.dispatchEvent(event);
+  describe('метод update', () => {
+    it('При обновлении конфига Model, Presenter вызывает ф-ю setConfig во View', () => {
+      spyOn(presenter.view, 'setConfig');
+      model.updateConfig({
+        label: true,
+        min: 0,
+        max: 100,
+        range: false,
+        vertical: true,
+        step: 1,
+        positionFrom: 10,
+        positionTo: 100,
+      });
 
-    expect(model.calcOnloadPosition).toHaveBeenCalled();
-  });
+      expect(presenter.view.setConfig).toHaveBeenCalled();
+    });
 
-  it('При обновлении конфига Model Presenter вызывает ф-ю updateConfig во View', () => {
-    spyOn(presenter.view, 'updateConfig');
-    model.updateConfig({ label: false });
+    it('При нажатии на бегунок вызывается ф-я findMoveThumbPosition в Model', () => {
+      presenter.view.setConfig({
+        label: true,
+        min: 0,
+        max: 100,
+        range: false,
+        vertical: true,
+        step: 1,
+        positionFrom: 10,
+        positionTo: 100,
+      });
+      const thumb = $block[0].querySelector('.js-slider__thumb-first') as HTMLElement;
+      const event = new MouseEvent('click', { bubbles: true });
+      spyOn(model, 'findMoveThumbPosition');
+      thumb.dispatchEvent(event);
 
-    expect(presenter.view.updateConfig).toHaveBeenCalled();
-  });
+      expect(model.findMoveThumbPosition).toHaveBeenCalled();
+    });
 
-  it('При изменении в конфиге св-в vertical или range в Model Presenter вызывает ф-ю changeOrientationOrRange во View', () => {
-    spyOn(presenter.view, 'changeOrientationOrRange');
-    model.updateConfig({ vertical: true });
+    it('При нажатии на бегунок Model передает вычисления в Presenter и вызывается ф-я setPositionThumb во View', () => {
+      presenter.view.setConfig({
+        label: true,
+        min: 0,
+        max: 100,
+        range: false,
+        vertical: true,
+        step: 1,
+        positionFrom: 10,
+        positionTo: 100,
+      });
+      const thumb = $block[0].querySelector('.js-slider__thumb-first') as HTMLElement;
+      const event = new MouseEvent('click', { bubbles: true });
+      spyOn(presenter.view, 'setPositionThumb');
+      thumb.dispatchEvent(event);
 
-    expect(presenter.view.changeOrientationOrRange).toHaveBeenCalled();
-  });
-
-  it('При нажатии на бегунок вызывается ф-я findMoveThumbPosition в Model', () => {
-    const thumb = $block[0].querySelector('.js-slider__thumb-first') as HTMLElement;
-    const event = new MouseEvent('click', { bubbles: true });
-    spyOn(model, 'findMoveThumbPosition');
-    thumb.dispatchEvent(event);
-
-    expect(model.findMoveThumbPosition).toHaveBeenCalled();
+      expect(presenter.view.setPositionThumb).toHaveBeenCalled();
+    });
   });
 });

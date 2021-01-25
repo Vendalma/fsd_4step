@@ -9,14 +9,9 @@ class Label {
 
   private config: IConfigLabel;
 
-  constructor(config: IConfigLabel, thumb: HTMLElement) {
+  constructor(thumb: HTMLElement) {
     this.thumb = thumb;
-    this.elementLabel = document.createElement('div');
-    this.elementLabel.classList.add('slider__label');
-    this.thumb.append(this.elementLabel);
-
-    this.config = config;
-    this.updateConfig(this.config);
+    this.createLabel();
   }
 
   setLabelValue(value: number): void {
@@ -27,6 +22,12 @@ class Label {
     this.config = data;
     this.changeVisibleLabel();
     this.checkOrientation();
+  }
+
+  private createLabel(): void {
+    this.elementLabel = document.createElement('div');
+    this.elementLabel.classList.add('slider__label');
+    this.thumb.append(this.elementLabel);
   }
 
   private checkOrientation(): void {

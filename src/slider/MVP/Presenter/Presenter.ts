@@ -1,42 +1,15 @@
 import Model from '../Model/Model';
 import View from '../View/View';
+import { IConfig, IDataThumbMove, IPosition } from './presenterInterfaces';
 
-interface IConfig {
-  min: number;
-  max: number;
-  range: boolean;
-  positionFrom: number;
-  positionTo: number;
-  vertical: boolean;
-  step: number;
-  label: boolean;
-}
-interface IDataThumbMove {
-  clientXY: number;
-  sliderClientReact: number;
-  dataNum: string;
-  positionThumbFirst: number;
-  positionThumbSecond: number;
-}
-interface IPosition {
-  dataFirstThumb?: {
-    positionFrom: number;
-    valueFrom: number;
-  };
-  dataSecondThumb?: {
-    positionTo: number;
-    valueTo: number;
-  };
-  stepData?: number;
-}
 class Presenter {
   private model: Model;
 
   protected view: View;
 
-  constructor(model: Model, container: HTMLElement) {
+  constructor(model: Model, view: View) {
     this.model = model;
-    this.view = new View(this.model.getConfig() as IConfig, container);
+    this.view = view;
     this.subscribeOnUpdate();
   }
 
@@ -53,9 +26,7 @@ class Presenter {
     } else if (type === 'sliderSize') {
       this.model.calcOnloadPosition(data as number);
     } else if (type === 'changeConfig') {
-      this.view.updateConfig(data as IConfig);
-    } else if (type === 'changeOrientationOrRange') {
-      this.view.changeOrientationOrRange(data as IConfig);
+      this.view.setConfig(data as IConfig);
     }
   }
 }

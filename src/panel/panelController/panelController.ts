@@ -1,21 +1,6 @@
-import * as $ from 'jquery';
-import Observer from '../../slider/Observer/Observer';
+import { IConfig } from '../../slider/MVP/Model/modelInterfaces';
 import './panelController.scss';
 
-interface ISettings {
-  range: boolean;
-  vertical: boolean;
-  min: number;
-  max: number;
-  positionFrom: number;
-  positionTo: number;
-  step: number;
-  label: boolean;
-}
-interface IPositionFromTo {
-  positionFrom: number;
-  positionTo: number;
-}
 class PanelController {
   parent: HTMLElement;
 
@@ -43,15 +28,13 @@ class PanelController {
 
   $slider: JQuery<HTMLElement>;
 
-  config: ISettings;
-
-  observer: Observer;
+  config: IConfig;
 
   container: HTMLElement;
 
   constructor(container: HTMLElement) {
     this.container = container;
-    this.observer = new Observer();
+
     this.init();
     this.setConfig();
     this.clickPanel();
@@ -72,8 +55,8 @@ class PanelController {
     this.inputSingle = this.parent.querySelector('.js-panel__radio-single') as HTMLInputElement;
     this.inputDouble = this.parent.querySelector('.js-panel__radio-double') as HTMLInputElement;
     this.$slider = $(this.parent);
-    this.config = this.$slider.data('sliderData').rangeSlider.getConfig();
     this.$slider.rangeSlider('returnPosition', this);
+    this.config = this.$slider.data('sliderData').rangeSlider.getConfig();
   }
 
   setConfig(): void {
@@ -170,17 +153,9 @@ class PanelController {
     if (this.config.range) disabledBlock.disabled = false;
   }
 
-  updateConfigInputFrom(data: number): void {
-    this.inputFrom.value = `${data}`;
-  }
-
-  updateConfigInputTo(data: number): void {
-    this.inputTo.value = `${data}`;
-  }
-
-  update(data: IPositionFromTo): void {
-    this.updateConfigInputFrom(data.positionFrom);
-    if (data.positionTo) this.updateConfigInputTo(data.positionTo);
+  update(data: IConfig): void {
+    this.config = this.$slider.data('sliderData').rangeSlider.getConfig();
+    this.setConfig();
   }
 }
 

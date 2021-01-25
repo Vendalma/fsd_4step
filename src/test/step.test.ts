@@ -1,15 +1,8 @@
 import Step from '../slider/MVP/View/Step';
 
-const config = {
-  min: 0,
-  max: 100,
-  step: 1,
-  vertical: false,
-};
-
 describe('Step', () => {
   const container = $('<div>');
-  const step: Step = new Step(config, container[0]);
+  const step: Step = new Step(container[0]);
   const $thumb = $('<div>');
   beforeAll(function () {
     $thumb[0].classList.add('js-slider__thumb-first');
@@ -21,7 +14,7 @@ describe('Step', () => {
     expect(step).toBeDefined();
   });
 
-  describe('метода addStepLine добавляет шкалу значений', () => {
+  describe('метод addStepLine добавляет шкалу значений', () => {
     let stepSize: number;
     beforeAll(function () {
       stepSize = 30.5;
@@ -38,7 +31,6 @@ describe('Step', () => {
       const conf = {
         min: 7,
         max: 11,
-        step: 1,
         vertical: false,
       };
       step.updateConfig(conf);
@@ -63,7 +55,6 @@ describe('Step', () => {
       const conf = {
         min: 7,
         max: 11,
-        step: 1,
         vertical: true,
       };
       step.updateConfig(conf);
@@ -85,13 +76,14 @@ describe('Step', () => {
     });
   });
 
-  it('метод updateConfig обновляет конфиг, изменяет значения min, max', () => {
+  it('метод updateConfig обновляет конфиг класса Step', () => {
     const newConf = {
       min: 0,
       max: 10,
       vertical: true,
     };
     step.updateConfig(newConf);
+    step.addStepLine(30);
     const blockMax = container[0].querySelector('.slider__step-block_max') as HTMLElement;
     const blockMin = container[0].querySelector('.slider__step-block_min') as HTMLElement;
 

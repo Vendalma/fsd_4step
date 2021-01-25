@@ -1,10 +1,5 @@
 import ProgressBar from '../slider/MVP/View/progressBar';
 
-const config = {
-  range: true,
-  vertical: false,
-};
-
 describe('ProgressBar', () => {
   const $block = $('<div>');
   const $firstThumb = $('<div>');
@@ -17,7 +12,7 @@ describe('ProgressBar', () => {
     $block.append($secondThumb[0]);
     $(document.body).append($block);
   });
-  const bar: ProgressBar = new ProgressBar(config, $block[0]);
+  const bar: ProgressBar = new ProgressBar($block[0]);
   it('Инициализация ProgressBar', () => {
     expect(bar).toBeDefined();
   });
@@ -70,14 +65,7 @@ describe('ProgressBar', () => {
     });
   });
 
-  it('метод cleanStyleAttr удаляет у контейнера прогресс бара атрибут style', () => {
-    bar.cleanStyleAttr();
-    const progressBar = $block[0].querySelector('.slider__progress-bar');
-
-    expect(progressBar).not.toHaveAttr('style');
-  });
-
-  it('метод updateBarConfig обновляет конфиг', () => {
+  it('метод updateConfig обновляет конфиг класса ProgressBar', () => {
     const newConf = {
       range: false,
       vertical: true,

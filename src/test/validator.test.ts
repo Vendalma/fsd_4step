@@ -1,94 +1,268 @@
 import Validator from '../slider/MVP/Model/Validator';
 
-interface IConfigValidator {
-  min: number;
-  max: number;
-  range: boolean;
-  positionFrom: number;
-  positionTo: number;
-  vertical: boolean;
-  step: number;
-  label: boolean;
-}
-
-const config: IConfigValidator = {
-  range: true,
-  min: 0,
-  max: 100,
-  positionFrom: 15,
-  positionTo: 30,
-  step: 1,
-  label: true,
-  vertical: true,
-};
-
-const validator: Validator = new Validator(config);
+const validator: Validator = new Validator();
 describe('Validator', () => {
   it('Инициализация класса Validator', () => {
     expect(validator).toBeDefined();
   });
 
   describe('метод validationConfig', () => {
-    let data: IConfigValidator;
-    beforeEach(function () {
-      data = {
-        max: 10,
-        min: 0,
-        step: 5,
-        positionFrom: 2,
-        positionTo: 7,
-        range: true,
-        label: true,
-        vertical: true,
-      };
+    describe('проверка валидации значений min, max', () => {
+      it('если max < min, то max равно дефолтному значению', () => {
+        const data = {
+          max: 9,
+          min: 10,
+          step: 1,
+          positionFrom: 11,
+          positionTo: 17,
+          range: true,
+          label: true,
+          vertical: true,
+        };
+        const expectedValue = {
+          max: 100,
+          min: 10,
+          step: 1,
+          positionFrom: 11,
+          positionTo: 17,
+          range: true,
+          label: true,
+          vertical: true,
+        };
+
+        expect(validator.validationConfig(data)).toEqual(expectedValue);
+      });
+
+      it('если min > max,при max равном дефолтному значению, то min так же равно дефолтному значению', () => {
+        const data = {
+          max: 100,
+          min: 101,
+          step: 1,
+          positionFrom: 90,
+          positionTo: 90,
+          range: true,
+          label: true,
+          vertical: true,
+        };
+        const expectedValue = {
+          max: 100,
+          min: 0,
+          step: 1,
+          positionFrom: 89,
+          positionTo: 90,
+          range: true,
+          label: true,
+          vertical: true,
+        };
+
+        expect(validator.validationConfig(data)).toEqual(expectedValue);
+      });
     });
 
-    it('при заданных значения, ф-я вернет true', () => {
-      expect(validator.validationConfig(data)).toBeTrue();
+    describe('проверка валидации step', () => {
+      it('если step <= 0, то step равно дефолтному значению', () => {
+        const data = {
+          max: 100,
+          min: 10,
+          step: 0,
+          positionFrom: 11,
+          positionTo: 17,
+          range: true,
+          label: true,
+          vertical: true,
+        };
+        const expectedValue = {
+          max: 100,
+          min: 10,
+          step: 1,
+          positionFrom: 11,
+          positionTo: 17,
+          range: true,
+          label: true,
+          vertical: true,
+        };
+
+        expect(validator.validationConfig(data)).toEqual(expectedValue);
+      });
+
+      it('если step > max - min, то step равно дефолтному значению', () => {
+        const data = {
+          max: 100,
+          min: 10,
+          step: 91,
+          positionFrom: 11,
+          positionTo: 17,
+          range: true,
+          label: true,
+          vertical: true,
+        };
+        const expectedValue = {
+          max: 100,
+          min: 10,
+          step: 1,
+          positionFrom: 11,
+          positionTo: 17,
+          range: true,
+          label: true,
+          vertical: true,
+        };
+
+        expect(validator.validationConfig(data)).toEqual(expectedValue);
+      });
     });
 
-    it('если max < min, ф-я вернет false', () => {
-      data.max = -100;
+    describe('проверка валидации positionFrom', () => {
+      it('если positionFrom < min, то positionFrom равно min', () => {
+        const data = {
+          max: 100,
+          min: 10,
+          step: 1,
+          positionFrom: 9,
+          positionTo: 17,
+          range: true,
+          label: true,
+          vertical: true,
+        };
+        const expectedValue = {
+          max: 100,
+          min: 10,
+          step: 1,
+          positionFrom: 10,
+          positionTo: 17,
+          range: true,
+          label: true,
+          vertical: true,
+        };
 
-      expect(validator.validationConfig(data)).toBeFalse();
+        expect(validator.validationConfig(data)).toEqual(expectedValue);
+      });
+
+      it('если range=false и positionFrom > max, то positionFrom равно max', () => {
+        const data = {
+          max: 100,
+          min: 10,
+          step: 1,
+          positionFrom: 101,
+          positionTo: 17,
+          range: false,
+          label: true,
+          vertical: true,
+        };
+        const expectedValue = {
+          max: 100,
+          min: 10,
+          step: 1,
+          positionFrom: 100,
+          positionTo: 17,
+          range: false,
+          label: true,
+          vertical: true,
+        };
+
+        expect(validator.validationConfig(data)).toEqual(expectedValue);
+      });
+
+      it('если range = true и positionFrom > max, то positionFrom равно min', () => {
+        const data = {
+          max: 100,
+          min: 10,
+          step: 1,
+          positionFrom: 101,
+          positionTo: 17,
+          range: true,
+          label: true,
+          vertical: true,
+        };
+        const expectedValue = {
+          max: 100,
+          min: 10,
+          step: 1,
+          positionFrom: 10,
+          positionTo: 17,
+          range: true,
+          label: true,
+          vertical: true,
+        };
+
+        expect(validator.validationConfig(data)).toEqual(expectedValue);
+      });
     });
 
-    it('если min > max, ф-я вернет false', () => {
-      data.min = 20;
+    describe('проверка валидации positionTo', () => {
+      it('если positionTo <= positionFrom и max - min > step, то positionTo = positionFrom, а positionFrom = positionTo - step, при этом positionFrom повторно валидируется', () => {
+        const data = {
+          max: 100,
+          min: 10,
+          step: 1,
+          positionFrom: 10,
+          positionTo: 9,
+          range: true,
+          label: true,
+          vertical: true,
+        };
+        const expectedValue = {
+          max: 100,
+          min: 10,
+          step: 1,
+          positionFrom: 10,
+          positionTo: 10,
+          range: true,
+          label: true,
+          vertical: true,
+        };
 
-      expect(validator.validationConfig(data)).toBeFalse();
-    });
+        expect(validator.validationConfig(data)).toEqual(expectedValue);
+      });
 
-    it('если step > max - min, ф-я вернет false', () => {
-      data.step = 1000;
+      it('если positionTo <= positionFrom и max - min <= step, то positionTo = max', () => {
+        const data = {
+          max: 100,
+          min: 10,
+          step: 90,
+          positionFrom: 10,
+          positionTo: 9,
+          range: true,
+          label: true,
+          vertical: true,
+        };
+        const expectedValue = {
+          max: 100,
+          min: 10,
+          step: 90,
+          positionFrom: 10,
+          positionTo: 100,
+          range: true,
+          label: true,
+          vertical: true,
+        };
 
-      expect(validator.validationConfig(data)).toBeFalse();
-    });
+        expect(validator.validationConfig(data)).toEqual(expectedValue);
+      });
 
-    it('если step = 0, ф-я вернет false', () => {
-      data.step = 0;
+      it('если positionTo > max, то positionTo = max', () => {
+        const data = {
+          max: 100,
+          min: 10,
+          step: 1,
+          positionFrom: 10,
+          positionTo: 101,
+          range: true,
+          label: true,
+          vertical: true,
+        };
+        const expectedValue = {
+          max: 100,
+          min: 10,
+          step: 1,
+          positionFrom: 10,
+          positionTo: 100,
+          range: true,
+          label: true,
+          vertical: true,
+        };
 
-      expect(validator.validationConfig(data)).toBeFalse();
-    });
-
-    it('если step < 0, ф-я вернет false', () => {
-      data.step = -10;
-
-      expect(validator.validationConfig(data)).toBeFalse();
-    });
-
-    it('при изменении параметра label, ф-я вернет true', () => {
-      data.label = false;
-
-      expect(validator.validationConfig(data)).toBeTrue();
-    });
-
-    it('при изменении параметра vertical, ф-я вернет true', () => {
-      expect(validator.validationConfig({ vertical: false })).toBeTrue();
-    });
-
-    it('при изменении параметра positionTo, ф-я вернет true', () => {
-      expect(validator.validationConfig({ positionTo: 5 })).toBeTrue();
+        expect(validator.validationConfig(data)).toEqual(expectedValue);
+      });
     });
   });
 });

@@ -8,8 +8,7 @@ class Step {
 
   private container: HTMLElement;
 
-  constructor(config: IConfigStep, container: HTMLElement) {
-    this.config = config;
+  constructor(container: HTMLElement) {
     this.container = container;
   }
 
@@ -49,18 +48,6 @@ class Step {
 
   updateConfig(data: IConfigStep): void {
     this.config = data;
-    this.changeMaxValue();
-    this.changeMinValue();
-  }
-
-  private changeMinValue(): void {
-    const blockMin = this.container.querySelector('.slider__step-block_min');
-    if (blockMin) blockMin.innerHTML = `${this.config.min}`;
-  }
-
-  private changeMaxValue(): void {
-    const blockMax = this.container.querySelector('.slider__step-block_max');
-    if (blockMax) blockMax.innerHTML = `${this.config.max}`;
   }
 
   private deleteStep(): void {

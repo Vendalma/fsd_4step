@@ -11,6 +11,9 @@ interface ISettings {
 interface IUpdateConfig {
   [key: string]: boolean | number;
 }
+interface MethodsObject {
+  [key: string]: any /* eslint-disable-line */;
+}
 interface JQuery {
   rangeSlider: (
     method?: string | undefined | unknown,

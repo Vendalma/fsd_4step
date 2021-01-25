@@ -1,5 +1,4 @@
 import Thumb from '../slider/MVP/View/Thumb';
-import Observer from '../slider/Observer/Observer';
 
 const config = {
   range: true,
@@ -9,30 +8,24 @@ const config = {
   label: false,
 };
 const $block = $('<div>');
-class TestThumb extends Thumb {
-  public observer: Observer;
-
-  constructor() {
-    super(config, 'js-slider__thumb-first', $block[0], '1');
-  }
-}
 describe('Thumb', () => {
-  const thumb: TestThumb = new TestThumb();
-  const observer = jasmine.createSpyObj('observer', ['broadcast', 'subscribe']);
+  const thumb: Thumb = new Thumb('js-slider__thumb-first', $block[0], '1');
   beforeAll(function () {
     $block[0].classList.add('slider__block');
     $(document.body).append($block);
+    thumb.updateConfig(config);
+    spyOn(thumb, 'broadcast');
   });
-  thumb.observer = observer;
   const thumbBlock = $block[0].querySelector('.js-slider__thumb-first') as HTMLElement;
   it('инициализация класса Thumb', () => {
     expect(thumb).toBeDefined();
   });
 
-  it('метод addFollower вызывает ф-ю subscribe в классе Observer', () => {
+  it('метод addFollower вызывает ф-ю subscribe', () => {
+    spyOn(thumb, 'subscribe');
     thumb.addFollower({});
 
-    expect(thumb.observer.subscribe).toHaveBeenCalledWith({});
+    expect(thumb.subscribe).toHaveBeenCalledWith({});
   });
 
   it('метод setLabelValue вызывает ф-ю setLabelValue в классе Label', () => {
@@ -58,6 +51,13 @@ describe('Thumb', () => {
 
   describe('метод setPosition', () => {
     it('при vertical = false устанавливает бегунку style.left', () => {
+      thumb.updateConfig({
+        range: true,
+        positionFrom: 15,
+        positionTo: 30,
+        vertical: false,
+        label: false,
+      });
       thumb.setPosition(8);
 
       expect(thumbBlock).toHaveCss({ left: '8px' });
@@ -84,7 +84,7 @@ describe('Thumb', () => {
     expect(thumbBlock).toHaveClass('slider__thumb_zIndex-up');
   });
 
-  describe('при перемещении мыши, вычисляется позиция бегунка', () => {
+  describe('при перемещении мыши через ф-ю broadcast передаются данные о движении бегунка', () => {
     const mousedown = new MouseEvent('mousedown', { bubbles: true });
     const mousemove = new MouseEvent('mousemove', { bubbles: true });
     thumbBlock.dispatchEvent(mousedown);
@@ -116,15 +116,10 @@ describe('Thumb', () => {
           vertical: false,
           label: false,
         });
-        const expectedValue = {
-          clientXY: 0,
-          sliderClientReact: $block[0].getBoundingClientRect().left,
-          dataNum: '1',
-          positionThumbSecond: undefined,
-        };
+        thumbBlock.dispatchEvent(mousedown);
         document.dispatchEvent(mousemove);
 
-        expect(thumb.observer.broadcast).toHaveBeenCalledWith(expectedValue);
+        expect(thumb.broadcast).toHaveBeenCalled();
       });
 
       it('range = true, data-num = 1', () => {
@@ -136,17 +131,10 @@ describe('Thumb', () => {
           label: false,
         });
         thumbBlock.dataset.num = '1';
-
-        const expectedValue = {
-          clientXY: 0,
-          sliderClientReact: $block[0].getBoundingClientRect().left,
-          dataNum: '1',
-          positionThumbSecond: 10,
-        };
-
+        thumbBlock.dispatchEvent(mousedown);
         document.dispatchEvent(mousemove);
 
-        expect(thumb.observer.broadcast).toHaveBeenCalledWith(expectedValue);
+        expect(thumb.broadcast).toHaveBeenCalled();
       });
 
       it('range = true, data-num = 2', () => {
@@ -159,16 +147,24 @@ describe('Thumb', () => {
         });
         thumbBlock.dataset.num = '2';
 
-        const expectedValue = {
-          clientXY: 0,
-          sliderClientReact: $block[0].getBoundingClientRect().left,
-          dataNum: '2',
-          positionThumbFirst: 101,
-        };
-
         document.dispatchEvent(mousemove);
 
-        expect(thumb.observer.broadcast).toHaveBeenCalledWith(expectedValue);
+        expect(thumb.broadcast).toHaveBeenCalled();
+      });
+
+      it('range = true, data-num = 3', () => {
+        thumb.updateConfig({
+          range: true,
+          positionFrom: 15,
+          positionTo: 30,
+          vertical: false,
+          label: false,
+        });
+        thumbBlock.dataset.num = '3';
+        thumbBlock.dispatchEvent(mousedown);
+        document.dispatchEvent(mousemove);
+
+        expect(thumb.broadcast).toHaveBeenCalled();
       });
     });
 
@@ -182,16 +178,9 @@ describe('Thumb', () => {
           label: false,
         });
         thumbBlock.dataset.num = '1';
-
-        const expectedValue = {
-          clientXY: 0,
-          sliderClientReact: $block[0].getBoundingClientRect().top,
-          dataNum: '1',
-          positionThumbSecond: undefined,
-        };
         document.dispatchEvent(mousemove);
 
-        expect(thumb.observer.broadcast).toHaveBeenCalledWith(expectedValue);
+        expect(thumb.broadcast).toHaveBeenCalled();
       });
 
       it('range = true, data-num = 1', () => {
@@ -203,16 +192,9 @@ describe('Thumb', () => {
           label: false,
         });
         thumbBlock.dataset.num = '1';
-
-        const expectedValue = {
-          clientXY: 0,
-          sliderClientReact: $block[0].getBoundingClientRect().top,
-          dataNum: '1',
-          positionThumbSecond: 50,
-        };
         document.dispatchEvent(mousemove);
 
-        expect(thumb.observer.broadcast).toHaveBeenCalledWith(expectedValue);
+        expect(thumb.broadcast).toHaveBeenCalled();
       });
 
       it('range = true, data-num = 2', () => {
@@ -224,21 +206,29 @@ describe('Thumb', () => {
           label: false,
         });
         thumbBlock.dataset.num = '2';
-
-        const expectedValue = {
-          clientXY: 0,
-          sliderClientReact: $block[0].getBoundingClientRect().top,
-          dataNum: '2',
-          positionThumbFirst: 58,
-        };
         document.dispatchEvent(mousemove);
 
-        expect(thumb.observer.broadcast).toHaveBeenCalledWith(expectedValue);
+        expect(thumb.broadcast).toHaveBeenCalled();
+      });
+
+      it('range = true, data-num = 3', () => {
+        thumb.updateConfig({
+          range: true,
+          positionFrom: 15,
+          positionTo: 30,
+          vertical: true,
+          label: false,
+        });
+        thumbBlock.dataset.num = '3';
+        thumbBlock.dispatchEvent(mousedown);
+        document.dispatchEvent(mousemove);
+
+        expect(thumb.broadcast).toHaveBeenCalled();
       });
     });
   });
 
-  describe('метод onMouseUp отвязывает обработчики событий, уменьшается zIndex контейнера бегунка, вызывает ф-ии changeZIndexDown и broadcast класса Observer ', () => {
+  describe('метод onMouseUp отвязывает обработчики событий, уменьшается zIndex контейнера бегунка, вызывает ф-ии changeZIndexDown и broadcast ', () => {
     const mousedown = new MouseEvent('mousedown', { bubbles: true });
     thumbBlock.dispatchEvent(mousedown);
     const mouseup = new MouseEvent('mouseup', { bubbles: true });
@@ -268,15 +258,9 @@ describe('Thumb', () => {
           vertical: false,
           label: false,
         });
-        const expectedValue = {
-          clientXY: 0,
-          sliderClientReact: $block[0].getBoundingClientRect().left,
-          dataNum: '1',
-          positionThumbSecond: undefined,
-        };
         document.dispatchEvent(mouseup);
 
-        expect(thumb.observer.broadcast).toHaveBeenCalledWith(expectedValue);
+        expect(thumb.broadcast).toHaveBeenCalled();
         expect(thumbBlock).not.toHaveClass('slider__thumb_zIndex-up');
       });
 
@@ -290,16 +274,9 @@ describe('Thumb', () => {
         });
         thumbBlock.dataset.num = '1';
 
-        const expectedValue = {
-          clientXY: 0,
-          sliderClientReact: $block[0].getBoundingClientRect().left,
-          dataNum: '1',
-          positionThumbSecond: 10,
-        };
-
         document.dispatchEvent(mouseup);
 
-        expect(thumb.observer.broadcast).toHaveBeenCalledWith(expectedValue);
+        expect(thumb.broadcast).toHaveBeenCalled();
         expect(thumbBlock).not.toHaveClass('slider__thumb_zIndex-up');
       });
 
@@ -313,16 +290,25 @@ describe('Thumb', () => {
         });
         thumbBlock.dataset.num = '2';
 
-        const expectedValue = {
-          clientXY: 0,
-          sliderClientReact: $block[0].getBoundingClientRect().left,
-          dataNum: '2',
-          positionThumbFirst: 101,
-        };
+        document.dispatchEvent(mouseup);
+
+        expect(thumb.broadcast).toHaveBeenCalled();
+        expect(thumbBlock).not.toHaveClass('slider__thumb_zIndex-up');
+      });
+
+      it('range = true, data-num = 3', () => {
+        thumb.updateConfig({
+          range: true,
+          positionFrom: 15,
+          positionTo: 30,
+          vertical: false,
+          label: false,
+        });
+        thumbBlock.dataset.num = '3';
 
         document.dispatchEvent(mouseup);
 
-        expect(thumb.observer.broadcast).toHaveBeenCalledWith(expectedValue);
+        expect(thumb.broadcast).toHaveBeenCalled();
         expect(thumbBlock).not.toHaveClass('slider__thumb_zIndex-up');
       });
     });
@@ -338,15 +324,9 @@ describe('Thumb', () => {
         });
         thumbBlock.dataset.num = '1';
 
-        const expectedValue = {
-          clientXY: 0,
-          sliderClientReact: $block[0].getBoundingClientRect().top,
-          dataNum: '1',
-          positionThumbSecond: undefined,
-        };
         document.dispatchEvent(mouseup);
 
-        expect(thumb.observer.broadcast).toHaveBeenCalledWith(expectedValue);
+        expect(thumb.broadcast).toHaveBeenCalled();
         expect(thumbBlock).not.toHaveClass('slider__thumb_zIndex-up');
       });
 
@@ -360,15 +340,9 @@ describe('Thumb', () => {
         });
         thumbBlock.dataset.num = '1';
 
-        const expectedValue = {
-          clientXY: 0,
-          sliderClientReact: $block[0].getBoundingClientRect().top,
-          dataNum: '1',
-          positionThumbSecond: 50,
-        };
         document.dispatchEvent(mouseup);
 
-        expect(thumb.observer.broadcast).toHaveBeenCalledWith(expectedValue);
+        expect(thumb.broadcast).toHaveBeenCalled();
         expect(thumbBlock).not.toHaveClass('slider__thumb_zIndex-up');
       });
 
@@ -382,24 +356,28 @@ describe('Thumb', () => {
         });
         thumbBlock.dataset.num = '2';
 
-        const expectedValue = {
-          clientXY: 0,
-          sliderClientReact: $block[0].getBoundingClientRect().top,
-          dataNum: '2',
-          positionThumbFirst: 58,
-        };
         document.dispatchEvent(mouseup);
 
-        expect(thumb.observer.broadcast).toHaveBeenCalledWith(expectedValue);
+        expect(thumb.broadcast).toHaveBeenCalled();
+        expect(thumbBlock).not.toHaveClass('slider__thumb_zIndex-up');
+      });
+
+      it('range = true, data-num = 3', () => {
+        thumb.updateConfig({
+          range: true,
+          positionFrom: 15,
+          positionTo: 30,
+          vertical: true,
+          label: false,
+        });
+        thumbBlock.dataset.num = '3';
+
+        document.dispatchEvent(mouseup);
+
+        expect(thumb.broadcast).toHaveBeenCalled();
         expect(thumbBlock).not.toHaveClass('slider__thumb_zIndex-up');
       });
     });
-  });
-
-  it('метод cleanStyleAttr удаляет у контейнера бегунка атрибут style', () => {
-    thumb.cleanStyleAttr();
-
-    expect(thumbBlock).not.toHaveAttr('style');
   });
 
   describe('метод updateConfigThumb обновляет конфиг класса, вызывает ф-цию updateConfig касса Label', () => {

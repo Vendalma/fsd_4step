@@ -1,42 +1,26 @@
 import Model from '../MVP/Model/Model';
 import Presenter from '../MVP/Presenter/Presenter';
+import View from '../MVP/View/View';
 import Observer from '../Observer/Observer';
+import { IRangeSlider } from './rangeSliderInterfaces';
 
-interface ISettings {
-  min: number;
-  max: number;
-  positionFrom: number;
-  positionTo: number;
-  range: boolean;
-  label: boolean;
-  step: number;
-  vertical: boolean;
-}
-interface IPosition {
-  dataFirstThumb?: {
-    positionFrom: number;
-    valueFrom: number;
-  };
-  dataSecondThumb?: {
-    positionTo?: number;
-    valueTo?: number;
-  };
-  stepData?: number;
-}
-interface IUpdateConfig {
-  [key: string]: boolean | number;
-}
-class RangeSlider {
+class RangeSlider extends Observer implements IRangeSlider {
   private model: Model;
 
   private presenter: Presenter;
 
-  private observer: Observer;
+  private view: View;
+
+  private settings: ISettings;
 
   constructor(container: HTMLElement, settings: ISettings) {
-    this.model = new Model(settings);
-    this.presenter = new Presenter(this.model, container);
-    this.observer = new Observer();
+    super();
+    this.settings = settings;
+    this.model = new Model();
+    this.view = new View(container);
+    this.presenter = new Presenter(this.model, this.view);
+
+    this.updateConfig(this.settings);
     this.subscribeOnUpdate();
   }
 
@@ -44,20 +28,20 @@ class RangeSlider {
     return this.model.getConfig();
   }
 
-  updateConfig(data: IUpdateConfig): void {
-    this.model.updateConfig(data);
+  updateConfig(data: IUpdateConfig | ISettings): void {
+    this.model.updateConfig(Object.assign(this.settings, data));
   }
 
   addFollower(follower: unknown): void {
-    this.observer.subscribe(follower);
+    this.subscribe(follower);
   }
 
   private subscribeOnUpdate(): void {
     this.model.addFollower(this);
   }
 
-  private update(data: IPosition): void {
-    this.observer.broadcast({
+  private update(data: ISettings): void {
+    this.broadcast({
       positionFrom: this.getConfig()?.positionFrom,
       positionTo: this.getConfig()?.positionTo,
     });

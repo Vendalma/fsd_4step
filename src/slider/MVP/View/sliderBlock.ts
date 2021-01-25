@@ -2,35 +2,9 @@ import Observer from '../../Observer/Observer';
 import ProgressBar from './progressBar';
 import Step from './Step';
 import Thumb from './Thumb';
+import { IConfig, IDataThumbMove, IPosition } from './viewInterfaces';
 
-interface IConfig {
-  min: number;
-  max: number;
-  range: boolean;
-  positionFrom: number;
-  positionTo: number;
-  vertical: boolean;
-  label: boolean;
-}
-interface IDataThumbMove {
-  clientXY: number;
-  sliderClientReact: number;
-  dataNum: string;
-  positionThumbFirst?: number;
-  positionThumbSecond?: number;
-}
-interface IPosition {
-  dataFirstThumb?: {
-    positionFrom: number;
-    valueFrom: number;
-  };
-  dataSecondThumb?: {
-    positionTo: number;
-    valueTo: number;
-  };
-  stepData?: number;
-}
-class SliderBlock {
+class SliderBlock extends Observer {
   private config: IConfig;
 
   private sliderContainer: HTMLElement;
@@ -45,30 +19,17 @@ class SliderBlock {
 
   private progressBar: ProgressBar;
 
-  protected observer: Observer;
-
-  constructor(config: IConfig, sliderContainer: HTMLElement) {
-    this.config = config;
+  constructor(sliderContainer: HTMLElement) {
+    super();
     this.sliderContainer = sliderContainer;
-    this.sliderBlock = document.createElement('div');
-    this.sliderBlock.classList.add('slider__block');
-    this.sliderContainer.append(this.sliderBlock);
-
-    this.observer = new Observer();
-    this.thumbOne = new Thumb(this.config, 'js-slider__thumb-first', this.sliderBlock, '1');
-    this.thumbTwo = new Thumb(this.config, 'js-slider__thumb-second', this.sliderBlock, '2');
-
-    this.progressBar = new ProgressBar(this.config, this.sliderBlock);
-
-    this.step = new Step(this.config, this.sliderBlock);
-    this.setThumbTwo();
+    this.createSliderBlock();
+    this.init();
     this.subscribeOnUpdate();
     this.sliderClick();
-    this.checkOrientation();
   }
 
   addFollower(follower: unknown): void {
-    this.observer.subscribe(follower);
+    this.subscribe(follower);
   }
 
   updateConfig(data: IConfig): void {
@@ -83,9 +44,6 @@ class SliderBlock {
 
   setPositionThumb(data: IPosition): void {
     if (data.stepData !== undefined) {
-      this.progressBar.cleanStyleAttr();
-      this.thumbOne.cleanStyleAttr();
-      this.thumbTwo?.cleanStyleAttr();
       this.step.addStepLine(data.stepData);
     }
     if (data.dataFirstThumb !== undefined) {
@@ -98,6 +56,19 @@ class SliderBlock {
       this.thumbTwo?.setLabelValue(data.dataSecondThumb.valueTo);
     }
     this.progressBar.addBar();
+  }
+
+  private createSliderBlock(): void {
+    this.sliderBlock = document.createElement('div');
+    this.sliderBlock.classList.add('slider__block');
+    this.sliderContainer.append(this.sliderBlock);
+  }
+
+  private init(): void {
+    this.thumbOne = new Thumb('js-slider__thumb-first', this.sliderBlock, '1');
+    this.thumbTwo = new Thumb('js-slider__thumb-second', this.sliderBlock, '2');
+    this.progressBar = new ProgressBar(this.sliderBlock);
+    this.step = new Step(this.sliderBlock);
   }
 
   private checkOrientation(): void {
@@ -167,7 +138,7 @@ class SliderBlock {
   }
 
   private update(data: IDataThumbMove): void {
-    this.observer.broadcast(data);
+    this.broadcast(data);
   }
 }
 export default SliderBlock;

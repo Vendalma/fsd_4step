@@ -1,6 +1,5 @@
 import SliderBlock from '../slider/MVP/View/sliderBlock';
 import View from '../slider/MVP/View/View';
-import Observer from '../slider/Observer/Observer';
 
 interface IPosition {
   dataFirstThumb?: {
@@ -23,24 +22,25 @@ const config = {
   step: 1,
   vertical: false,
 };
+
 const $block = $('<div>');
 class TestView extends View {
-  public observer: Observer;
-
   public sliderBlock: SliderBlock;
 
   constructor() {
-    super(config, $block[0]);
+    super($block[0]);
   }
 }
 
 $(document.body).append($block);
 const view: TestView = new TestView();
-const observer = jasmine.createSpyObj('observer', ['broadcast', 'subscribe']);
 const sliderBlock = jasmine.createSpyObj('sliderBlock', ['setPositionThumb', 'updateConfig']);
-view.observer = observer;
 view.sliderBlock = sliderBlock;
 describe('View', () => {
+  beforeAll(() => {
+    view.setConfig(config);
+  });
+
   it('Инициализация View', () => {
     expect(view).toBeDefined();
   });
@@ -106,26 +106,19 @@ describe('View', () => {
   });
 
   it('метод addFollower подписывает на обновления класса View', () => {
+    spyOn(view, 'subscribe');
     view.addFollower({});
 
-    expect(view.observer.subscribe).toHaveBeenCalled();
+    expect(view.subscribe).toHaveBeenCalled();
   });
 
-  describe('метод onloadWindow', () => {
-    it('при загрузке окна передает данные о размере контейнера', () => {
-      const event = new UIEvent('load', { bubbles: true });
-      window.dispatchEvent(event);
-
-      expect(view.observer.broadcast).toHaveBeenCalled();
-    });
-  });
-
-  describe('метод resizeWindow передает данные о размере контейнера', () => {
+  describe('метод resizeWindow передает данные о размере контейнера при изменении размера окна браузера', () => {
     it('при resize ', () => {
+      spyOn(view, 'broadcast');
       const event = new UIEvent('resize', {});
       window.dispatchEvent(event);
 
-      expect(view.observer.broadcast).toHaveBeenCalled();
+      expect(view.broadcast).toHaveBeenCalled();
     });
   });
 
@@ -140,26 +133,8 @@ describe('View', () => {
       step: 0.1,
       vertical: true,
     };
-    view.updateConfig(newConf);
+    view.setConfig(newConf);
 
-    expect(view.sliderBlock.updateConfig).toHaveBeenCalled();
-  });
-
-  it('метод changeOrientation вызывает метод updateConfig', () => {
-    const newConf = {
-      min: 0,
-      max: 105,
-      label: false,
-      vertical: true,
-      positionFrom: 5,
-      positionTo: 10,
-      range: false,
-      step: 1,
-    };
-    spyOn(view, 'updateConfig');
-    view.changeOrientationOrRange(newConf);
-
-    expect(view.updateConfig).toHaveBeenCalledWith(newConf);
     expect(view.sliderBlock.updateConfig).toHaveBeenCalled();
   });
 });

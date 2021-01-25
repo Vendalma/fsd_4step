@@ -1,22 +1,6 @@
+import RangeSlider from '../RangeSlider/rangeSlider';
 import '../styles.scss';
-import RangeSlider from './rangeSlider';
 
-interface ISettings {
-  min: number;
-  max: number;
-  positionFrom: number;
-  positionTo: number;
-  range: boolean;
-  label: boolean;
-  step: number;
-  vertical: boolean;
-}
-interface IUpdateConfig {
-  [key: string]: boolean | number;
-}
-interface MethodsObject {
-  [key: string]: any /* eslint-disable-line */;
-}
 (function ($) {
   const methods: MethodsObject = {
     init(options: ISettings) {

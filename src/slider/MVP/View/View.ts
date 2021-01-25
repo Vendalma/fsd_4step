@@ -1,57 +1,20 @@
 import Observer from '../../Observer/Observer';
 import SliderBlock from './sliderBlock';
+import { IConfig, IDataThumbMove, IPosition } from './viewInterfaces';
 
-interface IConfigView {
-  min: number;
-  max: number;
-  range: boolean;
-  positionFrom: number;
-  positionTo: number;
-  vertical: boolean;
-  step: number;
-  label: boolean;
-}
-interface IDataThumbMove {
-  clientXY: number;
-  sliderClientReact: number;
-  dataNum: string;
-  positionThumbFirst?: number;
-  positionThumbSecond?: number;
-}
-interface IPosition {
-  dataFirstThumb?: {
-    positionFrom: number;
-    valueFrom: number;
-  };
-  dataSecondThumb?: {
-    positionTo: number;
-    valueTo: number;
-  };
-  stepData?: number;
-}
-class View {
-  private config: IConfigView;
+class View extends Observer {
+  private config: IConfig;
 
   private wrapper: HTMLElement;
 
   private sliderContainer: HTMLElement;
 
-  protected observer: Observer;
-
   protected sliderBlock: SliderBlock;
 
-  constructor(config: IConfigView, wrapper: HTMLElement) {
-    this.config = config;
+  constructor(wrapper: HTMLElement) {
+    super();
     this.wrapper = wrapper;
-    this.wrapper.classList.add('slider__wrapper');
-    this.sliderContainer = document.createElement('div');
-    this.sliderContainer.classList.add('slider');
-    this.wrapper.append(this.sliderContainer);
-    this.observer = new Observer();
-    this.sliderBlock = new SliderBlock(this.config, this.sliderContainer);
-
-    this.onloadWindow();
-    this.resizeWindow();
+    this.createSliderContainer();
     this.subscribeOnUpdate();
   }
 
@@ -60,17 +23,22 @@ class View {
   }
 
   addFollower(follower: unknown): void {
-    this.observer.subscribe(follower);
+    this.subscribe(follower);
   }
 
-  updateConfig(data: IConfigView): void {
+  setConfig(data: IConfig): void {
     this.config = data;
-    this.sliderBlock.updateConfig(data);
+    this.sliderBlock.updateConfig(this.config);
+    this.getSliderSize();
   }
 
-  changeOrientationOrRange(data: IConfigView): void {
-    this.updateConfig(data);
-    this.getSliderSize();
+  private createSliderContainer(): void {
+    this.wrapper.classList.add('slider__wrapper');
+    this.sliderContainer = document.createElement('div');
+    this.sliderContainer.classList.add('slider');
+    this.wrapper.append(this.sliderContainer);
+    this.sliderBlock = new SliderBlock(this.sliderContainer);
+    this.resizeWindow();
   }
 
   private subscribeOnUpdate(): void {
@@ -78,11 +46,7 @@ class View {
   }
 
   private update(data: IDataThumbMove): void {
-    this.observer.broadcast(data, 'mouseMove');
-  }
-
-  private onloadWindow(): void {
-    window.addEventListener('load', this.getSliderSize.bind(this));
+    this.broadcast(data, 'mouseMove');
   }
 
   private resizeWindow(): void {
@@ -90,9 +54,9 @@ class View {
   }
 
   private getSliderSize(): void {
-    if (!this.config.vertical) this.observer.broadcast(this.sliderContainer.offsetWidth, 'sliderSize');
+    if (!this.config.vertical) this.broadcast(this.sliderContainer.offsetWidth, 'sliderSize');
 
-    if (this.config.vertical) this.observer.broadcast(this.sliderContainer.offsetHeight, 'sliderSize');
+    if (this.config.vertical) this.broadcast(this.sliderContainer.offsetHeight, 'sliderSize');
   }
 }
 export default View;

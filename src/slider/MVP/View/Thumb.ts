@@ -1,5 +1,6 @@
 import Observer from '../../Observer/Observer';
 import Label from './Label';
+import { IDataThumbMove } from './viewInterfaces';
 
 interface IConfigThumb {
   range: boolean;
@@ -8,14 +9,7 @@ interface IConfigThumb {
   vertical: boolean;
   label: boolean;
 }
-interface IDataThumbMove {
-  clientXY: number;
-  sliderClientReact: number;
-  dataNum: string;
-  positionThumbFirst?: number;
-  positionThumbSecond?: number;
-}
-class Thumb {
+class Thumb extends Observer {
   private config: IConfigThumb;
 
   private slider: HTMLElement;
@@ -28,44 +22,31 @@ class Thumb {
 
   private label: Label;
 
-  protected observer: Observer;
-
-  constructor(config: IConfigThumb, thumbHtmlClass: string, slider: HTMLElement, dataNum: string) {
-    this.config = config;
+  constructor(thumbHtmlClass: string, slider: HTMLElement, dataNum: string) {
+    super();
     this.slider = slider;
     this.thumbHtmlClass = thumbHtmlClass;
     this.dataNum = dataNum;
-
-    this.thumb = document.createElement('div');
-    this.thumb.classList.add('slider__thumb');
-    this.thumb.classList.add(this.thumbHtmlClass);
-
-    this.thumb.setAttribute('data-num', this.dataNum);
-    this.slider.append(this.thumb);
-
-    this.observer = new Observer();
-    this.label = new Label(this.config, this.thumb);
-    this.checkOrientation();
+    this.createThumb();
     this.moveThumb();
   }
 
   addFollower(follower: unknown): void {
-    this.observer.subscribe(follower);
+    this.subscribe(follower);
   }
 
   onMouseUp = (e: MouseEvent): void => {
     e.preventDefault; /* eslint-disable-line */
     document.removeEventListener('mousemove', this.moveHandle);
     document.removeEventListener('mouseup', this.onMouseUp);
-    this.observer.broadcast(this.findPosition(e));
+    this.broadcast(this.findPosition(e));
     this.changeZIndexDown();
   };
 
   setPosition(position: number): void {
     if (!this.config.vertical) {
       this.thumb.style.left = `${position}px`;
-    }
-    if (this.config.vertical) {
+    } else if (this.config.vertical) {
       this.thumb.style.top = `${position}px`;
     }
   }
@@ -82,14 +63,20 @@ class Thumb {
     this.slider.append(this.thumb);
   }
 
-  cleanStyleAttr(): void {
-    this.thumb.removeAttribute('style');
-  }
-
   updateConfig(data: IConfigThumb): void {
     this.config = data;
+    this.thumb.removeAttribute('style');
     this.label.updateConfig(data);
     this.checkOrientation();
+  }
+
+  private createThumb(): void {
+    this.thumb = document.createElement('div');
+    this.thumb.classList.add('slider__thumb');
+    this.thumb.classList.add(this.thumbHtmlClass);
+    this.thumb.setAttribute('data-num', this.dataNum);
+    this.slider.append(this.thumb);
+    this.label = new Label(this.thumb);
   }
 
   private checkOrientation(): void {
@@ -114,17 +101,14 @@ class Thumb {
   };
 
   private moveHandle = (e: MouseEvent): void => {
-    this.observer.broadcast(this.findPosition(e));
+    this.broadcast(this.findPosition(e));
   };
 
-  private findPosition(e: MouseEvent): IDataThumbMove | undefined {
+  private findPosition(e: MouseEvent): IDataThumbMove {
     if (!this.config.vertical) {
       return this.findPositionForHorizontal(e) as IDataThumbMove;
     }
-    if (this.config.vertical) {
-      return this.findPositionForVertical(e) as IDataThumbMove;
-    }
-    return undefined;
+    return this.findPositionForVertical(e) as IDataThumbMove;
   }
 
   private findPositionForHorizontal(e: MouseEvent): IDataThumbMove | undefined {

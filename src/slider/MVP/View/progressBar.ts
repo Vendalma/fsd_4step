@@ -9,13 +9,9 @@ class ProgressBar {
 
   private progressBar: HTMLElement;
 
-  constructor(config: IConfigBar, slider: HTMLElement) {
-    this.config = config;
+  constructor(slider: HTMLElement) {
     this.slider = slider;
-    this.progressBar = document.createElement('div');
-    this.progressBar.classList.add('slider__progress-bar');
-    this.slider.prepend(this.progressBar);
-    this.checkOrientation();
+    this.createBar();
   }
 
   addBar(): void {
@@ -43,13 +39,16 @@ class ProgressBar {
     }
   }
 
-  cleanStyleAttr(): void {
-    this.progressBar.removeAttribute('style');
-  }
-
   updateConfig(data: IConfigBar): void {
     this.config = data;
+    this.progressBar.removeAttribute('style');
     this.checkOrientation();
+  }
+
+  private createBar(): void {
+    this.progressBar = document.createElement('div');
+    this.progressBar.classList.add('slider__progress-bar');
+    this.slider.prepend(this.progressBar);
   }
 
   private checkOrientation(): void {

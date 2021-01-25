@@ -1,24 +1,7 @@
 import Model from '../slider/MVP/Model/Model';
-import Observer from '../slider/Observer/Observer';
+import { IConfig, IDataThumbMove } from '../slider/MVP/Model/modelInterfaces';
 
-interface IDataThumbMove {
-  clientXY: number;
-  sliderClientReact: number;
-  dataNum: string;
-  positionThumbFirst?: number;
-  positionThumbSecond?: number;
-}
-interface IConfigModel {
-  min: number;
-  max: number;
-  range: boolean;
-  positionFrom: number;
-  positionTo: number;
-  vertical: boolean;
-  step: number;
-  label: boolean;
-}
-const config: IConfigModel = {
+const config: IConfig = {
   range: true,
   min: 0,
   max: 100,
@@ -29,134 +12,36 @@ const config: IConfigModel = {
   label: true,
 };
 class TestModel extends Model {
-  public observer: Observer;
-
-  public config: IConfigModel;
-
-  constructor() {
-    super(config);
-  }
+  public config: IConfig;
 }
 describe('Model', () => {
   const model: TestModel = new TestModel();
-  const observer = jasmine.createSpyObj('observer', ['broadcast', 'subscribe']);
-  model.observer = observer;
+  beforeAll(() => {
+    spyOn(model, 'broadcast');
+  });
+
   it('Инициализация класса Model', () => {
     expect(model).toBeDefined();
-    expect(model.observer).toEqual(observer);
   });
 
-  it('метод addFollower вызывает ф-ю subscribe в кассе Observer', () => {
+  it('метод addFollower вызывает ф-ю subscribe', () => {
+    spyOn(model, 'subscribe');
     model.addFollower({});
 
-    expect(model.observer.subscribe).toHaveBeenCalledWith({});
+    expect(model.subscribe).toHaveBeenCalledWith({});
   });
 
-  describe('метод updateConfig обновляет конфиг модели', () => {
-    it('если в принимаемом объекте key = vertical, то вызывается ф-я broadcast класса Observer', () => {
-      const data = {
-        vertical: true,
-      };
-      model.updateConfig(data);
+  it('метод getConfig возвращает конфиг Model', () => {
+    model.updateConfig(config);
 
-      expect(model.observer.broadcast).toHaveBeenCalled();
-    });
-
-    it('если в принимаемом объекте key = vertical, вызывается ф-я broadcast класса Observer, при не корректном значении positionTo, оно пересчитывается', () => {
-      const data = {
-        vertical: false,
-      };
-      model.config.positionTo = 101;
-      model.updateConfig(data);
-
-      expect(model.observer.broadcast).toHaveBeenCalled();
-    });
-
-    it('если в принимаемом объекте key = range, то вызывается ф-я broadcast класса Observer', () => {
-      const data = {
-        range: false,
-      };
-      model.updateConfig(data);
-
-      expect(model.observer.broadcast).toHaveBeenCalled();
-    });
-
-    it('если в принимаемом объекте key = positionFrom, вызывается ф-я broadcast класса Observer', () => {
-      const data = {
-        positionFrom: 45,
-      };
-      model.updateConfig(data);
-
-      expect(model.observer.broadcast).toHaveBeenCalled();
-    });
-
-    it('если в принимаемом объекте key = positionFrom, при не корректном значении, оно пересчитывается, затем вызывается ф-я broadcast класса Observer', () => {
-      const data = {
-        positionFrom: -5,
-      };
-      model.updateConfig(data);
-
-      expect(model.observer.broadcast).toHaveBeenCalled();
-    });
-
-    it('если key = positionFrom, при не корректном значении, оно пересчитывается и вызывается ф-я broadcast класса Observer', () => {
-      model.config.range = true;
-      model.config.max = 30;
-      const data = {
-        positionFrom: 40,
-      };
-      model.updateConfig(data);
-
-      expect(model.observer.broadcast).toHaveBeenCalled();
-    });
-
-    it('если в принимаемом объекте key = positionTo, то вызывается ф-я broadcast класса Observer', () => {
-      const data = {
-        positionTo: 50,
-      };
-      model.updateConfig(data);
-
-      expect(model.observer.broadcast).toHaveBeenCalled();
-    });
-
-    it('если в принимаемом объекте key = positionTo, при не корректном значении, оно пересчитывается, затем вызывается ф-я broadcast класса Observer', () => {
-      model.config.positionFrom = 30;
-      model.config.step = 1000;
-      const data = {
-        positionTo: 25,
-      };
-      model.updateConfig(data);
-
-      expect(model.observer.broadcast).toHaveBeenCalled();
-    });
-
-    it('если в принимаемом объекте key = label, то вызываются ф-я  broadcast класса Observer', () => {
-      const data = {
-        label: false,
-      };
-      model.updateConfig(data);
-
-      expect(model.observer.broadcast).toHaveBeenCalled();
-    });
+    expect(model.getConfig()).toEqual(config);
   });
 
-  describe('метод getConfig валидирует конфиг модели', () => {
-    it('если конфиг проходит валидацию, то метод возвращает его', () => {
-      const expectConfig: IConfigModel = {
-        range: true,
-        min: 0,
-        max: 100,
-        positionFrom: 15,
-        positionTo: 50,
-        step: 1,
-        vertical: false,
-        label: true,
-      };
-      model.updateConfig(expectConfig);
-      const result = model.getConfig();
+  it('метод updateConfig устанавливает конфиг для класса Model и вызывает метод broadcast', () => {
+    model.updateConfig(config);
 
-      expect(result).toEqual(expectConfig);
-    });
+    expect(model.config).toEqual(config);
+    expect(model.broadcast).toHaveBeenCalled();
   });
 
   describe('проверка метода findMoveThumbPosition', () => {
@@ -172,145 +57,207 @@ describe('Model', () => {
     });
 
     describe('step = 0.1', () => {
-      model.updateConfig({ step: 0.1 });
       describe('dataNum = 1, range = false', () => {
         beforeEach(function () {
           data.dataNum = '1';
-          model.updateConfig({ range: false });
+          model.updateConfig({
+            step: 0.1,
+            max: 100,
+            min: 0,
+            positionFrom: 10,
+            positionTo: 20,
+            range: false,
+            label: true,
+            vertical: false,
+          });
         });
 
-        it('при position < 0, вызывается ф-я broadcast класса Observer', () => {
+        it('при position < 0, вызывается ф-я broadcast', () => {
           data.sliderClientReact = 100;
           model.findMoveThumbPosition(data);
 
-          expect(model.observer.broadcast).toHaveBeenCalled();
+          expect(model.broadcast).toHaveBeenCalled();
         });
 
-        it('при position > sliderSize, вызывается ф-я broadcast класса Observer', () => {
+        it('при position > sliderSize, вызывается ф-я broadcast', () => {
           data.clientXY = 410;
           model.calcOnloadPosition(300);
           model.findMoveThumbPosition(data);
 
-          expect(model.observer.broadcast).toHaveBeenCalled();
+          expect(model.broadcast).toHaveBeenCalled();
         });
 
-        it('при position, вызывается ф-я broadcast класса Observer', () => {
+        it('при position, вызывается ф-я broadcast', () => {
           model.findMoveThumbPosition(data);
 
-          expect(model.observer.broadcast).toHaveBeenCalled();
+          expect(model.broadcast).toHaveBeenCalled();
         });
       });
 
       describe('dataNum = 1, range = true', () => {
         beforeEach(function () {
           data.dataNum = '1';
-          model.updateConfig({ range: true });
+          model.updateConfig({
+            step: 0.1,
+            max: 100,
+            min: 0,
+            positionFrom: 10,
+            positionTo: 20,
+            range: true,
+            label: true,
+            vertical: false,
+          });
         });
 
-        it('если position < 0, вызывается метод broadcast класса Observer', () => {
+        it('если position < 0, вызывается метод broadcast', () => {
           data.sliderClientReact = 110;
           model.findMoveThumbPosition(data);
 
-          expect(model.observer.broadcast).toHaveBeenCalled();
+          expect(model.broadcast).toHaveBeenCalled();
         });
 
-        it('при position > secondThumbPosition, вызывается ф-я broadcast класса Observer', () => {
+        it('при position > secondThumbPosition, вызывается ф-я broadcast', () => {
           data.clientXY = 410;
           model.findMoveThumbPosition(data);
 
-          expect(model.observer.broadcast).toHaveBeenCalled();
+          expect(model.broadcast).toHaveBeenCalled();
         });
 
-        it('при position, вызывается метод broadcast класса Observer', () => {
+        it('при position, вызывается метод broadcast', () => {
           model.findMoveThumbPosition(data);
 
-          expect(model.observer.broadcast).toHaveBeenCalled();
+          expect(model.broadcast).toHaveBeenCalled();
         });
       });
 
       describe('dataNum = 2, range = true', () => {
         beforeEach(function () {
           data.dataNum = '2';
-          model.updateConfig({ range: true });
+          model.updateConfig({
+            step: 0.1,
+            max: 100,
+            min: 0,
+            positionFrom: 10,
+            positionTo: 20,
+            range: true,
+            label: true,
+            vertical: false,
+          });
         });
 
-        it('при position < firstThumbPosition, вызывается ф-я broadcast класса Observer', () => {
+        it('при position < firstThumbPosition, вызывается ф-я broadcast', () => {
           data.sliderClientReact = 110;
           model.findMoveThumbPosition(data);
 
-          expect(model.observer.broadcast).toHaveBeenCalled();
+          expect(model.broadcast).toHaveBeenCalled();
         });
 
-        it('если position > sliderSize, вызывается метод broadcast класса Observer', () => {
+        it('если position > sliderSize, вызывается метод broadcast', () => {
           data.clientXY = 410;
           model.calcOnloadPosition(300);
           model.findMoveThumbPosition(data);
 
-          expect(model.observer.broadcast).toHaveBeenCalled();
+          expect(model.broadcast).toHaveBeenCalled();
         });
 
-        it('если position, вызывается ф-я broadcast класса Observer', () => {
+        it('если position, вызывается ф-я broadcast', () => {
           model.findMoveThumbPosition(data);
 
-          expect(model.observer.broadcast).toHaveBeenCalled();
+          expect(model.broadcast).toHaveBeenCalled();
+        });
+      });
+
+      describe('dataNum = 3, то вызывается метод broadcast с значением undefined', () => {
+        it('', () => {
+          data.dataNum = '3';
+          model.updateConfig({
+            step: 0.1,
+            max: 100,
+            min: 0,
+            positionFrom: 10,
+            positionTo: 20,
+            range: true,
+            label: true,
+            vertical: false,
+          });
+          model.findMoveThumbPosition(data);
+
+          expect(model.broadcast).toHaveBeenCalledWith(undefined, 'positionThumb');
         });
       });
     });
 
     describe('step = 1', () => {
       describe('dataNum = 1, range = false', () => {
-        model.updateConfig({ step: 1 });
         beforeEach(function () {
           data.dataNum = '1';
-          model.updateConfig({ range: false });
+          model.updateConfig({
+            step: 1,
+            max: 100,
+            min: 0,
+            positionFrom: 10,
+            positionTo: 20,
+            range: false,
+            label: true,
+            vertical: false,
+          });
         });
 
-        it('при position < 0, вызывается ф-я broadcast класса Observer', () => {
+        it('при position < 0, вызывается ф-я broadcast', () => {
           data.sliderClientReact = 110;
           model.findMoveThumbPosition(data);
 
-          expect(model.observer.broadcast).toHaveBeenCalled();
+          expect(model.broadcast).toHaveBeenCalled();
         });
 
-        it('при position > sliderSize, вызывается ф-я broadcast класса Observer', () => {
+        it('при position > sliderSize, вызывается ф-я broadcast', () => {
           data.clientXY = 410;
           model.calcOnloadPosition(300);
           model.findMoveThumbPosition(data);
 
-          expect(model.observer.broadcast).toHaveBeenCalled();
+          expect(model.broadcast).toHaveBeenCalled();
         });
 
-        it('при position, вызывается ф-я broadcast класса Observer', () => {
+        it('при position, вызывается ф-я broadcast', () => {
           model.findMoveThumbPosition(data);
 
-          expect(model.observer.broadcast).toHaveBeenCalled();
+          expect(model.broadcast).toHaveBeenCalled();
         });
       });
 
       describe('dataNum = 1, range = true', () => {
         beforeEach(function () {
           data.dataNum = '1';
-          model.updateConfig({ range: true });
+          model.updateConfig({
+            step: 1,
+            max: 100,
+            min: 0,
+            positionFrom: 10,
+            positionTo: 20,
+            range: true,
+            label: true,
+            vertical: false,
+          });
         });
 
-        it('если position < 0, вызывается метод broadcast класса Observer', () => {
+        it('если position < 0, вызывается метод broadcast', () => {
           data.sliderClientReact = 110;
           model.findMoveThumbPosition(data);
 
-          expect(model.observer.broadcast).toHaveBeenCalled();
+          expect(model.broadcast).toHaveBeenCalled();
         });
 
-        it('при position > secondThumbPosition, вызывается ф-я broadcast класса Observer', () => {
+        it('при position > secondThumbPosition, вызывается ф-я broadcast', () => {
           data.clientXY = 410;
           model.findMoveThumbPosition(data);
 
-          expect(model.observer.broadcast).toHaveBeenCalled();
+          expect(model.broadcast).toHaveBeenCalled();
         });
 
-        it('при position, вызывается метод broadcast класса Observer', () => {
+        it('при position, вызывается метод broadcast', () => {
           model.findMoveThumbPosition(data);
 
-          expect(model.observer.broadcast).toHaveBeenCalled();
+          expect(model.broadcast).toHaveBeenCalled();
         });
       });
     });
@@ -318,35 +265,44 @@ describe('Model', () => {
     describe('dataNum = 2, range = true', () => {
       beforeEach(function () {
         data.dataNum = '2';
-        model.updateConfig({ range: true });
+        model.updateConfig({
+          step: 1,
+          max: 100,
+          min: 0,
+          positionFrom: 10,
+          positionTo: 20,
+          range: true,
+          label: true,
+          vertical: false,
+        });
       });
 
-      it('при position < firstThumbPosition, вызывается ф-я broadcast класса Observer', () => {
+      it('при position < firstThumbPosition, вызывается ф-я broadcast', () => {
         data.sliderClientReact = 110;
         model.findMoveThumbPosition(data);
 
-        expect(model.observer.broadcast).toHaveBeenCalled();
+        expect(model.broadcast).toHaveBeenCalled();
       });
 
-      it('если position > sliderSize, вызывается метод broadcast класса Observer', () => {
+      it('если position > sliderSize, вызывается метод broadcast', () => {
         data.clientXY = 410;
         model.calcOnloadPosition(300);
         model.findMoveThumbPosition(data);
 
-        expect(model.observer.broadcast).toHaveBeenCalled();
+        expect(model.broadcast).toHaveBeenCalled();
       });
 
-      it('если position, вызывается ф-я broadcast класса Observer', () => {
+      it('если position, вызывается ф-я broadcast', () => {
         model.findMoveThumbPosition(data);
 
-        expect(model.observer.broadcast).toHaveBeenCalled();
+        expect(model.broadcast).toHaveBeenCalled();
       });
     });
   });
 
-  it('метод calcOnloadPosition принимает размер слайдера и вызывает ф-ю broadcast класса Observer', () => {
+  it('метод calcOnloadPosition принимает размер слайдера, рассчитывает начальные позиции бегунков, передает данные через ф-ю broadcast', () => {
     model.calcOnloadPosition(150);
 
-    expect(model.observer.broadcast).toHaveBeenCalled();
+    expect(model.broadcast).toHaveBeenCalled();
   });
 });
