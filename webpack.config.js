@@ -10,7 +10,7 @@ const PATHS = {
   assets: 'assets/',
 };
 const config = {
-  entry: `${PATHS.src}/main.ts`,
+  entry: `${PATHS.src}/index.ts`,
   output: {
     path: PATHS.dist,
     filename: `${PATHS.assets}js/[name].js`,
@@ -20,7 +20,6 @@ const config = {
     contentBase: PATHS.dist,
     compress: true,
     port: 9000,
-    writeToDisk: true,
   },
   module: {
     rules: [

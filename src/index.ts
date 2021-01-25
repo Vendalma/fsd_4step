@@ -1,6 +1,6 @@
-import './main.scss';
+import './index.scss';
 import './panel/panelController/panelController';
-import './slider/RangeSlider/slider';
+import './slider/jquerySlider/slider';
 
 $('.js-app').rangeSlider();
 $('.js-app2').rangeSlider({
