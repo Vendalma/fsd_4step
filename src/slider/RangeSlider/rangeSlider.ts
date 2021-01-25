@@ -24,7 +24,7 @@ class RangeSlider extends Observer implements IRangeSlider {
     this.subscribeOnUpdate();
   }
 
-  getConfig(): ISettings | undefined {
+  getConfig(): ISettings {
     return this.model.getConfig();
   }
 

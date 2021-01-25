@@ -228,7 +228,7 @@ describe('Thumb', () => {
     });
   });
 
-  describe('метод onMouseUp отвязывает обработчики событий, уменьшается zIndex контейнера бегунка, вызывает ф-ии changeZIndexDown и broadcast ', () => {
+  describe('метод onMouseUp отвязывает обработчики событий, уменьшается zIndex контейнера бегунка, вызывает ф-ию broadcast ', () => {
     const mousedown = new MouseEvent('mousedown', { bubbles: true });
     thumbBlock.dispatchEvent(mousedown);
     const mouseup = new MouseEvent('mouseup', { bubbles: true });

@@ -40,7 +40,7 @@ class Thumb extends Observer {
     document.removeEventListener('mousemove', this.moveHandle);
     document.removeEventListener('mouseup', this.onMouseUp);
     this.broadcast(this.findPosition(e));
-    this.changeZIndexDown();
+    this.thumb.classList.remove('slider__thumb_zIndex-up');
   };
 
   setPosition(position: number): void {
@@ -97,7 +97,7 @@ class Thumb extends Observer {
     e.preventDefault();
     document.addEventListener('mousemove', this.moveHandle);
     document.addEventListener('mouseup', this.onMouseUp);
-    this.changeZIndexUp();
+    this.thumb.classList.add('slider__thumb_zIndex-up');
   };
 
   private moveHandle = (e: MouseEvent): void => {
@@ -153,14 +153,6 @@ class Thumb extends Observer {
       } as IDataThumbMove;
     }
     return undefined;
-  }
-
-  private changeZIndexUp(): void {
-    this.thumb.classList.add('slider__thumb_zIndex-up');
-  }
-
-  private changeZIndexDown(): void {
-    this.thumb.classList.remove('slider__thumb_zIndex-up');
   }
 }
 export default Thumb;

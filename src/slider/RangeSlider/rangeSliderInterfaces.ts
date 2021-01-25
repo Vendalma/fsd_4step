@@ -8,23 +8,13 @@ interface ISettings {
   step: number;
   vertical: boolean;
 }
-export interface IPosition {
-  dataFirstThumb?: {
-    positionFrom: number;
-    valueFrom: number;
-  };
-  dataSecondThumb?: {
-    positionTo?: number;
-    valueTo?: number;
-  };
-  stepData?: number;
-}
+
 interface IUpdateConfig {
   [key: string]: boolean | number;
 }
 
 export interface IRangeSlider {
-  updateConfig(data: IUpdateConfig): void;
+  updateConfig(data: IUpdateConfig | ISettings): void;
 
   addFollower(follower: unknown): void;
 }
