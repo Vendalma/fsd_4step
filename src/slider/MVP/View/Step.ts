@@ -13,20 +13,21 @@ class Step {
   }
 
   addStepLine(data: number): void {
-    const thumb = this.container.querySelector('.js-slider__thumb-first') as HTMLElement;
+    const thumb = this.container.querySelector('.js-slider__thumb_type_first') as HTMLElement;
     this.deleteStep();
     const fragment = document.createDocumentFragment();
     const stepSize = data;
     for (let i = 0; i < 21; i += 1) {
       const stepBlock = document.createElement('div');
+      stepBlock.classList.add('js-slider__step-block');
       stepBlock.classList.add('slider__step-block');
       fragment.append(stepBlock);
       if (i === 0) {
         stepBlock.innerHTML = `${this.config.min}`;
-        stepBlock.classList.add('slider__step-block_min');
+        stepBlock.classList.add('slider__step-block_value-type_min');
       } else if (i === 20) {
         stepBlock.innerHTML = `${this.config.max}`;
-        stepBlock.classList.add('slider__step-block_max');
+        stepBlock.classList.add('slider__step-block_value-type_max');
       }
 
       if (this.config.vertical) {
@@ -51,7 +52,7 @@ class Step {
   }
 
   private deleteStep(): void {
-    const steps = this.container.querySelectorAll('.slider__step-block') as NodeListOf<HTMLElement>;
+    const steps = this.container.querySelectorAll('.js-slider__step-block') as NodeListOf<HTMLElement>;
     steps.forEach((elem) => {
       this.container.removeChild(elem);
     });

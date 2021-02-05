@@ -5,7 +5,7 @@ describe('Step', () => {
   const step: Step = new Step(container[0]);
   const $thumb = $('<div>');
   beforeAll(function () {
-    $thumb[0].classList.add('js-slider__thumb-first');
+    $thumb[0].classList.add('js-slider__thumb_type_first');
     container.append($thumb);
     $(document.body).append(container);
   });
@@ -21,7 +21,7 @@ describe('Step', () => {
     });
 
     beforeEach(function () {
-      const blocks = container[0].querySelectorAll('.slider__step-block') as NodeListOf<HTMLElement>;
+      const blocks = container[0].querySelectorAll('.js-slider__step-block') as NodeListOf<HTMLElement>;
       blocks.forEach((elem) => {
         container[0].removeChild(elem);
       });
@@ -35,18 +35,18 @@ describe('Step', () => {
       };
       step.updateConfig(conf);
       step.addStepLine(stepSize);
-      const stepBlocks = container[0].querySelectorAll('.slider__step-block');
+      const stepBlocks = container[0].querySelectorAll('.js-slider__step-block');
 
       expect(stepBlocks.length).toEqual(21);
       for (let i = 0; i < stepBlocks.length; i += 1) {
         expect(stepBlocks[i]).not.toHaveClass('slider__step-block_vertical');
         if (i === 0) {
           expect(stepBlocks[i].innerHTML).toEqual('7');
-          expect(stepBlocks[i]).toHaveClass('slider__step-block_min');
+          expect(stepBlocks[i]).toHaveClass('slider__step-block_value-type_min');
         }
         if (i === stepBlocks.length) {
           expect(stepBlocks[i].innerHTML).toEqual('11');
-          expect(stepBlocks[i]).toHaveClass('slider__step-block_max');
+          expect(stepBlocks[i]).toHaveClass('slider__step-block_value-type_max');
         }
       }
     });
@@ -59,18 +59,18 @@ describe('Step', () => {
       };
       step.updateConfig(conf);
       step.addStepLine(stepSize);
-      const stepBlocks = container[0].querySelectorAll('.slider__step-block') as NodeListOf<HTMLElement>;
+      const stepBlocks = container[0].querySelectorAll('.js-slider__step-block') as NodeListOf<HTMLElement>;
 
       expect(stepBlocks.length).toEqual(21);
       for (let i = 0; i < stepBlocks.length; i += 1) {
         expect(stepBlocks[i]).toHaveClass('slider__step-block_vertical');
         if (i === 0) {
           expect(stepBlocks[i].innerHTML).toEqual('7');
-          expect(stepBlocks[i]).toHaveClass('slider__step-block_min');
+          expect(stepBlocks[i]).toHaveClass('slider__step-block_value-type_min');
         }
         if (i === stepBlocks.length) {
           expect(stepBlocks[i].innerHTML).toEqual('11');
-          expect(stepBlocks[i]).toHaveClass('slider__step-block_max');
+          expect(stepBlocks[i]).toHaveClass('slider__step-block_value-type_max');
         }
       }
     });
@@ -84,8 +84,8 @@ describe('Step', () => {
     };
     step.updateConfig(newConf);
     step.addStepLine(30);
-    const blockMax = container[0].querySelector('.slider__step-block_max') as HTMLElement;
-    const blockMin = container[0].querySelector('.slider__step-block_min') as HTMLElement;
+    const blockMax = container[0].querySelector('.slider__step-block_value-type_max') as HTMLElement;
+    const blockMin = container[0].querySelector('.slider__step-block_value-type_min') as HTMLElement;
 
     expect(blockMax).toContainText('10');
     expect(blockMin).toContainText('0');

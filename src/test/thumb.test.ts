@@ -9,14 +9,14 @@ const config = {
 };
 const $block = $('<div>');
 describe('Thumb', () => {
-  const thumb: Thumb = new Thumb('js-slider__thumb-first', $block[0], '1');
+  const thumb: Thumb = new Thumb('first', $block[0], '1');
   beforeAll(function () {
     $block[0].classList.add('slider__block');
     $(document.body).append($block);
     thumb.updateConfig(config);
     spyOn(thumb, 'broadcast');
   });
-  const thumbBlock = $block[0].querySelector('.js-slider__thumb-first') as HTMLElement;
+  const thumbBlock = $block[0].querySelector('.js-slider__thumb_type_first') as HTMLElement;
   it('инициализация класса Thumb', () => {
     expect(thumb).toBeDefined();
   });
@@ -30,7 +30,7 @@ describe('Thumb', () => {
 
   it('метод setLabelValue вызывает ф-ю setLabelValue в классе Label', () => {
     thumb.setLabelValue(8);
-    const elementLabel = $block[0].querySelector('.slider__label');
+    const elementLabel = $block[0].querySelector('.js-slider__label');
 
     expect(elementLabel).toHaveText('8');
   });
@@ -38,14 +38,14 @@ describe('Thumb', () => {
   it('метод removeThis удаляет бегунок из родительского блока', () => {
     thumb.removeThumb();
 
-    expect($block).not.toContainElement('div.js-slider__thumb-first');
+    expect($block).not.toContainElement('div.js-slider__thumb_type_first');
     expect(thumbBlock).not.toBeInDOM();
   });
 
   it('метод addThis добавляет блок бегунка в родительский блок', () => {
     thumb.addThumb();
 
-    expect($block).toContainElement('div.js-slider__thumb-first');
+    expect($block).toContainElement('div.js-slider__thumb_type_first');
     expect(thumbBlock).toBeInDOM();
   });
 
@@ -81,7 +81,7 @@ describe('Thumb', () => {
     const mousedown = new MouseEvent('mousedown', { bubbles: true });
     thumbBlock.dispatchEvent(mousedown);
 
-    expect(thumbBlock).toHaveClass('slider__thumb_zIndex-up');
+    expect(thumbBlock).toHaveClass('slider__thumb_visibility_zIndex-up');
   });
 
   describe('при перемещении мыши через ф-ю broadcast передаются данные о движении бегунка', () => {
@@ -90,15 +90,15 @@ describe('Thumb', () => {
     thumbBlock.dispatchEvent(mousedown);
 
     const $thumbTwo = $('<div>');
-    $thumbTwo[0].classList.add('js-slider__thumb-second');
+    $thumbTwo[0].classList.add('js-slider__thumb_type_second');
     $thumbTwo[0].setAttribute('data-num', '2');
     $block.append($thumbTwo);
 
     let event: MouseEvent;
     beforeEach(function () {
       event = new MouseEvent('mousedown', { clientX: 100, clientY: 105 });
-      const thumbFirst = $block[0].querySelector('.js-slider__thumb-first') as HTMLElement;
-      const thumbSecond = $block[0].querySelector('.js-slider__thumb-second') as HTMLElement;
+      const thumbFirst = $block[0].querySelector('.js-slider__thumb_type_first') as HTMLElement;
+      const thumbSecond = $block[0].querySelector('.js-slider__thumb_type_second') as HTMLElement;
 
       thumbFirst.style.left = '101px';
       thumbFirst.style.top = '58px';
@@ -234,14 +234,14 @@ describe('Thumb', () => {
     const mouseup = new MouseEvent('mouseup', { bubbles: true });
 
     const $thumbTwo = $('<div>');
-    $thumbTwo[0].classList.add('js-slider__thumb-second');
+    $thumbTwo[0].classList.add('js-slider__thumb_type_second');
     $thumbTwo[0].setAttribute('data-num', '2');
     $block.append($thumbTwo);
 
     let event: MouseEvent;
     beforeEach(function () {
-      const thumbFirst = $block[0].querySelector('.js-slider__thumb-first') as HTMLElement;
-      const thumbSecond = $block[0].querySelector('.js-slider__thumb-second') as HTMLElement;
+      const thumbFirst = $block[0].querySelector('.js-slider__thumb_type_first') as HTMLElement;
+      const thumbSecond = $block[0].querySelector('.js-slider__thumb_type_second') as HTMLElement;
       thumbFirst.style.left = '101px';
       thumbFirst.style.top = '58px';
 
@@ -261,7 +261,7 @@ describe('Thumb', () => {
         document.dispatchEvent(mouseup);
 
         expect(thumb.broadcast).toHaveBeenCalled();
-        expect(thumbBlock).not.toHaveClass('slider__thumb_zIndex-up');
+        expect(thumbBlock).not.toHaveClass('slider__thumb_visibility_zIndex-up');
       });
 
       it('range = true, data-num = 1', () => {
@@ -277,7 +277,7 @@ describe('Thumb', () => {
         document.dispatchEvent(mouseup);
 
         expect(thumb.broadcast).toHaveBeenCalled();
-        expect(thumbBlock).not.toHaveClass('slider__thumb_zIndex-up');
+        expect(thumbBlock).not.toHaveClass('slider__thumb_visibility_zIndex-up');
       });
 
       it('range = true, data-num = 2', () => {
@@ -293,7 +293,7 @@ describe('Thumb', () => {
         document.dispatchEvent(mouseup);
 
         expect(thumb.broadcast).toHaveBeenCalled();
-        expect(thumbBlock).not.toHaveClass('slider__thumb_zIndex-up');
+        expect(thumbBlock).not.toHaveClass('slider__thumb_visibility_zIndex-up');
       });
 
       it('range = true, data-num = 3', () => {
@@ -309,7 +309,7 @@ describe('Thumb', () => {
         document.dispatchEvent(mouseup);
 
         expect(thumb.broadcast).toHaveBeenCalled();
-        expect(thumbBlock).not.toHaveClass('slider__thumb_zIndex-up');
+        expect(thumbBlock).not.toHaveClass('slider__thumb_visibility_zIndex-up');
       });
     });
 
@@ -327,7 +327,7 @@ describe('Thumb', () => {
         document.dispatchEvent(mouseup);
 
         expect(thumb.broadcast).toHaveBeenCalled();
-        expect(thumbBlock).not.toHaveClass('slider__thumb_zIndex-up');
+        expect(thumbBlock).not.toHaveClass('slider__thumb_visibility_zIndex-up');
       });
 
       it('range = true, data-num = 1', () => {
@@ -343,7 +343,7 @@ describe('Thumb', () => {
         document.dispatchEvent(mouseup);
 
         expect(thumb.broadcast).toHaveBeenCalled();
-        expect(thumbBlock).not.toHaveClass('slider__thumb_zIndex-up');
+        expect(thumbBlock).not.toHaveClass('slider__thumb_visibility_zIndex-up');
       });
 
       it('range = true, data-num = 2', () => {
@@ -359,7 +359,7 @@ describe('Thumb', () => {
         document.dispatchEvent(mouseup);
 
         expect(thumb.broadcast).toHaveBeenCalled();
-        expect(thumbBlock).not.toHaveClass('slider__thumb_zIndex-up');
+        expect(thumbBlock).not.toHaveClass('slider__thumb_visibility_zIndex-up');
       });
 
       it('range = true, data-num = 3', () => {
@@ -375,7 +375,7 @@ describe('Thumb', () => {
         document.dispatchEvent(mouseup);
 
         expect(thumb.broadcast).toHaveBeenCalled();
-        expect(thumbBlock).not.toHaveClass('slider__thumb_zIndex-up');
+        expect(thumbBlock).not.toHaveClass('slider__thumb_visibility_zIndex-up');
       });
     });
   });

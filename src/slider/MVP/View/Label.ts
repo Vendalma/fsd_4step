@@ -27,6 +27,7 @@ class Label {
   private createLabel(): void {
     this.elementLabel = document.createElement('div');
     this.elementLabel.classList.add('slider__label');
+    this.elementLabel.classList.add('js-slider__label');
     this.thumb.append(this.elementLabel);
   }
 

@@ -15,8 +15,8 @@ class ProgressBar {
   }
 
   addBar(): void {
-    const thumbFirst = this.slider.querySelector('.js-slider__thumb-first') as HTMLElement;
-    const thumbSecond = this.slider.querySelector('.js-slider__thumb-second') as HTMLElement;
+    const thumbFirst = this.slider.querySelector('.js-slider__thumb_type_first') as HTMLElement;
+    const thumbSecond = this.slider.querySelector('.js-slider__thumb_type_second') as HTMLElement;
     if (!this.config.vertical) {
       if (!this.config.range) {
         this.progressBar.style.left = '0px';
@@ -48,6 +48,7 @@ class ProgressBar {
   private createBar(): void {
     this.progressBar = document.createElement('div');
     this.progressBar.classList.add('slider__progress-bar');
+    this.progressBar.classList.add('js-slider__progress-bar');
     this.slider.prepend(this.progressBar);
   }
 

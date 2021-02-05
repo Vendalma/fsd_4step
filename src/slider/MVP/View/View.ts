@@ -33,7 +33,6 @@ class View extends Observer {
   }
 
   private createSliderContainer(): void {
-    this.wrapper.classList.add('slider__wrapper');
     this.sliderContainer = document.createElement('div');
     this.sliderContainer.classList.add('slider');
     this.wrapper.append(this.sliderContainer);

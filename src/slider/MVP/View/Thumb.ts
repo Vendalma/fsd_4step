@@ -40,7 +40,7 @@ class Thumb extends Observer {
     document.removeEventListener('mousemove', this.moveHandle);
     document.removeEventListener('mouseup', this.onMouseUp);
     this.broadcast(this.findPosition(e));
-    this.thumb.classList.remove('slider__thumb_zIndex-up');
+    this.thumb.classList.remove('slider__thumb_visibility_zIndex-up');
   };
 
   setPosition(position: number): void {
@@ -73,7 +73,8 @@ class Thumb extends Observer {
   private createThumb(): void {
     this.thumb = document.createElement('div');
     this.thumb.classList.add('slider__thumb');
-    this.thumb.classList.add(this.thumbHtmlClass);
+    this.thumb.classList.add(`slider__thumb_type_${this.thumbHtmlClass}`);
+    this.thumb.classList.add(`js-slider__thumb_type_${this.thumbHtmlClass}`);
     this.thumb.setAttribute('data-num', this.dataNum);
     this.slider.append(this.thumb);
     this.label = new Label(this.thumb);
@@ -97,7 +98,7 @@ class Thumb extends Observer {
     e.preventDefault();
     document.addEventListener('mousemove', this.moveHandle);
     document.addEventListener('mouseup', this.onMouseUp);
-    this.thumb.classList.add('slider__thumb_zIndex-up');
+    this.thumb.classList.add('slider__thumb_visibility_zIndex-up');
   };
 
   private moveHandle = (e: MouseEvent): void => {
@@ -112,8 +113,8 @@ class Thumb extends Observer {
   }
 
   private findPositionForHorizontal(e: MouseEvent): IDataThumbMove | undefined {
-    const thumbFirst = this.slider.querySelector('.js-slider__thumb-first') as HTMLElement;
-    const thumbSecond = this.slider.querySelector('.js-slider__thumb-second') as HTMLElement;
+    const thumbFirst = this.slider.querySelector('.js-slider__thumb_type_first') as HTMLElement;
+    const thumbSecond = this.slider.querySelector('.js-slider__thumb_type_second') as HTMLElement;
     if (Number(this.thumb.dataset.num) === 1) {
       return {
         clientXY: e.clientX,
@@ -134,8 +135,8 @@ class Thumb extends Observer {
   }
 
   private findPositionForVertical(e: MouseEvent): IDataThumbMove | undefined {
-    const thumbFirst = this.slider.querySelector('.js-slider__thumb-first') as HTMLElement;
-    const thumbSecond = this.slider.querySelector('.js-slider__thumb-second') as HTMLElement;
+    const thumbFirst = this.slider.querySelector('.js-slider__thumb_type_first') as HTMLElement;
+    const thumbSecond = this.slider.querySelector('.js-slider__thumb_type_second') as HTMLElement;
     if (Number(this.thumb.dataset.num) === 1) {
       return {
         clientXY: e.clientY,

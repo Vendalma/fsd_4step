@@ -5,9 +5,9 @@ describe('ProgressBar', () => {
   const $firstThumb = $('<div>');
   const $secondThumb = $('<div>');
   beforeEach(function () {
-    $block[0].classList.add('slider__$block');
-    $firstThumb[0].classList.add('js-slider__thumb-first');
-    $secondThumb[0].classList.add('js-slider__thumb-second');
+    $block[0].classList.add('js-slider__$block');
+    $firstThumb[0].classList.add('js-slider__thumb_type_first');
+    $secondThumb[0].classList.add('js-slider__thumb_type_second');
     $block.append($firstThumb[0]);
     $block.append($secondThumb[0]);
     $(document.body).append($block);
@@ -20,10 +20,10 @@ describe('ProgressBar', () => {
   describe('метод addBar', () => {
     let thumbFirst: HTMLElement;
     let thumbSecond: HTMLElement;
-    const progressBar = $block[0].querySelector('.slider__progress-bar');
+    const progressBar = $block[0].querySelector('.js-slider__progress-bar');
     beforeEach(function () {
-      thumbFirst = $block[0].querySelector('.js-slider__thumb-first') as HTMLElement;
-      thumbSecond = $block[0].querySelector('.js-slider__thumb-second') as HTMLElement;
+      thumbFirst = $block[0].querySelector('.js-slider__thumb_type_first') as HTMLElement;
+      thumbSecond = $block[0].querySelector('.js-slider__thumb_type_second') as HTMLElement;
     });
 
     describe('vertical = false', () => {
@@ -70,7 +70,7 @@ describe('ProgressBar', () => {
       range: false,
       vertical: true,
     };
-    const progressBar = $block[0].querySelector('.slider__progress-bar');
+    const progressBar = $block[0].querySelector('.js-slider__progress-bar');
     bar.updateConfig(newConf);
 
     expect(progressBar).toHaveClass('slider__progress-bar_vertical');

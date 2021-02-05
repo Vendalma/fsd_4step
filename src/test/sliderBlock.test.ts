@@ -20,10 +20,10 @@ describe('Slider Block', () => {
   let thumbOne: HTMLElement;
   let thumbSecond: HTMLElement;
   beforeAll(function () {
-    blockSlider = $block[0].querySelector('.slider__block') as HTMLElement;
-    progressBar = blockSlider.querySelector('.slider__progress-bar') as HTMLElement;
-    thumbOne = blockSlider.querySelector('.js-slider__thumb-first') as HTMLElement;
-    thumbSecond = blockSlider.querySelector('.js-slider__thumb-second') as HTMLElement;
+    blockSlider = $block[0].querySelector('.js-slider__block') as HTMLElement;
+    progressBar = blockSlider.querySelector('.js-slider__progress-bar') as HTMLElement;
+    thumbOne = blockSlider.querySelector('.js-slider__thumb_type_first') as HTMLElement;
+    thumbSecond = blockSlider.querySelector('.js-slider__thumb_type_second') as HTMLElement;
     sliderBlock.updateConfig(config);
   });
 
@@ -88,7 +88,7 @@ describe('Slider Block', () => {
 
         expect(blockSlider).toHaveClass('slider__block_vertical');
         expect(progressBar).toHaveClass('slider__progress-bar_vertical');
-        expect(blockSlider).not.toContainElement('div.js-slider__thumb-second');
+        expect(blockSlider).not.toContainElement('div.js-slider__thumb_type_second');
       });
 
       it('если range = true контейнер второго бегунка добавляется в слайдер', () => {
@@ -106,7 +106,7 @@ describe('Slider Block', () => {
 
         expect(blockSlider).toHaveClass('slider__block_vertical');
         expect(progressBar).toHaveClass('slider__progress-bar_vertical');
-        expect(blockSlider).toContainElement('div.js-slider__thumb-second');
+        expect(blockSlider).toContainElement('div.js-slider__thumb_type_second');
       });
     });
 
@@ -126,7 +126,7 @@ describe('Slider Block', () => {
 
         expect(blockSlider).not.toHaveClass('slider__block_vertical');
         expect(progressBar).toHaveClass('slider__progress-bar_horizontal');
-        expect(blockSlider).toContainElement('div.js-slider__thumb-second');
+        expect(blockSlider).toContainElement('div.js-slider__thumb_type_second');
       });
 
       it('если range = false второй бегунок удаляется', () => {
@@ -144,7 +144,7 @@ describe('Slider Block', () => {
 
         expect(blockSlider).not.toHaveClass('slider__block_vertical');
         expect(progressBar).toHaveClass('slider__progress-bar_horizontal');
-        expect(blockSlider).not.toContainElement('div.js-slider__thumb-second');
+        expect(blockSlider).not.toContainElement('div.js-slider__thumb_type_second');
       });
     });
   });
@@ -185,7 +185,7 @@ describe('Slider Block', () => {
           step: 1,
         });
 
-        const thumb = blockSlider.querySelector('.js-slider__thumb-first') as HTMLElement;
+        const thumb = blockSlider.querySelector('.js-slider__thumb_type_first') as HTMLElement;
         thumb.style.position = 'relative';
         thumb.style.left = '10px';
         blockSlider.dispatchEvent(event);
@@ -204,7 +204,7 @@ describe('Slider Block', () => {
           vertical: false,
           step: 1,
         });
-        const thumb2 = blockSlider.querySelector('.js-slider__thumb-second') as HTMLElement;
+        const thumb2 = blockSlider.querySelector('.js-slider__thumb_type_second') as HTMLElement;
         thumb2.style.position = 'relative';
         thumb2.style.left = '20px';
         blockSlider.dispatchEvent(event);
@@ -243,7 +243,7 @@ describe('Slider Block', () => {
         vertical: true,
         step: 1,
       });
-      const thumb = blockSlider.querySelector('.js-slider__thumb-first') as HTMLElement;
+      const thumb = blockSlider.querySelector('.js-slider__thumb_type_first') as HTMLElement;
       thumb.style.position = 'relative';
       thumb.style.top = '100px';
       blockSlider.dispatchEvent(event);
@@ -262,7 +262,7 @@ describe('Slider Block', () => {
         vertical: true,
         step: 1,
       });
-      const thumb2 = blockSlider.querySelector('.js-slider__thumb-second') as HTMLElement;
+      const thumb2 = blockSlider.querySelector('.js-slider__thumb_type_second') as HTMLElement;
       thumb2.style.position = 'relative';
       thumb2.style.top = '100px';
       blockSlider.dispatchEvent(event);

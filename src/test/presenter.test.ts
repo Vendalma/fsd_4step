@@ -48,7 +48,7 @@ describe('Presenter', () => {
         positionFrom: 10,
         positionTo: 100,
       });
-      const thumb = $block[0].querySelector('.js-slider__thumb-first') as HTMLElement;
+      const thumb = $block[0].querySelector('.js-slider__thumb_type_first') as HTMLElement;
       const event = new MouseEvent('click', { bubbles: true });
       spyOn(model, 'findMoveThumbPosition');
       thumb.dispatchEvent(event);
@@ -67,7 +67,7 @@ describe('Presenter', () => {
         positionFrom: 10,
         positionTo: 100,
       });
-      const thumb = $block[0].querySelector('.js-slider__thumb-first') as HTMLElement;
+      const thumb = $block[0].querySelector('.js-slider__thumb_type_first') as HTMLElement;
       const event = new MouseEvent('click', { bubbles: true });
       spyOn(presenter.view, 'setPositionThumb');
       thumb.dispatchEvent(event);

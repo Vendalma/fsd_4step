@@ -61,12 +61,13 @@ class SliderBlock extends Observer {
   private createSliderBlock(): void {
     this.sliderBlock = document.createElement('div');
     this.sliderBlock.classList.add('slider__block');
+    this.sliderBlock.classList.add('js-slider__block');
     this.sliderContainer.append(this.sliderBlock);
   }
 
   private init(): void {
-    this.thumbOne = new Thumb('js-slider__thumb-first', this.sliderBlock, '1');
-    this.thumbTwo = new Thumb('js-slider__thumb-second', this.sliderBlock, '2');
+    this.thumbOne = new Thumb('first', this.sliderBlock, '1');
+    this.thumbTwo = new Thumb('second', this.sliderBlock, '2');
     this.progressBar = new ProgressBar(this.sliderBlock);
     this.step = new Step(this.sliderBlock);
   }
@@ -92,8 +93,8 @@ class SliderBlock extends Observer {
   }
 
   private findClickPlaceHorizon(e: MouseEvent): void {
-    const thumbFirst = this.sliderBlock.querySelector('.js-slider__thumb-first') as HTMLElement;
-    const thumbSecond = this.sliderBlock.querySelector('.js-slider__thumb-second') as HTMLElement;
+    const thumbFirst = this.sliderBlock.querySelector('.js-slider__thumb_type_first') as HTMLElement;
+    const thumbSecond = this.sliderBlock.querySelector('.js-slider__thumb_type_second') as HTMLElement;
     if (!this.config.range) {
       this.thumbOne.onMouseUp(e);
     } else if (this.config.range) {
@@ -108,8 +109,8 @@ class SliderBlock extends Observer {
   }
 
   private findClickPlaceVert(e: MouseEvent): void {
-    const thumbFirst = this.sliderBlock.querySelector('.js-slider__thumb-first') as HTMLElement;
-    const thumbSecond = this.sliderBlock.querySelector('.js-slider__thumb-second') as HTMLElement;
+    const thumbFirst = this.sliderBlock.querySelector('.js-slider__thumb_type_first') as HTMLElement;
+    const thumbSecond = this.sliderBlock.querySelector('.js-slider__thumb_type_second') as HTMLElement;
     if (!this.config.range) {
       this.thumbOne.onMouseUp(e);
     } else if (this.config.range) {
@@ -129,7 +130,7 @@ class SliderBlock extends Observer {
   }
 
   private setThumbTwo(): void {
-    const secondThumb = this.sliderBlock.querySelector('.js-slider__thumb-second') as HTMLElement;
+    const secondThumb = this.sliderBlock.querySelector('.js-slider__thumb_type_second') as HTMLElement;
     if (this.config.range) {
       this.thumbTwo?.addThumb();
     } else if (!this.config.range && secondThumb !== null) {

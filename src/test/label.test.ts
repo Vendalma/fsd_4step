@@ -14,7 +14,7 @@ describe('Label', () => {
 
   it('метод setLabelValue устанавливает переданное значение для innerHTML блока лейбла', () => {
     label.setLabelValue(4);
-    const elementLabel = $block[0].querySelector('.slider__label');
+    const elementLabel = $block[0].querySelector('.js-slider__label');
 
     expect(elementLabel).toHaveText('4');
   });
@@ -22,7 +22,7 @@ describe('Label', () => {
   describe('метод updateConfig обновляет конфиг для класса Label', () => {
     let elementLabel: HTMLElement;
     beforeAll(() => {
-      elementLabel = $block[0].querySelector('.slider__label') as HTMLElement;
+      elementLabel = $block[0].querySelector('.js-slider__label') as HTMLElement;
     });
 
     it('при label=false, vertical = true, контейнер лейбла имеет класс slider__label_vertical и slider__label_hidden', () => {
