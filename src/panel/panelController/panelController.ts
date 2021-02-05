@@ -26,6 +26,8 @@ class PanelController {
 
   inputDouble: HTMLInputElement;
 
+  slider: HTMLElement;
+
   $slider: JQuery<HTMLElement>;
 
   config: IConfig;
@@ -44,17 +46,18 @@ class PanelController {
   init(): void {
     this.parent = this.container.parentElement as HTMLElement;
     this.panel = this.parent.querySelector('.js-panel') as HTMLElement;
-    this.inputFrom = this.parent.querySelector('.js-panel__input-from') as HTMLInputElement;
-    this.inputTo = this.parent.querySelector('.js-panel__input-to') as HTMLInputElement;
-    this.inputMin = this.parent.querySelector('.js-panel__input-min') as HTMLInputElement;
-    this.inputMax = this.parent.querySelector('.js-panel__input-max') as HTMLInputElement;
-    this.inputStep = this.parent.querySelector('.js-panel__input-step') as HTMLInputElement;
-    this.inputLabel = this.parent.querySelector('.js-panel__checkbox-label') as HTMLInputElement;
-    this.inputHorizontal = this.parent.querySelector('.js-panel__radio-horizontal') as HTMLInputElement;
-    this.inputVertical = this.parent.querySelector('.js-panel__radio-vertical') as HTMLInputElement;
-    this.inputSingle = this.parent.querySelector('.js-panel__radio-single') as HTMLInputElement;
-    this.inputDouble = this.parent.querySelector('.js-panel__radio-double') as HTMLInputElement;
-    this.$slider = $(this.parent);
+    this.inputFrom = this.parent.querySelector('.js-panel__input_type_from') as HTMLInputElement;
+    this.inputTo = this.parent.querySelector('.js-panel__input_type_to') as HTMLInputElement;
+    this.inputMin = this.parent.querySelector('.js-panel__input_type_min') as HTMLInputElement;
+    this.inputMax = this.parent.querySelector('.js-panel__input_type_max') as HTMLInputElement;
+    this.inputStep = this.parent.querySelector('.js-panel__input_type_step') as HTMLInputElement;
+    this.inputLabel = this.parent.querySelector('.js-panel__checkbox_type_label') as HTMLInputElement;
+    this.inputHorizontal = this.parent.querySelector('.js-panel__radio_type_horizontal') as HTMLInputElement;
+    this.inputVertical = this.parent.querySelector('.js-panel__radio_type_vertical') as HTMLInputElement;
+    this.inputSingle = this.parent.querySelector('.js-panel__radio_type_single') as HTMLInputElement;
+    this.inputDouble = this.parent.querySelector('.js-panel__radio_type_double') as HTMLInputElement;
+    this.slider = this.parent.nextElementSibling as HTMLElement;
+    this.$slider = $(this.slider);
     this.$slider.rangeSlider('returnPosition', this);
     this.config = this.$slider.data('sliderData').rangeSlider.getConfig();
   }

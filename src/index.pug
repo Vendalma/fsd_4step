@@ -14,10 +14,17 @@ html(lang="en")
     meta(name="theme-color" content="#ffffff")
     title Slider
   body
-    .js-app
-      +panel-controller(1)
-    .js-app2
-      +panel-controller(2)
-    .js-app3
-      +panel-controller(3)
+    .page
+      .page__block
+        .page__panel
+          +panel-controller(1)
+        .page__slider-app.js-page__slider-app.page__slider-app_type_first.js-page__slider-app_type_first
+      .page__block
+        .page__panel
+          +panel-controller(2)
+        .page__slider-app.js-page__slider-app.page__slider-app_type_second.js-page__slider-app_type_second
+      .page__block
+        .page__panel
+          +panel-controller(3)
+        .page__slider-app.js-page__slider-app.page__slider-app_type_third.js-page__slider-app_type_third
 
