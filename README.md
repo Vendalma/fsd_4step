@@ -22,6 +22,8 @@ https://github.com/Vendalma/fsd_4step.git
 
 `npm run lint` - запуск линтера
 
+`npm run deploy` - загрузка проекта на GitHub Pages
+
 ## Описание
 
 Архитектура приложения разделена на три слоя:
