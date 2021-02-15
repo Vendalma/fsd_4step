@@ -161,13 +161,4 @@ class PanelController {
     this.setConfig();
   }
 }
-
 export default PanelController;
-
-function initPanelClass() {
-  const panels = document.querySelectorAll('.js-panel');
-  panels.forEach((panel) => {
-    const sliderPanel = new PanelController(panel as HTMLElement);
-  });
-}
-window.addEventListener('load', initPanelClass.bind(this));
