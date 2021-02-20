@@ -43,28 +43,7 @@ const config = {
         },
       },
       {
-        test: /\.css$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          {
-            loader: 'css-loader',
-            options: {
-              importLoaders: 1,
-            },
-          },
-
-          {
-            loader: 'postcss-loader',
-            options: {
-              postcssOptions: {
-                config: `./postcss.config.js`,
-              },
-            },
-          },
-        ],
-      },
-      {
-        test: /\.scss$/,
+        test: /\.s[ac]ss$/,
         use: [
           {
             loader: MiniCssExtractPlugin.loader,
@@ -87,11 +66,6 @@ const config = {
           },
         ],
       },
-
-      /*{
-        test: /\.scss$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
-      },*/
       {
         test: /\.pug$/,
         loader: 'pug-loader',
