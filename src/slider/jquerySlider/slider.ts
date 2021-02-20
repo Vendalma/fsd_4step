@@ -22,7 +22,6 @@ import '../styles.scss';
     },
   };
   jQuery.fn.rangeSlider = function (
-    /* eslint-disable-line */
     method?: string | unknown | undefined,
     settings?: ISettings | IUpdateConfig | unknown | undefined,
   ) {

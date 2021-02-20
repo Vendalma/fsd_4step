@@ -36,9 +36,7 @@ class Model extends Observer {
   }
 
   private calcThumbPosition(data: IDataThumbMove): IPosition | undefined {
-    const { clientXY } = data;
-    const { sliderClientReact } = data;
-    const { dataNum } = data;
+    const { clientXY, sliderClientReact, dataNum } = data;
     const firstThumbPosition = data.positionThumbFirst as number;
     const secondThumbPosition = data.positionThumbSecond as number;
 

@@ -11,7 +11,7 @@
     "build-prod": "webpack -p --mode production",
     "start": "webpack-dev-server --mode development --open  --watch",
     "test": "karma start karma.conf.js",
-    "lint": "node_modules/.bin/eslint . --fix --ext .ts",
+    "lint": "eslint . --fix --ext .ts",
     "deploy": "gh-pages -b pages -d dist"
   },
   "dependencies": {
@@ -24,8 +24,8 @@
     "@metahub/karma-jasmine-jquery": "^4.0.1",
     "@types/jasmine": "^3.5.14",
     "@types/jasmine-jquery": "^1.5.33",
-    "@typescript-eslint/eslint-plugin": "^4.8.1",
-    "@typescript-eslint/parser": "^4.8.1",
+    "@typescript-eslint/eslint-plugin": "^4.15.1",
+    "@typescript-eslint/parser": "^4.15.1",
     "autoprefixer": "^10.2.4",
     "babel-loader": "^8.1.0",
     "babel-preset-airbnb": "^5.0.0",
