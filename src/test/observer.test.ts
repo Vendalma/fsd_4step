@@ -18,10 +18,15 @@ class ClassB {
     this.observer.subscribe(this.classA);
   }
 }
+
 const classB: ClassB = new ClassB();
+
 describe('Observer', () => {
-  it('ф-я broadcast передает данные всем подписчикам', () => {
+  beforeEach(() => {
     spyOn(classB.classA, 'update');
+  });
+
+  it('ф-я broadcast передает данные всем подписчикам', () => {
     classB.observer.broadcast({ a: 1 }, 'data');
 
     expect(classB.classA.update).toHaveBeenCalledWith({ a: 1 }, 'data');
@@ -29,7 +34,6 @@ describe('Observer', () => {
 
   it('ф-я unsubscribe удаляет класс из списка подписчиков', () => {
     classB.observer.unsubscribe(classB.classA);
-    spyOn(classB.classA, 'update');
     classB.observer.broadcast({ a: 1 }, 'data');
 
     expect(classB.classA.update).not.toHaveBeenCalledWith({ a: 1 }, 'data');

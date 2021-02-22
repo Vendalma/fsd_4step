@@ -1,6 +1,7 @@
 import Validator from '../slider/MVP/Model/Validator';
 
 const validator: Validator = new Validator();
+
 describe('Validator', () => {
   it('Инициализация класса Validator', () => {
     expect(validator).toBeDefined();

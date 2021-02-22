@@ -12,26 +12,19 @@ const config = {
 };
 const $block = $('<div>');
 $(document.body).append($block);
+const sliderBlock: SliderBlock = new SliderBlock($block[0]);
+const blockSlider = $block[0].querySelector('.js-slider__block') as HTMLElement;
+const progressBar = blockSlider.querySelector('.js-slider__progress-bar') as HTMLElement;
+const thumbOne = blockSlider.querySelector('.js-slider__thumb_type_first') as HTMLElement;
+const thumbSecond = blockSlider.querySelector('.js-slider__thumb_type_second') as HTMLElement;
+sliderBlock.updateConfig(config);
 
 describe('Slider Block', () => {
-  const sliderBlock: SliderBlock = new SliderBlock($block[0]);
-  let blockSlider: HTMLElement;
-  let progressBar: HTMLElement;
-  let thumbOne: HTMLElement;
-  let thumbSecond: HTMLElement;
-  beforeAll(function () {
-    blockSlider = $block[0].querySelector('.js-slider__block') as HTMLElement;
-    progressBar = blockSlider.querySelector('.js-slider__progress-bar') as HTMLElement;
-    thumbOne = blockSlider.querySelector('.js-slider__thumb_type_first') as HTMLElement;
-    thumbSecond = blockSlider.querySelector('.js-slider__thumb_type_second') as HTMLElement;
-    sliderBlock.updateConfig(config);
-  });
-
   it('Инициализация Slider Block', () => {
     expect(sliderBlock).toBeDefined();
   });
 
-  it('метод addFollower вызывает ф-ю subscribe', () => {
+  it('метод addFollower вызывает ф-ю subscribe и подписывает на обновления класса SliderBlock', () => {
     spyOn(sliderBlock, 'subscribe');
     sliderBlock.addFollower({});
 
@@ -39,7 +32,7 @@ describe('Slider Block', () => {
   });
 
   describe('метод setPositionThumb', () => {
-    it('при заданных параметрах обновляется позиция второго бегунка и прогресс бар', () => {
+    it('при заданных параметрах устанавливается прогресс бар', () => {
       const data = {
         stepData: undefined,
         dataFirstThumb: undefined,
@@ -71,7 +64,7 @@ describe('Slider Block', () => {
     });
   });
 
-  describe('метод updateConfig обновляет конфиг, передает новый его классам step, thumbOne, thumbTwo, progressBar', () => {
+  describe('метод updateConfig обновляет конфиг и передает его классам step, thumbOne, thumbTwo, progressBar', () => {
     describe('при vertical = true контейнер слайдера должен иметь класс slider__block_vertical', () => {
       it('если range = false контейнер второго бегунка удаляется', () => {
         const newConf = {
@@ -156,8 +149,8 @@ describe('Slider Block', () => {
       spyOn(sliderBlock, 'broadcast');
     });
 
-    describe('vertical = false и клике на контейнер слайдера', () => {
-      it('если range = false, SliderBlock передает данные о движении бегунка', () => {
+    describe('vertical = false вычисляется место клика по горизонтальной оси', () => {
+      it('если range = false, при клике на контейнер слайдера бегунок перемещается в это место,класс SliderBlock вызывает метод broadcast и передает данные о положении бегунка', () => {
         sliderBlock.updateConfig({
           range: false,
           min: 0,
@@ -185,15 +178,14 @@ describe('Slider Block', () => {
           step: 1,
         });
 
-        const thumb = blockSlider.querySelector('.js-slider__thumb_type_first') as HTMLElement;
-        thumb.style.position = 'relative';
-        thumb.style.left = '10px';
+        thumbOne.style.position = 'relative';
+        thumbOne.style.left = '10px';
         blockSlider.dispatchEvent(event);
 
         expect(sliderBlock.broadcast).toHaveBeenCalled();
       });
 
-      it('range = true и клик был совершен рядом со вторым бегунком', () => {
+      it('range = true, если клик был совершен рядом со вторым бегунком, то он сдвигается', () => {
         sliderBlock.updateConfig({
           range: true,
           min: 0,
@@ -204,17 +196,17 @@ describe('Slider Block', () => {
           vertical: false,
           step: 1,
         });
-        const thumb2 = blockSlider.querySelector('.js-slider__thumb_type_second') as HTMLElement;
-        thumb2.style.position = 'relative';
-        thumb2.style.left = '20px';
+
+        thumbSecond.style.position = 'relative';
+        thumbSecond.style.left = '20px';
         blockSlider.dispatchEvent(event);
 
         expect(sliderBlock.broadcast).toHaveBeenCalled();
       });
     });
 
-    describe('при vertical = true', () => {
-      it('если range = false, SliderBlock передает данные о движении бегунка, и он смещается в место клика', () => {
+    describe('при vertical = true место клика вычисляется по вертикальной оси', () => {
+      it('если range = false, бегунок смещается в место клика, SliderBlock передает данные о его движении вызывая метод broadcast, ', () => {
         sliderBlock.updateConfig({
           range: false,
           min: 0,
@@ -232,7 +224,7 @@ describe('Slider Block', () => {
       });
     });
 
-    it('range = true и клик рядом с первым бегунком', () => {
+    it('range = true и клик рядом с первым бегунком, он перемещается в место клика', () => {
       sliderBlock.updateConfig({
         range: true,
         min: 0,
@@ -243,15 +235,14 @@ describe('Slider Block', () => {
         vertical: true,
         step: 1,
       });
-      const thumb = blockSlider.querySelector('.js-slider__thumb_type_first') as HTMLElement;
-      thumb.style.position = 'relative';
-      thumb.style.top = '100px';
+      thumbOne.style.position = 'relative';
+      thumbOne.style.top = '100px';
       blockSlider.dispatchEvent(event);
 
       expect(sliderBlock.broadcast).toHaveBeenCalled();
     });
 
-    it('range = true, клик рядом со вторым бегунком', () => {
+    it('range = true, клик рядом со вторым бегунком, то он передвигается в это место', () => {
       sliderBlock.updateConfig({
         range: true,
         min: 0,
@@ -262,9 +253,8 @@ describe('Slider Block', () => {
         vertical: true,
         step: 1,
       });
-      const thumb2 = blockSlider.querySelector('.js-slider__thumb_type_second') as HTMLElement;
-      thumb2.style.position = 'relative';
-      thumb2.style.top = '100px';
+      thumbSecond.style.position = 'relative';
+      thumbSecond.style.top = '100px';
       blockSlider.dispatchEvent(event);
 
       expect(sliderBlock.broadcast).toHaveBeenCalled();

@@ -6,6 +6,7 @@ const $block = $('<div>');
 $(document.body).append($block);
 const model: Model = new Model();
 const view: View = new View($block[0]);
+const thumb = $block[0].querySelector('.js-slider__thumb_type_first') as HTMLElement;
 
 class TestPresenter extends Presenter {
   public view: View;
@@ -14,8 +15,10 @@ class TestPresenter extends Presenter {
     super(model, view);
   }
 }
+
+const presenter: TestPresenter = new TestPresenter();
+
 describe('Presenter', () => {
-  const presenter: TestPresenter = new TestPresenter();
   it('Инициализация Presenter', () => {
     expect(presenter).toBeDefined();
   });
@@ -37,7 +40,7 @@ describe('Presenter', () => {
       expect(presenter.view.setConfig).toHaveBeenCalled();
     });
 
-    it('При нажатии на бегунок вызывается ф-я findMoveThumbPosition в Model', () => {
+    it('При нажатии на бегунок, вызывается ф-я findMoveThumbPosition в Model', () => {
       presenter.view.setConfig({
         label: true,
         min: 0,
@@ -48,7 +51,6 @@ describe('Presenter', () => {
         positionFrom: 10,
         positionTo: 100,
       });
-      const thumb = $block[0].querySelector('.js-slider__thumb_type_first') as HTMLElement;
       const event = new MouseEvent('click', { bubbles: true });
       spyOn(model, 'findMoveThumbPosition');
       thumb.dispatchEvent(event);
@@ -56,7 +58,7 @@ describe('Presenter', () => {
       expect(model.findMoveThumbPosition).toHaveBeenCalled();
     });
 
-    it('При нажатии на бегунок Model передает вычисления в Presenter и вызывается ф-я setPositionThumb во View', () => {
+    it('При нажатии на бегунок, Model передает вычисления в Presenter и вызывается ф-я setPositionThumb во View', () => {
       presenter.view.setConfig({
         label: true,
         min: 0,
@@ -67,7 +69,6 @@ describe('Presenter', () => {
         positionFrom: 10,
         positionTo: 100,
       });
-      const thumb = $block[0].querySelector('.js-slider__thumb_type_first') as HTMLElement;
       const event = new MouseEvent('click', { bubbles: true });
       spyOn(presenter.view, 'setPositionThumb');
       thumb.dispatchEvent(event);

@@ -11,11 +11,13 @@ const config: IConfig = {
   vertical: false,
   label: true,
 };
+
 class TestModel extends Model {
   public config: IConfig;
 }
+const model: TestModel = new TestModel();
+
 describe('Model', () => {
-  const model: TestModel = new TestModel();
   beforeAll(() => {
     spyOn(model, 'broadcast');
   });
@@ -24,7 +26,7 @@ describe('Model', () => {
     expect(model).toBeDefined();
   });
 
-  it('метод addFollower вызывает ф-ю subscribe', () => {
+  it('метод addFollower подписывает на обновления класса Model', () => {
     spyOn(model, 'subscribe');
     model.addFollower({});
 
@@ -37,14 +39,14 @@ describe('Model', () => {
     expect(model.getConfig()).toEqual(config);
   });
 
-  it('метод updateConfig устанавливает конфиг для класса Model и вызывает метод broadcast', () => {
+  it('метод updateConfig устанавливает конфиг и передает его подписчикам класса Model с помощью метода broadcast', () => {
     model.updateConfig(config);
 
     expect(model.config).toEqual(config);
     expect(model.broadcast).toHaveBeenCalled();
   });
 
-  describe('проверка метода findMoveThumbPosition', () => {
+  describe('метод findMoveThumbPosition рассчитывает данные для движения бегунка и передает их, вызывая метод broadcast', () => {
     let data: IDataThumbMove;
     beforeEach(function () {
       data = {
@@ -167,8 +169,8 @@ describe('Model', () => {
         });
       });
 
-      describe('dataNum = 3, то вызывается метод broadcast с значением undefined', () => {
-        it('', () => {
+      describe('dataNum = 3, range = true', () => {
+        it('dataNum = 3, то вызывается метод broadcast с значением undefined', () => {
           data.dataNum = '3';
           model.updateConfig({
             step: 0.1,
@@ -292,7 +294,7 @@ describe('Model', () => {
         expect(model.broadcast).toHaveBeenCalled();
       });
 
-      it('если position, вызывается ф-я broadcast', () => {
+      it('если position, вызывается broadcast', () => {
         model.findMoveThumbPosition(data);
 
         expect(model.broadcast).toHaveBeenCalled();
@@ -300,7 +302,7 @@ describe('Model', () => {
     });
   });
 
-  it('метод calcOnloadPosition принимает размер слайдера, рассчитывает начальные позиции бегунков, передает данные через ф-ю broadcast', () => {
+  it('метод calcOnloadPosition принимает размер слайдера, рассчитывает начальные позиции бегунков, передает данные через метод broadcast', () => {
     model.calcOnloadPosition(150);
 
     expect(model.broadcast).toHaveBeenCalled();

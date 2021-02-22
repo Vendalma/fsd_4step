@@ -1,24 +1,19 @@
 import Step from '../slider/MVP/View/Step';
 
-describe('Step', () => {
-  const container = $('<div>');
-  const step: Step = new Step(container[0]);
-  const $thumb = $('<div>');
-  beforeAll(function () {
-    $thumb[0].classList.add('js-slider__thumb_type_first');
-    container.append($thumb);
-    $(document.body).append(container);
-  });
+const container = $('<div>');
+const step: Step = new Step(container[0]);
+const $thumb = $('<div>');
+$thumb[0].classList.add('js-slider__thumb_type_first');
+container.append($thumb);
+$(document.body).append(container);
 
+describe('Step', () => {
   it('инициализация класса Step', () => {
     expect(step).toBeDefined();
   });
 
   describe('метод addStepLine добавляет шкалу значений', () => {
-    let stepSize: number;
-    beforeAll(function () {
-      stepSize = 30.5;
-    });
+    const stepSize = 30.5;
 
     beforeEach(function () {
       const blocks = container[0].querySelectorAll('.js-slider__step-block') as NodeListOf<HTMLElement>;
@@ -27,7 +22,7 @@ describe('Step', () => {
       });
     });
 
-    it('vertical = false', () => {
+    it('если vertical = false, позиции эл-тов рассчитываются по горизонтальной оси', () => {
       const conf = {
         min: 7,
         max: 11,
@@ -51,7 +46,7 @@ describe('Step', () => {
       }
     });
 
-    it('vertical = true', () => {
+    it('vertical = true, позиции эл-тов рассчитываются по вертикальной оси, эл-ты имеют класс slider__step-block_vertical', () => {
       const conf = {
         min: 7,
         max: 11,
