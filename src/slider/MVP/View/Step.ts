@@ -23,10 +23,10 @@ class Step {
       stepBlock.classList.add('slider__step-block');
       fragment.append(stepBlock);
       if (i === 0) {
-        stepBlock.innerHTML = `${this.config.min}`;
+        stepBlock.textContent = `${this.config.min}`;
         stepBlock.classList.add('slider__step-block_value-type_min');
       } else if (i === 20) {
-        stepBlock.innerHTML = `${this.config.max}`;
+        stepBlock.textContent = `${this.config.max}`;
         stepBlock.classList.add('slider__step-block_value-type_max');
       }
 

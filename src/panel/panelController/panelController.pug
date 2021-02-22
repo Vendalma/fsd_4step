@@ -1,95 +1,69 @@
 mixin panel-controller(id="")
   .panel.js-panel(id=id)
     .panel__column 
-      -const range = `range${id}`
+      - const range = `range${id}`;
       p.panel__text Количество ползунков
       .panel__row
         .panel__block
           label.panel__label 
-            input(type="radio" 
-              name=range 
-              class="panel__radio"
-              class="panel__radio_type_single"
-              class="js-panel__radio_type_single")
+            input.panel__radio.panel__radio_type_single.js-panel__radio_type_single(
+              type='radio',
+              name=range)
             span.panel__text Один
         .panel__block
           label.panel__label 
-            input(type="radio" 
-              name=range 
-              class="panel__radio" 
-              class="panel__radio_type_double"
-              class="js-panel__radio_type_double")  
-            span.panel__text Два       
+            input.panel__radio.panel__radio_type_double.js-panel__radio_type_double(
+              type='radio',
+              name=range) 
+            span.panel__text Два
     .panel__column
       p.panel__text Вид слайдера
-      -const orientation = `orientation${id}`
+      - const orientation = `orientation${id}`;
       .panel__row
         .panel__block
           label.panel__label 
-            input(type="radio" 
-              name=orientation 
-              class="panel__radio" 
-              class="panel__radio_type_horizontal"
-              class="js-panel__radio_type_horizontal")
+            input.panel__radio.panel__radio_type_horizontal.js-panel__radio_type_horizontal(
+              type='radio',
+              name=orientation)
             span.panel__text Горизонтальный
         .panel__block
           label.panel__label 
-            input(type="radio" 
-              name=orientation 
-              class="panel__radio"
-              class="panel__radio_type_vertical"
-              class="js-panel__radio_type_vertical")
+            input.panel__radio.panel__radio_type_vertical.js-panel__radio_type_vertical(
+              type='radio',
+              name=orientation)
             span Вертикальный
     .panel__column
       .panel__block
         label.panel__label
-          input(type="checkbox" 
-            name="label" 
-            class="panel__checkbox" 
-              class="panel__checkbox_type_label"
-            class="js-panel__checkbox_type_label")
+          input.panel__checkbox.panel__checkbox_type_label.js-panel__checkbox_type_label(
+            type='checkbox',
+            name='label')
           span.panel__text Показать значение ползунка
     .panel__column
       .panel__row
         label.panel__label.panel__label_position_center Min
-          input(type="number" 
-            step = "any" 
-            class="panel__input"
-            class="panel__input_size_m" 
-              class="panel__input_type_min"
-            class="js-panel__input_type_min")
+          input.panel__input.panel__input_size_m.panel__input_type_min.js-panel__input_type_min(
+            type='number',
+            step='any')
       .panel__row
         label.panel__label.panel__label_position_center Max
-          input(type="number" 
-            step = "any" 
-            class="panel__input"
-            class="panel__input_size_m" 
-            class="panel__input_type_max"
-            class="js-panel__input_type_max")
+          input.panel__input.panel__input_size_m.panel__input_type_max.js-panel__input_type_max(
+            type='number',
+            step='any')
     .panel__column
       .panel__row
         label.panel__label.panel__label_position_center Шаг
-          input(type="number" 
-            step = "any" 
-            class="panel__input"
-            class="panel__input_size_m" 
-            class="panel__input_type_step"
-            class="js-panel__input_type_step")
+          input.panel__input.panel__input_size_m.panel__input_type_step.js-panel__input_type_step(
+            type='number',
+            step='any')
     .panel__column
       .panel__row
-        label.panel__label.panel__label_position_center Ползунок №1 
-          input(type="number" 
-            step = "any" 
-              class="panel__input" 
-              class="panel__input_size_s"
-              class="panel__input_type_from"
-              class="js-panel__input_type_from")
+        label.panel__label.panel__label_position_center Ползунок №1
+          input.panel__input.panel__input_size_s.panel__input_type_from.js-panel__input_type_from(
+            type='number',
+            step='any')
       .panel__block_row
         label.panel__label.panel__label_position_center Ползунок №2
-          input(type="number" 
-            step = "any" 
-            class="panel__input" 
-            class="panel__input_size_s"
-            class="panel__input_type_to" 
-            class="js-panel__input_type_to" 
-            class="js-panel__input_disabled")
+          input.panel__input.panel__input_size_s.panel__input_type_to.js-panel__input_type_to.js-panel__input_disabled(
+            type='number',
+            step='any')
