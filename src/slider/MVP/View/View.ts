@@ -1,5 +1,5 @@
 import Observer from '../../Observer/Observer';
-import SliderBlock from './sliderBlock';
+import SliderBlock from './SliderBlock';
 import { IConfig, IDataThumbMove, IPosition } from './viewInterfaces';
 
 class View extends Observer {

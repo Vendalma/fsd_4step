@@ -1,4 +1,4 @@
-import PanelController from './panel/panelController/panelController';
+import PanelController from './panel/panelController/PanelController';
 import './slider/jquerySlider/slider';
 
 $('.js-page__slider-app_type_first').rangeSlider();

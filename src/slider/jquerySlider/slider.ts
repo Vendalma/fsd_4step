@@ -1,4 +1,4 @@
-import RangeSlider from '../RangeSlider/rangeSlider';
+import RangeSlider from '../RangeSlider/RangeSlider';
 import '../styles.scss';
 
 (function ($) {

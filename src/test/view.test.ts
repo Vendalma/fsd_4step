@@ -1,4 +1,4 @@
-import SliderBlock from '../slider/MVP/View/sliderBlock';
+import SliderBlock from '../slider/MVP/View/SliderBlock';
 import View from '../slider/MVP/View/View';
 import { IPosition } from '../slider/MVP/View/viewInterfaces';
 

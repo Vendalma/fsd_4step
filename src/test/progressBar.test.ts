@@ -1,4 +1,4 @@
-import ProgressBar from '../slider/MVP/View/progressBar';
+import ProgressBar from '../slider/MVP/View/ProgressBar';
 
 const $block = $('<div>');
 const $firstThumb = $('<div>');

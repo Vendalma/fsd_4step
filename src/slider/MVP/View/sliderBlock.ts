@@ -1,5 +1,5 @@
 import Observer from '../../Observer/Observer';
-import ProgressBar from './progressBar';
+import ProgressBar from './ProgressBar';
 import Step from './Step';
 import Thumb from './Thumb';
 import { IConfig, IDataThumbMove, IPosition } from './viewInterfaces';
