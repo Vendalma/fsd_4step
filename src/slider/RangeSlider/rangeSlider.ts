@@ -1,10 +1,9 @@
 import Model from '../MVP/Model/Model';
 import Presenter from '../MVP/Presenter/Presenter';
 import View from '../MVP/View/View';
-import Observer from '../Observer/Observer';
-import { IRangeSlider } from './rangeSliderInterfaces';
+import { ISettings, IUpdateConfig, IUpdatedPosition, valueForBroadcast } from './rangeSliderInterfaces';
 
-class RangeSlider extends Observer implements IRangeSlider {
+class RangeSlider {
   private model: Model;
 
   private presenter: Presenter;
@@ -14,14 +13,11 @@ class RangeSlider extends Observer implements IRangeSlider {
   private settings: ISettings;
 
   constructor(container: HTMLElement, settings: ISettings) {
-    super();
     this.settings = settings;
     this.model = new Model();
     this.view = new View(container);
     this.presenter = new Presenter(this.model, this.view);
-
     this.updateConfig(this.settings);
-    this.subscribeOnUpdate();
   }
 
   getConfig(): ISettings {
@@ -32,19 +28,16 @@ class RangeSlider extends Observer implements IRangeSlider {
     this.model.updateConfig(Object.assign(this.settings, data));
   }
 
-  addFollower(follower: unknown): void {
-    this.subscribe(follower);
-  }
-
-  private subscribeOnUpdate(): void {
-    this.model.addFollower(this);
-  }
-
-  private update(data: ISettings): void {
-    this.broadcast({
-      positionFrom: this.getConfig()?.positionFrom,
-      positionTo: this.getConfig()?.positionTo,
+  getUpdatePosition(fn: (value?: unknown) => void): void {
+    this.model.subscribe(({ type }: valueForBroadcast) => {
+      if (type === 'positionThumb') {
+        fn({
+          positionFrom: this.getConfig().positionFrom,
+          positionTo: this.getConfig().positionTo,
+        } as IUpdatedPosition);
+      }
     });
   }
 }
+
 export default RangeSlider;

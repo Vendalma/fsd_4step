@@ -1,4 +1,4 @@
-interface ISettings {
+export interface ISettings {
   min: number;
   max: number;
   positionFrom: number;
@@ -9,12 +9,16 @@ interface ISettings {
   vertical: boolean;
 }
 
-interface IUpdateConfig {
+export interface IUpdateConfig {
   [key: string]: boolean | number;
 }
 
-export interface IRangeSlider {
-  updateConfig(data: IUpdateConfig | ISettings): void;
+export interface IUpdatedPosition {
+  positionFrom: number;
+  positionTo: number;
+}
 
-  addFollower(follower: unknown): void;
+export interface valueForBroadcast {
+  data?: number | unknown;
+  type: string;
 }
