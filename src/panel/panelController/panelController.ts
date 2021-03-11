@@ -2,48 +2,47 @@ import { IConfig } from '../../slider/MVP/Model/modelInterfaces';
 import './panelController.scss';
 
 class PanelController {
-  parent: HTMLElement;
+  private parent: HTMLElement;
 
-  panel: HTMLElement;
+  private panel: HTMLElement;
 
-  inputFrom: HTMLInputElement;
+  private inputFrom: HTMLInputElement;
 
-  inputTo: HTMLInputElement;
+  private inputTo: HTMLInputElement;
 
-  inputMin: HTMLInputElement;
+  private inputMin: HTMLInputElement;
 
-  inputMax: HTMLInputElement;
+  private inputMax: HTMLInputElement;
 
-  inputStep: HTMLInputElement;
+  private inputStep: HTMLInputElement;
 
-  inputLabel: HTMLInputElement;
+  private inputLabel: HTMLInputElement;
 
-  inputHorizontal: HTMLInputElement;
+  private inputHorizontal: HTMLInputElement;
 
-  inputVertical: HTMLInputElement;
+  private inputVertical: HTMLInputElement;
 
-  inputSingle: HTMLInputElement;
+  private inputSingle: HTMLInputElement;
 
-  inputDouble: HTMLInputElement;
+  private inputDouble: HTMLInputElement;
 
-  slider: HTMLElement;
+  private slider: HTMLElement;
 
-  $slider: JQuery<HTMLElement>;
+  private $slider: JQuery<HTMLElement>;
 
-  config: IConfig;
+  private config: IConfig;
 
-  container: HTMLElement;
+  private container: HTMLElement;
 
   constructor(container: HTMLElement) {
     this.container = container;
-
     this.init();
     this.setConfig();
     this.clickPanel();
     this.checkRange();
   }
 
-  init(): void {
+  private init(): void {
     this.parent = this.container.parentElement as HTMLElement;
     this.panel = this.parent.querySelector('.js-panel') as HTMLElement;
     this.inputFrom = this.parent.querySelector('.js-panel__input_type_from') as HTMLInputElement;
@@ -58,11 +57,11 @@ class PanelController {
     this.inputDouble = this.parent.querySelector('.js-panel__radio_type_double') as HTMLInputElement;
     this.slider = this.parent.nextElementSibling as HTMLElement;
     this.$slider = $(this.slider);
-    this.$slider.rangeSlider('returnPosition', this);
+    this.$slider.rangeSlider('returnPosition', this.updateConfig.bind(this));
     this.config = this.$slider.data('sliderData').rangeSlider.getConfig();
   }
 
-  setConfig(): void {
+  private setConfig(): void {
     this.inputFrom.value = `${this.config.positionFrom}`;
     this.inputTo.value = `${this.config.positionTo}`;
     this.inputMin.value = `${this.config.min}`;
@@ -76,11 +75,11 @@ class PanelController {
     if (!this.config.range) this.inputSingle.checked = true;
   }
 
-  clickPanel(): void {
+  private clickPanel(): void {
     this.panel.addEventListener('click', this.onClickPanel.bind(this));
   }
 
-  onClickPanel(e: MouseEvent): void {
+  private onClickPanel(e: MouseEvent): void {
     if (e.target === this.inputLabel) {
       const isLabelVisible = this.inputLabel.checked;
       this.$slider.rangeSlider('updateConfig', { label: isLabelVisible });
@@ -103,61 +102,65 @@ class PanelController {
       this.$slider.rangeSlider('updateConfig', { range: true });
       this.checkRange();
     }
+
     if (e.target === this.inputMin) {
       this.inputMin.addEventListener('blur', this.changeMin.bind(this));
     }
+
     if (e.target === this.inputMax) {
       this.inputMax.addEventListener('blur', this.changeMax.bind(this));
     }
+
     if (e.target === this.inputStep) {
       this.inputStep.addEventListener('blur', this.changeStep.bind(this));
     }
+
     if (e.target === this.inputFrom) {
       this.inputFrom.addEventListener('blur', this.changePositionFrom.bind(this));
     }
+
     if (e.target === this.inputTo) {
       this.inputTo.addEventListener('blur', this.changePositionTo.bind(this));
     }
   }
 
-  changeMin(): void {
+  private changeMin(): void {
     this.$slider.rangeSlider('updateConfig', {
       min: Number(this.inputMin.value),
     });
   }
 
-  changeMax(): void {
+  private changeMax(): void {
     this.$slider.rangeSlider('updateConfig', {
       max: Number(this.inputMax.value),
     });
   }
 
-  changeStep(): void {
+  private changeStep(): void {
     this.$slider.rangeSlider('updateConfig', {
       step: Number(this.inputStep.value),
     });
   }
 
-  changePositionFrom(): void {
+  private changePositionFrom(): void {
     this.$slider.rangeSlider('updateConfig', {
       positionFrom: Number(this.inputFrom.value),
     });
   }
 
-  changePositionTo(): void {
+  private changePositionTo(): void {
     this.$slider.rangeSlider('updateConfig', {
       positionTo: Number(this.inputTo.value),
     });
   }
 
-  checkRange(): void {
+  private checkRange(): void {
     const disabledBlock = this.parent.querySelector('.js-panel__input_disabled') as HTMLInputElement;
     if (!this.config.range) disabledBlock.disabled = true;
     if (this.config.range) disabledBlock.disabled = false;
   }
 
-  update(data: IConfig): void {
-    this.config = this.$slider.data('sliderData').rangeSlider.getConfig();
+  private updateConfig(data?: IConfig): void {
     this.setConfig();
   }
 }

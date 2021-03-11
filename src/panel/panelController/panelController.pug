@@ -4,34 +4,40 @@ mixin panel-controller(id="")
       - const range = `range${id}`;
       p.panel__text Количество ползунков
       .panel__row
+
         .panel__block
           label.panel__label 
             input.panel__radio.panel__radio_type_single.js-panel__radio_type_single(
               type="radio",
               name=range)
             span.panel__text Один
+
         .panel__block
           label.panel__label 
             input.panel__radio.panel__radio_type_double.js-panel__radio_type_double(
               type="radio",
               name=range) 
             span.panel__text Два
+
     .panel__column
       p.panel__text Вид слайдера
       - const orientation = `orientation${id}`;
       .panel__row
+
         .panel__block
           label.panel__label 
             input.panel__radio.panel__radio_type_horizontal.js-panel__radio_type_horizontal(
               type="radio",
               name=orientation)
             span.panel__text Горизонтальный
+
         .panel__block
           label.panel__label 
             input.panel__radio.panel__radio_type_vertical.js-panel__radio_type_vertical(
               type="radio",
               name=orientation)
             span Вертикальный
+
     .panel__column
       .panel__block
         label.panel__label
@@ -39,29 +45,34 @@ mixin panel-controller(id="")
             type="checkbox",
             name="label")
           span.panel__text Показать значение ползунка
+
     .panel__column
       .panel__row
         label.panel__label.panel__label_position_center Min
           input.panel__input.panel__input_size_m.panel__input_type_min.js-panel__input_type_min(
             type="number",
             step="any")
+
       .panel__row
         label.panel__label.panel__label_position_center Max
           input.panel__input.panel__input_size_m.panel__input_type_max.js-panel__input_type_max(
             type="number",
             step="any")
+
     .panel__column
       .panel__row
         label.panel__label.panel__label_position_center Шаг
           input.panel__input.panel__input_size_m.panel__input_type_step.js-panel__input_type_step(
             type="number",
             step="any")
+
     .panel__column
       .panel__row
         label.panel__label.panel__label_position_center Ползунок №1
           input.panel__input.panel__input_size_s.panel__input_type_from.js-panel__input_type_from(
             type="number",
             step="any")
+            
       .panel__block_row
         label.panel__label.panel__label_position_center Ползунок №2
           input.panel__input.panel__input_size_s.panel__input_type_to.js-panel__input_type_to.js-panel__input_disabled(
