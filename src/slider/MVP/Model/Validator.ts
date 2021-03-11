@@ -57,9 +57,11 @@ class Validator {
         this.config.positionFrom = this.config.positionTo - this.config.step;
         this.validationPositionFrom();
       }
+
       if (this.config.positionTo <= this.config.positionFrom && this.config.max - this.config.min <= this.config.step) {
         this.config.positionTo = this.config.max;
       }
+
       if (this.config.positionTo > this.config.max) {
         this.config.positionTo = this.config.max;
       }

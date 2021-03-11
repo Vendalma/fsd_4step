@@ -2,6 +2,7 @@ import PanelController from './panel/panelController/PanelController';
 import './slider/jquerySlider/slider';
 
 $('.js-page__slider-app_type_first').rangeSlider();
+
 $('.js-page__slider-app_type_second').rangeSlider({
   range: false,
   min: -9999,
@@ -12,6 +13,7 @@ $('.js-page__slider-app_type_second').rangeSlider({
   step: 1000,
   vertical: true,
 });
+
 $('.js-page__slider-app_type_third').rangeSlider({
   max: 110,
   step: 0.5,

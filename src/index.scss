@@ -13,16 +13,19 @@ body {
   display: flex;
   flex-direction: column;
   padding: 30px;
+
   &__block {
     display: flex;
     flex-direction: row;
     margin-bottom: 30px;
   }
+
   &__panel {
     margin-right: 50px;
     width: 100%;
     max-width: 320px;
   }
+
   &__slider-app {
     width: 100%;
   }

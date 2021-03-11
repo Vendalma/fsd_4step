@@ -8,9 +8,11 @@ export interface IConfig {
   step: number;
   label: boolean;
 }
+
 export interface IUpdateConfig {
   [key: string]: boolean | number;
 }
+
 export interface IDataThumbMove {
   clientXY: number;
   sliderClientReact: number;
