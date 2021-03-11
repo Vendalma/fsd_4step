@@ -10,17 +10,20 @@ import '../styles.scss';
         $this.data('sliderData', { rangeSlider });
       });
     },
-    returnPosition(subscriber: unknown) {
+
+    returnPosition(fn: (value?: unknown) => void) {
       return this.each(function (this: HTMLElement) {
-        $(this).data('sliderData').rangeSlider.addFollower(subscriber);
+        $(this).data('sliderData').rangeSlider.getUpdatePosition(fn);
       });
     },
+
     updateConfig(options: IUpdateConfig) {
       return this.each(function (this: HTMLElement) {
         $(this).data('sliderData').rangeSlider.updateConfig(options);
       });
     },
   };
+
   jQuery.fn.rangeSlider = function (
     method?: string | unknown | undefined,
     settings?: ISettings | IUpdateConfig | unknown | undefined,
@@ -28,6 +31,7 @@ import '../styles.scss';
     if (methods[method as string]) {
       return methods[method as string].apply(this, Array.prototype.slice.call(arguments, 1)); /* eslint-disable-line */
     }
+
     if (typeof method === 'object' || !method) {
       const defaultSettings = $.extend(
         {
@@ -44,6 +48,7 @@ import '../styles.scss';
       );
       return methods.init.call(this, defaultSettings);
     }
+
     return $.error(`Метод с именем ${method} не существует`);
   };
 })(jQuery);
