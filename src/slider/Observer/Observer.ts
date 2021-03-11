@@ -1,3 +1,8 @@
+interface valueForBroadcast {
+  value: number | unknown;
+  type?: string;
+}
+
 class Observer {
   private observers: Array<any>; /* eslint-disable-line */
 
@@ -9,12 +14,8 @@ class Observer {
     this.observers.push(fn);
   }
 
-  unsubscribe(fn: unknown): void {
-    this.observers = this.observers.filter((subscriber) => subscriber !== fn);
-  }
-
-  broadcast(data: number | unknown, type?: string): void {
-    this.observers.forEach((subscriber) => subscriber.update(data, type));
+  broadcast({ value, type }: valueForBroadcast): void {
+    this.observers.forEach((subscriber) => subscriber({ value, type }));
   }
 }
 export default Observer;

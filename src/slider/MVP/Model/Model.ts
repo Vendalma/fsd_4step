@@ -14,13 +14,9 @@ class Model extends Observer {
     this.validator = new Validator();
   }
 
-  addFollower(follower: unknown): void {
-    this.subscribe(follower);
-  }
-
-  updateConfig(conf: IConfig): void {
-    this.config = this.validator.validationConfig(conf);
-    this.broadcast(this.config, 'changeConfig');
+  updateConfig(data: IConfig): void {
+    this.config = this.validator.validationConfig(data);
+    this.broadcast({ value: this.config, type: 'changeConfig' });
   }
 
   getConfig(): IConfig {
@@ -28,11 +24,11 @@ class Model extends Observer {
   }
 
   findMoveThumbPosition(data: IDataThumbMove): void {
-    this.broadcast(this.calcThumbPosition(data), 'positionThumb');
+    this.broadcast({ value: this.calcThumbPosition(data), type: 'positionThumb' });
   }
 
   calcOnloadPosition(data: number): void {
-    this.broadcast(this.calcParams(data), 'positionThumb');
+    this.broadcast({ value: this.calcParams(data), type: 'positionThumb' });
   }
 
   private calcThumbPosition(data: IDataThumbMove): IPosition | undefined {
@@ -48,6 +44,7 @@ class Model extends Observer {
     if (!this.isIntegerStep()) {
       value = Number(value.toFixed(String(this.config.step).split('.')[1].length));
     }
+
     if (dataNum === '1') {
       return this.calcPositionThumbOne({
         secondThumbPosition,
@@ -56,6 +53,7 @@ class Model extends Observer {
         value,
       });
     }
+
     if (dataNum === '2') {
       return this.calcPositionThumbTwo({
         firstThumbPosition,
@@ -64,6 +62,7 @@ class Model extends Observer {
         value,
       });
     }
+
     return undefined;
   }
 
@@ -71,6 +70,7 @@ class Model extends Observer {
     const secondThumbPosition = data.secondThumbPosition as number;
     const rightValueForRange = this.calcValue(secondThumbPosition);
     this.config.positionFrom = data.value;
+
     if (data.position <= 0) {
       return {
         dataFirstThumb: {
@@ -79,6 +79,7 @@ class Model extends Observer {
         },
       };
     }
+
     if (!this.config.range && data.position > this.sliderSize) {
       return {
         dataFirstThumb: {
@@ -87,6 +88,7 @@ class Model extends Observer {
         },
       };
     }
+
     if (this.config.range && data.position > secondThumbPosition) {
       this.config.positionFrom = rightValueForRange;
       return {
@@ -96,6 +98,7 @@ class Model extends Observer {
         },
       };
     }
+
     return {
       dataFirstThumb: {
         positionFrom: data.positionMove,
@@ -108,6 +111,7 @@ class Model extends Observer {
     const firstThumbPosition = data.firstThumbPosition as number;
     const leftValueForRange = this.calcValue(firstThumbPosition);
     this.config.positionTo = data.value;
+
     if (data.position < firstThumbPosition) {
       this.config.positionTo = leftValueForRange;
       return {
@@ -117,6 +121,7 @@ class Model extends Observer {
         },
       };
     }
+
     if (data.position > this.sliderSize) {
       return {
         dataSecondThumb: {
@@ -125,6 +130,7 @@ class Model extends Observer {
         },
       };
     }
+
     return {
       dataSecondThumb: {
         positionTo: data.positionMove,
@@ -135,15 +141,18 @@ class Model extends Observer {
 
   private calcParams(data: number): IPosition {
     this.sliderSize = data;
+
     return {
       dataFirstThumb: {
         positionFrom: (this.config.positionFrom - this.config.min) / this.calcPixelSize(),
         valueFrom: this.config.positionFrom,
       },
+
       dataSecondThumb: {
         positionTo: (this.config.positionTo - this.config.min) / this.calcPixelSize(),
         valueTo: this.config.positionTo,
       },
+
       stepData: this.sliderSize / 20,
     };
   }
@@ -164,6 +173,7 @@ class Model extends Observer {
     if (value >= this.config.min) {
       return value;
     }
+
     return this.config.min;
   }
 
@@ -171,6 +181,7 @@ class Model extends Observer {
     if (value <= this.config.max) {
       return value;
     }
+
     return this.config.max;
   }
 
@@ -178,6 +189,7 @@ class Model extends Observer {
     if (value <= this.sliderSize) {
       return value;
     }
+
     return this.sliderSize;
   }
 }

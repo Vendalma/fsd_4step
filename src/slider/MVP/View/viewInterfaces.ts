@@ -8,6 +8,7 @@ export interface IConfig {
   step: number;
   label: boolean;
 }
+
 export interface IDataThumbMove {
   clientXY: number;
   sliderClientReact: number;
@@ -15,6 +16,7 @@ export interface IDataThumbMove {
   positionThumbFirst?: number;
   positionThumbSecond?: number;
 }
+
 export interface IPosition {
   dataFirstThumb?: {
     positionFrom: number;
@@ -25,4 +27,9 @@ export interface IPosition {
     valueTo: number;
   };
   stepData?: number;
+}
+
+export interface IValuesForSubscribers {
+  value: IDataThumbMove | IConfig | IPosition | number;
+  type: string;
 }

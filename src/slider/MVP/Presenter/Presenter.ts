@@ -1,6 +1,6 @@
 import Model from '../Model/Model';
 import View from '../View/View';
-import { IConfig, IDataThumbMove, IPosition } from './presenterInterfaces';
+import { IConfig, IDataThumbMove, IPosition, IValuesForSubscribers } from './presenterInterfaces';
 
 class Presenter {
   private model: Model;
@@ -10,24 +10,29 @@ class Presenter {
   constructor(model: Model, view: View) {
     this.model = model;
     this.view = view;
-    this.subscribeOnUpdate();
+    this.subscribeView();
+    this.subscribeModel();
   }
 
-  private subscribeOnUpdate(): void {
-    this.view.addFollower(this);
-    this.model.addFollower(this);
+  private subscribeView(): void {
+    this.view.subscribe(({ value, type }: IValuesForSubscribers) => {
+      if (type === 'mouseMove') {
+        this.model.findMoveThumbPosition(value as IDataThumbMove);
+      } else if (type === 'sliderSize') {
+        this.model.calcOnloadPosition(value as number);
+      }
+    });
   }
 
-  private update(data: IDataThumbMove | IConfig | IPosition | number, type: string): void {
-    if (type === 'mouseMove') {
-      this.model.findMoveThumbPosition(data as IDataThumbMove);
-    } else if (type === 'positionThumb') {
-      this.view.setPositionThumb(data as IPosition);
-    } else if (type === 'sliderSize') {
-      this.model.calcOnloadPosition(data as number);
-    } else if (type === 'changeConfig') {
-      this.view.setConfig(data as IConfig);
-    }
+  private subscribeModel(): void {
+    this.model.subscribe(({ value, type }: IValuesForSubscribers) => {
+      if (type === 'positionThumb') {
+        this.view.setPosition(value as IPosition);
+      } else if (type === 'changeConfig') {
+        this.view.setConfig(value as IConfig);
+      }
+    });
   }
 }
+
 export default Presenter;
