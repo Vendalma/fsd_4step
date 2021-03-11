@@ -15,16 +15,43 @@ class TestPresenter extends Presenter {
     super(model, view);
   }
 }
-
 const presenter: TestPresenter = new TestPresenter();
+
+model.updateConfig({
+  label: true,
+  min: 0,
+  max: 100,
+  range: false,
+  vertical: true,
+  step: 1,
+  positionFrom: 10,
+  positionTo: 100,
+});
 
 describe('Presenter', () => {
   it('Инициализация Presenter', () => {
     expect(presenter).toBeDefined();
   });
 
-  describe('метод update', () => {
-    it('При обновлении конфига Model, Presenter вызывает ф-ю setConfig во View', () => {
+  describe('метод subscribeView', () => {
+    it('При нажатии на бегунок, view передает данные type === mouseMove, в Model вызывается ф-я findMoveThumbPosition', () => {
+      const event = new MouseEvent('click', { bubbles: true });
+      spyOn(model, 'findMoveThumbPosition');
+      thumb.dispatchEvent(event);
+
+      expect(model.findMoveThumbPosition).toHaveBeenCalled();
+    });
+
+    it('При изменении размера окна браузера, view передает данные type === sliderSize, в Model вызывается ф-я calcOnloadPosition', () => {
+      spyOn(model, 'calcOnloadPosition');
+      presenter.view.broadcast({ value: 135, type: 'sliderSize' });
+
+      expect(model.calcOnloadPosition).toHaveBeenCalled();
+    });
+  });
+
+  describe('метод subscribeModel', () => {
+    it('При обновлении конфига, Model передает данные type === changeConfig, Presenter вызывает ф-ю setConfig во View', () => {
       spyOn(presenter.view, 'setConfig');
       model.updateConfig({
         label: true,
@@ -40,40 +67,12 @@ describe('Presenter', () => {
       expect(presenter.view.setConfig).toHaveBeenCalled();
     });
 
-    it('При нажатии на бегунок, вызывается ф-я findMoveThumbPosition в Model', () => {
-      presenter.view.setConfig({
-        label: true,
-        min: 0,
-        max: 100,
-        range: false,
-        vertical: true,
-        step: 1,
-        positionFrom: 10,
-        positionTo: 100,
-      });
+    it('При нажатии на бегунок, Model передает данные type === positionThumb и вызывается ф-я setPositionThumb во View', () => {
       const event = new MouseEvent('click', { bubbles: true });
-      spyOn(model, 'findMoveThumbPosition');
+      spyOn(presenter.view, 'setPosition');
       thumb.dispatchEvent(event);
 
-      expect(model.findMoveThumbPosition).toHaveBeenCalled();
-    });
-
-    it('При нажатии на бегунок, Model передает вычисления в Presenter и вызывается ф-я setPositionThumb во View', () => {
-      presenter.view.setConfig({
-        label: true,
-        min: 0,
-        max: 100,
-        range: false,
-        vertical: true,
-        step: 1,
-        positionFrom: 10,
-        positionTo: 100,
-      });
-      const event = new MouseEvent('click', { bubbles: true });
-      spyOn(presenter.view, 'setPositionThumb');
-      thumb.dispatchEvent(event);
-
-      expect(presenter.view.setPositionThumb).toHaveBeenCalled();
+      expect(presenter.view.setPosition).toHaveBeenCalled();
     });
   });
 });

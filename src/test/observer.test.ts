@@ -1,12 +1,20 @@
 import Observer from '../slider/Observer/Observer';
 
-class ClassA {
-  testA: { [key: string]: number };
+interface valueForBroadcast {
+  value: number | unknown;
+  type?: string;
+}
 
-  update(data: { [key: string]: number }, type: string) {
-    this.testA = data;
+class ClassA {
+  testA: number;
+
+  update({ value, type }: valueForBroadcast): void {
+    if (type === 'test') {
+      this.testA = value as number;
+    }
   }
 }
+
 class ClassB {
   classA: ClassA;
 
@@ -15,7 +23,6 @@ class ClassB {
   constructor() {
     this.classA = new ClassA();
     this.observer = new Observer();
-    this.observer.subscribe(this.classA);
   }
 }
 
@@ -27,15 +34,12 @@ describe('Observer', () => {
   });
 
   it('ф-я broadcast передает данные всем подписчикам', () => {
-    classB.observer.broadcast({ a: 1 }, 'data');
+    classB.observer.subscribe(({ value, type }: valueForBroadcast) => {
+      classB.classA.update({ value, type } as valueForBroadcast);
+    });
 
-    expect(classB.classA.update).toHaveBeenCalledWith({ a: 1 }, 'data');
-  });
+    classB.observer.broadcast({ value: 10, type: 'test' });
 
-  it('ф-я unsubscribe удаляет класс из списка подписчиков', () => {
-    classB.observer.unsubscribe(classB.classA);
-    classB.observer.broadcast({ a: 1 }, 'data');
-
-    expect(classB.classA.update).not.toHaveBeenCalledWith({ a: 1 }, 'data');
+    expect(classB.classA.update).toHaveBeenCalledWith({ value: 10, type: 'test' });
   });
 });

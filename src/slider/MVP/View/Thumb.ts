@@ -9,6 +9,7 @@ interface IConfigThumb {
   vertical: boolean;
   label: boolean;
 }
+
 class Thumb extends Observer {
   private config: IConfigThumb;
 
@@ -31,15 +32,11 @@ class Thumb extends Observer {
     this.moveThumb();
   }
 
-  addFollower(follower: unknown): void {
-    this.subscribe(follower);
-  }
-
   onMouseUp = (e: MouseEvent): void => {
     e.preventDefault; /* eslint-disable-line */
     document.removeEventListener('mousemove', this.moveHandle);
     document.removeEventListener('mouseup', this.onMouseUp);
-    this.broadcast(this.findPosition(e));
+    this.broadcast({ value: this.findPosition(e) });
     this.thumb.classList.remove('slider__thumb_visibility_zIndex-up');
   };
 
@@ -102,7 +99,7 @@ class Thumb extends Observer {
   };
 
   private moveHandle = (e: MouseEvent): void => {
-    this.broadcast(this.findPosition(e));
+    this.broadcast({ value: this.findPosition(e) });
   };
 
   private findPosition(e: MouseEvent): IDataThumbMove {
@@ -115,6 +112,7 @@ class Thumb extends Observer {
   private findPositionForHorizontal(e: MouseEvent): IDataThumbMove | undefined {
     const thumbFirst = this.slider.querySelector('.js-slider__thumb_type_first') as HTMLElement;
     const thumbSecond = this.slider.querySelector('.js-slider__thumb_type_second') as HTMLElement;
+
     if (Number(this.thumb.dataset.num) === 1) {
       return {
         clientXY: e.clientX,
@@ -123,6 +121,7 @@ class Thumb extends Observer {
         positionThumbSecond: this.config.range ? parseInt(thumbSecond.style.left, 10) : undefined,
       } as IDataThumbMove;
     }
+
     if (Number(this.thumb.dataset.num) === 2) {
       return {
         clientXY: e.clientX,
@@ -131,12 +130,14 @@ class Thumb extends Observer {
         positionThumbFirst: parseInt(thumbFirst.style.left, 10),
       } as IDataThumbMove;
     }
+
     return undefined;
   }
 
   private findPositionForVertical(e: MouseEvent): IDataThumbMove | undefined {
     const thumbFirst = this.slider.querySelector('.js-slider__thumb_type_first') as HTMLElement;
     const thumbSecond = this.slider.querySelector('.js-slider__thumb_type_second') as HTMLElement;
+
     if (Number(this.thumb.dataset.num) === 1) {
       return {
         clientXY: e.clientY,
@@ -145,6 +146,7 @@ class Thumb extends Observer {
         positionThumbSecond: this.config.range ? parseInt(thumbSecond.style.top, 10) : undefined,
       } as IDataThumbMove;
     }
+
     if (Number(this.thumb.dataset.num) === 2) {
       return {
         clientXY: e.clientY,
@@ -153,6 +155,7 @@ class Thumb extends Observer {
         positionThumbFirst: parseInt(thumbFirst.style.top, 10),
       } as IDataThumbMove;
     }
+
     return undefined;
   }
 }

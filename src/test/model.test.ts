@@ -26,13 +26,6 @@ describe('Model', () => {
     expect(model).toBeDefined();
   });
 
-  it('метод addFollower подписывает на обновления класса Model', () => {
-    spyOn(model, 'subscribe');
-    model.addFollower({});
-
-    expect(model.subscribe).toHaveBeenCalledWith({});
-  });
-
   it('метод getConfig возвращает конфиг Model', () => {
     model.updateConfig(config);
 
@@ -184,7 +177,7 @@ describe('Model', () => {
           });
           model.findMoveThumbPosition(data);
 
-          expect(model.broadcast).toHaveBeenCalledWith(undefined, 'positionThumb');
+          expect(model.broadcast).toHaveBeenCalledWith({ value: undefined, type: 'positionThumb' });
         });
       });
     });

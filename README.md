@@ -73,13 +73,11 @@ $('#id').rangeSlider()
 $('#id').rangeSlider('updateConfig', {min: -100});
 
 //Получение позиций бегунков
-let object = {
-  update(data) {
-    console.log(data)
-  }
+function fn(value) {
+  console.log(value)
 }
 
-$('#id').rangeSlider('returnPosition', object);
+$('#id').rangeSlider('returnPosition', fn);
 
 /*
 {
@@ -91,8 +89,8 @@ $('#id').rangeSlider('returnPosition', object);
 
 ## Диаграмма
 
-![alt text](uml/uml1.jpg)
+![alt text](uml/uml-1.jpg)
 
 ---
 
-![alt text](uml/uml2.jpg)
+![alt text](uml/uml-2.jpg)

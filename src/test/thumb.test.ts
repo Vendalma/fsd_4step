@@ -24,13 +24,6 @@ describe('Thumb', () => {
     expect(thumb).toBeDefined();
   });
 
-  it('метод addFollower подписывает на обновления класса Thumb', () => {
-    spyOn(thumb, 'subscribe');
-    thumb.addFollower({});
-
-    expect(thumb.subscribe).toHaveBeenCalledWith({});
-  });
-
   it('метод setLabelValue устанавливает значение лейбла', () => {
     thumb.setLabelValue(8);
     const elementLabel = $block[0].querySelector('.js-slider__label');
@@ -151,7 +144,7 @@ describe('Thumb', () => {
         thumbBlock.dispatchEvent(mousedown);
         document.dispatchEvent(mousemove);
 
-        expect(thumb.broadcast).toHaveBeenCalledWith(undefined);
+        expect(thumb.broadcast).toHaveBeenCalledWith({ value: undefined });
       });
     });
 
@@ -213,7 +206,7 @@ describe('Thumb', () => {
         thumbBlock.dispatchEvent(mousedown);
         document.dispatchEvent(mousemove);
 
-        expect(thumb.broadcast).toHaveBeenCalledWith(undefined);
+        expect(thumb.broadcast).toHaveBeenCalledWith({ value: undefined });
       });
     });
   });
@@ -282,7 +275,7 @@ describe('Thumb', () => {
         thumbBlock.dispatchEvent(mousedown);
         document.dispatchEvent(mouseup);
 
-        expect(thumb.broadcast).toHaveBeenCalledWith(undefined);
+        expect(thumb.broadcast).toHaveBeenCalledWith({ value: undefined });
         expect(thumbBlock).not.toHaveClass('slider__thumb_visibility_zIndex-up');
       });
     });
@@ -348,7 +341,7 @@ describe('Thumb', () => {
         thumbBlock.dispatchEvent(mousedown);
         document.dispatchEvent(mouseup);
 
-        expect(thumb.broadcast).toHaveBeenCalledWith(undefined);
+        expect(thumb.broadcast).toHaveBeenCalledWith({ value: undefined });
         expect(thumbBlock).not.toHaveClass('slider__thumb_visibility_zIndex-up');
       });
     });

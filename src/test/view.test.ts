@@ -1,6 +1,4 @@
-import SliderBlock from '../slider/MVP/View/SliderBlock';
 import View from '../slider/MVP/View/View';
-import { IPosition } from '../slider/MVP/View/viewInterfaces';
 
 const config = {
   range: true,
@@ -14,93 +12,135 @@ const config = {
 };
 
 const $block = $('<div>');
-class TestView extends View {
-  public sliderBlock: SliderBlock;
-
-  constructor() {
-    super($block[0]);
-  }
-}
-
 $(document.body).append($block);
-const view: TestView = new TestView();
-const sliderBlock = jasmine.createSpyObj('sliderBlock', ['setPositionThumb', 'updateConfig']);
-view.sliderBlock = sliderBlock;
-view.setConfig(config);
+
+const view: View = new View($block[0]);
+const blockSlider = $block[0].querySelector('.js-slider__block') as HTMLElement;
+const progressBar = blockSlider.querySelector('.js-slider__progress-bar') as HTMLElement;
+const thumbOne = blockSlider.querySelector('.js-slider__thumb_type_first') as HTMLElement;
+const thumbSecond = blockSlider.querySelector('.js-slider__thumb_type_second') as HTMLElement;
 
 describe('View', () => {
+  beforeEach(() => {
+    view.setConfig(config);
+  });
+
   it('Инициализация View', () => {
     expect(view).toBeDefined();
   });
 
   describe('метод setPositionThumb', () => {
-    let data: IPosition;
-    it('при заданных параметрах data, вызывается ф-я setPositionThumb, которая передает данные в класс sliderBlock', () => {
-      data = {
-        stepData: 20,
-        dataFirstThumb: {
-          positionFrom: 50,
-          valueFrom: 10,
-        },
-        dataSecondThumb: {
-          positionTo: 100,
-          valueTo: 30,
-        },
-      };
-      view.setPositionThumb(data);
-
-      expect(view.sliderBlock.setPositionThumb).toHaveBeenCalled();
-    });
-
-    it('должна вызваться ф-я setPositionThumb, которая передает данные в класс sliderBlock', () => {
-      data = {
-        stepData: 30.5,
+    it('при заданных параметрах устанавливается прогресс бар', () => {
+      const data = {
+        stepData: undefined,
         dataFirstThumb: undefined,
         dataSecondThumb: undefined,
       };
-      view.setPositionThumb(data);
+      view.setPosition(data);
 
-      expect(view.sliderBlock.setPositionThumb).toHaveBeenCalled();
+      expect(blockSlider).toContainElement('div.slider__progress-bar');
     });
 
-    it('метод вызывает ф-ю setPositionThumb в классе sliderBlock', () => {
-      data = {
+    it('при заданных параметрах устанавливается шкала значений, прогресс бар, позиции бегунков', () => {
+      const data = {
+        stepData: 30.5,
         dataFirstThumb: {
           positionFrom: 100,
           valueFrom: 5,
         },
-        dataSecondThumb: undefined,
-        stepData: undefined,
-      };
-      view.setPositionThumb(data);
-
-      expect(view.sliderBlock.setPositionThumb).toHaveBeenCalled();
-    });
-
-    it('вызывается ф-я setPositionThumb, передающая данные в класс sliderBlock', () => {
-      data = {
         dataSecondThumb: {
-          positionTo: 100,
-          valueTo: 5,
+          positionTo: 200,
+          valueTo: 9,
         },
-        dataFirstThumb: undefined,
-        stepData: undefined,
       };
+      view.setPosition(data);
 
-      view.setPositionThumb(data);
-
-      expect(view.sliderBlock.setPositionThumb).toHaveBeenCalled();
+      expect(blockSlider).toContainElement('div.slider__step-block');
+      expect(blockSlider).toContainElement('div.slider__progress-bar');
+      expect(thumbOne).toHaveCss({ left: '100px' });
+      expect(thumbSecond).toHaveCss({ left: '200px' });
     });
   });
 
-  it('метод addFollower подписывает на обновления класса View', () => {
-    spyOn(view, 'subscribe');
-    view.addFollower({});
+  describe('метод setConfig обновляет конфиг и передает его классам step, thumbOne, thumbTwo, progressBar', () => {
+    describe('при vertical = true контейнер слайдера должен иметь класс slider__block_vertical', () => {
+      it('если range = false контейнер второго бегунка удаляется', () => {
+        const newConf = {
+          min: -5,
+          max: 40,
+          range: false,
+          positionFrom: 0,
+          positionTo: 10,
+          label: false,
+          vertical: true,
+          step: 1,
+        };
+        view.setConfig(newConf);
 
-    expect(view.subscribe).toHaveBeenCalled();
+        expect(blockSlider).toHaveClass('slider__block_vertical');
+        expect(progressBar).toHaveClass('slider__progress-bar_vertical');
+        expect(blockSlider).not.toContainElement('div.js-slider__thumb_type_second');
+      });
+
+      it('если range = true контейнер второго бегунка добавляется в слайдер', () => {
+        const newConf = {
+          min: -5,
+          max: 40,
+          range: true,
+          positionFrom: 0,
+          positionTo: 10,
+          label: false,
+          vertical: true,
+          step: 1,
+        };
+        view.setConfig(newConf);
+
+        expect(blockSlider).toHaveClass('slider__block_vertical');
+        expect(progressBar).toHaveClass('slider__progress-bar_vertical');
+        expect(blockSlider).toContainElement('div.js-slider__thumb_type_second');
+      });
+    });
+
+    describe('при vertical = false контейнер слайдера не должен иметь класс slider__block_vertical', () => {
+      it('если range = true добавляется контейнер второго бегунка', () => {
+        const newConf = {
+          min: -5,
+          max: 40,
+          range: true,
+          positionFrom: 0,
+          positionTo: 10,
+          label: false,
+          vertical: false,
+          step: 1,
+        };
+        view.setConfig(newConf);
+
+        expect(blockSlider).not.toHaveClass('slider__block_vertical');
+        expect(progressBar).toHaveClass('slider__progress-bar_horizontal');
+        expect(blockSlider).toContainElement('div.js-slider__thumb_type_second');
+      });
+
+      it('если range = false второй бегунок удаляется', () => {
+        const newConf = {
+          min: -5,
+          max: 40,
+          range: false,
+          positionFrom: 0,
+          positionTo: 10,
+          label: false,
+          vertical: false,
+          step: 1,
+        };
+        view.setConfig(newConf);
+
+        expect(blockSlider).not.toHaveClass('slider__block_vertical');
+        expect(blockSlider).not.toContainElement('div.js-slider__thumb_type_second');
+        expect(progressBar).toHaveClass('slider__progress-bar_horizontal');
+      });
+    });
   });
 
-  it('метод resizeWindow передает данные о размере контейнера при изменении размера окна браузера', () => {
+  it('метод resizeWindow передает данные о размере слайдера при изменении размера окна браузера', () => {
     spyOn(view, 'broadcast');
     const event = new UIEvent('resize', {});
     window.dispatchEvent(event);
@@ -108,19 +148,122 @@ describe('View', () => {
     expect(view.broadcast).toHaveBeenCalled();
   });
 
-  it('метод updateConfig обновляет конфиг View и вызывает метод updateConfig класса SliderBlock', () => {
-    const newConf = {
-      range: false,
-      min: -100,
-      max: 100,
-      positionFrom: 10,
-      positionTo: 45,
-      label: true,
-      step: 0.1,
-      vertical: true,
-    };
-    view.setConfig(newConf);
+  describe('метод sliderClick добавляет контейнеру слайдера обработчик событий', () => {
+    let event: MouseEvent;
+    beforeEach(function () {
+      event = new MouseEvent('click', { clientX: 10, clientY: 10 });
+      spyOn(view, 'broadcast');
+    });
 
-    expect(view.sliderBlock.updateConfig).toHaveBeenCalled();
+    describe('vertical = false вычисляется место клика по горизонтальной оси', () => {
+      it('если range = false, при клике на контейнер слайдера бегунок перемещается в это место,класс View вызывает метод broadcast и передает данные о положении бегунка', () => {
+        view.setConfig({
+          range: false,
+          min: 0,
+          max: 100,
+          positionFrom: 15,
+          positionTo: 30,
+          label: true,
+          vertical: false,
+          step: 1,
+        });
+        blockSlider.dispatchEvent(event);
+
+        expect(view.broadcast).toHaveBeenCalled();
+      });
+
+      it('range = true и клик был совершен рядом с первым бегунком, то он передвигается на место клика', () => {
+        view.setConfig({
+          range: true,
+          min: 0,
+          max: 100,
+          positionFrom: 15,
+          positionTo: 30,
+          label: true,
+          vertical: false,
+          step: 1,
+        });
+
+        thumbOne.style.position = 'relative';
+        thumbOne.style.left = '10px';
+        blockSlider.dispatchEvent(event);
+
+        expect(view.broadcast).toHaveBeenCalled();
+      });
+
+      it('range = true, если клик был совершен рядом со вторым бегунком, то он сдвигается', () => {
+        view.setConfig({
+          range: true,
+          min: 0,
+          max: 100,
+          positionFrom: 15,
+          positionTo: 30,
+          label: true,
+          vertical: false,
+          step: 1,
+        });
+
+        thumbSecond.style.position = 'relative';
+        thumbSecond.style.left = '20px';
+        blockSlider.dispatchEvent(event);
+
+        expect(view.broadcast).toHaveBeenCalled();
+      });
+    });
+
+    describe('при vertical = true место клика вычисляется по вертикальной оси', () => {
+      it('если range = false, бегунок смещается в место клика, View передает данные о его движении вызывая метод broadcast, ', () => {
+        view.setConfig({
+          range: false,
+          min: 0,
+          max: 100,
+          positionFrom: 15,
+          positionTo: 30,
+          label: true,
+          vertical: true,
+          step: 1,
+        });
+
+        blockSlider.dispatchEvent(event);
+
+        expect(view.broadcast).toHaveBeenCalled();
+      });
+    });
+
+    it('range = true и клик рядом с первым бегунком, он перемещается в место клика', () => {
+      view.setConfig({
+        range: true,
+        min: 0,
+        max: 100,
+        positionFrom: 15,
+        positionTo: 30,
+        label: true,
+        vertical: true,
+        step: 1,
+      });
+      thumbOne.style.position = 'relative';
+      thumbOne.style.top = '100px';
+      blockSlider.dispatchEvent(event);
+
+      expect(view.broadcast).toHaveBeenCalled();
+    });
+
+    it('range = true, клик рядом со вторым бегунком, то он передвигается в это место', () => {
+      view.setConfig({
+        range: true,
+        min: 0,
+        max: 100,
+        positionFrom: 15,
+        positionTo: 30,
+        label: true,
+        vertical: true,
+        step: 1,
+      });
+      thumbSecond.style.position = 'relative';
+      thumbSecond.style.top = '100px';
+      blockSlider.dispatchEvent(event);
+
+      expect(view.broadcast).toHaveBeenCalled();
+    });
   });
 });
