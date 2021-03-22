@@ -47,5 +47,6 @@ module.exports = {
     'jasmine/no-spec-dupes': [1, 'branch'],
     'jasmine/no-suite-dupes': [1, 'branch'],
     'max-classes-per-file': ['error', 2],
+    'default-case': 0,
   },
 };
