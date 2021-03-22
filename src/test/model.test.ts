@@ -161,25 +161,6 @@ describe('Model', () => {
           expect(model.broadcast).toHaveBeenCalled();
         });
       });
-
-      describe('dataNum = 3, range = true', () => {
-        it('dataNum = 3, то вызывается метод broadcast с значением undefined', () => {
-          data.dataNum = '3';
-          model.updateConfig({
-            step: 0.1,
-            max: 100,
-            min: 0,
-            positionFrom: 10,
-            positionTo: 20,
-            range: true,
-            label: true,
-            vertical: false,
-          });
-          model.findMoveThumbPosition(data);
-
-          expect(model.broadcast).toHaveBeenCalledWith({ value: undefined, type: 'positionThumb' });
-        });
-      });
     });
 
     describe('step = 1', () => {

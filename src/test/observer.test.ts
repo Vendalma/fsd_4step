@@ -1,16 +1,16 @@
 import Observer from '../slider/Observer/Observer';
 
-interface valueForBroadcast {
-  value: number | unknown;
-  type?: string;
-}
+type valueForBroadcast = {
+  value: number;
+  type: string;
+};
 
 class ClassA {
   testA: number;
 
   update({ value, type }: valueForBroadcast): void {
     if (type === 'test') {
-      this.testA = value as number;
+      this.testA = value;
     }
   }
 }
@@ -18,7 +18,7 @@ class ClassA {
 class ClassB {
   classA: ClassA;
 
-  observer: Observer;
+  observer: Observer<valueForBroadcast>;
 
   constructor() {
     this.classA = new ClassA();
@@ -35,7 +35,7 @@ describe('Observer', () => {
 
   it('ф-я broadcast передает данные всем подписчикам', () => {
     classB.observer.subscribe(({ value, type }: valueForBroadcast) => {
-      classB.classA.update({ value, type } as valueForBroadcast);
+      classB.classA.update({ value, type });
     });
 
     classB.observer.broadcast({ value: 10, type: 'test' });
