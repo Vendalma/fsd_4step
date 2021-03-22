@@ -3,6 +3,7 @@ interface IConfigStep {
   max: number;
   vertical: boolean;
 }
+
 class Step {
   private config: IConfigStep;
 
@@ -22,6 +23,7 @@ class Step {
       stepBlock.classList.add('js-slider__step-block');
       stepBlock.classList.add('slider__step-block');
       fragment.append(stepBlock);
+
       if (i === 0) {
         stepBlock.textContent = `${this.config.min}`;
         stepBlock.classList.add('slider__step-block_value-type_min');
@@ -58,4 +60,5 @@ class Step {
     });
   }
 }
+
 export default Step;

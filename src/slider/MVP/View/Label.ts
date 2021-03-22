@@ -2,6 +2,7 @@ interface IConfigLabel {
   label: boolean;
   vertical: boolean;
 }
+
 class Label {
   private thumb: HTMLElement;
 
@@ -34,9 +35,7 @@ class Label {
   private checkOrientation(): void {
     if (this.config.vertical) {
       this.elementLabel.classList.add('slider__label_vertical');
-    }
-
-    if (!this.config.vertical) {
+    } else {
       this.elementLabel.classList.remove('slider__label_vertical');
     }
   }
@@ -49,4 +48,5 @@ class Label {
     }
   }
 }
+
 export default Label;

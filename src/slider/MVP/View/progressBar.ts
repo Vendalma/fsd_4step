@@ -2,6 +2,7 @@ interface IConfigBar {
   range: boolean;
   vertical: boolean;
 }
+
 class ProgressBar {
   private config: IConfigBar;
 
@@ -28,6 +29,7 @@ class ProgressBar {
         }px`;
       }
     }
+
     if (this.config.vertical) {
       if (!this.config.range) {
         this.progressBar.style.top = '0px';

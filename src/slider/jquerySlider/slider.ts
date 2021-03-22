@@ -3,7 +3,7 @@ import '../styles.scss';
 
 (function ($) {
   const methods: MethodsObject = {
-    init(options: ISettings) {
+    init(options: IConfig) {
       return this.each(function (this: HTMLElement) {
         const $this = $(this);
         const rangeSlider = new RangeSlider(this, options);
@@ -11,7 +11,7 @@ import '../styles.scss';
       });
     },
 
-    returnPosition(fn: (value?: unknown) => void) {
+    returnPosition(fn: (data?: IConfig) => void) {
       return this.each(function (this: HTMLElement) {
         $(this).data('sliderData').rangeSlider.getUpdatePosition(fn);
       });
@@ -25,11 +25,11 @@ import '../styles.scss';
   };
 
   jQuery.fn.rangeSlider = function (
-    method?: string | unknown | undefined,
-    settings?: ISettings | IUpdateConfig | unknown | undefined,
+    method?: string | IConfig | IUpdateConfig,
+    settings?: IConfig | IUpdateConfig | ((data?: IConfig) => void),
   ) {
-    if (methods[method as string]) {
-      return methods[method as string].apply(this, Array.prototype.slice.call(arguments, 1)); /* eslint-disable-line */
+    if (typeof method === 'string' && methods[method]) {
+      return methods[method].apply(this, Array.prototype.slice.call(arguments, 1)); /* eslint-disable-line */
     }
 
     if (typeof method === 'object' || !method) {

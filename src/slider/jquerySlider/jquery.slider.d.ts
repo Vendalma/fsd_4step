@@ -1,4 +1,4 @@
-interface ISettings {
+interface IConfig {
   min: number;
   max: number;
   positionFrom: number;
@@ -8,15 +8,18 @@ interface ISettings {
   step: number;
   vertical: boolean;
 }
+
 interface IUpdateConfig {
   [key: string]: boolean | number;
 }
+
 interface MethodsObject {
-  [key: string]: any /* eslint-disable-line */;
+  [key: string]: any;  /* eslint-disable-line */
 }
+
 interface JQuery {
   rangeSlider: (
-    method?: string | undefined | unknown,
-    settings?: ISettings | IUpdateConfig | unknown | undefined,
+    method?: string | IConfig | IUpdateConfig,
+    settings?: IConfig | IUpdateConfig | ((data?: IConfig) => void),
   ) => JQuery;
 }

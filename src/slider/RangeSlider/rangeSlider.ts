@@ -1,7 +1,7 @@
 import Model from '../MVP/Model/Model';
 import Presenter from '../MVP/Presenter/Presenter';
 import View from '../MVP/View/View';
-import { ISettings, IUpdateConfig, IUpdatedPosition, valueForBroadcast } from './rangeSliderInterfaces';
+import { IConfig, IUpdatedPosition } from './rangeSliderInterfaces';
 
 class RangeSlider {
   private model: Model;
@@ -10,9 +10,9 @@ class RangeSlider {
 
   private view: View;
 
-  private settings: ISettings;
+  private settings: IConfig;
 
-  constructor(container: HTMLElement, settings: ISettings) {
+  constructor(container: HTMLElement, settings: IConfig) {
     this.settings = settings;
     this.model = new Model();
     this.view = new View(container);
@@ -20,21 +20,21 @@ class RangeSlider {
     this.updateConfig(this.settings);
   }
 
-  getConfig(): ISettings {
+  getConfig(): IConfig {
     return this.model.getConfig();
   }
 
-  updateConfig(data: IUpdateConfig | ISettings): void {
+  updateConfig(data: IUpdateConfig | IConfig): void {
     this.model.updateConfig(Object.assign(this.settings, data));
   }
 
-  getUpdatePosition(fn: (value?: unknown) => void): void {
-    this.model.subscribe(({ type }: valueForBroadcast) => {
-      if (type === 'positionThumb') {
+  getUpdatePosition(fn: (value?: IUpdatedPosition) => void): void {
+    this.model.subscribe((data) => {
+      if (data.type === 'positionThumb') {
         fn({
           positionFrom: this.getConfig().positionFrom,
           positionTo: this.getConfig().positionTo,
-        } as IUpdatedPosition);
+        });
       }
     });
   }

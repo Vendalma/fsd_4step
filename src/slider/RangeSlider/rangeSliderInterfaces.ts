@@ -1,4 +1,4 @@
-export interface ISettings {
+export interface IConfig {
   min: number;
   max: number;
   positionFrom: number;
@@ -16,9 +16,4 @@ export interface IUpdateConfig {
 export interface IUpdatedPosition {
   positionFrom: number;
   positionTo: number;
-}
-
-export interface valueForBroadcast {
-  data?: number | unknown;
-  type: string;
 }
