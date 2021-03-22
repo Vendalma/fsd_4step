@@ -1,8 +1,8 @@
 import Observer from '../../Observer/Observer';
-import { ICalcMoveThumb, IConfig, IDataThumbMove, IPosition } from './modelInterfaces';
+import { ICalcMoveThumb, IConfig, IDataThumbMove, IPosition, ModelValues } from './modelInterfaces';
 import Validator from './Validator';
 
-class Model extends Observer {
+class Model extends Observer<ModelValues> {
   private sliderSize: number;
 
   private validator: Validator;
@@ -20,7 +20,7 @@ class Model extends Observer {
   }
 
   getConfig(): IConfig {
-    return this.config as IConfig;
+    return this.config;
   }
 
   findMoveThumbPosition(data: IDataThumbMove): void {
@@ -31,10 +31,10 @@ class Model extends Observer {
     this.broadcast({ value: this.calcParams(data), type: 'positionThumb' });
   }
 
-  private calcThumbPosition(data: IDataThumbMove): IPosition | undefined {
+  private calcThumbPosition(data: IDataThumbMove): IPosition {
     const { clientXY, sliderClientReact, dataNum } = data;
-    const firstThumbPosition = data.positionThumbFirst as number;
-    const secondThumbPosition = data.positionThumbSecond as number;
+    const firstThumbPosition = data.positionThumbFirst;
+    const secondThumbPosition = data.positionThumbSecond;
 
     const stepSize = this.config.step / this.calcPixelSize();
     const position = clientXY - sliderClientReact;
@@ -43,15 +43,6 @@ class Model extends Observer {
 
     if (!this.isIntegerStep()) {
       value = Number(value.toFixed(String(this.config.step).split('.')[1].length));
-    }
-
-    if (dataNum === '1') {
-      return this.calcPositionThumbOne({
-        secondThumbPosition,
-        position,
-        positionMove,
-        value,
-      });
     }
 
     if (dataNum === '2') {
@@ -63,7 +54,12 @@ class Model extends Observer {
       });
     }
 
-    return undefined;
+    return this.calcPositionThumbOne({
+      secondThumbPosition,
+      position,
+      positionMove,
+      value,
+    });
   }
 
   private calcPositionThumbOne(data: ICalcMoveThumb): IPosition {
@@ -91,6 +87,7 @@ class Model extends Observer {
 
     if (this.config.range && data.position > secondThumbPosition) {
       this.config.positionFrom = rightValueForRange;
+
       return {
         dataFirstThumb: {
           positionFrom: secondThumbPosition,
@@ -114,6 +111,7 @@ class Model extends Observer {
 
     if (data.position < firstThumbPosition) {
       this.config.positionTo = leftValueForRange;
+
       return {
         dataSecondThumb: {
           positionTo: firstThumbPosition,
@@ -193,4 +191,5 @@ class Model extends Observer {
     return this.sliderSize;
   }
 }
+
 export default Model;

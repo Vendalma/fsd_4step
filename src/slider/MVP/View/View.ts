@@ -2,9 +2,9 @@ import Observer from '../../Observer/Observer';
 import ProgressBar from './ProgressBar';
 import Step from './Step';
 import Thumb from './Thumb';
-import { IConfig, IPosition, IValuesForSubscribers } from './viewInterfaces';
+import { ChangeView, IConfig, IPosition } from './viewInterfaces';
 
-class View extends Observer {
+class View extends Observer<ChangeView> {
   private config: IConfig;
 
   private wrapper: HTMLElement;
@@ -35,6 +35,7 @@ class View extends Observer {
     if (data.stepData !== undefined) {
       this.step.addStepLine(data.stepData);
     }
+
     if (data.dataFirstThumb !== undefined) {
       this.thumbOne.setPosition(data.dataFirstThumb.positionFrom);
       this.thumbOne.setLabelValue(data.dataFirstThumb.valueFrom);
@@ -81,12 +82,12 @@ class View extends Observer {
   }
 
   private subscribeOnThumb() {
-    this.thumbOne.subscribe(({ value }: IValuesForSubscribers) => {
-      this.broadcast({ value, type: 'mouseMove' });
+    this.thumbOne.subscribe(({ value }) => {
+      this.broadcast({ value, type: 'thumbMove' });
     });
 
-    this.thumbTwo?.subscribe(({ value }: IValuesForSubscribers) => {
-      this.broadcast({ value, type: 'mouseMove' });
+    this.thumbTwo?.subscribe(({ value }) => {
+      this.broadcast({ value, type: 'thumbMove' });
     });
   }
 
@@ -95,15 +96,17 @@ class View extends Observer {
   }
 
   private getSliderSize(): void {
-    if (!this.config.vertical) this.broadcast({ value: this.sliderContainer.offsetWidth, type: 'sliderSize' });
-
-    if (this.config.vertical) this.broadcast({ value: this.sliderContainer.offsetHeight, type: 'sliderSize' });
+    if (!this.config.vertical) {
+      this.broadcast({ value: this.sliderContainer.offsetWidth, type: 'sliderSize' });
+    } else {
+      this.broadcast({ value: this.sliderContainer.offsetHeight, type: 'sliderSize' });
+    }
   }
 
   private checkOrientation(): void {
     if (this.config.vertical) {
       this.sliderBlock.classList.add('slider__block_vertical');
-    } else if (!this.config.vertical) {
+    } else {
       this.sliderBlock.classList.remove('slider__block_vertical');
     }
   }
@@ -115,7 +118,7 @@ class View extends Observer {
   private onSliderClick(e: MouseEvent): void {
     if (!this.config.vertical) {
       this.findClickPlaceHorizon(e);
-    } else if (this.config.vertical) {
+    } else {
       this.findClickPlaceVert(e);
     }
   }
@@ -166,4 +169,5 @@ class View extends Observer {
     }
   }
 }
+
 export default View;

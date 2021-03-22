@@ -29,7 +29,26 @@ export interface IPosition {
   stepData?: number;
 }
 
-export interface IValuesForSubscribers {
-  value: IDataThumbMove | IConfig | IPosition | number;
-  type: string;
+export interface IConfigThumb {
+  range: boolean;
+  positionFrom: number;
+  positionTo: number;
+  vertical: boolean;
+  label: boolean;
 }
+
+export interface ThumbValue {
+  value: IDataThumbMove;
+}
+
+type ThumbMove = {
+  value: IDataThumbMove;
+  type: 'thumbMove';
+};
+
+type GetSliderSize = {
+  value: number;
+  type: 'sliderSize';
+};
+
+export type ChangeView = ThumbMove | GetSliderSize;

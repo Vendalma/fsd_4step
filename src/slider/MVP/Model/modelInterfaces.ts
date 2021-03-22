@@ -9,14 +9,10 @@ export interface IConfig {
   label: boolean;
 }
 
-export interface IUpdateConfig {
-  [key: string]: boolean | number;
-}
-
 export interface IDataThumbMove {
   clientXY: number;
   sliderClientReact: number;
-  dataNum: string;
+  dataNum?: string;
   positionThumbFirst?: number;
   positionThumbSecond?: number;
 }
@@ -40,3 +36,15 @@ export interface ICalcMoveThumb {
   positionMove: number;
   value: number;
 }
+
+type UpdateConfig = {
+  value: IConfig;
+  type: 'changeConfig';
+};
+
+type UpdateThumbPosition = {
+  value: IPosition;
+  type: 'positionThumb';
+};
+
+export type ModelValues = UpdateConfig | UpdateThumbPosition;

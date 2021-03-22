@@ -1,16 +1,8 @@
 import Observer from '../../Observer/Observer';
 import Label from './Label';
-import { IDataThumbMove } from './viewInterfaces';
+import { IConfigThumb, IDataThumbMove, ThumbValue } from './viewInterfaces';
 
-interface IConfigThumb {
-  range: boolean;
-  positionFrom: number;
-  positionTo: number;
-  vertical: boolean;
-  label: boolean;
-}
-
-class Thumb extends Observer {
+class Thumb extends Observer<ThumbValue> {
   private config: IConfigThumb;
 
   private slider: HTMLElement;
@@ -34,7 +26,7 @@ class Thumb extends Observer {
 
   onMouseUp = (e: MouseEvent): void => {
     e.preventDefault; /* eslint-disable-line */
-    document.removeEventListener('mousemove', this.moveHandle);
+    document.removeEventListener('mousemove', this.onMouseMove);
     document.removeEventListener('mouseup', this.onMouseUp);
     this.broadcast({ value: this.findPosition(e) });
     this.thumb.classList.remove('slider__thumb_visibility_zIndex-up');
@@ -43,7 +35,7 @@ class Thumb extends Observer {
   setPosition(position: number): void {
     if (!this.config.vertical) {
       this.thumb.style.left = `${position}px`;
-    } else if (this.config.vertical) {
+    } else {
       this.thumb.style.top = `${position}px`;
     }
   }
@@ -81,7 +73,7 @@ class Thumb extends Observer {
     if (!this.config.vertical) {
       this.thumb.classList.add('slider__thumb_horizontal');
       this.thumb.classList.remove('slider__thumb_vertical');
-    } else if (this.config.vertical) {
+    } else {
       this.thumb.classList.remove('slider__thumb_horizontal');
       this.thumb.classList.add('slider__thumb_vertical');
     }
@@ -93,70 +85,64 @@ class Thumb extends Observer {
 
   private mouseDown = (e: MouseEvent): void => {
     e.preventDefault();
-    document.addEventListener('mousemove', this.moveHandle);
+    document.addEventListener('mousemove', this.onMouseMove);
     document.addEventListener('mouseup', this.onMouseUp);
     this.thumb.classList.add('slider__thumb_visibility_zIndex-up');
   };
 
-  private moveHandle = (e: MouseEvent): void => {
+  private onMouseMove = (e: MouseEvent): void => {
     this.broadcast({ value: this.findPosition(e) });
   };
 
   private findPosition(e: MouseEvent): IDataThumbMove {
     if (!this.config.vertical) {
-      return this.findPositionForHorizontal(e) as IDataThumbMove;
+      return this.findPositionForHorizontal(e);
     }
-    return this.findPositionForVertical(e) as IDataThumbMove;
+
+    return this.findPositionForVertical(e);
   }
 
-  private findPositionForHorizontal(e: MouseEvent): IDataThumbMove | undefined {
+  private findPositionForHorizontal(e: MouseEvent): IDataThumbMove {
     const thumbFirst = this.slider.querySelector('.js-slider__thumb_type_first') as HTMLElement;
     const thumbSecond = this.slider.querySelector('.js-slider__thumb_type_second') as HTMLElement;
 
-    if (Number(this.thumb.dataset.num) === 1) {
+    if (this.thumb.dataset.num === '2') {
       return {
         clientXY: e.clientX,
         sliderClientReact: this.slider.getBoundingClientRect().left,
-        dataNum: this.thumb.dataset.num,
-        positionThumbSecond: this.config.range ? parseInt(thumbSecond.style.left, 10) : undefined,
-      } as IDataThumbMove;
-    }
-
-    if (Number(this.thumb.dataset.num) === 2) {
-      return {
-        clientXY: e.clientX,
-        sliderClientReact: this.slider.getBoundingClientRect().left,
-        dataNum: this.thumb.dataset.num,
+        dataNum: '2',
         positionThumbFirst: parseInt(thumbFirst.style.left, 10),
-      } as IDataThumbMove;
+      };
     }
 
-    return undefined;
+    return {
+      clientXY: e.clientX,
+      sliderClientReact: this.slider.getBoundingClientRect().left,
+      dataNum: '1',
+      positionThumbSecond: this.config.range ? parseInt(thumbSecond.style.left, 10) : undefined,
+    };
   }
 
-  private findPositionForVertical(e: MouseEvent): IDataThumbMove | undefined {
+  private findPositionForVertical(e: MouseEvent): IDataThumbMove {
     const thumbFirst = this.slider.querySelector('.js-slider__thumb_type_first') as HTMLElement;
     const thumbSecond = this.slider.querySelector('.js-slider__thumb_type_second') as HTMLElement;
 
-    if (Number(this.thumb.dataset.num) === 1) {
+    if (this.thumb.dataset.num === '2') {
       return {
         clientXY: e.clientY,
         sliderClientReact: this.slider.getBoundingClientRect().top,
-        dataNum: this.thumb.dataset.num,
-        positionThumbSecond: this.config.range ? parseInt(thumbSecond.style.top, 10) : undefined,
-      } as IDataThumbMove;
-    }
-
-    if (Number(this.thumb.dataset.num) === 2) {
-      return {
-        clientXY: e.clientY,
-        sliderClientReact: this.slider.getBoundingClientRect().top,
-        dataNum: this.thumb.dataset.num,
+        dataNum: '2',
         positionThumbFirst: parseInt(thumbFirst.style.top, 10),
-      } as IDataThumbMove;
+      };
     }
 
-    return undefined;
+    return {
+      clientXY: e.clientY,
+      sliderClientReact: this.slider.getBoundingClientRect().top,
+      dataNum: '1',
+      positionThumbSecond: this.config.range ? parseInt(thumbSecond.style.top, 10) : undefined,
+    };
   }
 }
+
 export default Thumb;

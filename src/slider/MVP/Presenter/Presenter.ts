@@ -1,6 +1,5 @@
 import Model from '../Model/Model';
 import View from '../View/View';
-import { IConfig, IDataThumbMove, IPosition, IValuesForSubscribers } from './presenterInterfaces';
 
 class Presenter {
   private model: Model;
@@ -15,21 +14,27 @@ class Presenter {
   }
 
   private subscribeView(): void {
-    this.view.subscribe(({ value, type }: IValuesForSubscribers) => {
-      if (type === 'mouseMove') {
-        this.model.findMoveThumbPosition(value as IDataThumbMove);
-      } else if (type === 'sliderSize') {
-        this.model.calcOnloadPosition(value as number);
+    this.view.subscribe((data) => {
+      switch (data.type) {
+        case 'sliderSize':
+          this.model.calcOnloadPosition(data.value);
+          break;
+        case 'thumbMove':
+          this.model.findMoveThumbPosition(data.value);
+          break;
       }
     });
   }
 
   private subscribeModel(): void {
-    this.model.subscribe(({ value, type }: IValuesForSubscribers) => {
-      if (type === 'positionThumb') {
-        this.view.setPosition(value as IPosition);
-      } else if (type === 'changeConfig') {
-        this.view.setConfig(value as IConfig);
+    this.model.subscribe((data) => {
+      switch (data.type) {
+        case 'positionThumb':
+          this.view.setPosition(data.value);
+          break;
+        case 'changeConfig':
+          this.view.setConfig(data.value);
+          break;
       }
     });
   }
