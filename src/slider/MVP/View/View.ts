@@ -32,21 +32,17 @@ class View extends Observer<ChangeView> {
   }
 
   setPosition(data: IPosition): void {
-    if (data.stepData !== undefined) {
-      this.step.addStepLine(data.stepData);
-    }
+    this.thumbOne.setPosition(data.dataFirstThumb.positionFrom);
+    this.thumbOne.setLabelValue(data.dataFirstThumb.valueFrom);
 
-    if (data.dataFirstThumb !== undefined) {
-      this.thumbOne.setPosition(data.dataFirstThumb.positionFrom);
-      this.thumbOne.setLabelValue(data.dataFirstThumb.valueFrom);
-    }
+    this.thumbTwo?.setPosition(data.dataSecondThumb.positionTo);
+    this.thumbTwo?.setLabelValue(data.dataSecondThumb.valueTo);
 
-    if (data.dataSecondThumb !== undefined) {
-      this.thumbTwo?.setPosition(data.dataSecondThumb.positionTo);
-      this.thumbTwo?.setLabelValue(data.dataSecondThumb.valueTo);
-    }
+    this.progressBar.addBar(data);
+  }
 
-    this.progressBar.addBar();
+  addStepLine(value: number): void {
+    this.step.addStepLine(value);
   }
 
   setConfig(data: IConfig): void {

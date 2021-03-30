@@ -74,5 +74,12 @@ describe('Presenter', () => {
 
       expect(presenter.view.setPosition).toHaveBeenCalled();
     });
+
+    it('При изменении размера окна браузера, Model передает данные type === stepSize и вызывается ф-я addStepLine во View', () => {
+      spyOn(presenter.view, 'addStepLine');
+      presenter.view.broadcast({ value: 135, type: 'sliderSize' });
+
+      expect(presenter.view.addStepLine).toHaveBeenCalled();
+    });
   });
 });

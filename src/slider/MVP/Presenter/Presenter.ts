@@ -35,6 +35,9 @@ class Presenter {
         case 'changeConfig':
           this.view.setConfig(data.value);
           break;
+        case 'stepSize':
+          this.view.addStepLine(data.value);
+          break;
       }
     });
   }

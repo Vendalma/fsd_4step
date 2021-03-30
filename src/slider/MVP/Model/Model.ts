@@ -1,11 +1,13 @@
 import Observer from '../../Observer/Observer';
-import { ICalcMoveThumb, IConfig, IDataThumbMove, IPosition, ModelValues } from './modelInterfaces';
+import { ICalcMoveThumb, IConfig, IDataThumbMove, IPosition, IUpdatePosition, ModelValues } from './modelInterfaces';
 import Validator from './Validator';
 
 class Model extends Observer<ModelValues> {
   private sliderSize: number;
 
   private validator: Validator;
+
+  private positionState: IPosition;
 
   protected config: IConfig;
 
@@ -33,11 +35,8 @@ class Model extends Observer<ModelValues> {
 
   private calcThumbPosition(data: IDataThumbMove): IPosition {
     const { clientXY, sliderClientReact, dataNum } = data;
-    const firstThumbPosition = data.positionThumbFirst;
-    const secondThumbPosition = data.positionThumbSecond;
-
-    const stepSize = this.config.step / this.calcPixelSize();
     const position = clientXY - sliderClientReact;
+    const stepSize = this.config.step / this.calcPixelSize();
     const positionMove = this.checkValueWithSliderSize(Math.round(position / stepSize) * stepSize);
     let value = this.checkValueWithMin(this.checkValueWithMax(this.calcValue(positionMove)));
 
@@ -47,7 +46,6 @@ class Model extends Observer<ModelValues> {
 
     if (dataNum === '2') {
       return this.calcPositionThumbTwo({
-        firstThumbPosition,
         position,
         positionMove,
         value,
@@ -55,7 +53,6 @@ class Model extends Observer<ModelValues> {
     }
 
     return this.calcPositionThumbOne({
-      secondThumbPosition,
       position,
       positionMove,
       value,
@@ -63,45 +60,44 @@ class Model extends Observer<ModelValues> {
   }
 
   private calcPositionThumbOne(data: ICalcMoveThumb): IPosition {
-    const secondThumbPosition = data.secondThumbPosition as number;
+    const secondThumbPosition = this.positionState.dataSecondThumb.positionTo;
     const rightValueForRange = this.calcValue(secondThumbPosition);
     this.config.positionFrom = data.value;
 
     if (data.position <= 0) {
-      return {
+      return this.changePositionState({
         dataFirstThumb: {
           positionFrom: 0,
           valueFrom: this.config.min,
         },
-      };
+      });
     }
 
     if (!this.config.range && data.position > this.sliderSize) {
-      return {
+      return this.changePositionState({
         dataFirstThumb: {
           positionFrom: this.sliderSize,
           valueFrom: this.config.max,
         },
-      };
+      });
     }
 
     if (this.config.range && data.position > secondThumbPosition) {
       this.config.positionFrom = rightValueForRange;
-
-      return {
+      return this.changePositionState({
         dataFirstThumb: {
           positionFrom: secondThumbPosition,
           valueFrom: rightValueForRange,
         },
-      };
+      });
     }
 
-    return {
+    return this.changePositionState({
       dataFirstThumb: {
         positionFrom: data.positionMove,
         valueFrom: data.value,
       },
-    };
+    });
   }
 
   private calcPositionThumbTwo(data: ICalcMoveThumb): IPosition {
@@ -112,35 +108,34 @@ class Model extends Observer<ModelValues> {
     if (data.position < firstThumbPosition) {
       this.config.positionTo = leftValueForRange;
 
-      return {
+      return this.changePositionState({
         dataSecondThumb: {
           positionTo: firstThumbPosition,
           valueTo: leftValueForRange,
         },
-      };
+      });
     }
 
     if (data.position > this.sliderSize) {
-      return {
+      return this.changePositionState({
         dataSecondThumb: {
           positionTo: this.sliderSize,
           valueTo: this.config.max,
         },
-      };
+      });
     }
 
-    return {
+    return this.changePositionState({
       dataSecondThumb: {
         positionTo: data.positionMove,
         valueTo: data.value,
       },
-    };
+    });
   }
 
   private calcParams(data: number): IPosition {
     this.sliderSize = data;
-
-    return {
+    this.positionState = {
       dataFirstThumb: {
         positionFrom: (this.config.positionFrom - this.config.min) / this.calcPixelSize(),
         valueFrom: this.config.positionFrom,
@@ -150,9 +145,17 @@ class Model extends Observer<ModelValues> {
         positionTo: (this.config.positionTo - this.config.min) / this.calcPixelSize(),
         valueTo: this.config.positionTo,
       },
-
-      stepData: this.sliderSize / 20,
     };
+    this.getStepSize();
+    return this.positionState;
+  }
+
+  private getStepSize() {
+    this.broadcast({ value: this.sliderSize / 20, type: 'stepSize' });
+  }
+
+  private changePositionState(value: IUpdatePosition): IPosition {
+    return Object.assign(this.positionState, value);
   }
 
   private calcPixelSize(): number {

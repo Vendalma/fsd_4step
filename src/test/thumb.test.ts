@@ -131,21 +131,6 @@ describe('Thumb', () => {
 
         expect(thumb.broadcast).toHaveBeenCalled();
       });
-
-      /* it('range = true, data-num = 3, метод broadcast будет вызван со значением undefined', () => {
-         thumb.updateConfig({
-           range: true,
-           positionFrom: 15,
-           positionTo: 30,
-           vertical: false,
-           label: false,
-         });
-         thumbBlock.dataset.num = '3';
-         thumbBlock.dispatchEvent(mousedown);
-         document.dispatchEvent(mousemove);
- 
-         expect(thumb.broadcast).toHaveBeenCalledWith({ value: undefined });
-       }); */
     });
 
     describe('vertical= true', () => {
@@ -193,21 +178,6 @@ describe('Thumb', () => {
 
         expect(thumb.broadcast).toHaveBeenCalled();
       });
-
-      /* it('range = true, data-num = 3, метод broadcast передаст значение undefined', () => {
-        thumb.updateConfig({
-          range: true,
-          positionFrom: 15,
-          positionTo: 30,
-          vertical: true,
-          label: false,
-        });
-        thumbBlock.dataset.num = '3';
-        thumbBlock.dispatchEvent(mousedown);
-        document.dispatchEvent(mousemove);
-
-        expect(thumb.broadcast).toHaveBeenCalledWith({ value: undefined });
-      }); */
     });
   });
 
@@ -262,22 +232,6 @@ describe('Thumb', () => {
         expect(thumb.broadcast).toHaveBeenCalled();
         expect(thumbBlock).not.toHaveClass('slider__thumb_visibility_zIndex-up');
       });
-
-      /* it('range = true, data-num = 3, метод broadcast передаст значение undefined', () => {
-        thumb.updateConfig({
-          range: true,
-          positionFrom: 15,
-          positionTo: 30,
-          vertical: false,
-          label: false,
-        });
-        thumbBlock.dataset.num = '3';
-        thumbBlock.dispatchEvent(mousedown);
-        document.dispatchEvent(mouseup);
-
-        expect(thumb.broadcast).toHaveBeenCalledWith({ value: undefined });
-        expect(thumbBlock).not.toHaveClass('slider__thumb_visibility_zIndex-up');
-      }); */
     });
 
     describe('vertical= true', () => {
@@ -328,22 +282,6 @@ describe('Thumb', () => {
         expect(thumb.broadcast).toHaveBeenCalled();
         expect(thumbBlock).not.toHaveClass('slider__thumb_visibility_zIndex-up');
       });
-
-      /* it('range = true, data-num = 3, метод broadcast передаст undefined', () => {
-        thumb.updateConfig({
-          range: true,
-          positionFrom: 15,
-          positionTo: 30,
-          vertical: true,
-          label: false,
-        });
-        thumbBlock.dataset.num = '3';
-        thumbBlock.dispatchEvent(mousedown);
-        document.dispatchEvent(mouseup);
-
-        expect(thumb.broadcast).toHaveBeenCalledWith({ value: undefined });
-        expect(thumbBlock).not.toHaveClass('slider__thumb_visibility_zIndex-up');
-      }); */
     });
   });
 

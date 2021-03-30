@@ -39,6 +39,12 @@ describe('Model', () => {
     expect(model.broadcast).toHaveBeenCalled();
   });
 
+  it('метод calcOnloadPosition принимает размер слайдера, рассчитывает начальные позиции бегунков, передает данные через метод broadcast', () => {
+    model.calcOnloadPosition(150);
+
+    expect(model.broadcast).toHaveBeenCalled();
+  });
+
   describe('метод findMoveThumbPosition рассчитывает данные для движения бегунка и передает их, вызывая метод broadcast', () => {
     let data: IDataThumbMove;
     beforeEach(function () {
@@ -46,8 +52,6 @@ describe('Model', () => {
         clientXY: 100,
         sliderClientReact: 5,
         dataNum: '1',
-        positionThumbFirst: 10,
-        positionThumbSecond: 21,
       };
     });
 
@@ -274,11 +278,5 @@ describe('Model', () => {
         expect(model.broadcast).toHaveBeenCalled();
       });
     });
-  });
-
-  it('метод calcOnloadPosition принимает размер слайдера, рассчитывает начальные позиции бегунков, передает данные через метод broadcast', () => {
-    model.calcOnloadPosition(150);
-
-    expect(model.broadcast).toHaveBeenCalled();
   });
 });

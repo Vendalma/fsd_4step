@@ -1,3 +1,5 @@
+import { IPosition } from './viewInterfaces';
+
 interface IConfigBar {
   range: boolean;
   vertical: boolean;
@@ -15,28 +17,26 @@ class ProgressBar {
     this.createBar();
   }
 
-  addBar(): void {
-    const thumbFirst = this.slider.querySelector('.js-slider__thumb_type_first') as HTMLElement;
-    const thumbSecond = this.slider.querySelector('.js-slider__thumb_type_second') as HTMLElement;
+  addBar(values: IPosition): void {
+    const positionThumbFirst = values.dataFirstThumb.positionFrom;
+    const positionThumbSecond = values.dataSecondThumb.positionTo;
     if (!this.config.vertical) {
       if (!this.config.range) {
         this.progressBar.style.left = '0px';
-        this.progressBar.style.width = thumbFirst.style.left;
+        this.progressBar.style.width = `${positionThumbFirst}px`;
       } else {
-        this.progressBar.style.left = thumbFirst.style.left;
-        this.progressBar.style.width = `${
-          parseInt(thumbSecond.style.left, 10) - parseInt(thumbFirst.style.left, 10)
-        }px`;
+        this.progressBar.style.left = `${positionThumbFirst}px`;
+        this.progressBar.style.width = `${positionThumbSecond - positionThumbFirst}px`;
       }
     }
 
     if (this.config.vertical) {
       if (!this.config.range) {
         this.progressBar.style.top = '0px';
-        this.progressBar.style.height = thumbFirst.style.top;
+        this.progressBar.style.height = `${positionThumbFirst}px`;
       } else {
-        this.progressBar.style.top = thumbFirst.style.top;
-        this.progressBar.style.height = `${parseInt(thumbSecond.style.top, 10) - parseInt(thumbFirst.style.top, 10)}px`;
+        this.progressBar.style.top = `${positionThumbFirst}px`;
+        this.progressBar.style.height = `${positionThumbSecond - positionThumbFirst}px`;
       }
     }
   }

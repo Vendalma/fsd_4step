@@ -30,20 +30,8 @@ describe('View', () => {
   });
 
   describe('метод setPositionThumb', () => {
-    it('при заданных параметрах устанавливается прогресс бар', () => {
+    it('при заданных параметрах устанавливается прогресс бар, позиции бегунков', () => {
       const data = {
-        stepData: undefined,
-        dataFirstThumb: undefined,
-        dataSecondThumb: undefined,
-      };
-      view.setPosition(data);
-
-      expect(blockSlider).toContainElement('div.slider__progress-bar');
-    });
-
-    it('при заданных параметрах устанавливается шкала значений, прогресс бар, позиции бегунков', () => {
-      const data = {
-        stepData: 30.5,
         dataFirstThumb: {
           positionFrom: 100,
           valueFrom: 5,
@@ -55,10 +43,17 @@ describe('View', () => {
       };
       view.setPosition(data);
 
-      expect(blockSlider).toContainElement('div.slider__step-block');
       expect(blockSlider).toContainElement('div.slider__progress-bar');
       expect(thumbOne).toHaveCss({ left: '100px' });
       expect(thumbSecond).toHaveCss({ left: '200px' });
+    });
+  });
+
+  describe('метод addStepLine', () => {
+    it('метод принимает размер шага и устанавливает шкалу значений', () => {
+      view.addStepLine(30.5);
+
+      expect(blockSlider).toContainElement('div.slider__step-block');
     });
   });
 
