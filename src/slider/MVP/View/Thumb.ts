@@ -103,15 +103,11 @@ class Thumb extends Observer<ThumbValue> {
   }
 
   private findPositionForHorizontal(e: MouseEvent): IDataThumbMove {
-    const thumbFirst = this.slider.querySelector('.js-slider__thumb_type_first') as HTMLElement;
-    const thumbSecond = this.slider.querySelector('.js-slider__thumb_type_second') as HTMLElement;
-
     if (this.thumb.dataset.num === '2') {
       return {
         clientXY: e.clientX,
         sliderClientReact: this.slider.getBoundingClientRect().left,
         dataNum: '2',
-        positionThumbFirst: parseInt(thumbFirst.style.left, 10),
       };
     }
 
@@ -119,20 +115,15 @@ class Thumb extends Observer<ThumbValue> {
       clientXY: e.clientX,
       sliderClientReact: this.slider.getBoundingClientRect().left,
       dataNum: '1',
-      positionThumbSecond: this.config.range ? parseInt(thumbSecond.style.left, 10) : undefined,
     };
   }
 
   private findPositionForVertical(e: MouseEvent): IDataThumbMove {
-    const thumbFirst = this.slider.querySelector('.js-slider__thumb_type_first') as HTMLElement;
-    const thumbSecond = this.slider.querySelector('.js-slider__thumb_type_second') as HTMLElement;
-
     if (this.thumb.dataset.num === '2') {
       return {
         clientXY: e.clientY,
         sliderClientReact: this.slider.getBoundingClientRect().top,
         dataNum: '2',
-        positionThumbFirst: parseInt(thumbFirst.style.top, 10),
       };
     }
 
@@ -140,7 +131,6 @@ class Thumb extends Observer<ThumbValue> {
       clientXY: e.clientY,
       sliderClientReact: this.slider.getBoundingClientRect().top,
       dataNum: '1',
-      positionThumbSecond: this.config.range ? parseInt(thumbSecond.style.top, 10) : undefined,
     };
   }
 }

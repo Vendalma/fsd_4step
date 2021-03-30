@@ -13,20 +13,17 @@ export interface IDataThumbMove {
   clientXY: number;
   sliderClientReact: number;
   dataNum: string;
-  positionThumbFirst?: number;
-  positionThumbSecond?: number;
 }
 
 export interface IPosition {
-  dataFirstThumb?: {
+  dataFirstThumb: {
     positionFrom: number;
     valueFrom: number;
   };
-  dataSecondThumb?: {
+  dataSecondThumb: {
     positionTo: number;
     valueTo: number;
   };
-  stepData?: number;
 }
 
 export interface IConfigThumb {
