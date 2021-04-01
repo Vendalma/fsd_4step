@@ -25,7 +25,6 @@ class Thumb extends Observer<ThumbValue> {
   }
 
   onMouseUp = (e: MouseEvent): void => {
-    e.preventDefault; /* eslint-disable-line */
     document.removeEventListener('mousemove', this.onMouseMove);
     document.removeEventListener('mouseup', this.onMouseUp);
     this.broadcast({ value: this.findPosition(e) });
@@ -89,7 +88,6 @@ class Thumb extends Observer<ThumbValue> {
   }
 
   private mouseDown = (e: MouseEvent): void => {
-    e.preventDefault();
     document.addEventListener('mousemove', this.onMouseMove);
     document.addEventListener('mouseup', this.onMouseUp);
     this.thumb.classList.add('slider__thumb_visibility_zIndex-up');
