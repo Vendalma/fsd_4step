@@ -1,5 +1,5 @@
 import Observer from '../../Observer/Observer';
-import { ICalcMoveThumb, IConfig, IDataThumbMove, IPosition, IUpdatePosition, ModelValues } from './modelInterfaces';
+import { ICalcPosition, IConfig, IDataThumbMove, IPosition, IUpdatedPosition, ModelValues } from './modelInterfaces';
 import Validator from './Validator';
 
 class Model extends Observer<ModelValues> {
@@ -7,9 +7,9 @@ class Model extends Observer<ModelValues> {
 
   private validator: Validator;
 
-  private positionState: IPosition;
+  private config: IConfig;
 
-  protected config: IConfig;
+  protected positionState: IPosition;
 
   constructor() {
     super();
@@ -25,125 +25,101 @@ class Model extends Observer<ModelValues> {
     return this.config;
   }
 
-  findMoveThumbPosition(data: IDataThumbMove): void {
-    this.broadcast({ value: this.calcThumbPosition(data), type: 'positionThumb' });
+  findUpdatedPosition(data: IDataThumbMove): void {
+    this.broadcast({ value: this.checkTypeParams(data), type: 'positionThumb' });
   }
 
-  calcOnloadPosition(data: number): void {
-    this.broadcast({ value: this.calcParams(data), type: 'positionThumb' });
+  findOnloadPosition(data: number): void {
+    this.broadcast({ value: this.calcOnloadPosition(data), type: 'positionThumb' });
   }
 
-  private calcThumbPosition(data: IDataThumbMove): IPosition {
-    const { clientXY, sliderClientReact, dataNum } = data;
-    const position = clientXY - sliderClientReact;
+  private checkTypeParams(data: IDataThumbMove): IPosition {
+    const { position, dataName } = data;
     const stepSize = this.config.step / this.calcPixelSize();
     const positionMove = this.checkValueWithSliderSize(Math.round(position / stepSize) * stepSize);
-    let value = this.checkValueWithMin(this.checkValueWithMax(this.calcValue(positionMove)));
 
+    if (dataName === 'to') {
+      return this.calcPosition({
+        position: positionMove,
+        leftPoint: this.positionState.positionFrom.position,
+        leftPointValue: this.calcValue(this.positionState.positionFrom.position),
+        rightPoint: this.sliderSize,
+        rightPointValue: this.config.max,
+        nameState: 'positionTo',
+      });
+    }
+
+    if (dataName === 'from' && this.config.range) {
+      return this.calcPosition({
+        position: positionMove,
+        leftPoint: 0,
+        leftPointValue: this.config.min,
+        rightPoint: this.positionState.positionTo.position,
+        rightPointValue: this.calcValue(this.positionState.positionTo.position),
+        nameState: 'positionFrom',
+      });
+    }
+
+    return this.calcPosition({
+      position: positionMove,
+      leftPoint: 0,
+      leftPointValue: this.config.min,
+      rightPoint: this.sliderSize,
+      rightPointValue: this.config.max,
+      nameState: 'positionFrom',
+    });
+  }
+
+  private calcPosition(values: ICalcPosition): IPosition {
+    const { position, leftPoint, leftPointValue, rightPoint, rightPointValue, nameState } = values;
+    let value = this.checkValueWithMin(this.checkValueWithMax(this.calcValue(position)));
     if (!this.isIntegerStep()) {
       value = Number(value.toFixed(String(this.config.step).split('.')[1].length));
     }
 
-    if (dataNum === '2') {
-      return this.calcPositionThumbTwo({
+    if (position <= leftPoint) {
+      return this.changePositionState({
+        [nameState]: {
+          position: leftPoint,
+          value: leftPointValue,
+        },
+      });
+    }
+
+    if (position > rightPoint) {
+      return this.changePositionState({
+        [nameState]: {
+          position: rightPoint,
+          value: rightPointValue,
+        },
+      });
+    }
+
+    return this.changePositionState({
+      [nameState]: {
         position,
-        positionMove,
         value,
-      });
-    }
-
-    return this.calcPositionThumbOne({
-      position,
-      positionMove,
-      value,
-    });
-  }
-
-  private calcPositionThumbOne(data: ICalcMoveThumb): IPosition {
-    const secondThumbPosition = this.positionState.dataSecondThumb.positionTo;
-    const rightValueForRange = this.calcValue(secondThumbPosition);
-    this.config.positionFrom = data.value;
-
-    if (data.position <= 0) {
-      return this.changePositionState({
-        dataFirstThumb: {
-          positionFrom: 0,
-          valueFrom: this.config.min,
-        },
-      });
-    }
-
-    if (!this.config.range && data.position > this.sliderSize) {
-      return this.changePositionState({
-        dataFirstThumb: {
-          positionFrom: this.sliderSize,
-          valueFrom: this.config.max,
-        },
-      });
-    }
-
-    if (this.config.range && data.position > secondThumbPosition) {
-      this.config.positionFrom = rightValueForRange;
-      return this.changePositionState({
-        dataFirstThumb: {
-          positionFrom: secondThumbPosition,
-          valueFrom: rightValueForRange,
-        },
-      });
-    }
-
-    return this.changePositionState({
-      dataFirstThumb: {
-        positionFrom: data.positionMove,
-        valueFrom: data.value,
       },
     });
   }
 
-  private calcPositionThumbTwo(data: ICalcMoveThumb): IPosition {
-    const firstThumbPosition = data.firstThumbPosition as number;
-    const leftValueForRange = this.calcValue(firstThumbPosition);
-    this.config.positionTo = data.value;
-
-    if (data.position < firstThumbPosition) {
-      this.config.positionTo = leftValueForRange;
-
-      return this.changePositionState({
-        dataSecondThumb: {
-          positionTo: firstThumbPosition,
-          valueTo: leftValueForRange,
-        },
-      });
-    }
-
-    if (data.position > this.sliderSize) {
-      return this.changePositionState({
-        dataSecondThumb: {
-          positionTo: this.sliderSize,
-          valueTo: this.config.max,
-        },
-      });
-    }
-
-    return this.changePositionState({
-      dataSecondThumb: {
-        positionTo: data.positionMove,
-        valueTo: data.value,
-      },
-    });
+  private changePositionState(value: IUpdatedPosition): IPosition {
+    Object.assign(this.positionState, value);
+    this.config.positionFrom = this.positionState.positionFrom.value;
+    this.config.positionTo = this.positionState.positionTo.value;
+    return this.positionState;
   }
 
-  private calcParams(data: number): IPosition {
+  private calcOnloadPosition(data: number): IPosition {
     this.sliderSize = data;
     this.positionState = {
-      dataFirstThumb: {
-        positionFrom: (this.config.positionFrom - this.config.min) / this.calcPixelSize(),
-        valueFrom: this.config.positionFrom,
+      positionFrom: {
+        position: (this.config.positionFrom - this.config.min) / this.calcPixelSize(),
+        value: this.config.positionFrom,
       },
-
-      dataSecondThumb: {
-        positionTo: (this.config.positionTo - this.config.min) / this.calcPixelSize(),
-        valueTo: this.config.positionTo,
+      positionTo: {
+        position: (this.config.positionTo - this.config.min) / this.calcPixelSize(),
+        value: this.config.positionTo,
       },
     };
     this.getStepSize();
@@ -152,10 +128,6 @@ class Model extends Observer<ModelValues> {
 
   private getStepSize() {
     this.broadcast({ value: this.sliderSize / 20, type: 'stepSize' });
-  }
-
-  private changePositionState(value: IUpdatePosition): IPosition {
-    return Object.assign(this.positionState, value);
   }
 
   private calcPixelSize(): number {

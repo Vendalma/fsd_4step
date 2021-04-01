@@ -10,19 +10,18 @@ export interface IConfig {
 }
 
 export interface IDataThumbMove {
-  clientXY: number;
-  sliderClientReact: number;
-  dataNum: string;
+  position: number;
+  dataName: string;
 }
 
 export interface IPosition {
-  dataFirstThumb: {
-    positionFrom: number;
-    valueFrom: number;
+  positionFrom: {
+    position: number;
+    value: number;
   };
-  dataSecondThumb: {
-    positionTo: number;
-    valueTo: number;
+  positionTo: {
+    position: number;
+    value: number;
   };
 }
 
@@ -32,6 +31,11 @@ export interface IConfigThumb {
   positionTo: number;
   vertical: boolean;
   label: boolean;
+}
+
+export interface IUpdatedThumbPosition {
+  position: number;
+  value: number;
 }
 
 export interface ThumbValue {

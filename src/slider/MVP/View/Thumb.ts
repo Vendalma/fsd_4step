@@ -1,6 +1,6 @@
 import Observer from '../../Observer/Observer';
 import Label from './Label';
-import { IConfigThumb, IDataThumbMove, ThumbValue } from './viewInterfaces';
+import { IConfigThumb, IDataThumbMove, IUpdatedThumbPosition, ThumbValue } from './viewInterfaces';
 
 class Thumb extends Observer<ThumbValue> {
   private config: IConfigThumb;
@@ -11,15 +11,15 @@ class Thumb extends Observer<ThumbValue> {
 
   private thumbHtmlClass: string;
 
-  private dataNum: string;
+  private dataName: string;
 
   private label: Label;
 
-  constructor(thumbHtmlClass: string, slider: HTMLElement, dataNum: string) {
+  constructor(thumbHtmlClass: string, slider: HTMLElement, dataName: string) {
     super();
     this.slider = slider;
     this.thumbHtmlClass = thumbHtmlClass;
-    this.dataNum = dataNum;
+    this.dataName = dataName;
     this.createThumb();
     this.moveThumb();
   }
@@ -32,16 +32,13 @@ class Thumb extends Observer<ThumbValue> {
     this.thumb.classList.remove('slider__thumb_visibility_zIndex-up');
   };
 
-  setPosition(position: number): void {
+  updatePosition(data: IUpdatedThumbPosition): void {
     if (!this.config.vertical) {
-      this.thumb.style.left = `${position}px`;
+      this.thumb.style.left = `${data.position}px`;
     } else {
-      this.thumb.style.top = `${position}px`;
+      this.thumb.style.top = `${data.position}px`;
     }
-  }
-
-  setLabelValue(value: number): void {
-    this.label.setLabelValue(value);
+    this.setLabelValue(data.value);
   }
 
   removeThumb(): void {
@@ -64,7 +61,7 @@ class Thumb extends Observer<ThumbValue> {
     this.thumb.classList.add('slider__thumb');
     this.thumb.classList.add(`slider__thumb_type_${this.thumbHtmlClass}`);
     this.thumb.classList.add(`js-slider__thumb_type_${this.thumbHtmlClass}`);
-    this.thumb.setAttribute('data-num', this.dataNum);
+    this.thumb.setAttribute('data-name', this.dataName);
     this.slider.append(this.thumb);
     this.label = new Label(this.thumb);
   }
@@ -77,6 +74,10 @@ class Thumb extends Observer<ThumbValue> {
       this.thumb.classList.remove('slider__thumb_horizontal');
       this.thumb.classList.add('slider__thumb_vertical');
     }
+  }
+
+  private setLabelValue(value: number): void {
+    this.label.setLabelValue(value);
   }
 
   private moveThumb(): void {
@@ -98,39 +99,20 @@ class Thumb extends Observer<ThumbValue> {
     if (!this.config.vertical) {
       return this.findPositionForHorizontal(e);
     }
-
     return this.findPositionForVertical(e);
   }
 
   private findPositionForHorizontal(e: MouseEvent): IDataThumbMove {
-    if (this.thumb.dataset.num === '2') {
-      return {
-        clientXY: e.clientX,
-        sliderClientReact: this.slider.getBoundingClientRect().left,
-        dataNum: '2',
-      };
-    }
-
     return {
-      clientXY: e.clientX,
-      sliderClientReact: this.slider.getBoundingClientRect().left,
-      dataNum: '1',
+      position: e.clientX - this.slider.getBoundingClientRect().left,
+      dataName: this.dataName,
     };
   }
 
   private findPositionForVertical(e: MouseEvent): IDataThumbMove {
-    if (this.thumb.dataset.num === '2') {
-      return {
-        clientXY: e.clientY,
-        sliderClientReact: this.slider.getBoundingClientRect().top,
-        dataNum: '2',
-      };
-    }
-
     return {
-      clientXY: e.clientY,
-      sliderClientReact: this.slider.getBoundingClientRect().top,
-      dataNum: '1',
+      position: e.clientY - this.slider.getBoundingClientRect().top,
+      dataName: this.dataName,
     };
   }
 }

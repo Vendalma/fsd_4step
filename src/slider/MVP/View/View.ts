@@ -31,13 +31,9 @@ class View extends Observer<ChangeView> {
     this.sliderClick();
   }
 
-  setPosition(data: IPosition): void {
-    this.thumbOne.setPosition(data.dataFirstThumb.positionFrom);
-    this.thumbOne.setLabelValue(data.dataFirstThumb.valueFrom);
-
-    this.thumbTwo?.setPosition(data.dataSecondThumb.positionTo);
-    this.thumbTwo?.setLabelValue(data.dataSecondThumb.valueTo);
-
+  updatePosition(data: IPosition): void {
+    this.thumbOne.updatePosition(data.positionFrom);
+    this.thumbTwo?.updatePosition(data.positionTo);
     this.progressBar.addBar(data);
   }
 
@@ -45,7 +41,7 @@ class View extends Observer<ChangeView> {
     this.step.addStepLine(value);
   }
 
-  setConfig(data: IConfig): void {
+  updateConfig(data: IConfig): void {
     this.config = data;
     this.setThumbTwo();
     this.checkOrientation();
@@ -71,8 +67,8 @@ class View extends Observer<ChangeView> {
   }
 
   private init(): void {
-    this.thumbOne = new Thumb('first', this.sliderBlock, '1');
-    this.thumbTwo = new Thumb('second', this.sliderBlock, '2');
+    this.thumbOne = new Thumb('first', this.sliderBlock, 'from');
+    this.thumbTwo = new Thumb('second', this.sliderBlock, 'to');
     this.progressBar = new ProgressBar(this.sliderBlock);
     this.step = new Step(this.sliderBlock);
   }

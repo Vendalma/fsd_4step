@@ -17,10 +17,10 @@ class Presenter {
     this.view.subscribe((data) => {
       switch (data.type) {
         case 'sliderSize':
-          this.model.calcOnloadPosition(data.value);
+          this.model.findOnloadPosition(data.value);
           break;
         case 'thumbMove':
-          this.model.findMoveThumbPosition(data.value);
+          this.model.findUpdatedPosition(data.value);
           break;
       }
     });
@@ -30,10 +30,10 @@ class Presenter {
     this.model.subscribe((data) => {
       switch (data.type) {
         case 'positionThumb':
-          this.view.setPosition(data.value);
+          this.view.updatePosition(data.value);
           break;
         case 'changeConfig':
-          this.view.setConfig(data.value);
+          this.view.updateConfig(data.value);
           break;
         case 'stepSize':
           this.view.addStepLine(data.value);
