@@ -45,18 +45,19 @@ export interface IUpdatedPosition {
   };
 }
 
-type UpdateConfig = {
+interface IUpdateConfig {
   value: IConfig;
   type: 'changeConfig';
-};
+}
 
-type UpdateThumbPosition = {
+interface IUpdateThumbPosition {
   value: IPosition;
   type: 'positionThumb';
-};
+}
 
-type GetStepSize = {
+interface IGetStepSize {
   value: number;
   type: 'stepSize';
-};
-export type ModelValues = UpdateConfig | UpdateThumbPosition | GetStepSize;
+}
+
+export type ModelValues = IUpdateConfig | IUpdateThumbPosition | IGetStepSize;

@@ -43,18 +43,18 @@ export interface IUpdatedThumbPosition {
   value: number;
 }
 
-export interface ThumbValue {
+export interface IThumbValue {
   value: IDataThumbMove;
 }
 
-type ThumbMove = {
+interface IThumbMove {
   value: IDataThumbMove;
   type: 'thumbMove';
-};
+}
 
-type GetSliderSize = {
+interface IGetSliderSize {
   value: number;
   type: 'sliderSize';
-};
+}
 
-export type ChangeView = ThumbMove | GetSliderSize;
+export type ChangeView = IThumbMove | IGetSliderSize;

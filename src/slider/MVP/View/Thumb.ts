@@ -1,8 +1,8 @@
 import Observer from '../../Observer/Observer';
 import Label from './Label';
-import { IConfigThumb, IDataThumbMove, IUpdatedThumbPosition, ThumbValue } from './viewInterfaces';
+import { IConfigThumb, IDataThumbMove, IThumbValue, IUpdatedThumbPosition } from './viewInterfaces';
 
-class Thumb extends Observer<ThumbValue> {
+class Thumb extends Observer<IThumbValue> {
   private config: IConfigThumb;
 
   private slider: HTMLElement;
