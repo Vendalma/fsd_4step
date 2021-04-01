@@ -15,7 +15,7 @@ class View extends Observer<ChangeView> {
 
   private thumbOne: Thumb;
 
-  private thumbTwo: Thumb | null;
+  private thumbTwo: Thumb;
 
   private step: Step;
 
@@ -33,7 +33,7 @@ class View extends Observer<ChangeView> {
 
   updatePosition(data: IPosition): void {
     this.thumbOne.updatePosition(data.positionFrom);
-    this.thumbTwo?.updatePosition(data.positionTo);
+    this.thumbTwo.updatePosition(data.positionTo);
     this.progressBar.addBar(data);
   }
 
@@ -46,7 +46,7 @@ class View extends Observer<ChangeView> {
     this.setThumbTwo();
     this.checkOrientation();
     this.thumbOne.updateConfig(data);
-    this.thumbTwo?.updateConfig(data);
+    this.thumbTwo.updateConfig(data);
     this.progressBar.updateConfig(data);
     this.step.updateConfig(data);
     this.getSliderSize();
@@ -78,7 +78,7 @@ class View extends Observer<ChangeView> {
       this.broadcast({ value, type: 'thumbMove' });
     });
 
-    this.thumbTwo?.subscribe(({ value }) => {
+    this.thumbTwo.subscribe(({ value }) => {
       this.broadcast({ value, type: 'thumbMove' });
     });
   }
@@ -116,8 +116,8 @@ class View extends Observer<ChangeView> {
   }
 
   private findClickPlaceHorizon(e: MouseEvent): void {
-    const thumbFirst = this.sliderBlock.querySelector('.js-slider__thumb_type_first') as HTMLElement;
-    const thumbSecond = this.sliderBlock.querySelector('.js-slider__thumb_type_second') as HTMLElement;
+    const thumbFirst = this.thumbOne.getThumbBlock();
+    const thumbSecond = this.thumbTwo.getThumbBlock();
 
     if (!this.config.range) {
       this.thumbOne.onMouseUp(e);
@@ -128,14 +128,14 @@ class View extends Observer<ChangeView> {
       if (thumbFirstPosition < thumbSecondPosition) {
         this.thumbOne.onMouseUp(e);
       } else {
-        this.thumbTwo?.onMouseUp(e);
+        this.thumbTwo.onMouseUp(e);
       }
     }
   }
 
   private findClickPlaceVert(e: MouseEvent): void {
-    const thumbFirst = this.sliderBlock.querySelector('.js-slider__thumb_type_first') as HTMLElement;
-    const thumbSecond = this.sliderBlock.querySelector('.js-slider__thumb_type_second') as HTMLElement;
+    const thumbFirst = this.thumbOne.getThumbBlock();
+    const thumbSecond = this.thumbTwo.getThumbBlock();
 
     if (!this.config.range) {
       this.thumbOne.onMouseUp(e);
@@ -146,18 +146,18 @@ class View extends Observer<ChangeView> {
       if (thumbFirstPosition < thumbSecondPosition) {
         this.thumbOne.onMouseUp(e);
       } else {
-        this.thumbTwo?.onMouseUp(e);
+        this.thumbTwo.onMouseUp(e);
       }
     }
   }
 
   private setThumbTwo(): void {
-    const secondThumb = this.sliderBlock.querySelector('.js-slider__thumb_type_second') as HTMLElement;
+    const thumbSecond = this.thumbTwo.getThumbBlock().parentNode;
 
     if (this.config.range) {
-      this.thumbTwo?.addThumb();
-    } else if (!this.config.range && secondThumb !== null) {
-      this.thumbTwo?.removeThumb();
+      this.thumbTwo.addThumb();
+    } else if (!this.config.range && thumbSecond !== null) {
+      this.thumbTwo.removeThumb();
     }
   }
 }

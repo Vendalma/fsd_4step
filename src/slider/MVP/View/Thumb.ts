@@ -56,6 +56,10 @@ class Thumb extends Observer<ThumbValue> {
     this.checkOrientation();
   }
 
+  getThumbBlock(): HTMLElement {
+    return this.thumb;
+  }
+
   private createThumb(): void {
     this.thumb = document.createElement('div');
     this.thumb.classList.add('slider__thumb');
