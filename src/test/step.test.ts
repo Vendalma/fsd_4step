@@ -2,9 +2,6 @@ import Step from '../slider/MVP/View/Step';
 
 const container = $('<div>');
 const step: Step = new Step(container[0]);
-const $thumb = $('<div>');
-$thumb[0].classList.add('js-slider__thumb_type_first');
-container.append($thumb);
 $(document.body).append(container);
 
 describe('Step', () => {
@@ -13,8 +10,6 @@ describe('Step', () => {
   });
 
   describe('метод addStepLine добавляет шкалу значений', () => {
-    const stepSize = 30.5;
-
     beforeEach(function () {
       const blocks = container[0].querySelectorAll('.js-slider__step-block') as NodeListOf<HTMLElement>;
       blocks.forEach((elem) => {
@@ -29,7 +24,7 @@ describe('Step', () => {
         vertical: false,
       };
       step.updateConfig(conf);
-      step.addStepLine(stepSize);
+      step.addStepLine({ stepSize: 30.5, thumbSize: 17 });
       const stepBlocks = container[0].querySelectorAll('.js-slider__step-block');
 
       expect(stepBlocks.length).toEqual(21);
@@ -53,7 +48,7 @@ describe('Step', () => {
         vertical: true,
       };
       step.updateConfig(conf);
-      step.addStepLine(stepSize);
+      step.addStepLine({ stepSize: 30.5, thumbSize: 17 });
       const stepBlocks = container[0].querySelectorAll('.js-slider__step-block') as NodeListOf<HTMLElement>;
 
       expect(stepBlocks.length).toEqual(21);
@@ -78,7 +73,7 @@ describe('Step', () => {
       vertical: true,
     };
     step.updateConfig(newConf);
-    step.addStepLine(30);
+    step.addStepLine({ stepSize: 30.5, thumbSize: 17 });
     const blockMax = container[0].querySelector('.slider__step-block_value-type_max') as HTMLElement;
     const blockMin = container[0].querySelector('.slider__step-block_value-type_min') as HTMLElement;
 

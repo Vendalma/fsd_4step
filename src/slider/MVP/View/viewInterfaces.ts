@@ -35,7 +35,7 @@ export interface IConfigThumb {
 
 export interface IStepValues {
   stepSize: number;
-  thumbElement: HTMLElement;
+  thumbSize: number;
 }
 
 export interface IUpdatedThumbPosition {

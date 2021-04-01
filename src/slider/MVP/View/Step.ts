@@ -16,7 +16,7 @@ class Step {
   }
 
   addStepLine(values: IStepValues): void {
-    const { stepSize, thumbElement } = values;
+    const { stepSize, thumbSize } = values;
     this.deleteStep();
     const fragment = document.createDocumentFragment();
 
@@ -38,7 +38,7 @@ class Step {
         stepBlock.classList.add('slider__step-block_vertical');
         stepBlock.style.top = `${stepSize * i}px`;
         if (i === 0 || i === 20) {
-          stepBlock.style.top = `${stepSize * i - thumbElement.offsetWidth}px`;
+          stepBlock.style.top = `${stepSize * i - thumbSize}px`;
         }
       } else {
         stepBlock.style.left = `${stepSize * i}px`;

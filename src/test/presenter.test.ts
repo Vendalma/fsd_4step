@@ -34,25 +34,25 @@ describe('Presenter', () => {
   });
 
   describe('метод subscribeView', () => {
-    it('При нажатии на бегунок, view передает данные type === mouseMove, в Model вызывается ф-я findMoveThumbPosition', () => {
+    it('При нажатии на бегунок, view передает данные type === mouseMove, в Model вызывается ф-я findUpdatedPosition', () => {
       const event = new MouseEvent('click', { bubbles: true });
-      spyOn(model, 'findMoveThumbPosition');
+      spyOn(model, 'findUpdatedPosition');
       thumb.dispatchEvent(event);
 
-      expect(model.findMoveThumbPosition).toHaveBeenCalled();
+      expect(model.findUpdatedPosition).toHaveBeenCalled();
     });
 
-    it('При изменении размера окна браузера, view передает данные type === sliderSize, в Model вызывается ф-я calcOnloadPosition', () => {
-      spyOn(model, 'calcOnloadPosition');
+    it('При изменении размера окна браузера, view передает данные type === sliderSize, в Model вызывается ф-я findOnloadPosition', () => {
+      spyOn(model, 'findOnloadPosition');
       presenter.view.broadcast({ value: 135, type: 'sliderSize' });
 
-      expect(model.calcOnloadPosition).toHaveBeenCalled();
+      expect(model.findOnloadPosition).toHaveBeenCalled();
     });
   });
 
   describe('метод subscribeModel', () => {
-    it('При обновлении конфига, Model передает данные type === changeConfig, Presenter вызывает ф-ю setConfig во View', () => {
-      spyOn(presenter.view, 'setConfig');
+    it('При обновлении конфига, Model передает данные type === changeConfig, Presenter вызывает ф-ю updateConfig во View', () => {
+      spyOn(presenter.view, 'updateConfig');
       model.updateConfig({
         label: true,
         min: 0,
@@ -64,15 +64,15 @@ describe('Presenter', () => {
         positionTo: 100,
       });
 
-      expect(presenter.view.setConfig).toHaveBeenCalled();
+      expect(presenter.view.updateConfig).toHaveBeenCalled();
     });
 
-    it('При нажатии на бегунок, Model передает данные type === positionThumb и вызывается ф-я setPositionThumb во View', () => {
+    it('При нажатии на бегунок, Model передает данные type === positionThumb и вызывается ф-я updatePosition во View', () => {
       const event = new MouseEvent('click', { bubbles: true });
-      spyOn(presenter.view, 'setPosition');
+      spyOn(presenter.view, 'updatePosition');
       thumb.dispatchEvent(event);
 
-      expect(presenter.view.setPosition).toHaveBeenCalled();
+      expect(presenter.view.updatePosition).toHaveBeenCalled();
     });
 
     it('При изменении размера окна браузера, Model передает данные type === stepSize и вызывается ф-я addStepLine во View', () => {

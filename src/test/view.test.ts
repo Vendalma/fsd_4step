@@ -22,26 +22,26 @@ const thumbSecond = blockSlider.querySelector('.js-slider__thumb_type_second') a
 
 describe('View', () => {
   beforeEach(() => {
-    view.setConfig(config);
+    view.updateConfig(config);
   });
 
   it('Инициализация View', () => {
     expect(view).toBeDefined();
   });
 
-  describe('метод setPositionThumb', () => {
+  describe('метод updatePosition', () => {
     it('при заданных параметрах устанавливается прогресс бар, позиции бегунков', () => {
       const data = {
-        dataFirstThumb: {
-          positionFrom: 100,
-          valueFrom: 5,
+        positionFrom: {
+          position: 100,
+          value: 5,
         },
-        dataSecondThumb: {
-          positionTo: 200,
-          valueTo: 9,
+        positionTo: {
+          position: 200,
+          value: 9,
         },
       };
-      view.setPosition(data);
+      view.updatePosition(data);
 
       expect(blockSlider).toContainElement('div.slider__progress-bar');
       expect(thumbOne).toHaveCss({ left: '100px' });
@@ -57,7 +57,7 @@ describe('View', () => {
     });
   });
 
-  describe('метод setConfig обновляет конфиг и передает его классам step, thumbOne, thumbTwo, progressBar', () => {
+  describe('метод updateConfig обновляет конфиг и передает его классам step, thumbOne, thumbTwo, progressBar', () => {
     describe('при vertical = true контейнер слайдера должен иметь класс slider__block_vertical', () => {
       it('если range = false контейнер второго бегунка удаляется', () => {
         const newConf = {
@@ -70,7 +70,7 @@ describe('View', () => {
           vertical: true,
           step: 1,
         };
-        view.setConfig(newConf);
+        view.updateConfig(newConf);
 
         expect(blockSlider).toHaveClass('slider__block_vertical');
         expect(progressBar).toHaveClass('slider__progress-bar_vertical');
@@ -88,7 +88,7 @@ describe('View', () => {
           vertical: true,
           step: 1,
         };
-        view.setConfig(newConf);
+        view.updateConfig(newConf);
 
         expect(blockSlider).toHaveClass('slider__block_vertical');
         expect(progressBar).toHaveClass('slider__progress-bar_vertical');
@@ -108,7 +108,7 @@ describe('View', () => {
           vertical: false,
           step: 1,
         };
-        view.setConfig(newConf);
+        view.updateConfig(newConf);
 
         expect(blockSlider).not.toHaveClass('slider__block_vertical');
         expect(progressBar).toHaveClass('slider__progress-bar_horizontal');
@@ -126,7 +126,7 @@ describe('View', () => {
           vertical: false,
           step: 1,
         };
-        view.setConfig(newConf);
+        view.updateConfig(newConf);
 
         expect(blockSlider).not.toHaveClass('slider__block_vertical');
         expect(blockSlider).not.toContainElement('div.js-slider__thumb_type_second');
@@ -152,7 +152,7 @@ describe('View', () => {
 
     describe('vertical = false вычисляется место клика по горизонтальной оси', () => {
       it('если range = false, при клике на контейнер слайдера бегунок перемещается в это место,класс View вызывает метод broadcast и передает данные о положении бегунка', () => {
-        view.setConfig({
+        view.updateConfig({
           range: false,
           min: 0,
           max: 100,
@@ -168,7 +168,7 @@ describe('View', () => {
       });
 
       it('range = true и клик был совершен рядом с первым бегунком, то он передвигается на место клика', () => {
-        view.setConfig({
+        view.updateConfig({
           range: true,
           min: 0,
           max: 100,
@@ -187,7 +187,7 @@ describe('View', () => {
       });
 
       it('range = true, если клик был совершен рядом со вторым бегунком, то он сдвигается', () => {
-        view.setConfig({
+        view.updateConfig({
           range: true,
           min: 0,
           max: 100,
@@ -208,7 +208,7 @@ describe('View', () => {
 
     describe('при vertical = true место клика вычисляется по вертикальной оси', () => {
       it('если range = false, бегунок смещается в место клика, View передает данные о его движении вызывая метод broadcast, ', () => {
-        view.setConfig({
+        view.updateConfig({
           range: false,
           min: 0,
           max: 100,
@@ -226,7 +226,7 @@ describe('View', () => {
     });
 
     it('range = true и клик рядом с первым бегунком, он перемещается в место клика', () => {
-      view.setConfig({
+      view.updateConfig({
         range: true,
         min: 0,
         max: 100,
@@ -244,7 +244,7 @@ describe('View', () => {
     });
 
     it('range = true, клик рядом со вторым бегунком, то он передвигается в это место', () => {
-      view.setConfig({
+      view.updateConfig({
         range: true,
         min: 0,
         max: 100,

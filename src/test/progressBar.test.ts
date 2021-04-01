@@ -2,15 +2,6 @@ import ProgressBar from '../slider/MVP/View/ProgressBar';
 import { IPosition } from '../slider/MVP/View/viewInterfaces';
 
 const $block = $('<div>');
-const $firstThumb = $('<div>');
-const $secondThumb = $('<div>');
-$block[0].classList.add('js-slider__block');
-$firstThumb[0].classList.add('js-slider__thumb_type_first');
-$secondThumb[0].classList.add('js-slider__thumb_type_second');
-$block.append($firstThumb[0]);
-$block.append($secondThumb[0]);
-$(document.body).append($block);
-
 const bar: ProgressBar = new ProgressBar($block[0]);
 const progressBarBlock = $block[0].querySelector('.js-slider__progress-bar');
 
@@ -23,13 +14,13 @@ describe('ProgressBar', () => {
     let data: IPosition;
     beforeAll(() => {
       data = {
-        dataFirstThumb: {
-          positionFrom: 10,
-          valueFrom: 25,
+        positionFrom: {
+          position: 10,
+          value: 25,
         },
-        dataSecondThumb: {
-          positionTo: 30,
-          valueTo: 35,
+        positionTo: {
+          position: 30,
+          value: 35,
         },
       };
     });

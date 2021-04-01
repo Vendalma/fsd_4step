@@ -13,6 +13,7 @@ $(document.body).append($block);
 
 const thumb: Thumb = new Thumb('first', $block[0], '1');
 const thumbBlock = $block[0].querySelector('.js-slider__thumb_type_first') as HTMLElement;
+const elementLabel = $block[0].querySelector('.js-slider__label');
 thumb.updateConfig(config);
 
 describe('Thumb', () => {
@@ -22,13 +23,6 @@ describe('Thumb', () => {
 
   it('инициализация класса Thumb', () => {
     expect(thumb).toBeDefined();
-  });
-
-  it('метод setLabelValue устанавливает значение лейбла', () => {
-    thumb.setLabelValue(8);
-    const elementLabel = $block[0].querySelector('.js-slider__label');
-
-    expect(elementLabel).toHaveText('8');
   });
 
   it('метод removeThis удаляет бегунок из родительского блока', () => {
@@ -45,7 +39,11 @@ describe('Thumb', () => {
     expect(thumbBlock).toBeInDOM();
   });
 
-  describe('метод setPosition', () => {
+  it('метод getThumbBlock возвращает эл-т бегунка', () => {
+    expect(thumb.getThumbBlock()).toEqual(thumbBlock);
+  });
+
+  describe('метод updatePosition, устанавливает позицию бегунка и значение лейбла', () => {
     it('при vertical = false устанавливает бегунку style.left', () => {
       thumb.updateConfig({
         range: true,
@@ -54,9 +52,13 @@ describe('Thumb', () => {
         vertical: false,
         label: false,
       });
-      thumb.setPosition(8);
+      thumb.updatePosition({
+        position: 10,
+        value: 5,
+      });
 
-      expect(thumbBlock).toHaveCss({ left: '8px' });
+      expect(thumbBlock).toHaveCss({ left: '10px' });
+      expect(elementLabel).toHaveText('5');
     });
 
     it('при vertical= true устанавливает бегунку style.top', () => {
@@ -67,9 +69,13 @@ describe('Thumb', () => {
         vertical: true,
         label: false,
       });
-      thumb.setPosition(8);
+      thumb.updatePosition({
+        position: 20,
+        value: 10,
+      });
 
-      expect(thumbBlock).toHaveCss({ top: '8px' });
+      expect(thumbBlock).toHaveCss({ top: '20px' });
+      expect(elementLabel).toHaveText('10');
     });
   });
 
@@ -83,9 +89,6 @@ describe('Thumb', () => {
   describe('при перемещении мыши, через ф-ю broadcast передаются данные о движении бегунка', () => {
     const mousedown = new MouseEvent('mousedown', { bubbles: true });
     const mousemove = new MouseEvent('mousemove', { bubbles: true });
-    const $thumbTwo = $('<div>');
-    $thumbTwo[0].classList.add('js-slider__thumb_type_second');
-    $block.append($thumbTwo);
 
     describe('vertical = false', () => {
       it('range = false', () => {
@@ -102,7 +105,7 @@ describe('Thumb', () => {
         expect(thumb.broadcast).toHaveBeenCalled();
       });
 
-      it('range = true, data-num = 1', () => {
+      it('range = true', () => {
         thumb.updateConfig({
           range: true,
           positionFrom: 15,
@@ -110,22 +113,6 @@ describe('Thumb', () => {
           vertical: false,
           label: false,
         });
-        thumbBlock.dataset.num = '1';
-        thumbBlock.dispatchEvent(mousedown);
-        document.dispatchEvent(mousemove);
-
-        expect(thumb.broadcast).toHaveBeenCalled();
-      });
-
-      it('range = true, data-num = 2', () => {
-        thumb.updateConfig({
-          range: false,
-          positionFrom: 15,
-          positionTo: 30,
-          vertical: false,
-          label: false,
-        });
-        thumbBlock.dataset.num = '2';
         thumbBlock.dispatchEvent(mousedown);
         document.dispatchEvent(mousemove);
 
@@ -142,14 +129,13 @@ describe('Thumb', () => {
           vertical: true,
           label: false,
         });
-        thumbBlock.dataset.num = '1';
         thumbBlock.dispatchEvent(mousedown);
         document.dispatchEvent(mousemove);
 
         expect(thumb.broadcast).toHaveBeenCalled();
       });
 
-      it('range = true, data-num = 1', () => {
+      it('range = true', () => {
         thumb.updateConfig({
           range: true,
           positionFrom: 15,
@@ -157,22 +143,6 @@ describe('Thumb', () => {
           vertical: true,
           label: false,
         });
-        thumbBlock.dataset.num = '1';
-        thumbBlock.dispatchEvent(mousedown);
-        document.dispatchEvent(mousemove);
-
-        expect(thumb.broadcast).toHaveBeenCalled();
-      });
-
-      it('range = true, data-num = 2', () => {
-        thumb.updateConfig({
-          range: true,
-          positionFrom: 15,
-          positionTo: 30,
-          vertical: true,
-          label: false,
-        });
-        thumbBlock.dataset.num = '2';
         thumbBlock.dispatchEvent(mousedown);
         document.dispatchEvent(mousemove);
 
@@ -193,7 +163,6 @@ describe('Thumb', () => {
           vertical: false,
           label: false,
         });
-        thumbBlock.dataset.num = '1';
         thumbBlock.dispatchEvent(mousedown);
         document.dispatchEvent(mouseup);
 
@@ -201,7 +170,7 @@ describe('Thumb', () => {
         expect(thumbBlock).not.toHaveClass('slider__thumb_visibility_zIndex-up');
       });
 
-      it('range = true, data-num = 1', () => {
+      it('range = true', () => {
         thumb.updateConfig({
           range: true,
           positionFrom: 15,
@@ -209,23 +178,6 @@ describe('Thumb', () => {
           vertical: false,
           label: false,
         });
-        thumbBlock.dataset.num = '1';
-        thumbBlock.dispatchEvent(mousedown);
-        document.dispatchEvent(mouseup);
-
-        expect(thumb.broadcast).toHaveBeenCalled();
-        expect(thumbBlock).not.toHaveClass('slider__thumb_visibility_zIndex-up');
-      });
-
-      it('range = true, data-num = 2', () => {
-        thumb.updateConfig({
-          range: true,
-          positionFrom: 15,
-          positionTo: 30,
-          vertical: false,
-          label: false,
-        });
-        thumbBlock.dataset.num = '2';
         thumbBlock.dispatchEvent(mousedown);
         document.dispatchEvent(mouseup);
 
@@ -243,7 +195,6 @@ describe('Thumb', () => {
           vertical: true,
           label: false,
         });
-        thumbBlock.dataset.num = '1';
         thumbBlock.dispatchEvent(mousedown);
         document.dispatchEvent(mouseup);
 
@@ -251,7 +202,7 @@ describe('Thumb', () => {
         expect(thumbBlock).not.toHaveClass('slider__thumb_visibility_zIndex-up');
       });
 
-      it('range = true, data-num = 1', () => {
+      it('range = true', () => {
         thumb.updateConfig({
           range: true,
           positionFrom: 15,
@@ -259,23 +210,6 @@ describe('Thumb', () => {
           vertical: true,
           label: false,
         });
-        thumbBlock.dataset.num = '1';
-        thumbBlock.dispatchEvent(mousedown);
-        document.dispatchEvent(mouseup);
-
-        expect(thumb.broadcast).toHaveBeenCalled();
-        expect(thumbBlock).not.toHaveClass('slider__thumb_visibility_zIndex-up');
-      });
-
-      it('range = true, data-num = 2', () => {
-        thumb.updateConfig({
-          range: true,
-          positionFrom: 15,
-          positionTo: 30,
-          vertical: true,
-          label: false,
-        });
-        thumbBlock.dataset.num = '2';
         thumbBlock.dispatchEvent(mousedown);
         document.dispatchEvent(mouseup);
 
