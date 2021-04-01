@@ -38,7 +38,7 @@ class View extends Observer<ChangeView> {
   }
 
   addStepLine(value: number): void {
-    this.step.addStepLine(value);
+    this.step.addStepLine({ stepSize: value, thumbElement: this.thumbOne.getThumbBlock() });
   }
 
   updateConfig(data: IConfig): void {

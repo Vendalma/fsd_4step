@@ -1,3 +1,5 @@
+import { IStepValues } from './viewInterfaces';
+
 interface IConfigStep {
   min: number;
   max: number;
@@ -13,11 +15,11 @@ class Step {
     this.container = container;
   }
 
-  addStepLine(data: number): void {
-    const thumb = this.container.querySelector('.js-slider__thumb_type_first') as HTMLElement;
+  addStepLine(values: IStepValues): void {
+    const { stepSize, thumbElement } = values;
     this.deleteStep();
     const fragment = document.createDocumentFragment();
-    const stepSize = data;
+
     for (let i = 0; i < 21; i += 1) {
       const stepBlock = document.createElement('div');
       stepBlock.classList.add('js-slider__step-block');
@@ -35,13 +37,10 @@ class Step {
       if (this.config.vertical) {
         stepBlock.classList.add('slider__step-block_vertical');
         stepBlock.style.top = `${stepSize * i}px`;
-        if (i === 0) {
-          stepBlock.style.top = `${stepSize * i - thumb.offsetWidth}px`;
-        } else if (i === 20) {
-          stepBlock.style.top = `${stepSize * i - thumb.offsetWidth}px`;
+        if (i === 0 || i === 20) {
+          stepBlock.style.top = `${stepSize * i - thumbElement.offsetWidth}px`;
         }
-      }
-      if (!this.config.vertical) {
+      } else {
         stepBlock.style.left = `${stepSize * i}px`;
         stepBlock.classList.remove('slider__step-block_vertical');
       }
