@@ -1,4 +1,4 @@
-import { IStepValues } from './viewInterfaces';
+import { IStepValues } from './types';
 
 interface IConfigStep {
   min: number;

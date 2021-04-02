@@ -1,7 +1,7 @@
 import Model from '../MVP/Model/Model';
 import Presenter from '../MVP/Presenter/Presenter';
 import View from '../MVP/View/View';
-import { IConfig, IUpdatedPosition } from './rangeSliderInterfaces';
+import { IConfig, IUpdatedPosition } from './types';
 
 class RangeSlider {
   private model: Model;

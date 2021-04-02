@@ -2,7 +2,7 @@ import Observer from '../../Observer/Observer';
 import ProgressBar from './ProgressBar';
 import Step from './Step';
 import Thumb from './Thumb';
-import { ChangeView, IConfig, IPosition } from './viewInterfaces';
+import { ChangeView, IConfig, IPosition } from './types';
 
 class View extends Observer<ChangeView> {
   private config: IConfig;

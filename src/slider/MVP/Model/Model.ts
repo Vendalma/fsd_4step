@@ -1,5 +1,5 @@
 import Observer from '../../Observer/Observer';
-import { ICalcPosition, IConfig, IDataThumbMove, IPosition, IUpdatedPosition, ModelValues } from './modelInterfaces';
+import { ICalcPosition, IConfig, IDataThumbMove, IPosition, IUpdatedPosition, ModelValues } from './types';
 import Validator from './Validator';
 
 class Model extends Observer<ModelValues> {

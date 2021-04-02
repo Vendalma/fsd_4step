@@ -1,4 +1,4 @@
-import { IPosition } from './viewInterfaces';
+import { IPosition } from './types';
 
 interface IConfigBar {
   range: boolean;

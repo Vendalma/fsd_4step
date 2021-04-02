@@ -1,4 +1,4 @@
-import { IConfig } from '../../slider/MVP/Model/modelInterfaces';
+import { IConfig } from '../../slider/MVP/Model/types';
 import './panelController.scss';
 
 class PanelController {

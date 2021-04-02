@@ -1,5 +1,5 @@
 import ProgressBar from '../slider/MVP/View/ProgressBar';
-import { IPosition } from '../slider/MVP/View/viewInterfaces';
+import { IPosition } from '../slider/MVP/View/types';
 
 const $block = $('<div>');
 const bar: ProgressBar = new ProgressBar($block[0]);

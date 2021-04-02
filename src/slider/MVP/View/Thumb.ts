@@ -1,6 +1,6 @@
 import Observer from '../../Observer/Observer';
 import Label from './Label';
-import { IConfigThumb, IDataThumbMove, IThumbValue, IUpdatedThumbPosition } from './viewInterfaces';
+import { IConfigThumb, IDataThumbMove, IThumbValue, IUpdatedThumbPosition } from './types';
 
 class Thumb extends Observer<IThumbValue> {
   private config: IConfigThumb;

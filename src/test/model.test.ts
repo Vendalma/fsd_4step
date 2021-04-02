@@ -1,5 +1,5 @@
 import Model from '../slider/MVP/Model/Model';
-import { IConfig, IDataThumbMove, IPosition } from '../slider/MVP/Model/modelInterfaces';
+import { IConfig, IDataThumbMove, IPosition } from '../slider/MVP/Model/types';
 
 const config: IConfig = {
   range: true,

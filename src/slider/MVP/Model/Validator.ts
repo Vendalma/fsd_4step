@@ -1,5 +1,5 @@
-import defaultSettings from './defaultSettings';
-import { IConfig } from './modelInterfaces';
+import defaultSettings from './fixture';
+import { IConfig } from './types';
 
 class Validator {
   private config: IConfig;
