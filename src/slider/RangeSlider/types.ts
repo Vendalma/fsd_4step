@@ -9,7 +9,7 @@ export interface IConfig {
   vertical: boolean;
 }
 
-export interface IUpdateConfig {
+export interface IUpdatedConfig {
   [key: string]: boolean | number;
 }
 

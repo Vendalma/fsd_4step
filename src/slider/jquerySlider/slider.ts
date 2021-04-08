@@ -1,3 +1,4 @@
+import { IConfig } from '../MVP/Model/types';
 import RangeSlider from '../RangeSlider/RangeSlider';
 import '../styles.scss';
 
@@ -11,22 +12,22 @@ import '../styles.scss';
       });
     },
 
-    returnPosition(fn: (data?: IConfig) => void) {
+    getPosition(fn: (data?: IConfig) => void) {
       return this.each(function (this: HTMLElement) {
-        $(this).data('sliderData').rangeSlider.getUpdatePosition(fn);
+        $(this).data('sliderData').rangeSlider.getPosition(fn);
       });
     },
 
-    updateConfig(options: IUpdateConfig) {
+    setConfig(options: IUpdatedConfig) {
       return this.each(function (this: HTMLElement) {
-        $(this).data('sliderData').rangeSlider.updateConfig(options);
+        $(this).data('sliderData').rangeSlider.setConfig(options);
       });
     },
   };
 
   jQuery.fn.rangeSlider = function (
-    method?: string | IConfig | IUpdateConfig,
-    settings?: IConfig | IUpdateConfig | ((data?: IConfig) => void),
+    method?: string | IConfig | IUpdatedConfig,
+    settings?: IConfig | IUpdatedConfig | ((data?: IConfig) => void),
   ) {
     if (typeof method === 'string' && methods[method]) {
       return methods[method].apply(this, Array.prototype.slice.call(arguments, 1)); /* eslint-disable-line */

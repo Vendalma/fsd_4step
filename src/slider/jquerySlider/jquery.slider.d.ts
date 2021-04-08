@@ -9,7 +9,7 @@ interface IConfig {
   vertical: boolean;
 }
 
-interface IUpdateConfig {
+interface IUpdatedConfig {
   [key: string]: boolean | number;
 }
 
@@ -19,7 +19,7 @@ interface MethodsObject {
 
 interface JQuery {
   rangeSlider: (
-    method?: string | IConfig | IUpdateConfig,
-    settings?: IConfig | IUpdateConfig | ((data?: IConfig) => void),
+    method?: string | IConfig | IUpdatedConfig,
+    settings?: IConfig | IUpdatedConfig | ((data?: IConfig) => void),
   ) => JQuery;
 }

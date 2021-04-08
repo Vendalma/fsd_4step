@@ -57,8 +57,8 @@ class PanelController {
     this.inputDouble = this.parent.querySelector('.js-panel__radio_type_double') as HTMLInputElement;
     this.slider = this.parent.nextElementSibling as HTMLElement;
     this.$slider = $(this.slider);
-    this.$slider.rangeSlider('returnPosition', this.updateConfig.bind(this));
     this.config = this.$slider.data('sliderData').rangeSlider.getConfig();
+    this.$slider.rangeSlider('getPosition', this.updatePosition.bind(this));
   }
 
   private setConfig(): void {
@@ -82,24 +82,24 @@ class PanelController {
   private onClickPanel(e: MouseEvent): void {
     if (e.target === this.inputLabel) {
       const isLabelVisible = this.inputLabel.checked;
-      this.$slider.rangeSlider('updateConfig', { label: isLabelVisible });
+      this.$slider.rangeSlider('setConfig', { label: isLabelVisible });
     }
 
     if (e.target === this.inputHorizontal && this.inputHorizontal.checked) {
-      this.$slider.rangeSlider('updateConfig', { vertical: false });
+      this.$slider.rangeSlider('setConfig', { vertical: false });
     }
 
     if (e.target === this.inputVertical && this.inputVertical.checked) {
-      this.$slider.rangeSlider('updateConfig', { vertical: true });
+      this.$slider.rangeSlider('setConfig', { vertical: true });
     }
 
     if (e.target === this.inputSingle && this.inputSingle.checked) {
-      this.$slider.rangeSlider('updateConfig', { range: false });
+      this.$slider.rangeSlider('setConfig', { range: false });
       this.checkRange();
     }
 
     if (e.target === this.inputDouble && this.inputDouble.checked) {
-      this.$slider.rangeSlider('updateConfig', { range: true });
+      this.$slider.rangeSlider('setConfig', { range: true });
       this.checkRange();
     }
 
@@ -125,31 +125,31 @@ class PanelController {
   }
 
   private changeMin(): void {
-    this.$slider.rangeSlider('updateConfig', {
+    this.$slider.rangeSlider('setConfig', {
       min: Number(this.inputMin.value),
     });
   }
 
   private changeMax(): void {
-    this.$slider.rangeSlider('updateConfig', {
+    this.$slider.rangeSlider('setConfig', {
       max: Number(this.inputMax.value),
     });
   }
 
   private changeStep(): void {
-    this.$slider.rangeSlider('updateConfig', {
+    this.$slider.rangeSlider('setConfig', {
       step: Number(this.inputStep.value),
     });
   }
 
   private changePositionFrom(): void {
-    this.$slider.rangeSlider('updateConfig', {
+    this.$slider.rangeSlider('setConfig', {
       positionFrom: Number(this.inputFrom.value),
     });
   }
 
   private changePositionTo(): void {
-    this.$slider.rangeSlider('updateConfig', {
+    this.$slider.rangeSlider('setConfig', {
       positionTo: Number(this.inputTo.value),
     });
   }
@@ -160,7 +160,8 @@ class PanelController {
     if (this.config.range) disabledBlock.disabled = false;
   }
 
-  private updateConfig(data?: IConfig): void {
+  private updatePosition(data?: IConfig): void {
+    this.config = Object.assign(this.config, data);
     this.setConfig();
   }
 }

@@ -1,5 +1,5 @@
 import Model from '../slider/MVP/Model/Model';
-import { IConfig, IDataThumbMove, IPosition } from '../slider/MVP/Model/types';
+import { IConfig } from '../slider/MVP/Model/types';
 
 const config: IConfig = {
   range: true,
@@ -13,7 +13,7 @@ const config: IConfig = {
 };
 
 class TestModel extends Model {
-  public positionState: IPosition;
+  public config: IConfig;
 }
 const model: TestModel = new TestModel();
 
@@ -26,257 +26,307 @@ describe('Model', () => {
     expect(model).toBeDefined();
   });
 
-  it('метод getConfig возвращает конфиг Model', () => {
-    model.updateConfig(config);
+  describe('метод updateConfig валидирует конфиг и передает его подписчикам класса Model с помощью метода broadcast', () => {
+    it('если конфиг проходит валидацию, его значение устанавливается для модели', () => {
+      model.updateConfig(config);
 
-    expect(model.getConfig()).toEqual(config);
-  });
-
-  it('метод updateConfig устанавливает конфиг и передает его подписчикам класса Model с помощью метода broadcast', () => {
-    model.updateConfig(config);
-
-    expect(model.broadcast).toHaveBeenCalled();
-  });
-
-  it('метод findOnloadPosition принимает размер слайдера, рассчитывает начальные позиции бегунков, передает данные через метод broadcast', () => {
-    model.findOnloadPosition(150);
-
-    expect(model.broadcast).toHaveBeenCalled();
-  });
-
-  describe('метод findUpdatedPosition рассчитывает данные для движения бегунка и передает их, вызывая метод broadcast', () => {
-    let data: IDataThumbMove;
-    beforeEach(function () {
-      data = {
-        position: 95,
-        dataName: 'from',
-      };
+      expect(model.config).toEqual(config);
+      expect(model.broadcast).toHaveBeenCalled();
     });
 
-    describe('step = 0.1', () => {
-      describe('dataName = from, range = false', () => {
-        beforeEach(function () {
-          data.dataName = 'from';
-          model.updateConfig({
-            step: 0.1,
-            max: 100,
-            min: 0,
-            positionFrom: 10,
-            positionTo: 20,
-            range: false,
-            label: true,
-            vertical: false,
-          });
-        });
-
-        it('при position <= leftPoint, вызывается ф-я broadcast', () => {
-          data.position = -100;
-          model.findUpdatedPosition(data);
-
-          expect(model.broadcast).toHaveBeenCalled();
-        });
-
-        it('при position > rightPoint, вызывается ф-я broadcast', () => {
-          data.position = 410;
-          model.findOnloadPosition(300);
-          model.findUpdatedPosition(data);
-
-          expect(model.broadcast).toHaveBeenCalled();
-        });
-
-        it('при position, вызывается ф-я broadcast', () => {
-          model.findUpdatedPosition(data);
-
-          expect(model.broadcast).toHaveBeenCalled();
-        });
-      });
-
-      describe('dataName = from, range = true', () => {
-        beforeEach(function () {
-          data.dataName = 'from';
-          model.updateConfig({
-            step: 0.1,
-            max: 100,
-            min: 0,
-            positionFrom: 10,
-            positionTo: 20,
-            range: true,
-            label: true,
-            vertical: false,
-          });
-        });
-
-        it('если position <= leftPoint, вызывается метод broadcast', () => {
-          data.position = -110;
-          model.findUpdatedPosition(data);
-
-          expect(model.broadcast).toHaveBeenCalled();
-        });
-
-        it('при position > rightPoint, вызывается ф-я broadcast', () => {
-          data.position = 410;
-          model.positionState.positionTo.position = 390;
-          model.findUpdatedPosition(data);
-
-          expect(model.broadcast).toHaveBeenCalled();
-        });
-
-        it('при position, вызывается метод broadcast', () => {
-          model.findUpdatedPosition(data);
-
-          expect(model.broadcast).toHaveBeenCalled();
-        });
-      });
-
-      describe('dataName = to, range = true', () => {
-        beforeEach(function () {
-          data.dataName = 'to';
-          model.updateConfig({
-            step: 0.1,
-            max: 100,
-            min: 0,
-            positionFrom: 10,
-            positionTo: 20,
-            range: true,
-            label: true,
-            vertical: false,
-          });
-        });
-
-        it('при position <= leftPoint, вызывается ф-я broadcast', () => {
-          data.position = 110;
-          model.positionState.positionFrom.position = 150;
-          model.findUpdatedPosition(data);
-
-          expect(model.broadcast).toHaveBeenCalled();
-        });
-
-        it('если position > rightPoint, вызывается метод broadcast', () => {
-          data.position = 410;
-          model.findOnloadPosition(300);
-          model.findUpdatedPosition(data);
-
-          expect(model.broadcast).toHaveBeenCalled();
-        });
-
-        it('если position, вызывается ф-я broadcast', () => {
-          model.findUpdatedPosition(data);
-
-          expect(model.broadcast).toHaveBeenCalled();
-        });
-      });
-    });
-
-    describe('step = 1', () => {
-      describe('dataName = from, range = false', () => {
-        beforeEach(function () {
-          data.dataName = 'from';
-          model.updateConfig({
-            step: 1,
-            max: 100,
-            min: 0,
-            positionFrom: 10,
-            positionTo: 20,
-            range: false,
-            label: true,
-            vertical: false,
-          });
-        });
-
-        it('при position <= leftPoint, вызывается ф-я broadcast', () => {
-          data.position = -110;
-          model.findUpdatedPosition(data);
-
-          expect(model.broadcast).toHaveBeenCalled();
-        });
-
-        it('при position > rightPoint, вызывается ф-я broadcast', () => {
-          data.position = 410;
-          model.findOnloadPosition(300);
-          model.findUpdatedPosition(data);
-
-          expect(model.broadcast).toHaveBeenCalled();
-        });
-
-        it('при position, вызывается ф-я broadcast', () => {
-          model.findUpdatedPosition(data);
-
-          expect(model.broadcast).toHaveBeenCalled();
-        });
-      });
-
-      describe('dataName = from, range = true', () => {
-        beforeEach(function () {
-          data.dataName = 'from';
-          model.updateConfig({
-            step: 1,
-            max: 100,
-            min: 0,
-            positionFrom: 10,
-            positionTo: 20,
-            range: true,
-            label: true,
-            vertical: false,
-          });
-        });
-
-        it('если position <= leftPoint, вызывается метод broadcast', () => {
-          data.position = -110;
-          model.findUpdatedPosition(data);
-
-          expect(model.broadcast).toHaveBeenCalled();
-        });
-
-        it('при position > rightPoint, вызывается ф-я broadcast', () => {
-          data.position = 410;
-          model.findUpdatedPosition(data);
-
-          expect(model.broadcast).toHaveBeenCalled();
-        });
-
-        it('при position, вызывается метод broadcast', () => {
-          model.findUpdatedPosition(data);
-
-          expect(model.broadcast).toHaveBeenCalled();
-        });
-      });
-    });
-
-    describe('dataName = to, range = true', () => {
-      beforeEach(function () {
-        data.dataName = 'to';
-        model.updateConfig({
+    describe('проверка валидации значений min, max', () => {
+      it('если max < min, то max равно дефолтному значению', () => {
+        const data = {
+          max: 9,
+          min: 10,
           step: 1,
-          max: 100,
-          min: 0,
-          positionFrom: 10,
-          positionTo: 20,
+          positionFrom: 11,
+          positionTo: 17,
           range: true,
           label: true,
-          vertical: false,
-        });
+          vertical: true,
+        };
+        const expectedValue = {
+          max: 100,
+          min: 10,
+          step: 1,
+          positionFrom: 11,
+          positionTo: 17,
+          range: true,
+          label: true,
+          vertical: true,
+        };
+
+        model.updateConfig(data);
+
+        expect(model.config).toEqual(expectedValue);
       });
 
-      it('при position <= leftPoint, вызывается ф-я broadcast', () => {
-        data.position = 110;
-        model.findUpdatedPosition(data);
+      it('если min > max,при max равном дефолтному значению, то min так же равно дефолтному значению', () => {
+        const data = {
+          max: 100,
+          min: 101,
+          step: 1,
+          positionFrom: 90,
+          positionTo: 90,
+          range: true,
+          label: true,
+          vertical: true,
+        };
+        const expectedValue = {
+          max: 100,
+          min: 0,
+          step: 1,
+          positionFrom: 90,
+          positionTo: 90,
+          range: true,
+          label: true,
+          vertical: true,
+        };
 
-        expect(model.broadcast).toHaveBeenCalled();
-      });
+        model.updateConfig(data);
 
-      it('если position > rightPoint, вызывается метод broadcast', () => {
-        data.position = 410;
-        model.findOnloadPosition(300);
-        model.findUpdatedPosition(data);
-
-        expect(model.broadcast).toHaveBeenCalled();
-      });
-
-      it('если position, вызывается broadcast', () => {
-        model.findUpdatedPosition(data);
-
-        expect(model.broadcast).toHaveBeenCalled();
+        expect(model.config).toEqual(expectedValue);
       });
     });
+
+    describe('проверка валидации step', () => {
+      it('если step <= 0, то step равно дефолтному значению', () => {
+        const data = {
+          max: 100,
+          min: 10,
+          step: 0,
+          positionFrom: 11,
+          positionTo: 17,
+          range: true,
+          label: true,
+          vertical: true,
+        };
+        const expectedValue = {
+          max: 100,
+          min: 10,
+          step: 1,
+          positionFrom: 11,
+          positionTo: 17,
+          range: true,
+          label: true,
+          vertical: true,
+        };
+
+        model.updateConfig(data);
+
+        expect(model.config).toEqual(expectedValue);
+      });
+
+      it('если step > max - min, то step равно дефолтному значению', () => {
+        const data = {
+          max: 100,
+          min: 10,
+          step: 91,
+          positionFrom: 11,
+          positionTo: 17,
+          range: true,
+          label: true,
+          vertical: true,
+        };
+        const expectedValue = {
+          max: 100,
+          min: 10,
+          step: 1,
+          positionFrom: 11,
+          positionTo: 17,
+          range: true,
+          label: true,
+          vertical: true,
+        };
+
+        model.updateConfig(data);
+
+        expect(model.config).toEqual(expectedValue);
+      });
+    });
+
+    describe('проверка валидации positionFrom', () => {
+      it('если positionFrom < min, то positionFrom равно min', () => {
+        const data = {
+          max: 100,
+          min: 10,
+          step: 1,
+          positionFrom: 9,
+          positionTo: 17,
+          range: true,
+          label: true,
+          vertical: true,
+        };
+        const expectedValue = {
+          max: 100,
+          min: 10,
+          step: 1,
+          positionFrom: 10,
+          positionTo: 17,
+          range: true,
+          label: true,
+          vertical: true,
+        };
+
+        model.updateConfig(data);
+
+        expect(model.config).toEqual(expectedValue);
+      });
+
+      it('если range=false и positionFrom > max, то positionFrom равно max', () => {
+        const data = {
+          max: 100,
+          min: 10,
+          step: 1,
+          positionFrom: 101,
+          positionTo: 17,
+          range: false,
+          label: true,
+          vertical: true,
+        };
+        const expectedValue = {
+          max: 100,
+          min: 10,
+          step: 1,
+          positionFrom: 100,
+          positionTo: 17,
+          range: false,
+          label: true,
+          vertical: true,
+        };
+
+        model.updateConfig(data);
+
+        expect(model.config).toEqual(expectedValue);
+      });
+
+      it('если range = true и positionFrom > max, то positionFrom равно min', () => {
+        const data = {
+          max: 100,
+          min: 10,
+          step: 1,
+          positionFrom: 101,
+          positionTo: 17,
+          range: true,
+          label: true,
+          vertical: true,
+        };
+        const expectedValue = {
+          max: 100,
+          min: 10,
+          step: 1,
+          positionFrom: 10,
+          positionTo: 17,
+          range: true,
+          label: true,
+          vertical: true,
+        };
+
+        model.updateConfig(data);
+
+        expect(model.config).toEqual(expectedValue);
+      });
+    });
+
+    describe('проверка валидации positionTo', () => {
+      it('если positionTo <= positionFrom и max - min > step, то positionTo = positionFrom, а positionFrom = positionTo - step, при этом positionFrom повторно валидируется', () => {
+        const data = {
+          max: 100,
+          min: 10,
+          step: 1,
+          positionFrom: 10,
+          positionTo: 9,
+          range: true,
+          label: true,
+          vertical: true,
+        };
+        const expectedValue = {
+          max: 100,
+          min: 10,
+          step: 1,
+          positionFrom: 10,
+          positionTo: 10,
+          range: true,
+          label: true,
+          vertical: true,
+        };
+
+        model.updateConfig(data);
+
+        expect(model.config).toEqual(expectedValue);
+      });
+
+      it('если positionTo <= positionFrom и max - min <= step, то positionTo = max', () => {
+        const data = {
+          max: 100,
+          min: 10,
+          step: 90,
+          positionFrom: 10,
+          positionTo: 9,
+          range: true,
+          label: true,
+          vertical: true,
+        };
+        const expectedValue = {
+          max: 100,
+          min: 10,
+          step: 90,
+          positionFrom: 10,
+          positionTo: 100,
+          range: true,
+          label: true,
+          vertical: true,
+        };
+
+        model.updateConfig(data);
+
+        expect(model.config).toEqual(expectedValue);
+      });
+
+      it('если positionTo > max, то positionTo = max', () => {
+        const data = {
+          max: 100,
+          min: 10,
+          step: 1,
+          positionFrom: 10,
+          positionTo: 101,
+          range: true,
+          label: true,
+          vertical: true,
+        };
+        const expectedValue = {
+          max: 100,
+          min: 10,
+          step: 1,
+          positionFrom: 10,
+          positionTo: 100,
+          range: true,
+          label: true,
+          vertical: true,
+        };
+
+        model.updateConfig(data);
+
+        expect(model.config).toEqual(expectedValue);
+      });
+    });
+  });
+
+  it('метод updatePosition обновляет значения positionFrom, positionTo в конфиге и передает его подписчикам класса Model через метод broadcast', () => {
+    model.updatePosition({ positionFrom: 10, positionTo: 20 });
+
+    expect(model.config).toEqual({
+      range: true,
+      min: 10,
+      max: 100,
+      positionFrom: 10,
+      positionTo: 20,
+      step: 1,
+      vertical: true,
+      label: true,
+    });
+
+    expect(model.broadcast).toHaveBeenCalled();
   });
 });

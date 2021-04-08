@@ -151,7 +151,7 @@ describe('Thumb', () => {
     });
   });
 
-  describe('метод onMouseUp отвязывает обработчики событий, уменьшается zIndex контейнера бегунка, вызывает ф-ию broadcast, которая передает данные о положении бегунка', () => {
+  describe('при отпускании кнопки мыши, от бегунка отвязываются обработчики событий, уменьшается zIndex контейнера, вызывается ф-ию broadcast, которая передает данные о положении бегунка', () => {
     const mousedown = new MouseEvent('mousedown', { bubbles: true });
     const mouseup = new MouseEvent('mouseup', { bubbles: true });
     describe('vertical= false', () => {

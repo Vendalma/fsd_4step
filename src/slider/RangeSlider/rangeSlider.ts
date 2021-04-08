@@ -1,7 +1,7 @@
 import Model from '../MVP/Model/Model';
 import Presenter from '../MVP/Presenter/Presenter';
 import View from '../MVP/View/View';
-import { IConfig, IUpdatedPosition } from './types';
+import { IConfig, IUpdatedConfig, IUpdatedPosition } from './types';
 
 class RangeSlider {
   private model: Model;
@@ -12,31 +12,40 @@ class RangeSlider {
 
   private settings: IConfig;
 
+  private container: HTMLElement;
+
   constructor(container: HTMLElement, settings: IConfig) {
     this.settings = settings;
-    this.model = new Model();
-    this.view = new View(container);
-    this.presenter = new Presenter(this.model, this.view);
-    this.updateConfig(this.settings);
+    this.container = container;
+    this.init();
+    this.setConfig(settings);
   }
 
-  getConfig(): IConfig {
-    return this.model.getConfig();
-  }
-
-  updateConfig(data: IUpdateConfig | IConfig): void {
+  setConfig(data: IUpdatedConfig | IConfig): void {
     this.model.updateConfig(Object.assign(this.settings, data));
   }
 
-  getUpdatePosition(fn: (value?: IUpdatedPosition) => void): void {
+  getConfig(): IConfig {
     this.model.subscribe((data) => {
-      if (data.type === 'positionThumb') {
-        fn({
-          positionFrom: this.getConfig().positionFrom,
-          positionTo: this.getConfig().positionTo,
-        });
+      if (data.type === 'configChanged') {
+        this.settings = data.value;
       }
     });
+    return this.settings;
+  }
+
+  getPosition(fn: (value?: IUpdatedPosition) => void): void {
+    this.model.subscribe((data) => {
+      if (data.type === 'positionChanged') {
+        fn(data.value);
+      }
+    });
+  }
+
+  private init() {
+    this.model = new Model();
+    this.view = new View(this.container);
+    this.presenter = new Presenter(this.model, this.view);
   }
 }
 

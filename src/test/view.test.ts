@@ -29,35 +29,7 @@ describe('View', () => {
     expect(view).toBeDefined();
   });
 
-  describe('метод updatePosition', () => {
-    it('при заданных параметрах устанавливается прогресс бар, позиции бегунков', () => {
-      const data = {
-        positionFrom: {
-          position: 100,
-          value: 5,
-        },
-        positionTo: {
-          position: 200,
-          value: 9,
-        },
-      };
-      view.updatePosition(data);
-
-      expect(blockSlider).toContainElement('div.slider__progress-bar');
-      expect(thumbOne).toHaveCss({ left: '100px' });
-      expect(thumbSecond).toHaveCss({ left: '200px' });
-    });
-  });
-
-  describe('метод addStepLine', () => {
-    it('метод принимает размер шага и устанавливает шкалу значений', () => {
-      view.addStepLine(30.5);
-
-      expect(blockSlider).toContainElement('div.slider__step-block');
-    });
-  });
-
-  describe('метод updateConfig обновляет конфиг и передает его классам step, thumbOne, thumbTwo, progressBar', () => {
+  describe('метод updateConfig обновляет конфиг View, обновляет положения бегунков на слайдере', () => {
     describe('при vertical = true контейнер слайдера должен иметь класс slider__block_vertical', () => {
       it('если range = false контейнер второго бегунка удаляется', () => {
         const newConf = {
@@ -135,7 +107,51 @@ describe('View', () => {
     });
   });
 
-  it('метод resizeWindow передает данные о размере слайдера при изменении размера окна браузера', () => {
+  describe('при изменении позиции бегунка, View передает новые данны через метод broadcast', () => {
+    const mousedown = new MouseEvent('mousedown', { bubbles: true });
+    const mousemove = new MouseEvent('mousemove', { bubbles: true });
+    beforeEach(() => {
+      spyOn(view, 'broadcast');
+    });
+
+    it('range= false', () => {
+      view.updateConfig({
+        min: -5,
+        max: 40,
+        range: false,
+        positionFrom: 0,
+        positionTo: 10,
+        label: false,
+        vertical: false,
+        step: 1,
+      });
+
+      thumbOne.dispatchEvent(mousedown);
+      document.dispatchEvent(mousemove);
+
+      expect(view.broadcast).toHaveBeenCalled();
+    });
+
+    it('range= true', () => {
+      view.updateConfig({
+        min: -5,
+        max: 40,
+        range: true,
+        positionFrom: 0,
+        positionTo: 10,
+        label: false,
+        vertical: false,
+        step: 1,
+      });
+
+      thumbSecond.dispatchEvent(mousedown);
+      document.dispatchEvent(mousemove);
+
+      expect(view.broadcast).toHaveBeenCalled();
+    });
+  });
+
+  it('при изменении размера окна браузера, View пересчитывает позиции бегунков и сообщает об изменениях через метод broadcast', () => {
     spyOn(view, 'broadcast');
     const event = new UIEvent('resize', {});
     window.dispatchEvent(event);
@@ -143,7 +159,7 @@ describe('View', () => {
     expect(view.broadcast).toHaveBeenCalled();
   });
 
-  describe('метод sliderClick добавляет контейнеру слайдера обработчик событий', () => {
+  describe('при нажатии на контейнер слайдера, бегунок перемещается в место клика, новые данные передаются через метод broadcast', () => {
     let event: MouseEvent;
     beforeEach(function () {
       event = new MouseEvent('click', { clientX: 10, clientY: 10 });
@@ -151,7 +167,7 @@ describe('View', () => {
     });
 
     describe('vertical = false вычисляется место клика по горизонтальной оси', () => {
-      it('если range = false, при клике на контейнер слайдера бегунок перемещается в это место,класс View вызывает метод broadcast и передает данные о положении бегунка', () => {
+      it('range = false', () => {
         view.updateConfig({
           range: false,
           min: 0,
@@ -207,7 +223,7 @@ describe('View', () => {
     });
 
     describe('при vertical = true место клика вычисляется по вертикальной оси', () => {
-      it('если range = false, бегунок смещается в место клика, View передает данные о его движении вызывая метод broadcast, ', () => {
+      it('range = false, ', () => {
         view.updateConfig({
           range: false,
           min: 0,
