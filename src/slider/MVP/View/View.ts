@@ -29,6 +29,7 @@ class View extends Observer<IViewValue> {
     this.createSliderBlock();
     this.initComponents();
     this.resizeWindow();
+    this.clickSliderBlock();
     this.subscribeOnThumb();
   }
 
@@ -119,6 +120,84 @@ class View extends Observer<IViewValue> {
     this.updatePosition(
       this.positionsCalculator.calcOnloadPosition({ config: this.config, sliderSize: this.getSliderSize() }),
     );
+  }
+
+  private clickSliderBlock(): void {
+    this.sliderBlock.addEventListener('click', this.findClickPlace.bind(this));
+  }
+
+  private findClickPlace(e: MouseEvent): void {
+    if (!this.config.vertical) {
+      this.findClickPlaceHorizon(e);
+    } else {
+      this.findClickPlaceVert(e);
+    }
+  }
+
+  private findClickPlaceHorizon(e: MouseEvent): void {
+    const thumbFirstPosition = this.thumbOne.getThumbBlock().offsetLeft;
+    const thumbSecondPosition = this.thumbTwo.getThumbBlock().offsetLeft;
+    const clickPlace = e.clientX - this.sliderBlock.getBoundingClientRect().left;
+    const thumbFirstClickDistance = Math.abs(thumbFirstPosition - clickPlace);
+    const thumbSecondClickDistance = Math.abs(thumbSecondPosition - clickPlace);
+
+    if (!this.config.range) {
+      this.updatePosition(
+        this.positionsCalculator.findPosition({
+          position: clickPlace,
+          dataName: 'from',
+        }),
+      );
+    } else if (this.config.range) {
+      if (thumbFirstClickDistance < thumbSecondClickDistance) {
+        this.updatePosition(
+          this.positionsCalculator.findPosition({
+            position: clickPlace,
+            dataName: 'from',
+          }),
+        );
+      } else {
+        this.updatePosition(
+          this.positionsCalculator.findPosition({
+            position: clickPlace,
+            dataName: 'to',
+          }),
+        );
+      }
+    }
+  }
+
+  private findClickPlaceVert(e: MouseEvent): void {
+    const thumbFirstPosition = this.thumbOne.getThumbBlock().offsetTop;
+    const thumbSecondPosition = this.thumbTwo.getThumbBlock().offsetTop;
+    const clickPlace = e.clientY - this.sliderBlock.getBoundingClientRect().top;
+    const thumbFirstClickDistance = Math.abs(thumbFirstPosition - clickPlace);
+    const thumbSecondClickDistance = Math.abs(thumbSecondPosition - clickPlace);
+
+    if (!this.config.range) {
+      this.updatePosition(
+        this.positionsCalculator.findPosition({
+          position: clickPlace,
+          dataName: 'from',
+        }),
+      );
+    } else if (this.config.range) {
+      if (thumbFirstClickDistance < thumbSecondClickDistance) {
+        this.updatePosition(
+          this.positionsCalculator.findPosition({
+            position: clickPlace,
+            dataName: 'from',
+          }),
+        );
+      } else {
+        this.updatePosition(
+          this.positionsCalculator.findPosition({
+            position: clickPlace,
+            dataName: 'to',
+          }),
+        );
+      }
+    }
   }
 }
 
