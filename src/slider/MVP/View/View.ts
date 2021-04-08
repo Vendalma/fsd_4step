@@ -1,15 +1,14 @@
 import Observer from '../../Observer/Observer';
+import PositionCalculator from './PositionCalculator';
 import ProgressBar from './ProgressBar';
 import Step from './Step';
 import Thumb from './Thumb';
-import { ChangeView, IConfig, IPosition } from './types';
+import { IConfig, IPosition, IViewValue } from './types';
 
-class View extends Observer<ChangeView> {
+class View extends Observer<IViewValue> {
   private config: IConfig;
 
   private wrapper: HTMLElement;
-
-  private sliderContainer: HTMLElement;
 
   private sliderBlock: HTMLElement;
 
@@ -19,135 +18,51 @@ class View extends Observer<ChangeView> {
 
   private step: Step;
 
+  private positionsCalculator: PositionCalculator;
+
   private progressBar: ProgressBar;
 
   constructor(wrapper: HTMLElement) {
     super();
     this.wrapper = wrapper;
-    this.createSliderContainer();
+    this.wrapper.classList.add('slider');
     this.createSliderBlock();
-    this.init();
-    this.subscribeOnThumb();
-    this.sliderClick();
-  }
-
-  updatePosition(data: IPosition): void {
-    this.thumbOne.updatePosition(data.positionFrom);
-    this.thumbTwo.updatePosition(data.positionTo);
-    this.progressBar.addBar(data);
-  }
-
-  addStepLine(value: number): void {
-    this.step.addStepLine({ stepSize: value, thumbSize: this.thumbOne.getThumbBlock().offsetWidth });
-  }
-
-  updateConfig(data: IConfig): void {
-    this.config = data;
-    this.setThumbTwo();
-    this.checkOrientation();
-    this.thumbOne.updateConfig(data);
-    this.thumbTwo.updateConfig(data);
-    this.progressBar.updateConfig(data);
-    this.step.updateConfig(data);
-    this.getSliderSize();
-  }
-
-  private createSliderContainer(): void {
-    this.sliderContainer = document.createElement('div');
-    this.sliderContainer.classList.add('slider');
-    this.wrapper.append(this.sliderContainer);
+    this.initComponents();
     this.resizeWindow();
+    this.subscribeOnThumb();
+  }
+
+  updateConfig(config: IConfig): void {
+    this.config = config;
+    this.setThumbTwo();
+    this.thumbOne.updateConfig(this.config);
+    this.thumbTwo.updateConfig(this.config);
+    this.progressBar.updateConfig(this.config);
+    this.step.updateConfig(this.config);
+    this.checkOrientation();
+    this.updateSliderParams();
   }
 
   private createSliderBlock(): void {
     this.sliderBlock = document.createElement('div');
     this.sliderBlock.classList.add('slider__block');
     this.sliderBlock.classList.add('js-slider__block');
-    this.sliderContainer.append(this.sliderBlock);
+    this.wrapper.append(this.sliderBlock);
   }
 
-  private init(): void {
+  private initComponents(): void {
     this.thumbOne = new Thumb('first', this.sliderBlock, 'from');
     this.thumbTwo = new Thumb('second', this.sliderBlock, 'to');
+    this.positionsCalculator = new PositionCalculator();
     this.progressBar = new ProgressBar(this.sliderBlock);
     this.step = new Step(this.sliderBlock);
-  }
-
-  private subscribeOnThumb() {
-    this.thumbOne.subscribe(({ value }) => {
-      this.broadcast({ value, type: 'thumbMove' });
-    });
-
-    this.thumbTwo.subscribe(({ value }) => {
-      this.broadcast({ value, type: 'thumbMove' });
-    });
-  }
-
-  private resizeWindow(): void {
-    window.addEventListener('resize', this.getSliderSize.bind(this));
-  }
-
-  private getSliderSize(): void {
-    if (!this.config.vertical) {
-      this.broadcast({ value: this.sliderContainer.offsetWidth, type: 'sliderSize' });
-    } else {
-      this.broadcast({ value: this.sliderContainer.offsetHeight, type: 'sliderSize' });
-    }
   }
 
   private checkOrientation(): void {
     if (this.config.vertical) {
       this.sliderBlock.classList.add('slider__block_vertical');
-    } else {
+    } else if (!this.config.vertical) {
       this.sliderBlock.classList.remove('slider__block_vertical');
-    }
-  }
-
-  private sliderClick(): void {
-    this.sliderBlock.addEventListener('click', this.onSliderClick.bind(this));
-  }
-
-  private onSliderClick(e: MouseEvent): void {
-    if (!this.config.vertical) {
-      this.findClickPlaceHorizon(e);
-    } else {
-      this.findClickPlaceVert(e);
-    }
-  }
-
-  private findClickPlaceHorizon(e: MouseEvent): void {
-    const thumbFirst = this.thumbOne.getThumbBlock();
-    const thumbSecond = this.thumbTwo.getThumbBlock();
-
-    if (!this.config.range) {
-      this.thumbOne.onMouseUp(e);
-    } else if (this.config.range) {
-      const thumbFirstPosition = Math.abs(thumbFirst.getBoundingClientRect().x - e.clientX);
-      const thumbSecondPosition = Math.abs(thumbSecond.getBoundingClientRect().x - e.clientX);
-
-      if (thumbFirstPosition < thumbSecondPosition) {
-        this.thumbOne.onMouseUp(e);
-      } else {
-        this.thumbTwo.onMouseUp(e);
-      }
-    }
-  }
-
-  private findClickPlaceVert(e: MouseEvent): void {
-    const thumbFirst = this.thumbOne.getThumbBlock();
-    const thumbSecond = this.thumbTwo.getThumbBlock();
-
-    if (!this.config.range) {
-      this.thumbOne.onMouseUp(e);
-    } else if (this.config.range) {
-      const thumbFirstPosition = Math.abs(thumbFirst.getBoundingClientRect().y - e.clientY);
-      const thumbSecondPosition = Math.abs(thumbSecond.getBoundingClientRect().y - e.clientY);
-
-      if (thumbFirstPosition < thumbSecondPosition) {
-        this.thumbOne.onMouseUp(e);
-      } else {
-        this.thumbTwo.onMouseUp(e);
-      }
     }
   }
 
@@ -159,6 +74,51 @@ class View extends Observer<ChangeView> {
     } else if (!this.config.range && thumbSecond !== null) {
       this.thumbTwo.removeThumb();
     }
+  }
+
+  private subscribeOnThumb(): void {
+    this.thumbOne.subscribe(({ value }) => {
+      this.updatePosition(this.positionsCalculator.findPosition(value));
+    });
+
+    this.thumbTwo.subscribe(({ value }) => {
+      this.updatePosition(this.positionsCalculator.findPosition(value));
+    });
+  }
+
+  private updatePosition(data: IPosition): void {
+    this.thumbOne.updatePosition(data.positionFrom);
+    this.thumbTwo.updatePosition(data.positionTo);
+    this.progressBar.addBar(data);
+    this.broadcast({
+      value: {
+        positionFrom: data.positionFrom.value,
+        positionTo: data.positionTo.value,
+      },
+      type: 'viewChanged',
+    });
+  }
+
+  private resizeWindow(): void {
+    window.addEventListener('resize', this.updateSliderParams.bind(this));
+  }
+
+  private getSliderSize(): number {
+    if (!this.config.vertical) {
+      return this.wrapper.offsetWidth;
+    }
+    return this.wrapper.offsetHeight;
+  }
+
+  private updateSliderParams(): void {
+    this.step.addStepLine({
+      stepSize: this.getSliderSize() / 20,
+      thumbSize: this.thumbOne.getThumbBlock().offsetWidth,
+    });
+
+    this.updatePosition(
+      this.positionsCalculator.calcOnloadPosition({ config: this.config, sliderSize: this.getSliderSize() }),
+    );
   }
 }
 

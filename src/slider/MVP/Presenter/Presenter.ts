@@ -9,18 +9,15 @@ class Presenter {
   constructor(model: Model, view: View) {
     this.model = model;
     this.view = view;
-    this.subscribeView();
     this.subscribeModel();
+    this.subscribeView();
   }
 
   private subscribeView(): void {
     this.view.subscribe((data) => {
       switch (data.type) {
-        case 'sliderSize':
-          this.model.findOnloadPosition(data.value);
-          break;
-        case 'thumbMove':
-          this.model.findUpdatedPosition(data.value);
+        case 'viewChanged':
+          this.model.updatePosition(data.value);
           break;
       }
     });
@@ -29,14 +26,8 @@ class Presenter {
   private subscribeModel(): void {
     this.model.subscribe((data) => {
       switch (data.type) {
-        case 'positionThumb':
-          this.view.updatePosition(data.value);
-          break;
-        case 'changeConfig':
+        case 'configChanged':
           this.view.updateConfig(data.value);
-          break;
-        case 'stepSize':
-          this.view.addStepLine(data.value);
           break;
       }
     });

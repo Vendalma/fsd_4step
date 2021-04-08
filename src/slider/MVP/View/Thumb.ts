@@ -1,6 +1,6 @@
 import Observer from '../../Observer/Observer';
 import Label from './Label';
-import { IConfigThumb, IDataThumbMove, IThumbValue, IUpdatedThumbPosition } from './types';
+import { IConfigThumb, IMovingThumbValues, IThumbValue, IUpdatedThumbPosition } from './types';
 
 class Thumb extends Observer<IThumbValue> {
   private config: IConfigThumb;
@@ -21,15 +21,8 @@ class Thumb extends Observer<IThumbValue> {
     this.thumbHtmlClass = thumbHtmlClass;
     this.dataName = dataName;
     this.createThumb();
-    this.moveThumb();
+    this.clickThumb();
   }
-
-  onMouseUp = (e: MouseEvent): void => {
-    document.removeEventListener('mousemove', this.onMouseMove);
-    document.removeEventListener('mouseup', this.onMouseUp);
-    this.broadcast({ value: this.findPosition(e) });
-    this.thumb.classList.remove('slider__thumb_visibility_zIndex-up');
-  };
 
   updatePosition(data: IUpdatedThumbPosition): void {
     if (!this.config.vertical) {
@@ -83,35 +76,34 @@ class Thumb extends Observer<IThumbValue> {
     this.label.setLabelValue(value);
   }
 
-  private moveThumb(): void {
-    this.thumb.addEventListener('mousedown', this.mouseDown);
+  private clickThumb(): void {
+    this.thumb.addEventListener('mousedown', this.onMouseDown.bind(this));
   }
 
-  private mouseDown = (e: MouseEvent): void => {
+  private onMouseDown = (): void => {
     document.addEventListener('mousemove', this.onMouseMove);
     document.addEventListener('mouseup', this.onMouseUp);
     this.thumb.classList.add('slider__thumb_visibility_zIndex-up');
+  };
+
+  private onMouseUp = (): void => {
+    document.removeEventListener('mousemove', this.onMouseMove);
+    document.removeEventListener('mouseup', this.onMouseUp);
+    this.thumb.classList.remove('slider__thumb_visibility_zIndex-up');
   };
 
   private onMouseMove = (e: MouseEvent): void => {
     this.broadcast({ value: this.findPosition(e) });
   };
 
-  private findPosition(e: MouseEvent): IDataThumbMove {
+  private findPosition(e: MouseEvent): IMovingThumbValues {
     if (!this.config.vertical) {
-      return this.findPositionForHorizontal(e);
+      return {
+        position: e.clientX - this.slider.getBoundingClientRect().left,
+        dataName: this.dataName,
+      };
     }
-    return this.findPositionForVertical(e);
-  }
 
-  private findPositionForHorizontal(e: MouseEvent): IDataThumbMove {
-    return {
-      position: e.clientX - this.slider.getBoundingClientRect().left,
-      dataName: this.dataName,
-    };
-  }
-
-  private findPositionForVertical(e: MouseEvent): IDataThumbMove {
     return {
       position: e.clientY - this.slider.getBoundingClientRect().top,
       dataName: this.dataName,

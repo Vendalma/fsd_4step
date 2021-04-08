@@ -1,169 +1,88 @@
 import Observer from '../../Observer/Observer';
-import { ICalcPosition, IConfig, IDataThumbMove, IPosition, IUpdatedPosition, ModelValues } from './types';
-import Validator from './Validator';
+import defaultSettings from './fixture';
+import { IConfig, IUpdatedPosition, ModelValues } from './types';
 
 class Model extends Observer<ModelValues> {
-  private sliderSize: number;
+  private defaultSettings: IConfig;
 
-  private validator: Validator;
-
-  private config: IConfig;
-
-  protected positionState: IPosition;
+  protected config: IConfig;
 
   constructor() {
     super();
-    this.validator = new Validator();
+    this.defaultSettings = defaultSettings;
   }
 
   updateConfig(data: IConfig): void {
-    this.config = this.validator.validationConfig(data);
-    this.broadcast({ value: this.config, type: 'changeConfig' });
+    this.validateConfig(data);
+    this.broadcast({ value: this.config, type: 'configChanged' });
   }
 
-  getConfig(): IConfig {
+  updatePosition(data: IUpdatedPosition): void {
+    this.validateConfig(Object.assign(this.config, data));
+    this.broadcast({
+      value: {
+        positionFrom: this.config.positionFrom,
+        positionTo: this.config.positionTo,
+      },
+      type: 'positionChanged',
+    });
+  }
+
+  private validateConfig(data: IConfig): IConfig {
+    this.config = data;
+    this.validateMaxValue();
+    this.validateMinValue();
+    this.validateStepValue();
+    this.validatePositionFrom();
+    this.validatePositionTo();
     return this.config;
   }
 
-  findUpdatedPosition(data: IDataThumbMove): void {
-    this.broadcast({ value: this.checkTypeParams(data), type: 'positionThumb' });
-  }
-
-  findOnloadPosition(data: number): void {
-    this.broadcast({ value: this.calcOnloadPosition(data), type: 'positionThumb' });
-  }
-
-  private checkTypeParams(data: IDataThumbMove): IPosition {
-    const { position, dataName } = data;
-    const stepSize = this.config.step / this.calcPixelSize();
-    const positionMove = this.checkValueWithSliderSize(Math.round(position / stepSize) * stepSize);
-
-    if (dataName === 'to') {
-      return this.calcPosition({
-        position: positionMove,
-        leftPoint: this.positionState.positionFrom.position,
-        leftPointValue: this.calcValue(this.positionState.positionFrom.position),
-        rightPoint: this.sliderSize,
-        rightPointValue: this.config.max,
-        nameState: 'positionTo',
-      });
+  private validateMaxValue(): void {
+    if (this.config.max < this.config.min) {
+      this.config.max = this.defaultSettings.max;
     }
+  }
 
-    if (dataName === 'from' && this.config.range) {
-      return this.calcPosition({
-        position: positionMove,
-        leftPoint: 0,
-        leftPointValue: this.config.min,
-        rightPoint: this.positionState.positionTo.position,
-        rightPointValue: this.calcValue(this.positionState.positionTo.position),
-        nameState: 'positionFrom',
-      });
+  private validateMinValue(): void {
+    if (this.config.min > this.config.max) {
+      this.config.min = this.defaultSettings.min;
     }
-
-    return this.calcPosition({
-      position: positionMove,
-      leftPoint: 0,
-      leftPointValue: this.config.min,
-      rightPoint: this.sliderSize,
-      rightPointValue: this.config.max,
-      nameState: 'positionFrom',
-    });
   }
 
-  private calcPosition(values: ICalcPosition): IPosition {
-    const { position, leftPoint, leftPointValue, rightPoint, rightPointValue, nameState } = values;
-    let value = this.checkValueWithMin(this.checkValueWithMax(this.calcValue(position)));
-    if (!this.isIntegerStep()) {
-      value = Number(value.toFixed(String(this.config.step).split('.')[1].length));
+  private validateStepValue(): void {
+    if (this.config.step <= 0) {
+      this.config.step = this.defaultSettings.step;
+    } else if (this.config.step > this.config.max - this.config.min) {
+      this.config.step = this.defaultSettings.step;
     }
+  }
 
-    if (position <= leftPoint) {
-      return this.changePositionState({
-        [nameState]: {
-          position: leftPoint,
-          value: leftPointValue,
-        },
-      });
+  private validatePositionFrom(): void {
+    if (this.config.positionFrom < this.config.min) {
+      this.config.positionFrom = this.config.min;
+    } else if (!this.config.range && this.config.positionFrom > this.config.max) {
+      this.config.positionFrom = this.config.max;
+    } else if (this.config.range && this.config.positionFrom > this.config.max) {
+      this.config.positionFrom = this.config.min;
     }
+  }
 
-    if (position > rightPoint) {
-      return this.changePositionState({
-        [nameState]: {
-          position: rightPoint,
-          value: rightPointValue,
-        },
-      });
+  private validatePositionTo(): void {
+    if (this.config.range) {
+      if (this.config.positionTo <= this.config.positionFrom && this.config.max - this.config.min > this.config.step) {
+        this.config.positionTo = this.config.positionFrom;
+        this.validatePositionFrom();
+      }
+
+      if (this.config.positionTo <= this.config.positionFrom && this.config.max - this.config.min <= this.config.step) {
+        this.config.positionTo = this.config.max;
+      }
+
+      if (this.config.positionTo > this.config.max) {
+        this.config.positionTo = this.config.max;
+      }
     }
-
-    return this.changePositionState({
-      [nameState]: {
-        position,
-        value,
-      },
-    });
-  }
-
-  private changePositionState(value: IUpdatedPosition): IPosition {
-    Object.assign(this.positionState, value);
-    this.config.positionFrom = this.positionState.positionFrom.value;
-    this.config.positionTo = this.positionState.positionTo.value;
-    return this.positionState;
-  }
-
-  private calcOnloadPosition(data: number): IPosition {
-    this.sliderSize = data;
-    this.positionState = {
-      positionFrom: {
-        position: (this.config.positionFrom - this.config.min) / this.calcPixelSize(),
-        value: this.config.positionFrom,
-      },
-      positionTo: {
-        position: (this.config.positionTo - this.config.min) / this.calcPixelSize(),
-        value: this.config.positionTo,
-      },
-    };
-    this.getStepSize();
-    return this.positionState;
-  }
-
-  private getStepSize() {
-    this.broadcast({ value: this.sliderSize / 20, type: 'stepSize' });
-  }
-
-  private calcPixelSize(): number {
-    return (this.config.max - this.config.min) / this.sliderSize;
-  }
-
-  private calcValue(position: number): number {
-    return Math.round((position * this.calcPixelSize() + this.config.min) / this.config.step) * this.config.step;
-  }
-
-  private isIntegerStep(): boolean {
-    return Number.isInteger(this.config.step);
-  }
-
-  private checkValueWithMin(value: number): number {
-    if (value >= this.config.min) {
-      return value;
-    }
-
-    return this.config.min;
-  }
-
-  private checkValueWithMax(value: number): number {
-    if (value <= this.config.max) {
-      return value;
-    }
-
-    return this.config.max;
-  }
-
-  private checkValueWithSliderSize(value: number): number {
-    if (value <= this.sliderSize) {
-      return value;
-    }
-
-    return this.sliderSize;
   }
 }
 
