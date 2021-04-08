@@ -28,11 +28,11 @@ https://github.com/Vendalma/fsd_4step.git
 
 Архитектура приложения разделена на три слоя:
 
-`Model` - валидирует данные и производит расчеты
+`Model` - валидирует данные и сообщает об их изменениях
 
-`View` - отображает компоненты слайдера
+`View` - отображает компоненты слайдера и рассчитывает позиции бегунков
 
-`Presenter` - занимается передачей данных между Model и View
+`Presenter` - передает данные между Model и View
 
 Взаимодействие Model и View c Presenter осуществляется с помощью шаблона Observer
 
@@ -42,7 +42,7 @@ https://github.com/Vendalma/fsd_4step.git
 $('#id').rangeSlider()
 ```
 
-При инициализации плагина можно указать необходимые параметры:
+При инициализации можно указать необходимые параметры:
 
 ```
 $('#id').rangeSlider({
@@ -62,17 +62,17 @@ $('#id').rangeSlider({
 | vertical     | boolean |         false         | Ориентация слайдера               |
 | label        | boolean |         true          | Отображение значения бегунка      |
 
-## Методы плагина
+## Методы
 
-Слайдер имеет два метода
+Обновление параметров плагина
 
 ```
-$('#id').rangeSlider()
+$('#id').rangeSlider('setConfig', {min: -100});
+```
 
-//Обновление параметров плагина
-$('#id').rangeSlider('updateConfig', {min: -100});
+Получение позиций бегунков
 
-//Получение позиций бегунков
+```
 function fn(value) {
   console.log(value)
 }
@@ -89,8 +89,8 @@ $('#id').rangeSlider('returnPosition', fn);
 
 ## Диаграмма
 
-![alt text](uml/uml1.jpg)
+![alt text](uml/uml-1.jpg)
 
 ---
 
-![alt text](uml/uml2.jpg)
+![alt text](uml/uml-2.jpg)
