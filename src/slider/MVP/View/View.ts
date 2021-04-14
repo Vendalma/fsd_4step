@@ -29,7 +29,7 @@ class View extends Observer<IViewValue> {
     this.createSliderBlock();
     this.initComponents();
     this.resizeWindow();
-    this.clickSliderBlock();
+    this.mouseDownOnSliderBlock();
     this.subscribeOnThumb();
   }
 
@@ -122,81 +122,43 @@ class View extends Observer<IViewValue> {
     );
   }
 
-  private clickSliderBlock(): void {
-    this.sliderBlock.addEventListener('click', this.findClickPlace.bind(this));
+  private mouseDownOnSliderBlock(): void {
+    this.sliderBlock.addEventListener('mousedown', this.onMouseDown.bind(this));
   }
 
-  private findClickPlace(e: MouseEvent): void {
+  private onMouseDown(e: MouseEvent): void {
     if (!this.config.vertical) {
-      this.findClickPlaceHorizon(e);
+      this.checkMouseDownPosition(e.clientX - this.sliderBlock.getBoundingClientRect().left);
     } else {
-      this.findClickPlaceVert(e);
+      this.checkMouseDownPosition(e.clientY - this.sliderBlock.getBoundingClientRect().top);
     }
   }
 
-  private findClickPlaceHorizon(e: MouseEvent): void {
-    const thumbFirstPosition = this.thumbOne.getThumbBlock().offsetLeft;
-    const thumbSecondPosition = this.thumbTwo.getThumbBlock().offsetLeft;
-    const clickPlace = e.clientX - this.sliderBlock.getBoundingClientRect().left;
-    const thumbFirstClickDistance = Math.abs(thumbFirstPosition - clickPlace);
-    const thumbSecondClickDistance = Math.abs(thumbSecondPosition - clickPlace);
+  private checkMouseDownPosition(value: number): void {
+    const eventPosition = value;
+    const thumbFirstPosition = this.thumbOne.getThumbBlockValues(eventPosition).position;
+    const thumbFirstClickDistance = this.thumbOne.getThumbBlockValues(eventPosition).distance;
+    const thumbSecondPosition = this.thumbTwo.getThumbBlockValues(eventPosition).position;
+    const thumbSecondClickDistance = this.thumbTwo.getThumbBlockValues(eventPosition).distance;
+    const isThumbFirstNearest =
+      eventPosition < thumbFirstPosition || thumbFirstClickDistance < thumbSecondClickDistance;
+    const isThumbSecondNearest =
+      eventPosition > thumbSecondPosition || thumbSecondClickDistance < thumbFirstClickDistance;
 
-    if (!this.config.range) {
+    if (!this.config.range || isThumbFirstNearest) {
       this.updatePosition(
         this.positionsCalculator.findPosition({
-          position: clickPlace,
+          position: eventPosition,
           dataName: 'from',
         }),
       );
-    } else if (this.config.range) {
-      if (thumbFirstClickDistance < thumbSecondClickDistance) {
-        this.updatePosition(
-          this.positionsCalculator.findPosition({
-            position: clickPlace,
-            dataName: 'from',
-          }),
-        );
-      } else {
-        this.updatePosition(
-          this.positionsCalculator.findPosition({
-            position: clickPlace,
-            dataName: 'to',
-          }),
-        );
-      }
-    }
-  }
-
-  private findClickPlaceVert(e: MouseEvent): void {
-    const thumbFirstPosition = this.thumbOne.getThumbBlock().offsetTop;
-    const thumbSecondPosition = this.thumbTwo.getThumbBlock().offsetTop;
-    const clickPlace = e.clientY - this.sliderBlock.getBoundingClientRect().top;
-    const thumbFirstClickDistance = Math.abs(thumbFirstPosition - clickPlace);
-    const thumbSecondClickDistance = Math.abs(thumbSecondPosition - clickPlace);
-
-    if (!this.config.range) {
+    } else if (isThumbSecondNearest) {
       this.updatePosition(
         this.positionsCalculator.findPosition({
-          position: clickPlace,
-          dataName: 'from',
+          position: eventPosition,
+          dataName: 'to',
         }),
       );
-    } else if (this.config.range) {
-      if (thumbFirstClickDistance < thumbSecondClickDistance) {
-        this.updatePosition(
-          this.positionsCalculator.findPosition({
-            position: clickPlace,
-            dataName: 'from',
-          }),
-        );
-      } else {
-        this.updatePosition(
-          this.positionsCalculator.findPosition({
-            position: clickPlace,
-            dataName: 'to',
-          }),
-        );
-      }
     }
   }
 }

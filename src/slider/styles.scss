@@ -28,6 +28,8 @@
   }
 
   &__step-block {
+    user-select: none;
+    pointer-events: none;
     position: absolute;
     top: 24px;
     transform: translateX(-50%);

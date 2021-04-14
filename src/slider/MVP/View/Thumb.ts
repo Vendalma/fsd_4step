@@ -1,6 +1,6 @@
 import Observer from '../../Observer/Observer';
 import Label from './Label';
-import { IConfigThumb, IMovingThumbValues, IThumbValue, IUpdatedThumbPosition } from './types';
+import { IConfigThumb, IMovingThumbValues, IThumbBlockValues, IThumbValue, IUpdatedThumbPosition } from './types';
 
 class Thumb extends Observer<IThumbValue> {
   private config: IConfigThumb;
@@ -50,6 +50,20 @@ class Thumb extends Observer<IThumbValue> {
 
   getThumbBlock(): HTMLElement {
     return this.thumb;
+  }
+
+  getThumbBlockValues(value: number): IThumbBlockValues {
+    if (!this.config.vertical) {
+      return {
+        distance: Math.abs(this.thumb.offsetLeft - value),
+        position: this.thumb.offsetLeft,
+      };
+    }
+
+    return {
+      distance: Math.abs(this.thumb.offsetTop - value),
+      position: this.thumb.offsetTop,
+    };
   }
 
   private createThumb(): void {

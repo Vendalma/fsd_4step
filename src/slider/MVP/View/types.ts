@@ -61,6 +61,7 @@ export interface IUpdatedPositionValues {
 
 export interface ICalcPosition {
   position: number;
+  value: number;
   leftPoint: number;
   leftPointValue: number;
   rightPoint: number;
@@ -78,4 +79,9 @@ export interface IViewValue {
     positionTo: number;
   };
   type: 'viewChanged';
+}
+
+export interface IThumbBlockValues {
+  distance: number;
+  position: number;
 }
