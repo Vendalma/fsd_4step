@@ -34,7 +34,7 @@ describe('Presenter', () => {
   });
 
   it('При изменений позиций бегунков, View передает данные type === viewChanged, в Model вызывается ф-я updatePosition', () => {
-    const event = new MouseEvent('click', { bubbles: true, clientX: 50, clientY: 100 });
+    const event = new MouseEvent('mousedown', { bubbles: true, clientX: 50, clientY: 100 });
     spyOn(model, 'updatePosition');
     sliderBlock.dispatchEvent(event);
 

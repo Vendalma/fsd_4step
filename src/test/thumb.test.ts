@@ -246,4 +246,30 @@ describe('Thumb', () => {
       expect(thumbBlock).toHaveClass('slider__thumb_horizontal');
     });
   });
+
+  describe('метод getThumbBlockValues возвращает позицию бегунка и расстояние от заданного значения до бегунка', () => {
+    it('vertical = false', () => {
+      thumb.updateConfig({
+        range: false,
+        positionFrom: 10,
+        positionTo: 15,
+        vertical: false,
+        label: true,
+      });
+
+      expect(thumb.getThumbBlockValues(100)).toEqual({ position: 8, distance: 92 });
+    });
+  });
+
+  it('vertical = true', () => {
+    thumb.updateConfig({
+      range: false,
+      positionFrom: 10,
+      positionTo: 15,
+      vertical: true,
+      label: true,
+    });
+
+    expect(thumb.getThumbBlockValues(150)).toEqual({ position: 155, distance: 5 });
+  });
 });

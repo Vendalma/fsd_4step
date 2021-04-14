@@ -17,7 +17,7 @@ $(document.body).append($block);
 const view: View = new View($block[0]);
 const blockSlider = $block[0].querySelector('.js-slider__block') as HTMLElement;
 const progressBar = blockSlider.querySelector('.js-slider__progress-bar') as HTMLElement;
-const thumbOne = blockSlider.querySelector('.js-slider__thumb_type_first') as HTMLElement;
+const thumbFirst = blockSlider.querySelector('.js-slider__thumb_type_first') as HTMLElement;
 const thumbSecond = blockSlider.querySelector('.js-slider__thumb_type_second') as HTMLElement;
 
 describe('View', () => {
@@ -126,7 +126,7 @@ describe('View', () => {
         step: 1,
       });
 
-      thumbOne.dispatchEvent(mousedown);
+      thumbFirst.dispatchEvent(mousedown);
       document.dispatchEvent(mousemove);
 
       expect(view.broadcast).toHaveBeenCalled();
@@ -162,7 +162,7 @@ describe('View', () => {
   describe('при нажатии на контейнер слайдера, бегунок перемещается в место клика, новые данные передаются через метод broadcast', () => {
     let event: MouseEvent;
     beforeEach(function () {
-      event = new MouseEvent('click', { clientX: 10, clientY: 10 });
+      event = new MouseEvent('mousedown', { clientX: 100, clientY: 100 });
       spyOn(view, 'broadcast');
     });
 
@@ -194,9 +194,7 @@ describe('View', () => {
           vertical: false,
           step: 1,
         });
-
-        thumbOne.style.position = 'relative';
-        thumbOne.style.left = '10px';
+        event = new MouseEvent('mousedown', { clientX: 10 });
         blockSlider.dispatchEvent(event);
 
         expect(view.broadcast).toHaveBeenCalled();
@@ -213,9 +211,7 @@ describe('View', () => {
           vertical: false,
           step: 1,
         });
-
-        thumbSecond.style.position = 'relative';
-        thumbSecond.style.left = '20px';
+        event = new MouseEvent('mousedown', { clientX: 300 });
         blockSlider.dispatchEvent(event);
 
         expect(view.broadcast).toHaveBeenCalled();
@@ -234,7 +230,6 @@ describe('View', () => {
           vertical: true,
           step: 1,
         });
-
         blockSlider.dispatchEvent(event);
 
         expect(view.broadcast).toHaveBeenCalled();
@@ -252,8 +247,6 @@ describe('View', () => {
         vertical: true,
         step: 1,
       });
-      thumbOne.style.position = 'relative';
-      thumbOne.style.top = '100px';
       blockSlider.dispatchEvent(event);
 
       expect(view.broadcast).toHaveBeenCalled();
@@ -270,8 +263,7 @@ describe('View', () => {
         vertical: true,
         step: 1,
       });
-      thumbSecond.style.position = 'relative';
-      thumbSecond.style.top = '100px';
+      event = new MouseEvent('mousedown', { clientY: 400 });
       blockSlider.dispatchEvent(event);
 
       expect(view.broadcast).toHaveBeenCalled();
