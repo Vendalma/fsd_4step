@@ -17,9 +17,23 @@ export interface IConfigThumb {
   label: boolean;
 }
 
-export interface IOnloadParams {
-  config: IConfig;
-  sliderSize: number;
+export interface IMovingThumbValues {
+  position: number;
+  dataName: string;
+}
+
+export interface IThumbValue {
+  value: IMovingThumbValues;
+}
+
+export interface IUpdatedThumbPosition {
+  position: number;
+  value: number;
+}
+
+export interface IThumbBlockValues {
+  distance: number;
+  position: number;
 }
 
 export interface IStepValues {
@@ -27,12 +41,7 @@ export interface IStepValues {
   thumbSize: number;
 }
 
-export interface IMovingThumbValues {
-  position: number;
-  dataName: string;
-}
-
-export interface IPosition {
+export interface IPositionState {
   positionFrom: {
     position: number;
     value: number;
@@ -43,45 +52,14 @@ export interface IPosition {
   };
 }
 
-export interface IUpdatedThumbPosition {
-  position: number;
+export interface IPositionValues {
   value: number;
-}
-
-export interface IUpdatedPositionValues {
-  positionFrom?: {
-    position: number;
-    value: number;
-  };
-  positionTo?: {
-    position: number;
-    value: number;
-  };
-}
-
-export interface ICalcPosition {
-  position: number;
-  value: number;
-  leftPoint: number;
   leftPointValue: number;
-  rightPoint: number;
   rightPointValue: number;
   nameState: string;
 }
 
-export interface IThumbValue {
-  value: IMovingThumbValues;
-}
-
 export interface IViewValue {
-  value: {
-    positionFrom: number;
-    positionTo: number;
-  };
+  value: IPositionValues;
   type: 'viewChanged';
-}
-
-export interface IThumbBlockValues {
-  distance: number;
-  position: number;
 }

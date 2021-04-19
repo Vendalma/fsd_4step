@@ -1,6 +1,6 @@
 import Observer from '../../Observer/Observer';
 import defaultSettings from './fixture';
-import { IConfig, IUpdatedPosition, ModelValues } from './types';
+import { IConfig, IPositionValues, IUpdatedPosition, ModelValues } from './types';
 
 class Model extends Observer<ModelValues> {
   private defaultSettings: IConfig;
@@ -17,15 +17,25 @@ class Model extends Observer<ModelValues> {
     this.broadcast({ value: this.config, type: 'configChanged' });
   }
 
-  updatePosition(data: IUpdatedPosition): void {
-    this.validateConfig(Object.assign(this.config, data));
-    this.broadcast({
-      value: {
-        positionFrom: this.config.positionFrom,
-        positionTo: this.config.positionTo,
-      },
-      type: 'positionChanged',
+  checkPositionValues(values: IPositionValues): void {
+    const { value, leftPointValue, rightPointValue, nameState } = values;
+    if (value <= leftPointValue) {
+      return this.updatePosition({
+        [nameState]: leftPointValue,
+      });
+    }
+    if (value > rightPointValue) {
+      return this.updatePosition({
+        [nameState]: rightPointValue,
+      });
+    }
+    return this.updatePosition({
+      [nameState]: value,
     });
+  }
+
+  private updatePosition(value: IUpdatedPosition): void {
+    this.updateConfig(Object.assign(this.config, value));
   }
 
   private validateConfig(data: IConfig): IConfig {

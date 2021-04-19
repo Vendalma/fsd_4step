@@ -17,7 +17,7 @@ class Presenter {
     this.view.subscribe((data) => {
       switch (data.type) {
         case 'viewChanged':
-          this.model.updatePosition(data.value);
+          this.model.checkPositionValues(data.value);
           break;
       }
     });
@@ -27,7 +27,7 @@ class Presenter {
     this.model.subscribe((data) => {
       switch (data.type) {
         case 'configChanged':
-          this.view.updateConfig(data.value);
+          this.view.setConfig(data.value);
           break;
       }
     });

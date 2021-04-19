@@ -1,13 +1,11 @@
 import Observer from '../../Observer/Observer';
-import PositionCalculator from './PositionCalculator';
 import ProgressBar from './ProgressBar';
 import Step from './Step';
+import SubView from './SubView';
 import Thumb from './Thumb';
-import { IConfig, IPosition, IViewValue } from './types';
+import { IConfig, IPositionState, IPositionValues, IViewValue } from './types';
 
 class View extends Observer<IViewValue> {
-  private config: IConfig;
-
   private wrapper: HTMLElement;
 
   private sliderBlock: HTMLElement;
@@ -18,9 +16,11 @@ class View extends Observer<IViewValue> {
 
   private step: Step;
 
-  private positionsCalculator: PositionCalculator;
-
   private progressBar: ProgressBar;
+
+  private subView: SubView;
+
+  protected config: IConfig;
 
   constructor(wrapper: HTMLElement) {
     super();
@@ -33,15 +33,26 @@ class View extends Observer<IViewValue> {
     this.subscribeOnThumb();
   }
 
-  updateConfig(config: IConfig): void {
-    this.config = config;
+  setConfig(config: IConfig): void {
+    const params = {};
+    if (!this.config || config.vertical !== this.config.vertical) {
+      this.updateConfig(Object.assign(params, config));
+      this.checkOrientation();
+      this.updateSliderParams();
+    } else {
+      this.updateConfig(Object.assign(params, config));
+      this.setUpdatedPosition(this.subView.findPositionState());
+    }
+  }
+
+  private updateConfig(value: IConfig): void {
+    this.config = value;
     this.setThumbTwo();
     this.thumbOne.updateConfig(this.config);
     this.thumbTwo.updateConfig(this.config);
     this.progressBar.updateConfig(this.config);
-    this.step.updateConfig(this.config);
-    this.checkOrientation();
-    this.updateSliderParams();
+    this.subView.updateConfig(this.config);
+    this.step.updateValues(this.config);
   }
 
   private createSliderBlock(): void {
@@ -54,9 +65,9 @@ class View extends Observer<IViewValue> {
   private initComponents(): void {
     this.thumbOne = new Thumb('first', this.sliderBlock, 'from');
     this.thumbTwo = new Thumb('second', this.sliderBlock, 'to');
-    this.positionsCalculator = new PositionCalculator();
     this.progressBar = new ProgressBar(this.sliderBlock);
     this.step = new Step(this.sliderBlock);
+    this.subView = new SubView();
   }
 
   private checkOrientation(): void {
@@ -79,25 +90,22 @@ class View extends Observer<IViewValue> {
 
   private subscribeOnThumb(): void {
     this.thumbOne.subscribe(({ value }) => {
-      this.updatePosition(this.positionsCalculator.findPosition(value));
+      this.broadcastUpdates(this.subView.findValue(value));
     });
 
     this.thumbTwo.subscribe(({ value }) => {
-      this.updatePosition(this.positionsCalculator.findPosition(value));
+      this.broadcastUpdates(this.subView.findValue(value));
     });
   }
 
-  private updatePosition(data: IPosition): void {
+  private broadcastUpdates(value: IPositionValues): void {
+    this.broadcast({ value, type: 'viewChanged' });
+  }
+
+  private setUpdatedPosition(data: IPositionState): void {
     this.thumbOne.updatePosition(data.positionFrom);
     this.thumbTwo.updatePosition(data.positionTo);
     this.progressBar.addBar(data);
-    this.broadcast({
-      value: {
-        positionFrom: data.positionFrom.value,
-        positionTo: data.positionTo.value,
-      },
-      type: 'viewChanged',
-    });
   }
 
   private resizeWindow(): void {
@@ -116,10 +124,8 @@ class View extends Observer<IViewValue> {
       stepSize: this.getSliderSize() / 20,
       thumbSize: this.thumbOne.getThumbBlock().offsetWidth,
     });
-
-    this.updatePosition(
-      this.positionsCalculator.calcOnloadPosition({ config: this.config, sliderSize: this.getSliderSize() }),
-    );
+    this.subView.setSliderSize(this.getSliderSize());
+    this.setUpdatedPosition(this.subView.findPositionState());
   }
 
   private mouseDownOnSliderBlock(): void {
@@ -146,15 +152,15 @@ class View extends Observer<IViewValue> {
       eventPosition > thumbSecondPosition || thumbSecondClickDistance < thumbFirstClickDistance;
 
     if (!this.config.range || isThumbFirstNearest) {
-      this.updatePosition(
-        this.positionsCalculator.findPosition({
+      this.broadcastUpdates(
+        this.subView.findValue({
           position: eventPosition,
           dataName: 'from',
         }),
       );
     } else if (isThumbSecondNearest) {
-      this.updatePosition(
-        this.positionsCalculator.findPosition({
+      this.broadcastUpdates(
+        this.subView.findValue({
           position: eventPosition,
           dataName: 'to',
         }),

@@ -9,19 +9,19 @@ export interface IConfig {
   label: boolean;
 }
 
-interface IChangedConfig {
-  value: IConfig;
-  type: 'configChanged';
+export interface IPositionValues {
+  value: number;
+  leftPointValue: number;
+  rightPointValue: number;
+  nameState: string;
 }
 
 export interface IUpdatedPosition {
-  positionFrom: number;
-  positionTo: number;
+  positionFrom?: number;
+  positionTo?: number;
 }
 
-export interface IChangedPosition {
-  value: IUpdatedPosition;
-  type: 'positionChanged';
+export interface ModelValues {
+  value: IConfig;
+  type: 'configChanged';
 }
-
-export type ModelValues = IChangedConfig | IChangedPosition;
