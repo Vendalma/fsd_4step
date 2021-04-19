@@ -1,12 +1,5 @@
 import Thumb from '../slider/MVP/View/Thumb';
 
-const config = {
-  range: true,
-  positionFrom: 15,
-  positionTo: 30,
-  vertical: false,
-  label: false,
-};
 const $block = $('<div>');
 $block[0].classList.add('slider__block');
 $(document.body).append($block);
@@ -14,7 +7,13 @@ $(document.body).append($block);
 const thumb: Thumb = new Thumb('first', $block[0], '1');
 const thumbBlock = $block[0].querySelector('.js-slider__thumb_type_first') as HTMLElement;
 const elementLabel = $block[0].querySelector('.js-slider__label');
-thumb.updateConfig(config);
+thumb.updateConfig({
+  range: true,
+  positionFrom: 15,
+  positionTo: 30,
+  vertical: false,
+  label: false,
+});
 
 describe('Thumb', () => {
   beforeAll(function () {
@@ -270,6 +269,6 @@ describe('Thumb', () => {
       label: true,
     });
 
-    expect(thumb.getThumbBlockValues(150)).toEqual({ position: 155, distance: 5 });
+    expect(thumb.getThumbBlockValues(150)).toEqual({ position: 122, distance: 28 });
   });
 });

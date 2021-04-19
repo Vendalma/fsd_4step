@@ -7,12 +7,22 @@ interface IConfigStep {
 }
 
 class Step {
-  private config: IConfigStep;
+  protected config: IConfigStep;
 
   private container: HTMLElement;
 
   constructor(container: HTMLElement) {
     this.container = container;
+  }
+
+  updateValues(values: IConfigStep): void {
+    this.config = values;
+    const min = this.container.querySelector('.slider__step-block_value-type_min') as HTMLElement;
+    const max = this.container.querySelector('.slider__step-block_value-type_max') as HTMLElement;
+    if (min !== null && max !== null) {
+      min.textContent = `${this.config.min}`;
+      max.textContent = `${this.config.max}`;
+    }
   }
 
   addStepLine(values: IStepValues): void {
@@ -46,10 +56,6 @@ class Step {
       }
     }
     this.container.append(fragment);
-  }
-
-  updateConfig(data: IConfigStep): void {
-    this.config = data;
   }
 
   private deleteStep(): void {

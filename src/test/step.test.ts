@@ -1,12 +1,55 @@
 import Step from '../slider/MVP/View/Step';
 
+interface IConfigStep {
+  min: number;
+  max: number;
+  vertical: boolean;
+}
+
 const container = $('<div>');
-const step: Step = new Step(container[0]);
 $(document.body).append(container);
+
+class TestStep extends Step {
+  public config: IConfigStep;
+
+  constructor() {
+    super(container[0]);
+  }
+}
+const step: TestStep = new TestStep();
 
 describe('Step', () => {
   it('инициализация класса Step', () => {
     expect(step).toBeDefined();
+  });
+
+  describe('метод updateValues устанавливает конфиг класса Step и обновляет значения шкалы', () => {
+    it('если шкала не добавлена в контейнер слайдера, обновится только конфиг', () => {
+      const newConf = {
+        min: 0,
+        max: 10,
+        vertical: true,
+      };
+      step.updateValues(newConf);
+
+      expect(step.config).toEqual(newConf);
+    });
+
+    it('если шкала добавлена в контейнер слайдера, то обновится конфиг и значения шкалы', () => {
+      const newConf = {
+        min: 1,
+        max: 100,
+        vertical: false,
+      };
+      step.addStepLine({ stepSize: 30.5, thumbSize: 17 });
+      step.updateValues(newConf);
+
+      const blockMax = container[0].querySelector('.slider__step-block_value-type_max') as HTMLElement;
+      const blockMin = container[0].querySelector('.slider__step-block_value-type_min') as HTMLElement;
+
+      expect(blockMax).toContainText('100');
+      expect(blockMin).toContainText('1');
+    });
   });
 
   describe('метод addStepLine добавляет шкалу значений', () => {
@@ -18,12 +61,12 @@ describe('Step', () => {
     });
 
     it('если vertical = false, позиции эл-тов рассчитываются по горизонтальной оси', () => {
-      const conf = {
+      step.config = {
         min: 7,
         max: 11,
         vertical: false,
       };
-      step.updateConfig(conf);
+
       step.addStepLine({ stepSize: 30.5, thumbSize: 17 });
       const stepBlocks = container[0].querySelectorAll('.js-slider__step-block');
 
@@ -42,12 +85,11 @@ describe('Step', () => {
     });
 
     it('vertical = true, позиции эл-тов рассчитываются по вертикальной оси, эл-ты имеют класс slider__step-block_vertical', () => {
-      const conf = {
+      step.config = {
         min: 7,
         max: 11,
         vertical: true,
       };
-      step.updateConfig(conf);
       step.addStepLine({ stepSize: 30.5, thumbSize: 17 });
       const stepBlocks = container[0].querySelectorAll('.js-slider__step-block') as NodeListOf<HTMLElement>;
 
@@ -64,20 +106,5 @@ describe('Step', () => {
         }
       }
     });
-  });
-
-  it('метод updateConfig обновляет конфиг класса Step', () => {
-    const newConf = {
-      min: 0,
-      max: 10,
-      vertical: true,
-    };
-    step.updateConfig(newConf);
-    step.addStepLine({ stepSize: 30.5, thumbSize: 17 });
-    const blockMax = container[0].querySelector('.slider__step-block_value-type_max') as HTMLElement;
-    const blockMin = container[0].querySelector('.slider__step-block_value-type_min') as HTMLElement;
-
-    expect(blockMax).toContainText('10');
-    expect(blockMin).toContainText('0');
   });
 });

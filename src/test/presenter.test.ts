@@ -8,14 +8,7 @@ const model: Model = new Model();
 const view: View = new View($block[0]);
 const sliderBlock = $block[0].querySelector('.js-slider__block') as HTMLElement;
 
-class TestPresenter extends Presenter {
-  public view: View;
-
-  constructor() {
-    super(model, view);
-  }
-}
-const presenter: TestPresenter = new TestPresenter();
+const presenter: Presenter = new Presenter(model, view);
 
 model.updateConfig({
   label: true,
@@ -33,16 +26,16 @@ describe('Presenter', () => {
     expect(presenter).toBeDefined();
   });
 
-  it('При изменений позиций бегунков, View передает данные type === viewChanged, в Model вызывается ф-я updatePosition', () => {
+  it('При изменений позиций бегунков в Model вызывается ф-я checkPositionValues', () => {
     const event = new MouseEvent('mousedown', { bubbles: true, clientX: 50, clientY: 100 });
-    spyOn(model, 'updatePosition');
+    spyOn(model, 'checkPositionValues');
     sliderBlock.dispatchEvent(event);
 
-    expect(model.updatePosition).toHaveBeenCalled();
+    expect(model.checkPositionValues).toHaveBeenCalled();
   });
 
-  it('При обновлении конфига, Model передает данные type === configChanged, Presenter вызывает ф-ю updateConfig во View', () => {
-    spyOn(presenter.view, 'updateConfig');
+  it('При обновлении конфига во View вызывается ф-я setConfig ', () => {
+    spyOn(view, 'setConfig');
     model.updateConfig({
       label: true,
       min: 0,
@@ -54,6 +47,6 @@ describe('Presenter', () => {
       positionTo: 100,
     });
 
-    expect(presenter.view.updateConfig).toHaveBeenCalled();
+    expect(view.setConfig).toHaveBeenCalled();
   });
 });

@@ -1,4 +1,4 @@
-import { IPosition } from './types';
+import { IPositionState } from './types';
 
 interface IConfigBar {
   range: boolean;
@@ -17,7 +17,7 @@ class ProgressBar {
     this.createBar();
   }
 
-  addBar(values: IPosition): void {
+  addBar(values: IPositionState): void {
     const positionThumbFirst = values.positionFrom.position;
     const positionThumbSecond = values.positionTo.position;
     if (!this.config.vertical) {

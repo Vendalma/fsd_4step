@@ -34,6 +34,45 @@ describe('Model', () => {
       expect(model.broadcast).toHaveBeenCalled();
     });
 
+    describe('метод checkPositionValues проверяет чтобы переданные значения не выходили за пределы допустимых параметров и вызывает метод updateConfig', () => {
+      beforeAll(() => {
+        spyOn(model, 'updateConfig');
+      });
+
+      it('если значение меньше границы с левой стороны', () => {
+        model.checkPositionValues({
+          value: 5,
+          leftPointValue: 10,
+          rightPointValue: 100,
+          nameState: 'positionFrom',
+        });
+
+        expect(model.broadcast).toHaveBeenCalled();
+      });
+
+      it('если значение больше границы с правой стороны', () => {
+        model.checkPositionValues({
+          value: 110,
+          leftPointValue: 10,
+          rightPointValue: 100,
+          nameState: 'positionFrom',
+        });
+
+        expect(model.broadcast).toHaveBeenCalled();
+      });
+
+      it('если значение не выходит за пределы границ', () => {
+        model.checkPositionValues({
+          value: 50,
+          leftPointValue: 10,
+          rightPointValue: 100,
+          nameState: 'positionFrom',
+        });
+
+        expect(model.broadcast).toHaveBeenCalled();
+      });
+    });
+
     describe('проверка валидации значений min, max', () => {
       it('если max < min, то max равно дефолтному значению', () => {
         const data = {
@@ -311,22 +350,5 @@ describe('Model', () => {
         expect(model.config).toEqual(expectedValue);
       });
     });
-  });
-
-  it('метод updatePosition обновляет значения positionFrom, positionTo в конфиге и передает его подписчикам класса Model через метод broadcast', () => {
-    model.updatePosition({ positionFrom: 10, positionTo: 20 });
-
-    expect(model.config).toEqual({
-      range: true,
-      min: 10,
-      max: 100,
-      positionFrom: 10,
-      positionTo: 20,
-      step: 1,
-      vertical: true,
-      label: true,
-    });
-
-    expect(model.broadcast).toHaveBeenCalled();
   });
 });
