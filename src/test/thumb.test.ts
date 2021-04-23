@@ -9,8 +9,8 @@ const thumbBlock = $block[0].querySelector('.js-slider__thumb_type_first') as HT
 const elementLabel = $block[0].querySelector('.js-slider__label');
 thumb.updateConfig({
   range: true,
-  positionFrom: 15,
-  positionTo: 30,
+  valueFrom: 15,
+  valueTo: 30,
   vertical: false,
   label: false,
 });
@@ -46,8 +46,8 @@ describe('Thumb', () => {
     it('при vertical = false устанавливает бегунку style.left', () => {
       thumb.updateConfig({
         range: true,
-        positionFrom: 15,
-        positionTo: 30,
+        valueFrom: 15,
+        valueTo: 30,
         vertical: false,
         label: false,
       });
@@ -63,8 +63,8 @@ describe('Thumb', () => {
     it('при vertical= true устанавливает бегунку style.top', () => {
       thumb.updateConfig({
         range: true,
-        positionFrom: 15,
-        positionTo: 30,
+        valueFrom: 15,
+        valueTo: 30,
         vertical: true,
         label: false,
       });
@@ -93,8 +93,8 @@ describe('Thumb', () => {
       it('range = false', () => {
         thumb.updateConfig({
           range: false,
-          positionFrom: 15,
-          positionTo: 30,
+          valueFrom: 15,
+          valueTo: 30,
           vertical: false,
           label: false,
         });
@@ -107,8 +107,8 @@ describe('Thumb', () => {
       it('range = true', () => {
         thumb.updateConfig({
           range: true,
-          positionFrom: 15,
-          positionTo: 30,
+          valueFrom: 15,
+          valueTo: 30,
           vertical: false,
           label: false,
         });
@@ -123,8 +123,8 @@ describe('Thumb', () => {
       it('range = false', () => {
         thumb.updateConfig({
           range: false,
-          positionFrom: 15,
-          positionTo: 30,
+          valueFrom: 15,
+          valueTo: 30,
           vertical: true,
           label: false,
         });
@@ -137,8 +137,8 @@ describe('Thumb', () => {
       it('range = true', () => {
         thumb.updateConfig({
           range: true,
-          positionFrom: 15,
-          positionTo: 30,
+          valueFrom: 15,
+          valueTo: 30,
           vertical: true,
           label: false,
         });
@@ -157,8 +157,8 @@ describe('Thumb', () => {
       it('range = false', () => {
         thumb.updateConfig({
           range: false,
-          positionFrom: 15,
-          positionTo: 30,
+          valueFrom: 15,
+          valueTo: 30,
           vertical: false,
           label: false,
         });
@@ -172,8 +172,8 @@ describe('Thumb', () => {
       it('range = true', () => {
         thumb.updateConfig({
           range: true,
-          positionFrom: 15,
-          positionTo: 30,
+          valueFrom: 15,
+          valueTo: 30,
           vertical: false,
           label: false,
         });
@@ -189,8 +189,8 @@ describe('Thumb', () => {
       it('range = false', () => {
         thumb.updateConfig({
           range: false,
-          positionFrom: 15,
-          positionTo: 30,
+          valueFrom: 15,
+          valueTo: 30,
           vertical: true,
           label: false,
         });
@@ -204,8 +204,8 @@ describe('Thumb', () => {
       it('range = true', () => {
         thumb.updateConfig({
           range: true,
-          positionFrom: 15,
-          positionTo: 30,
+          valueFrom: 15,
+          valueTo: 30,
           vertical: true,
           label: false,
         });
@@ -222,8 +222,8 @@ describe('Thumb', () => {
     it('при vertical = true', () => {
       thumb.updateConfig({
         range: false,
-        positionFrom: 10,
-        positionTo: 15,
+        valueFrom: 10,
+        valueTo: 15,
         vertical: true,
         label: true,
       });
@@ -235,8 +235,8 @@ describe('Thumb', () => {
     it('при vertical= false', () => {
       thumb.updateConfig({
         range: false,
-        positionFrom: 10,
-        positionTo: 15,
+        valueFrom: 10,
+        valueTo: 15,
         vertical: false,
         label: true,
       });
@@ -250,8 +250,8 @@ describe('Thumb', () => {
     it('vertical = false', () => {
       thumb.updateConfig({
         range: false,
-        positionFrom: 10,
-        positionTo: 15,
+        valueFrom: 10,
+        valueTo: 15,
         vertical: false,
         label: true,
       });
@@ -263,8 +263,8 @@ describe('Thumb', () => {
   it('vertical = true', () => {
     thumb.updateConfig({
       range: false,
-      positionFrom: 10,
-      positionTo: 15,
+      valueFrom: 10,
+      valueTo: 15,
       vertical: true,
       label: true,
     });

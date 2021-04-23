@@ -14,11 +14,11 @@ describe('ProgressBar', () => {
     let data: IPositionState;
     beforeAll(() => {
       data = {
-        positionFrom: {
+        valueFrom: {
           position: 10,
           value: 25,
         },
-        positionTo: {
+        valueTo: {
           position: 30,
           value: 35,
         },

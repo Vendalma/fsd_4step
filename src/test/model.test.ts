@@ -5,8 +5,8 @@ const config: IConfig = {
   range: true,
   min: 0,
   max: 100,
-  positionFrom: 15,
-  positionTo: 50,
+  valueFrom: 15,
+  valueTo: 50,
   step: 1,
   vertical: false,
   label: true,
@@ -44,7 +44,7 @@ describe('Model', () => {
           value: 5,
           leftPointValue: 10,
           rightPointValue: 100,
-          nameState: 'positionFrom',
+          nameState: 'valueFrom',
         });
 
         expect(model.broadcast).toHaveBeenCalled();
@@ -55,7 +55,7 @@ describe('Model', () => {
           value: 110,
           leftPointValue: 10,
           rightPointValue: 100,
-          nameState: 'positionFrom',
+          nameState: 'valueFrom',
         });
 
         expect(model.broadcast).toHaveBeenCalled();
@@ -66,7 +66,7 @@ describe('Model', () => {
           value: 50,
           leftPointValue: 10,
           rightPointValue: 100,
-          nameState: 'positionFrom',
+          nameState: 'valueFrom',
         });
 
         expect(model.broadcast).toHaveBeenCalled();
@@ -79,8 +79,8 @@ describe('Model', () => {
           max: 9,
           min: 10,
           step: 1,
-          positionFrom: 11,
-          positionTo: 17,
+          valueFrom: 11,
+          valueTo: 17,
           range: true,
           label: true,
           vertical: true,
@@ -89,8 +89,8 @@ describe('Model', () => {
           max: 100,
           min: 10,
           step: 1,
-          positionFrom: 11,
-          positionTo: 17,
+          valueFrom: 11,
+          valueTo: 17,
           range: true,
           label: true,
           vertical: true,
@@ -106,8 +106,8 @@ describe('Model', () => {
           max: 100,
           min: 101,
           step: 1,
-          positionFrom: 90,
-          positionTo: 90,
+          valueFrom: 90,
+          valueTo: 90,
           range: true,
           label: true,
           vertical: true,
@@ -116,8 +116,8 @@ describe('Model', () => {
           max: 100,
           min: 0,
           step: 1,
-          positionFrom: 90,
-          positionTo: 90,
+          valueFrom: 90,
+          valueTo: 90,
           range: true,
           label: true,
           vertical: true,
@@ -135,8 +135,8 @@ describe('Model', () => {
           max: 100,
           min: 10,
           step: 0,
-          positionFrom: 11,
-          positionTo: 17,
+          valueFrom: 11,
+          valueTo: 17,
           range: true,
           label: true,
           vertical: true,
@@ -145,8 +145,8 @@ describe('Model', () => {
           max: 100,
           min: 10,
           step: 1,
-          positionFrom: 11,
-          positionTo: 17,
+          valueFrom: 11,
+          valueTo: 17,
           range: true,
           label: true,
           vertical: true,
@@ -162,8 +162,8 @@ describe('Model', () => {
           max: 100,
           min: 10,
           step: 91,
-          positionFrom: 11,
-          positionTo: 17,
+          valueFrom: 11,
+          valueTo: 17,
           range: true,
           label: true,
           vertical: true,
@@ -172,8 +172,8 @@ describe('Model', () => {
           max: 100,
           min: 10,
           step: 1,
-          positionFrom: 11,
-          positionTo: 17,
+          valueFrom: 11,
+          valueTo: 17,
           range: true,
           label: true,
           vertical: true,
@@ -185,14 +185,14 @@ describe('Model', () => {
       });
     });
 
-    describe('проверка валидации positionFrom', () => {
-      it('если positionFrom < min, то positionFrom равно min', () => {
+    describe('проверка валидации valueFrom', () => {
+      it('если valueFrom < min, то valueFrom равно min', () => {
         const data = {
           max: 100,
           min: 10,
           step: 1,
-          positionFrom: 9,
-          positionTo: 17,
+          valueFrom: 9,
+          valueTo: 17,
           range: true,
           label: true,
           vertical: true,
@@ -201,8 +201,8 @@ describe('Model', () => {
           max: 100,
           min: 10,
           step: 1,
-          positionFrom: 10,
-          positionTo: 17,
+          valueFrom: 10,
+          valueTo: 17,
           range: true,
           label: true,
           vertical: true,
@@ -213,13 +213,13 @@ describe('Model', () => {
         expect(model.config).toEqual(expectedValue);
       });
 
-      it('если range=false и positionFrom > max, то positionFrom равно max', () => {
+      it('если range=false и valueFrom > max, то valueFrom равно max', () => {
         const data = {
           max: 100,
           min: 10,
           step: 1,
-          positionFrom: 101,
-          positionTo: 17,
+          valueFrom: 101,
+          valueTo: 17,
           range: false,
           label: true,
           vertical: true,
@@ -228,8 +228,8 @@ describe('Model', () => {
           max: 100,
           min: 10,
           step: 1,
-          positionFrom: 100,
-          positionTo: 17,
+          valueFrom: 100,
+          valueTo: 17,
           range: false,
           label: true,
           vertical: true,
@@ -240,13 +240,13 @@ describe('Model', () => {
         expect(model.config).toEqual(expectedValue);
       });
 
-      it('если range = true и positionFrom > max, то positionFrom равно min', () => {
+      it('если range = true и valueFrom > max, то valueFrom равно min', () => {
         const data = {
           max: 100,
           min: 10,
           step: 1,
-          positionFrom: 101,
-          positionTo: 17,
+          valueFrom: 101,
+          valueTo: 17,
           range: true,
           label: true,
           vertical: true,
@@ -255,8 +255,8 @@ describe('Model', () => {
           max: 100,
           min: 10,
           step: 1,
-          positionFrom: 10,
-          positionTo: 17,
+          valueFrom: 10,
+          valueTo: 17,
           range: true,
           label: true,
           vertical: true,
@@ -268,14 +268,14 @@ describe('Model', () => {
       });
     });
 
-    describe('проверка валидации positionTo', () => {
-      it('если positionTo <= positionFrom и max - min > step, то positionTo = positionFrom, а positionFrom = positionTo - step, при этом positionFrom повторно валидируется', () => {
+    describe('проверка валидации valueTo', () => {
+      it('если valueTo <= valueFrom и max - min > step, то valueTo = valueFrom, а valueFrom = valueTo - step, при этом valueFrom повторно валидируется', () => {
         const data = {
           max: 100,
           min: 10,
           step: 1,
-          positionFrom: 10,
-          positionTo: 9,
+          valueFrom: 10,
+          valueTo: 9,
           range: true,
           label: true,
           vertical: true,
@@ -284,8 +284,8 @@ describe('Model', () => {
           max: 100,
           min: 10,
           step: 1,
-          positionFrom: 10,
-          positionTo: 10,
+          valueFrom: 10,
+          valueTo: 10,
           range: true,
           label: true,
           vertical: true,
@@ -296,13 +296,13 @@ describe('Model', () => {
         expect(model.config).toEqual(expectedValue);
       });
 
-      it('если positionTo <= positionFrom и max - min <= step, то positionTo = max', () => {
+      it('если valueTo <= valueFrom и max - min <= step, то valueTo = max', () => {
         const data = {
           max: 100,
           min: 10,
           step: 90,
-          positionFrom: 10,
-          positionTo: 9,
+          valueFrom: 10,
+          valueTo: 9,
           range: true,
           label: true,
           vertical: true,
@@ -311,8 +311,8 @@ describe('Model', () => {
           max: 100,
           min: 10,
           step: 90,
-          positionFrom: 10,
-          positionTo: 100,
+          valueFrom: 10,
+          valueTo: 100,
           range: true,
           label: true,
           vertical: true,
@@ -323,13 +323,13 @@ describe('Model', () => {
         expect(model.config).toEqual(expectedValue);
       });
 
-      it('если positionTo > max, то positionTo = max', () => {
+      it('если valueTo > max, то valueTo = max', () => {
         const data = {
           max: 100,
           min: 10,
           step: 1,
-          positionFrom: 10,
-          positionTo: 101,
+          valueFrom: 10,
+          valueTo: 101,
           range: true,
           label: true,
           vertical: true,
@@ -338,8 +338,8 @@ describe('Model', () => {
           max: 100,
           min: 10,
           step: 1,
-          positionFrom: 10,
-          positionTo: 100,
+          valueFrom: 10,
+          valueTo: 100,
           range: true,
           label: true,
           vertical: true,

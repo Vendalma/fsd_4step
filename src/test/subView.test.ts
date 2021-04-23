@@ -11,8 +11,8 @@ const config = {
   range: true,
   min: 0,
   max: 100,
-  positionFrom: 15,
-  positionTo: 30,
+  valueFrom: 15,
+  valueTo: 30,
   label: true,
   step: 1,
   vertical: false,
@@ -37,11 +37,11 @@ describe('SubView', () => {
 
   it('метод findPositionState рассчитывает позиции и значения бегунков и возвращает объект со значениями', () => {
     expect(subView.findPositionState()).toEqual({
-      positionFrom: {
+      valueFrom: {
         position: 45,
         value: 15,
       },
-      positionTo: {
+      valueTo: {
         position: 90,
         value: 30,
       },
@@ -52,9 +52,9 @@ describe('SubView', () => {
     it('если изменено положение второго бегунка', () => {
       expect(subView.findValue({ position: 100, dataName: 'to' })).toEqual({
         value: 33,
-        leftPointValue: subView.config.positionFrom,
+        leftPointValue: subView.config.valueFrom,
         rightPointValue: subView.config.max,
-        nameState: 'positionTo',
+        nameState: 'valueTo',
       });
     });
 
@@ -62,8 +62,8 @@ describe('SubView', () => {
       expect(subView.findValue({ position: 50, dataName: 'from' })).toEqual({
         value: 17,
         leftPointValue: subView.config.min,
-        rightPointValue: subView.config.positionTo,
-        nameState: 'positionFrom',
+        rightPointValue: subView.config.valueTo,
+        nameState: 'valueFrom',
       });
     });
 
@@ -74,7 +74,7 @@ describe('SubView', () => {
         value: 18,
         leftPointValue: subView.config.min,
         rightPointValue: subView.config.max,
-        nameState: 'positionFrom',
+        nameState: 'valueFrom',
       });
     });
   });

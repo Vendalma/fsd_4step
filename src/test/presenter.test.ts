@@ -17,8 +17,8 @@ model.updateConfig({
   range: false,
   vertical: true,
   step: 1,
-  positionFrom: 10,
-  positionTo: 100,
+  valueFrom: 10,
+  valueTo: 100,
 });
 
 describe('Presenter', () => {
@@ -43,8 +43,8 @@ describe('Presenter', () => {
       range: false,
       vertical: true,
       step: 1,
-      positionFrom: 10,
-      positionTo: 100,
+      valueFrom: 10,
+      valueTo: 100,
     });
 
     expect(view.setConfig).toHaveBeenCalled();
