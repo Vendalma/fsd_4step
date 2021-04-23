@@ -107,6 +107,7 @@ class Thumb extends Observer<IThumbValue> {
   };
 
   private onMouseMove = (e: MouseEvent): void => {
+    e.preventDefault();
     this.broadcast({ value: this.findPosition(e) });
   };
 
