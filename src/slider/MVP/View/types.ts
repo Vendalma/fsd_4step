@@ -2,8 +2,8 @@ export interface IConfig {
   min: number;
   max: number;
   range: boolean;
-  positionFrom: number;
-  positionTo: number;
+  valueFrom: number;
+  valueTo: number;
   vertical: boolean;
   step: number;
   label: boolean;
@@ -11,8 +11,8 @@ export interface IConfig {
 
 export interface IConfigThumb {
   range: boolean;
-  positionFrom: number;
-  positionTo: number;
+  valueFrom: number;
+  valueTo: number;
   vertical: boolean;
   label: boolean;
 }
@@ -42,11 +42,11 @@ export interface IStepValues {
 }
 
 export interface IPositionState {
-  positionFrom: {
+  valueFrom: {
     position: number;
     value: number;
   };
-  positionTo: {
+  valueTo: {
     position: number;
     value: number;
   };

@@ -62,8 +62,8 @@ class PanelController {
   }
 
   private setConfig(): void {
-    this.inputFrom.value = `${this.config.positionFrom}`;
-    this.inputTo.value = `${this.config.positionTo}`;
+    this.inputFrom.value = `${this.config.valueFrom}`;
+    this.inputTo.value = `${this.config.valueTo}`;
     this.inputMin.value = `${this.config.min}`;
     this.inputMax.value = `${this.config.max}`;
     this.inputStep.value = `${this.config.step}`;

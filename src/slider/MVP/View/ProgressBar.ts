@@ -18,8 +18,8 @@ class ProgressBar {
   }
 
   addBar(values: IPositionState): void {
-    const positionThumbFirst = values.positionFrom.position;
-    const positionThumbSecond = values.positionTo.position;
+    const positionThumbFirst = values.valueFrom.position;
+    const positionThumbSecond = values.valueTo.position;
     if (!this.config.vertical) {
       if (!this.config.range) {
         this.progressBar.style.left = '0px';

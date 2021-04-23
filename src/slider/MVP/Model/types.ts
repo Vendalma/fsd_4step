@@ -2,8 +2,8 @@ export interface IConfig {
   min: number;
   max: number;
   range: boolean;
-  positionFrom: number;
-  positionTo: number;
+  valueFrom: number;
+  valueTo: number;
   vertical: boolean;
   step: number;
   label: boolean;
@@ -17,8 +17,8 @@ export interface IPositionValues {
 }
 
 export interface IUpdatedPosition {
-  positionFrom?: number;
-  positionTo?: number;
+  valueFrom?: number;
+  valueTo?: number;
 }
 
 export interface ModelValues {

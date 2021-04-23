@@ -38,8 +38,8 @@ class RangeSlider {
     this.model.subscribe((data) => {
       if (data.type === 'configChanged') {
         fn({
-          positionFrom: data.value.positionFrom,
-          positionTo: data.value.positionTo,
+          valueFrom: data.value.valueFrom,
+          valueTo: data.value.valueTo,
         });
       }
     });

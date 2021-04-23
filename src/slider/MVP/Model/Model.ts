@@ -43,8 +43,8 @@ class Model extends Observer<ModelValues> {
     this.validateMaxValue();
     this.validateMinValue();
     this.validateStepValue();
-    this.validatePositionFrom();
-    this.validatePositionTo();
+    this.validateValueFrom();
+    this.validateValueTo();
     return this.config;
   }
 
@@ -68,29 +68,29 @@ class Model extends Observer<ModelValues> {
     }
   }
 
-  private validatePositionFrom(): void {
-    if (this.config.positionFrom < this.config.min) {
-      this.config.positionFrom = this.config.min;
-    } else if (!this.config.range && this.config.positionFrom > this.config.max) {
-      this.config.positionFrom = this.config.max;
-    } else if (this.config.range && this.config.positionFrom > this.config.max) {
-      this.config.positionFrom = this.config.min;
+  private validateValueFrom(): void {
+    if (this.config.valueFrom < this.config.min) {
+      this.config.valueFrom = this.config.min;
+    } else if (!this.config.range && this.config.valueFrom > this.config.max) {
+      this.config.valueFrom = this.config.max;
+    } else if (this.config.range && this.config.valueFrom > this.config.max) {
+      this.config.valueFrom = this.config.min;
     }
   }
 
-  private validatePositionTo(): void {
+  private validateValueTo(): void {
     if (this.config.range) {
-      if (this.config.positionTo <= this.config.positionFrom && this.config.max - this.config.min > this.config.step) {
-        this.config.positionTo = this.config.positionFrom;
-        this.validatePositionFrom();
+      if (this.config.valueTo <= this.config.valueFrom && this.config.max - this.config.min > this.config.step) {
+        this.config.valueTo = this.config.valueFrom;
+        this.validateValueFrom();
       }
 
-      if (this.config.positionTo <= this.config.positionFrom && this.config.max - this.config.min <= this.config.step) {
-        this.config.positionTo = this.config.max;
+      if (this.config.valueTo <= this.config.valueFrom && this.config.max - this.config.min <= this.config.step) {
+        this.config.valueTo = this.config.max;
       }
 
-      if (this.config.positionTo > this.config.max) {
-        this.config.positionTo = this.config.max;
+      if (this.config.valueTo > this.config.max) {
+        this.config.valueTo = this.config.max;
       }
     }
   }

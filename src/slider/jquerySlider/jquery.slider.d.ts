@@ -1,8 +1,8 @@
 interface IConfig {
   min: number;
   max: number;
-  positionFrom: number;
-  positionTo: number;
+  valueFrom: number;
+  valueTo: number;
   range: boolean;
   label: boolean;
   step: number;

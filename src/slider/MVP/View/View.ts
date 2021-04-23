@@ -103,8 +103,8 @@ class View extends Observer<IViewValue> {
   }
 
   private setUpdatedPosition(data: IPositionState): void {
-    this.thumbOne.updatePosition(data.positionFrom);
-    this.thumbTwo.updatePosition(data.positionTo);
+    this.thumbOne.updatePosition(data.valueFrom);
+    this.thumbTwo.updatePosition(data.valueTo);
     this.progressBar.addBar(data);
   }
 

@@ -5,8 +5,8 @@ const defaultSettings = {
   range: true,
   step: 1,
   vertical: false,
-  positionFrom: 10,
-  positionTo: 50,
+  valueFrom: 10,
+  valueTo: 50,
 };
 
 export default defaultSettings;

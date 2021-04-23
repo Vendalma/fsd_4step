@@ -17,13 +17,13 @@ class SubView {
 
   findPositionState(): IPositionState {
     this.positionState = {
-      positionFrom: {
-        position: (this.config.positionFrom - this.config.min) / this.calcPixelSize(),
-        value: this.config.positionFrom,
+      valueFrom: {
+        position: (this.config.valueFrom - this.config.min) / this.calcPixelSize(),
+        value: this.config.valueFrom,
       },
-      positionTo: {
-        position: (this.config.positionTo - this.config.min) / this.calcPixelSize(),
-        value: this.config.positionTo,
+      valueTo: {
+        position: (this.config.valueTo - this.config.min) / this.calcPixelSize(),
+        value: this.config.valueTo,
       },
     };
     return this.positionState;
@@ -38,9 +38,9 @@ class SubView {
     if (dataName === 'to') {
       return {
         value,
-        leftPointValue: this.config.positionFrom,
+        leftPointValue: this.config.valueFrom,
         rightPointValue: this.config.max,
-        nameState: 'positionTo',
+        nameState: 'valueTo',
       };
     }
 
@@ -48,8 +48,8 @@ class SubView {
       return {
         value,
         leftPointValue: this.config.min,
-        rightPointValue: this.config.positionTo,
-        nameState: 'positionFrom',
+        rightPointValue: this.config.valueTo,
+        nameState: 'valueFrom',
       };
     }
 
@@ -57,7 +57,7 @@ class SubView {
       value,
       leftPointValue: this.config.min,
       rightPointValue: this.config.max,
-      nameState: 'positionFrom',
+      nameState: 'valueFrom',
     };
   }
 
