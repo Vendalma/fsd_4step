@@ -50,7 +50,6 @@ class ProgressBar {
   private createBar(): void {
     this.progressBar = document.createElement('div');
     this.progressBar.classList.add('slider__progress-bar');
-    this.progressBar.classList.add('js-slider__progress-bar');
     this.slider.prepend(this.progressBar);
   }
 

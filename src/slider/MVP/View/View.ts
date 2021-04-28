@@ -63,7 +63,6 @@ class View extends Observer<IViewValue> {
   private createSliderBlock(): void {
     this.sliderBlock = document.createElement('div');
     this.sliderBlock.classList.add('slider__block');
-    this.sliderBlock.classList.add('js-slider__block');
     this.wrapper.append(this.sliderBlock);
   }
 

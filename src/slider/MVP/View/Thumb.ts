@@ -70,7 +70,6 @@ class Thumb extends Observer<IThumbValue> {
     this.thumb = document.createElement('div');
     this.thumb.classList.add('slider__thumb');
     this.thumb.classList.add(`slider__thumb_type_${this.thumbHtmlClass}`);
-    this.thumb.classList.add(`js-slider__thumb_type_${this.thumbHtmlClass}`);
     this.thumb.setAttribute('data-name', this.dataName);
     this.slider.append(this.thumb);
     this.label = new Label(this.thumb);
