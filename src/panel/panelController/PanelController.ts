@@ -116,11 +116,11 @@ class PanelController {
     }
 
     if (e.target === this.inputFrom) {
-      this.inputFrom.addEventListener('blur', this.changePositionFrom.bind(this));
+      this.inputFrom.addEventListener('blur', this.changeValueFrom.bind(this));
     }
 
     if (e.target === this.inputTo) {
-      this.inputTo.addEventListener('blur', this.changePositionTo.bind(this));
+      this.inputTo.addEventListener('blur', this.changeValueTo.bind(this));
     }
   }
 
@@ -142,15 +142,15 @@ class PanelController {
     });
   }
 
-  private changePositionFrom(): void {
+  private changeValueFrom(): void {
     this.$slider.rangeSlider('setConfig', {
-      positionFrom: Number(this.inputFrom.value),
+      valueFrom: Number(this.inputFrom.value),
     });
   }
 
-  private changePositionTo(): void {
+  private changeValueTo(): void {
     this.$slider.rangeSlider('setConfig', {
-      positionTo: Number(this.inputTo.value),
+      valueTo: Number(this.inputTo.value),
     });
   }
 

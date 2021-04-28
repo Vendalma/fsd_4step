@@ -29,7 +29,7 @@ describe('SubView', () => {
     expect(subView.config).toEqual(config);
   });
 
-  it('метод setSliderSize устанавливает значение размера слайдера', () => {
+  it('метод setSliderSize устанавливает размер слайдера', () => {
     subView.setSliderSize(300);
 
     expect(subView.sliderSize).toEqual(300);
@@ -59,8 +59,8 @@ describe('SubView', () => {
     });
 
     it('если изменено положение первого бегунка и range = true', () => {
-      expect(subView.findValue({ position: 50, dataName: 'from' })).toEqual({
-        value: 17,
+      expect(subView.findValue({ position: 3, dataName: 'from' })).toEqual({
+        value: 1,
         leftPointValue: subView.config.min,
         rightPointValue: subView.config.valueTo,
         nameState: 'valueFrom',
@@ -70,8 +70,37 @@ describe('SubView', () => {
     it('если изменено положение первого бегунка и range = false', () => {
       subView.config.range = false;
 
-      expect(subView.findValue({ position: 55, dataName: 'from' })).toEqual({
-        value: 18,
+      expect(subView.findValue({ position: 65, dataName: 'from' })).toEqual({
+        value: 22,
+        leftPointValue: subView.config.min,
+        rightPointValue: subView.config.max,
+        nameState: 'valueFrom',
+      });
+    });
+
+    it('если положение бегунка за пределами левой границы слайдера', () => {
+      expect(subView.findValue({ position: -10, dataName: 'from' })).toEqual({
+        value: subView.config.min,
+        leftPointValue: subView.config.min,
+        rightPointValue: subView.config.max,
+        nameState: 'valueFrom',
+      });
+    });
+
+    it('если положение бегунка за пределами правой границы слайдера ', () => {
+      expect(subView.findValue({ position: 305, dataName: 'to' })).toEqual({
+        value: 1000,
+        leftPointValue: subView.config.valueFrom,
+        rightPointValue: subView.config.max,
+        nameState: 'valueTo',
+      });
+    });
+
+    it('если step = 0.1', () => {
+      subView.config.step = 0.1;
+
+      expect(subView.findValue({ position: 5, dataName: 'from' })).toEqual({
+        value: 1.7,
         leftPointValue: subView.config.min,
         rightPointValue: subView.config.max,
         nameState: 'valueFrom',

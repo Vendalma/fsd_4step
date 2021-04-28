@@ -16,6 +16,7 @@ const blockSlider = $block[0].querySelector('.js-slider__block') as HTMLElement;
 const progressBar = blockSlider.querySelector('.js-slider__progress-bar') as HTMLElement;
 const thumbFirst = blockSlider.querySelector('.js-slider__thumb_type_first') as HTMLElement;
 const thumbSecond = blockSlider.querySelector('.js-slider__thumb_type_second') as HTMLElement;
+const label = thumbFirst.querySelector('.slider__label') as HTMLElement;
 
 describe('View', () => {
   it('Инициализация View', () => {
@@ -58,6 +59,21 @@ describe('View', () => {
       expect(progressBar).toHaveClass('slider__progress-bar_horizontal');
       expect(thumbFirst).toHaveClass('slider__thumb_horizontal');
       expect(thumbSecond).toHaveClass('slider__thumb_horizontal');
+    });
+
+    it('если меняются значения valueFrom или valueTo, то обновляется лейбл', () => {
+      view.setConfig({
+        range: false,
+        min: 0,
+        max: 100,
+        valueFrom: 11,
+        valueTo: 30,
+        label: true,
+        step: 1,
+        vertical: false,
+      });
+
+      expect(label.textContent).toEqual(`${view.config.valueFrom}`);
     });
   });
 

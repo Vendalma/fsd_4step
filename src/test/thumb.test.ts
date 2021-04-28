@@ -269,6 +269,6 @@ describe('Thumb', () => {
       label: true,
     });
 
-    expect(thumb.getThumbBlockValues(150)).toEqual({ position: 122, distance: 28 });
+    expect(thumb.getThumbBlockValues(150)).toEqual({ position: 470, distance: 320 });
   });
 });
