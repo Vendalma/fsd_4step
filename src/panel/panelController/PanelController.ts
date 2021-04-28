@@ -2,7 +2,7 @@ import { IConfig } from '../../slider/MVP/Model/types';
 import './panelController.scss';
 
 class PanelController {
-  private parent: Element | null;
+  private container: HTMLElement;
 
   private panel: HTMLElement | null;
 
@@ -31,6 +31,7 @@ class PanelController {
   private config: IConfig;
 
   constructor(container: HTMLElement) {
+    this.container = container;
     this.initElements();
     this.checkConfig();
     this.setConfig();
@@ -39,21 +40,17 @@ class PanelController {
   }
 
   private initElements(): void {
-    this.parent = document.querySelector('.page__block');
-    if (this.parent) {
-      this.panel = this.parent.querySelector('.js-panel');
-      this.inputFrom = this.parent.querySelector('.js-panel__input_type_from');
-      this.inputTo = this.parent.querySelector('.js-panel__input_type_to');
-      this.inputMin = this.parent.querySelector('.js-panel__input_type_min');
-      this.inputMax = this.parent.querySelector('.js-panel__input_type_max');
-      this.inputStep = this.parent.querySelector('.js-panel__input_type_step');
-      this.inputLabel = this.parent.querySelector('.js-panel__checkbox_type_label');
-      this.inputHorizontal = this.parent.querySelector('.js-panel__radio_type_horizontal');
-      this.inputVertical = this.parent.querySelector('.js-panel__radio_type_vertical');
-      this.inputSingle = this.parent.querySelector('.js-panel__radio_type_single');
-      this.inputDouble = this.parent.querySelector('.js-panel__radio_type_double');
-      this.$slider = $(this.parent).find('.js-page__slider-app');
-    }
+    this.inputFrom = this.container.querySelector('.js-panel__input_type_from');
+    this.inputTo = this.container.querySelector('.js-panel__input_type_to');
+    this.inputMin = this.container.querySelector('.js-panel__input_type_min');
+    this.inputMax = this.container.querySelector('.js-panel__input_type_max');
+    this.inputStep = this.container.querySelector('.js-panel__input_type_step');
+    this.inputLabel = this.container.querySelector('.js-panel__checkbox_type_label');
+    this.inputHorizontal = this.container.querySelector('.js-panel__radio_type_horizontal');
+    this.inputVertical = this.container.querySelector('.js-panel__radio_type_vertical');
+    this.inputSingle = this.container.querySelector('.js-panel__radio_type_single');
+    this.inputDouble = this.container.querySelector('.js-panel__radio_type_double');
+    this.$slider = $(this.container).parent().next('.js-page__slider-app');
   }
 
   private checkConfig(): void {
@@ -75,7 +72,7 @@ class PanelController {
   }
 
   private clickPanel(): void {
-    this.panel?.addEventListener('click', this.onClickPanel.bind(this));
+    this.container.addEventListener('click', this.onClickPanel.bind(this));
   }
 
   private onClickPanel(e: MouseEvent): void {
@@ -176,7 +173,7 @@ class PanelController {
   }
 
   private checkRange(): void {
-    const disabledBlock = this.parent?.querySelector<HTMLInputElement>('.js-panel__input_disabled');
+    const disabledBlock = this.container?.querySelector<HTMLInputElement>('.js-panel__input_disabled');
     if (disabledBlock) disabledBlock.disabled = !this.config.range;
   }
 
