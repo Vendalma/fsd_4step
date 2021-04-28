@@ -77,10 +77,7 @@ class SubView {
       Number.isInteger(this.config.step) && Number.isInteger(this.config.min) && Number.isInteger(this.config.max);
     const value = this.config.min + this.calcPixelSize() * position;
 
-    if (isValuesInteger) {
-      return Math.trunc(value);
-    }
-    return Math.trunc(value * 100) / 100;
+    return isValuesInteger ? Math.trunc(value) : Number(value.toFixed(1));
   }
 
   private calcPixelSize(): number {
