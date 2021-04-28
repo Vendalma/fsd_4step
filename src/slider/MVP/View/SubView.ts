@@ -31,10 +31,8 @@ class SubView {
 
   findValue(data: IMovingThumbValues): IPositionValues {
     const { position, dataName } = data;
-    const stepSize = this.config.step / this.calcPixelSize();
-    const positionMove = Math.round(position / stepSize) * stepSize;
-    const value = Math.trunc(this.calcValue(positionMove) * 100) / 100;
-
+    const positionMove = this.calcPosition(position);
+    const value = typeof data.value === 'undefined' ? this.calcValue(positionMove) : data.value;
     if (dataName === 'to') {
       return {
         value,
@@ -61,12 +59,32 @@ class SubView {
     };
   }
 
-  private calcPixelSize(): number {
-    return (this.config.max - this.config.min) / this.sliderSize;
+  private calcPosition(position: number): number {
+    const stepSize = this.config.step / this.calcPixelSize();
+    if (position <= 0) {
+      return 0;
+    }
+
+    if (position >= this.sliderSize) {
+      return this.sliderSize * 10;
+    }
+
+    return Math.round(position / stepSize) * stepSize;
   }
 
   private calcValue(position: number): number {
-    return Math.round((position * this.calcPixelSize() + this.config.min) / this.config.step) * this.config.step;
+    const isValuesInteger =
+      Number.isInteger(this.config.step) && Number.isInteger(this.config.min) && Number.isInteger(this.config.max);
+    const value = this.config.min + this.calcPixelSize() * position;
+
+    if (isValuesInteger) {
+      return Math.trunc(value);
+    }
+    return Math.trunc(value * 100) / 100;
+  }
+
+  private calcPixelSize(): number {
+    return (this.config.max - this.config.min) / this.sliderSize;
   }
 }
 
