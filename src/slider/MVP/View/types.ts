@@ -20,6 +20,7 @@ export interface IConfigThumb {
 export interface IMovingThumbValues {
   position: number;
   dataName: string;
+  value?: number;
 }
 
 export interface IThumbValue {
@@ -36,9 +37,9 @@ export interface IThumbBlockValues {
   position: number;
 }
 
-export interface IStepValues {
-  stepSize: number;
-  thumbSize: number;
+export interface IScaleBlockValues {
+  scaleBlockPosition: number;
+  scaleBlockValue: number;
 }
 
 export interface IPositionState {
@@ -57,6 +58,11 @@ export interface IPositionValues {
   leftPointValue: number;
   rightPointValue: number;
   nameState: string;
+}
+
+export interface ISliderBlockValues {
+  eventPosition: number;
+  value?: number;
 }
 
 export interface IViewValue {

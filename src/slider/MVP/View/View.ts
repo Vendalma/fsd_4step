@@ -1,9 +1,9 @@
 import Observer from '../../Observer/Observer';
 import ProgressBar from './ProgressBar';
-import Step from './Step';
+import Scale from './Scale';
 import SubView from './SubView';
 import Thumb from './Thumb';
-import { IConfig, IPositionState, IPositionValues, IViewValue } from './types';
+import { IConfig, IPositionState, IPositionValues, ISliderBlockValues, IViewValue } from './types';
 
 class View extends Observer<IViewValue> {
   private wrapper: HTMLElement;
@@ -14,7 +14,7 @@ class View extends Observer<IViewValue> {
 
   private thumbTwo: Thumb;
 
-  private step: Step;
+  private scale: Scale;
 
   private progressBar: ProgressBar;
 
@@ -35,7 +35,12 @@ class View extends Observer<IViewValue> {
 
   setConfig(config: IConfig): void {
     const params = {};
-    if (!this.config || config.vertical !== this.config.vertical) {
+    const isVerticalChanged = this.config && this.config.vertical !== config.vertical;
+    const isMaxChanged = this.config && this.config.max !== config.max;
+    const isMinChanged = this.config && this.config.min !== config.min;
+    const isDefinedParamsChanged = isMaxChanged || isMinChanged || isVerticalChanged;
+
+    if (!this.config || isDefinedParamsChanged) {
       this.updateConfig(Object.assign(params, config));
       this.checkOrientation();
       this.updateSliderParams();
@@ -52,7 +57,7 @@ class View extends Observer<IViewValue> {
     this.thumbTwo.updateConfig(this.config);
     this.progressBar.updateConfig(this.config);
     this.subView.updateConfig(this.config);
-    this.step.updateValues(this.config);
+    this.scale.updateValues(this.config);
   }
 
   private createSliderBlock(): void {
@@ -66,7 +71,7 @@ class View extends Observer<IViewValue> {
     this.thumbOne = new Thumb('first', this.sliderBlock, 'from');
     this.thumbTwo = new Thumb('second', this.sliderBlock, 'to');
     this.progressBar = new ProgressBar(this.sliderBlock);
-    this.step = new Step(this.sliderBlock);
+    this.scale = new Scale(this.sliderBlock);
     this.subView = new SubView();
   }
 
@@ -113,17 +118,11 @@ class View extends Observer<IViewValue> {
   }
 
   private getSliderSize(): number {
-    if (!this.config.vertical) {
-      return this.wrapper.offsetWidth;
-    }
-    return this.wrapper.offsetHeight;
+    return this.config.vertical ? this.wrapper.offsetHeight : this.wrapper.offsetWidth;
   }
 
   private updateSliderParams(): void {
-    this.step.addStepLine({
-      stepSize: this.getSliderSize() / 20,
-      thumbSize: this.thumbOne.getThumbBlock().offsetWidth,
-    });
+    this.scale.addScale(this.getSliderSize());
     this.subView.setSliderSize(this.getSliderSize());
     this.setUpdatedPosition(this.subView.findPositionState());
   }
@@ -133,15 +132,21 @@ class View extends Observer<IViewValue> {
   }
 
   private onMouseDown(e: MouseEvent): void {
-    if (!this.config.vertical) {
-      this.checkMouseDownPosition(e.clientX - this.sliderBlock.getBoundingClientRect().left);
+    if (this.config.vertical) {
+      this.checkMouseDownPosition({
+        eventPosition: e.clientY - this.sliderBlock.getBoundingClientRect().top,
+        value: this.scale.getScaleValues(e),
+      });
     } else {
-      this.checkMouseDownPosition(e.clientY - this.sliderBlock.getBoundingClientRect().top);
+      this.checkMouseDownPosition({
+        eventPosition: e.clientX - this.sliderBlock.getBoundingClientRect().left,
+        value: this.scale.getScaleValues(e),
+      });
     }
   }
 
-  private checkMouseDownPosition(value: number): void {
-    const eventPosition = value;
+  private checkMouseDownPosition(data: ISliderBlockValues): void {
+    const { eventPosition, value } = data;
     const thumbFirstPosition = this.thumbOne.getThumbBlockValues(eventPosition).position;
     const thumbFirstClickDistance = this.thumbOne.getThumbBlockValues(eventPosition).distance;
     const thumbSecondPosition = this.thumbTwo.getThumbBlockValues(eventPosition).position;
@@ -156,6 +161,7 @@ class View extends Observer<IViewValue> {
         this.subView.findValue({
           position: eventPosition,
           dataName: 'from',
+          value,
         }),
       );
     } else if (isThumbSecondNearest) {
@@ -163,6 +169,7 @@ class View extends Observer<IViewValue> {
         this.subView.findValue({
           position: eventPosition,
           dataName: 'to',
+          value,
         }),
       );
     }
