@@ -3,7 +3,7 @@ import { IPositionState } from '../slider/MVP/View/types';
 
 const $block = $('<div>');
 const bar: ProgressBar = new ProgressBar($block[0]);
-const progressBarBlock = $block[0].querySelector('.js-slider__progress-bar');
+const progressBarBlock = $block[0].querySelector('.slider__progress-bar');
 
 describe('ProgressBar', () => {
   it('Инициализация ProgressBar', () => {

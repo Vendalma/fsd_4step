@@ -4,7 +4,7 @@ const $block = $('<div>');
 $block[0].classList.add('thumb');
 $(document.body).append($block);
 const label: Label = new Label($block[0]);
-const elementLabel = $block[0].querySelector('.js-slider__label') as HTMLElement;
+const elementLabel = $block[0].querySelector('.slider__label');
 
 describe('Label', () => {
   it('Инициализация класса Label', () => {

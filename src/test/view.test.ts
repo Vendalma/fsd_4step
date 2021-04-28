@@ -12,11 +12,11 @@ class TestView extends View {
 }
 
 const view: TestView = new TestView();
-const blockSlider = $block[0].querySelector('.js-slider__block') as HTMLElement;
-const progressBar = blockSlider.querySelector('.js-slider__progress-bar') as HTMLElement;
-const thumbFirst = blockSlider.querySelector('.js-slider__thumb_type_first') as HTMLElement;
-const thumbSecond = blockSlider.querySelector('.js-slider__thumb_type_second') as HTMLElement;
-const label = thumbFirst.querySelector('.slider__label') as HTMLElement;
+const blockSlider = $block[0].querySelector('.slider__block');
+const progressBar = blockSlider?.querySelector('.slider__progress-bar');
+const thumbFirst = blockSlider?.querySelector('.slider__thumb_type_first');
+const thumbSecond = blockSlider?.querySelector('.slider__thumb_type_second');
+const label = thumbFirst?.querySelector('.slider__label');
 
 describe('View', () => {
   it('Инициализация View', () => {
@@ -73,7 +73,7 @@ describe('View', () => {
         vertical: false,
       });
 
-      expect(label.textContent).toEqual(`${view.config.valueFrom}`);
+      expect(label?.textContent).toEqual(`${view.config.valueFrom}`);
     });
   });
 
@@ -86,7 +86,7 @@ describe('View', () => {
 
     it('range= false', () => {
       view.config.range = false;
-      thumbFirst.dispatchEvent(mousedown);
+      thumbFirst?.dispatchEvent(mousedown);
       document.dispatchEvent(mousemove);
 
       expect(view.broadcast).toHaveBeenCalled();
@@ -94,7 +94,7 @@ describe('View', () => {
 
     it('range= true', () => {
       view.config.range = true;
-      thumbSecond.dispatchEvent(mousedown);
+      thumbSecond?.dispatchEvent(mousedown);
       document.dispatchEvent(mousemove);
 
       expect(view.broadcast).toHaveBeenCalled();
@@ -120,7 +120,7 @@ describe('View', () => {
           vertical: false,
           step: 1,
         });
-        blockSlider.dispatchEvent(event);
+        blockSlider?.dispatchEvent(event);
 
         expect(view.broadcast).toHaveBeenCalled();
       });
@@ -137,7 +137,7 @@ describe('View', () => {
           step: 1,
         });
         event = new MouseEvent('mousedown', { clientX: 10 });
-        blockSlider.dispatchEvent(event);
+        blockSlider?.dispatchEvent(event);
 
         expect(view.broadcast).toHaveBeenCalled();
       });
@@ -154,7 +154,7 @@ describe('View', () => {
           step: 1,
         });
         event = new MouseEvent('mousedown', { clientX: 300 });
-        blockSlider.dispatchEvent(event);
+        blockSlider?.dispatchEvent(event);
 
         expect(view.broadcast).toHaveBeenCalled();
       });
@@ -172,7 +172,7 @@ describe('View', () => {
           vertical: true,
           step: 1,
         });
-        blockSlider.dispatchEvent(event);
+        blockSlider?.dispatchEvent(event);
 
         expect(view.broadcast).toHaveBeenCalled();
       });
@@ -189,7 +189,7 @@ describe('View', () => {
         vertical: true,
         step: 1,
       });
-      blockSlider.dispatchEvent(event);
+      blockSlider?.dispatchEvent(event);
 
       expect(view.broadcast).toHaveBeenCalled();
     });
@@ -206,7 +206,7 @@ describe('View', () => {
         step: 1,
       });
       event = new MouseEvent('mousedown', { clientY: 400 });
-      blockSlider.dispatchEvent(event);
+      blockSlider?.dispatchEvent(event);
 
       expect(view.broadcast).toHaveBeenCalled();
     });

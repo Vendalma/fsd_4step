@@ -5,8 +5,8 @@ $block[0].classList.add('slider__block');
 $(document.body).append($block);
 
 const thumb: Thumb = new Thumb('first', $block[0], '1');
-const thumbBlock = $block[0].querySelector('.js-slider__thumb_type_first') as HTMLElement;
-const elementLabel = $block[0].querySelector('.js-slider__label');
+const thumbBlock = thumb.getThumbBlock();
+const elementLabel = $block[0].querySelector('.slider__label');
 thumb.updateConfig({
   range: true,
   valueFrom: 15,
@@ -27,14 +27,14 @@ describe('Thumb', () => {
   it('метод removeThis удаляет бегунок из родительского блока', () => {
     thumb.removeThumb();
 
-    expect($block).not.toContainElement('div.js-slider__thumb_type_first');
+    expect($block).not.toContainElement('div.slider__thumb_type_first');
     expect(thumbBlock).not.toBeInDOM();
   });
 
   it('метод addThis добавляет бегунок в родительский блок', () => {
     thumb.addThumb();
 
-    expect($block).toContainElement('div.js-slider__thumb_type_first');
+    expect($block).toContainElement('div.slider__thumb_type_first');
     expect(thumbBlock).toBeInDOM();
   });
 

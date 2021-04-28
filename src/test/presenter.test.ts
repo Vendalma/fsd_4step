@@ -6,7 +6,7 @@ const $block = $('<div>');
 $(document.body).append($block);
 const model: Model = new Model();
 const view: View = new View($block[0]);
-const sliderBlock = $block[0].querySelector('.js-slider__block') as HTMLElement;
+const sliderBlock = $block[0].querySelector('.slider__block');
 
 const presenter: Presenter = new Presenter(model, view);
 
@@ -29,7 +29,7 @@ describe('Presenter', () => {
   it('При изменений позиций бегунков в Model вызывается ф-я checkPositionValues', () => {
     const event = new MouseEvent('mousedown', { bubbles: true, clientX: 50, clientY: 100 });
     spyOn(model, 'checkPositionValues');
-    sliderBlock.dispatchEvent(event);
+    sliderBlock?.dispatchEvent(event);
 
     expect(model.checkPositionValues).toHaveBeenCalled();
   });
