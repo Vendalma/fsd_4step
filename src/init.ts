@@ -23,7 +23,7 @@ $('.js-page__slider-app_type_third').rangeSlider({
   label: false,
 });
 
-const panels = document.querySelectorAll('.js-panel');
+const panels = document.querySelectorAll<HTMLElement>('.js-panel');
 panels.forEach((panel) => {
-  return new PanelController(panel as HTMLElement);
+  return new PanelController(panel);
 });
