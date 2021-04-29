@@ -1,7 +1,6 @@
 import Label from '../slider/MVP/View/Label';
 
 const $block = $('<div>');
-$block[0].classList.add('thumb');
 $(document.body).append($block);
 const label: Label = new Label($block[0]);
 const elementLabel = $block[0].querySelector('.slider__label');

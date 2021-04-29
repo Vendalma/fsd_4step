@@ -1,7 +1,6 @@
 import Thumb from '../slider/MVP/View/Thumb';
 
 const $block = $('<div>');
-$block[0].classList.add('slider__block');
 $(document.body).append($block);
 
 const thumb: Thumb = new Thumb('first', $block[0], '1');
@@ -78,13 +77,6 @@ describe('Thumb', () => {
     });
   });
 
-  it('при нажатии на бегунок ему добавляется класс slider__thumb_visibility_zIndex-up', () => {
-    const mousedown = new MouseEvent('mousedown', { bubbles: true });
-    thumbBlock.dispatchEvent(mousedown);
-
-    expect(thumbBlock).toHaveClass('slider__thumb_visibility_zIndex-up');
-  });
-
   describe('при перемещении мыши, через ф-ю broadcast передаются данные о движении бегунка', () => {
     const mousedown = new MouseEvent('mousedown', { bubbles: true });
     const mousemove = new MouseEvent('mousemove', { bubbles: true });
@@ -150,7 +142,7 @@ describe('Thumb', () => {
     });
   });
 
-  describe('при отпускании кнопки мыши, от бегунка отвязываются обработчики событий, уменьшается zIndex контейнера, вызывается ф-ию broadcast, которая передает данные о положении бегунка', () => {
+  describe('при отпускании кнопки мыши, от бегунка отвязываются обработчики событий, вызывается ф-ия broadcast, которая передает данные о положении бегунка', () => {
     const mousedown = new MouseEvent('mousedown', { bubbles: true });
     const mouseup = new MouseEvent('mouseup', { bubbles: true });
     describe('vertical= false', () => {
@@ -166,7 +158,6 @@ describe('Thumb', () => {
         document.dispatchEvent(mouseup);
 
         expect(thumb.broadcast).toHaveBeenCalled();
-        expect(thumbBlock).not.toHaveClass('slider__thumb_visibility_zIndex-up');
       });
 
       it('range = true', () => {
@@ -181,7 +172,6 @@ describe('Thumb', () => {
         document.dispatchEvent(mouseup);
 
         expect(thumb.broadcast).toHaveBeenCalled();
-        expect(thumbBlock).not.toHaveClass('slider__thumb_visibility_zIndex-up');
       });
     });
 
@@ -198,7 +188,6 @@ describe('Thumb', () => {
         document.dispatchEvent(mouseup);
 
         expect(thumb.broadcast).toHaveBeenCalled();
-        expect(thumbBlock).not.toHaveClass('slider__thumb_visibility_zIndex-up');
       });
 
       it('range = true', () => {
@@ -213,7 +202,6 @@ describe('Thumb', () => {
         document.dispatchEvent(mouseup);
 
         expect(thumb.broadcast).toHaveBeenCalled();
-        expect(thumbBlock).not.toHaveClass('slider__thumb_visibility_zIndex-up');
       });
     });
   });
@@ -270,5 +258,19 @@ describe('Thumb', () => {
     });
 
     expect(thumb.getThumbBlockValues(150)).toEqual({ position: 470, distance: 320 });
+  });
+
+  describe('метод changeZIndex повышает z-index бегунка', () => {
+    it('если методу передается значение true, то бегунку добавляется класс slider__thumb_visibility_zIndex-up', () => {
+      thumb.changeZIndex(true);
+
+      expect(thumbBlock).toHaveClass('slider__thumb_visibility_zIndex-up');
+    });
+
+    it('если методу передается false, то класс slider__thumb_visibility_zIndex-up удаляется', () => {
+      thumb.changeZIndex(false);
+
+      expect(thumbBlock).not.toHaveClass('slider__thumb_visibility_zIndex-up');
+    });
   });
 });
