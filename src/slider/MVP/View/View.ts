@@ -110,6 +110,7 @@ class View extends Observer<IViewValue> {
     this.thumbOne.updatePosition(data.valueFrom);
     this.thumbTwo.updatePosition(data.valueTo);
     this.progressBar.addBar(data);
+    this.checkThumbOnePosition(data.valueFrom.position);
   }
 
   private resizeWindow(): void {
@@ -172,6 +173,13 @@ class View extends Observer<IViewValue> {
         }),
       );
     }
+  }
+
+  private checkThumbOnePosition(value: number): void {
+    const thumbFirstPosition = value;
+    const isThumbsPositionMatched =
+      thumbFirstPosition >= this.getSliderSize() - this.thumbTwo.getThumbBlock().offsetWidth;
+    this.thumbOne.changeZIndex(isThumbsPositionMatched && this.config.range);
   }
 }
 

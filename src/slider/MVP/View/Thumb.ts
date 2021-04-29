@@ -66,6 +66,14 @@ class Thumb extends Observer<IThumbValue> {
     };
   }
 
+  changeZIndex(value: boolean): void {
+    if (value) {
+      this.thumb.classList.add('slider__thumb_visibility_zIndex-up');
+    } else {
+      this.thumb.classList.remove('slider__thumb_visibility_zIndex-up');
+    }
+  }
+
   private createThumb(): void {
     this.thumb = document.createElement('div');
     this.thumb.classList.add('slider__thumb');
@@ -96,13 +104,11 @@ class Thumb extends Observer<IThumbValue> {
   private onMouseDown = (): void => {
     document.addEventListener('mousemove', this.onMouseMove);
     document.addEventListener('mouseup', this.onMouseUp);
-    this.thumb.classList.add('slider__thumb_visibility_zIndex-up');
   };
 
   private onMouseUp = (): void => {
     document.removeEventListener('mousemove', this.onMouseMove);
     document.removeEventListener('mouseup', this.onMouseUp);
-    this.thumb.classList.remove('slider__thumb_visibility_zIndex-up');
   };
 
   private onMouseMove = (e: MouseEvent): void => {
