@@ -257,7 +257,7 @@ describe('Thumb', () => {
       label: true,
     });
 
-    expect(thumb.getThumbBlockValues(150)).toEqual({ position: 470, distance: 320 });
+    expect(thumb.getThumbBlockValues(150)).toEqual({ position: 358, distance: 208 });
   });
 
   describe('метод changeZIndex повышает z-index бегунка', () => {

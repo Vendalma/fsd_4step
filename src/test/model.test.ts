@@ -74,7 +74,7 @@ describe('Model', () => {
     });
 
     describe('проверка валидации значений min, max', () => {
-      it('если max < min, то max равно дефолтному значению', () => {
+      it('если max <= min, то max равно дефолтному значению', () => {
         const data = {
           max: 9,
           min: 10,
@@ -101,7 +101,7 @@ describe('Model', () => {
         expect(model.config).toEqual(expectedValue);
       });
 
-      it('если min > max,при max равном дефолтному значению, то min так же равно дефолтному значению', () => {
+      it('если min >= max, min равно дефолтному значению', () => {
         const data = {
           max: 100,
           min: 101,
@@ -161,7 +161,7 @@ describe('Model', () => {
         const data = {
           max: 100,
           min: 10,
-          step: 91,
+          step: 92,
           valueFrom: 11,
           valueTo: 17,
           range: true,
@@ -269,12 +269,12 @@ describe('Model', () => {
     });
 
     describe('проверка валидации valueTo', () => {
-      it('если valueTo <= valueFrom и max - min > step, то valueTo = valueFrom, а valueFrom = valueTo - step, при этом valueFrom повторно валидируется', () => {
+      it('если valueTo < valueFrom, то valueTo = valueFrom', () => {
         const data = {
           max: 100,
           min: 10,
           step: 1,
-          valueFrom: 10,
+          valueFrom: 11,
           valueTo: 9,
           range: true,
           label: true,
@@ -284,35 +284,8 @@ describe('Model', () => {
           max: 100,
           min: 10,
           step: 1,
-          valueFrom: 10,
-          valueTo: 10,
-          range: true,
-          label: true,
-          vertical: true,
-        };
-
-        model.updateConfig(data);
-
-        expect(model.config).toEqual(expectedValue);
-      });
-
-      it('если valueTo <= valueFrom и max - min <= step, то valueTo = max', () => {
-        const data = {
-          max: 100,
-          min: 10,
-          step: 90,
-          valueFrom: 10,
-          valueTo: 9,
-          range: true,
-          label: true,
-          vertical: true,
-        };
-        const expectedValue = {
-          max: 100,
-          min: 10,
-          step: 90,
-          valueFrom: 10,
-          valueTo: 100,
+          valueFrom: 11,
+          valueTo: 11,
           range: true,
           label: true,
           vertical: true,
@@ -329,7 +302,7 @@ describe('Model', () => {
           min: 10,
           step: 1,
           valueFrom: 10,
-          valueTo: 101,
+          valueTo: 100,
           range: true,
           label: true,
           vertical: true,
