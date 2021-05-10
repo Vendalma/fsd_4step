@@ -3,7 +3,7 @@ import ProgressBar from './ProgressBar';
 import Scale from './Scale';
 import SubView from './SubView';
 import Thumb from './Thumb';
-import { IConfig, IPositionState, IPositionValues, ISliderBlockValues, IViewValue } from './types';
+import { IConfig, IPositionState, IPositionValues, ISliderBlockValues, ISliderOptions, IViewValue } from './types';
 
 class View extends Observer<IViewValue> {
   private wrapper: HTMLElement;
@@ -38,7 +38,8 @@ class View extends Observer<IViewValue> {
     const isVerticalChanged = this.config && this.config.vertical !== config.vertical;
     const isMaxChanged = this.config && this.config.max !== config.max;
     const isMinChanged = this.config && this.config.min !== config.min;
-    const isDefinedParamsChanged = isMaxChanged || isMinChanged || isVerticalChanged;
+    const isStepChanged = this.config && this.config.step !== config.step;
+    const isDefinedParamsChanged = isMaxChanged || isMinChanged || isVerticalChanged || isStepChanged;
 
     if (!this.config || isDefinedParamsChanged) {
       this.updateConfig(Object.assign(params, config));
@@ -57,7 +58,6 @@ class View extends Observer<IViewValue> {
     this.thumbTwo.updateConfig(this.config);
     this.progressBar.updateConfig(this.config);
     this.subView.updateConfig(this.config);
-    this.scale.updateValues(this.config);
   }
 
   private createSliderBlock(): void {
@@ -121,9 +121,17 @@ class View extends Observer<IViewValue> {
     return this.config.vertical ? this.wrapper.offsetHeight : this.wrapper.offsetWidth;
   }
 
+  private calcSliderOptions(): ISliderOptions {
+    return {
+      sliderSize: this.getSliderSize(),
+      pixelSize: (this.config.max - this.config.min) / this.getSliderSize(),
+    };
+  }
+
   private updateSliderParams(): void {
-    this.scale.addScale(this.getSliderSize());
-    this.subView.setSliderSize(this.getSliderSize());
+    const options = { config: this.config };
+    this.scale.initScale(Object.assign(options, this.calcSliderOptions()));
+    this.subView.setSliderOptions(this.calcSliderOptions());
     this.setUpdatedPosition(this.subView.findPositionState());
   }
 
@@ -135,12 +143,12 @@ class View extends Observer<IViewValue> {
     if (this.config.vertical) {
       this.checkMouseDownPosition({
         eventPosition: e.clientY - this.sliderBlock.getBoundingClientRect().top,
-        value: this.scale.getScaleValues(e),
+        value: this.scale.getScaleValue(e),
       });
     } else {
       this.checkMouseDownPosition({
         eventPosition: e.clientX - this.sliderBlock.getBoundingClientRect().left,
-        value: this.scale.getScaleValues(e),
+        value: this.scale.getScaleValue(e),
       });
     }
   }

@@ -96,8 +96,9 @@
   &__label {
     user-select: none;
     position: absolute;
+    left: 50%;
     bottom: 20px;
-    left: -15px;
+    transform: translateX(-50%);
     height: 30px;
     padding: 5px;
     box-sizing: border-box;
@@ -108,7 +109,8 @@
     color: #ffffff;
 
     &_vertical {
-      top: -10px;
+      top: 50%;
+      transform: translateY(-50%);
       left: 20px;
     }
 

@@ -1,69 +1,108 @@
-import { IConfig, IScaleBlockValues } from './types';
+import { IConfig, IScaleBlockValues, IScaleOptions, IScalePositionParams, IScaleValues } from './types';
 
 class Scale {
   private container: HTMLElement;
 
-  private scaleItems: Array<HTMLElement>;
+  private scaleItems: NodeListOf<HTMLElement>;
+
+  private sliderSize: number;
+
+  private pixelSize: number;
 
   protected config: IConfig;
 
   constructor(container: HTMLElement) {
     this.container = container;
-    this.scaleItems = [];
   }
 
-  updateValues(values: IConfig): void {
-    this.config = values;
-    if (this.scaleItems.length > 0) {
-      const min = this.scaleItems[0];
-      const max = this.scaleItems[this.scaleItems.length - 1];
-
-      min.textContent = `${this.config.min}`;
-      max.textContent = `${this.config.max}`;
-    }
+  initScale(values: IScaleOptions): void {
+    this.config = values.config;
+    this.sliderSize = values.sliderSize;
+    this.pixelSize = values.pixelSize;
+    this.checkStepSize();
   }
 
-  addScale(value: number): void {
-    this.removeScale();
-    const sliderSize = value;
-    const fragment = document.createDocumentFragment();
-    for (let i = 0; i < 11; i += 1) {
-      const scaleBlockPosition = (sliderSize / 10) * i;
-      let scaleBlockValue = this.findScaleBlockValue(i);
-      if (i === 0) {
-        scaleBlockValue = this.config.min;
-      } else if (i === 10) {
-        scaleBlockValue = this.config.max;
-      }
-
-      const scaleBlock = this.createScaleBlock({ scaleBlockPosition, scaleBlockValue });
-      this.scaleItems.push(scaleBlock);
-      fragment.append(scaleBlock);
-    }
-    this.container.append(fragment);
-  }
-
-  getScaleValues(e: MouseEvent): number | undefined {
-    let scaleValues;
+  getScaleValue(e: MouseEvent): number | undefined {
+    let scaleValue;
     this.scaleItems.forEach((elem) => {
       if (e.target === elem) {
-        scaleValues = Number(elem.textContent);
+        scaleValue = Number(elem.textContent);
       }
     });
-    return scaleValues;
+    return scaleValue;
+  }
+
+  private checkStepSize(): void {
+    let stepSize = this.config.step / this.pixelSize;
+    let segmentsNumber = this.sliderSize / stepSize;
+    let updatedStep = this.config.step;
+    while (segmentsNumber / stepSize > 1) {
+      updatedStep += this.config.step;
+      stepSize = updatedStep / this.pixelSize;
+      segmentsNumber = this.sliderSize / stepSize;
+    }
+    this.addScale({ segmentsNumber, updatedStep });
+  }
+
+  private addScale(values: IScaleValues): void {
+    if (this.scaleItems) this.removeScale();
+    const fragment = document.createDocumentFragment();
+    const { updatedStep } = values;
+    let { segmentsNumber } = values;
+    for (let i = 0; i <= segmentsNumber; i += 1) {
+      let scalePosition = this.calcScalePosition({ value: i, updatedStep });
+      let scaleBlockValue = this.calcScaleValue(scalePosition);
+
+      if (i === 0) {
+        scaleBlockValue = this.config.min;
+        scalePosition = 0;
+      } else if (i === segmentsNumber) {
+        scaleBlockValue = this.config.max;
+        scalePosition = this.sliderSize;
+      }
+
+      const scaleBlock = this.createScaleBlock({ scalePosition, scaleBlockValue });
+
+      if (i === Math.trunc(segmentsNumber) && scalePosition < this.sliderSize) {
+        segmentsNumber = Math.trunc(segmentsNumber) + 1;
+      }
+
+      if (!(i !== segmentsNumber && scalePosition >= this.sliderSize - 15)) {
+        fragment.append(scaleBlock);
+      }
+    }
+    this.container.append(fragment);
+    this.scaleItems = this.container.querySelectorAll<HTMLElement>('.slider__scale-block');
+  }
+
+  private calcScalePosition(values: IScalePositionParams): number {
+    const { updatedStep, value } = values;
+    if (typeof updatedStep !== 'undefined') {
+      return (value * updatedStep) / this.pixelSize;
+    }
+    return (value * this.config.step) / this.pixelSize;
+  }
+
+  private calcScaleValue(value: number): number {
+    const isValuesInteger =
+      Number.isInteger(this.config.step) && Number.isInteger(this.config.min) && Number.isInteger(this.config.max);
+    if (!isValuesInteger) {
+      return Number((this.config.min + this.pixelSize * value).toFixed(1));
+    }
+    return Math.round(this.config.min + this.pixelSize * value);
   }
 
   private createScaleBlock(values: IScaleBlockValues): HTMLElement {
-    const { scaleBlockPosition, scaleBlockValue } = values;
+    const { scalePosition, scaleBlockValue } = values;
     const scaleBlock = document.createElement('div');
     scaleBlock.classList.add('slider__scale-block');
     scaleBlock.textContent = `${scaleBlockValue}`;
 
     if (this.config.vertical) {
       scaleBlock.classList.add('slider__scale-block_vertical');
-      scaleBlock.style.top = `${scaleBlockPosition}px`;
+      scaleBlock.style.top = `${scalePosition}px`;
     } else {
-      scaleBlock.style.left = `${scaleBlockPosition}px`;
+      scaleBlock.style.left = `${scalePosition}px`;
     }
     return scaleBlock;
   }
@@ -72,17 +111,6 @@ class Scale {
     this.scaleItems.forEach((elem) => {
       this.container.removeChild(elem);
     });
-    this.scaleItems.length = 0;
-  }
-
-  private findScaleBlockValue(value: number): number {
-    const scaleBlockStep = Math.abs(this.config.max - this.config.min) / 10;
-    const isValuesInteger =
-      Number.isInteger(this.config.step) && Number.isInteger(this.config.min) && Number.isInteger(this.config.max);
-    if (!isValuesInteger || scaleBlockStep <= 1) {
-      return Number((this.config.min + scaleBlockStep * value).toFixed(1));
-    }
-    return Math.trunc(this.config.min + scaleBlockStep * value);
   }
 }
 

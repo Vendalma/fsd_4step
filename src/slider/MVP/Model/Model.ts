@@ -49,18 +49,19 @@ class Model extends Observer<ModelValues> {
   }
 
   private validateMaxValue(): void {
-    if (this.config.max < this.config.min) {
+    if (this.config.max <= this.config.min) {
       this.config.max = this.defaultSettings.max;
     }
   }
 
   private validateMinValue(): void {
-    if (this.config.min > this.config.max) {
+    if (this.config.min >= this.config.max) {
       this.config.min = this.defaultSettings.min;
     }
   }
 
   private validateStepValue(): void {
+    this.config.step = Number(this.config.step.toFixed(1));
     if (this.config.step <= 0) {
       this.config.step = this.defaultSettings.step;
     } else if (this.config.step > this.config.max - this.config.min) {
@@ -80,16 +81,9 @@ class Model extends Observer<ModelValues> {
 
   private validateValueTo(): void {
     if (this.config.range) {
-      if (this.config.valueTo <= this.config.valueFrom && this.config.max - this.config.min > this.config.step) {
+      if (this.config.valueTo < this.config.valueFrom) {
         this.config.valueTo = this.config.valueFrom;
-        this.validateValueFrom();
-      }
-
-      if (this.config.valueTo <= this.config.valueFrom && this.config.max - this.config.min <= this.config.step) {
-        this.config.valueTo = this.config.max;
-      }
-
-      if (this.config.valueTo > this.config.max) {
+      } else if (this.config.valueTo > this.config.max) {
         this.config.valueTo = this.config.max;
       }
     }

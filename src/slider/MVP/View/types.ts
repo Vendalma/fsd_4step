@@ -38,8 +38,29 @@ export interface IThumbBlockValues {
 }
 
 export interface IScaleBlockValues {
-  scaleBlockPosition: number;
+  scalePosition: number;
   scaleBlockValue: number;
+}
+
+export interface IScaleValues {
+  updatedStep?: number;
+  segmentsNumber: number;
+}
+
+export interface IScaleOptions {
+  config: IConfig;
+  sliderSize: number;
+  pixelSize: number;
+}
+
+export interface IScalePositionParams {
+  value: number;
+  updatedStep?: number;
+}
+
+export interface ISliderOptions {
+  sliderSize: number;
+  pixelSize: number;
 }
 
 export interface IPositionState {
