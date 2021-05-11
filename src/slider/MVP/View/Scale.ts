@@ -35,22 +35,22 @@ class Scale {
   private checkStepSize(): void {
     let stepSize = this.config.step / this.pixelSize;
     let segmentsNumber = this.sliderSize / stepSize;
-    let updatedStep = this.config.step;
+    let currentStep = this.config.step;
     while (segmentsNumber / stepSize > 1) {
-      updatedStep += this.config.step;
-      stepSize = updatedStep / this.pixelSize;
+      currentStep += this.config.step;
+      stepSize = currentStep / this.pixelSize;
       segmentsNumber = this.sliderSize / stepSize;
     }
-    this.addScale({ segmentsNumber, updatedStep });
+    this.addScale({ segmentsNumber, currentStep });
   }
 
   private addScale(values: IScaleValues): void {
     if (this.scaleItems) this.removeScale();
     const fragment = document.createDocumentFragment();
-    const { updatedStep } = values;
+    const { currentStep } = values;
     let { segmentsNumber } = values;
     for (let i = 0; i <= segmentsNumber; i += 1) {
-      let scalePosition = this.calcScalePosition({ value: i, updatedStep });
+      let scalePosition = this.calcScalePosition({ value: i, currentStep });
       let scaleBlockValue = this.calcScaleValue(scalePosition);
 
       if (i === 0) {
@@ -76,11 +76,8 @@ class Scale {
   }
 
   private calcScalePosition(values: IScalePositionParams): number {
-    const { updatedStep, value } = values;
-    if (typeof updatedStep !== 'undefined') {
-      return (value * updatedStep) / this.pixelSize;
-    }
-    return (value * this.config.step) / this.pixelSize;
+    const { currentStep, value } = values;
+    return (value * currentStep) / this.pixelSize;
   }
 
   private calcScaleValue(value: number): number {

@@ -302,7 +302,7 @@ describe('Model', () => {
           min: 10,
           step: 1,
           valueFrom: 10,
-          valueTo: 100,
+          valueTo: 101,
           range: true,
           label: true,
           vertical: true,

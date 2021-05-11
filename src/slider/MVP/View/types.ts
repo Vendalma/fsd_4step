@@ -43,7 +43,7 @@ export interface IScaleBlockValues {
 }
 
 export interface IScaleValues {
-  updatedStep?: number;
+  currentStep: number;
   segmentsNumber: number;
 }
 
@@ -55,7 +55,7 @@ export interface IScaleOptions {
 
 export interface IScalePositionParams {
   value: number;
-  updatedStep?: number;
+  currentStep: number;
 }
 
 export interface ISliderOptions {
