@@ -16,10 +16,12 @@
   },
   "dependencies": {
     "@types/jquery": "^3.5.1",
+    "autobind-decorator": "^2.4.0",
     "jquery": "^3.5.1"
   },
   "devDependencies": {
     "@babel/core": "^7.11.5",
+    "@babel/plugin-proposal-decorators": "^7.14.2",
     "@babel/preset-env": "^7.11.5",
     "@metahub/karma-jasmine-jquery": "^4.0.1",
     "@prettier/plugin-pug": "^1.13.4",
@@ -31,8 +33,8 @@
     "babel-loader": "^8.1.0",
     "babel-preset-airbnb": "^5.0.0",
     "copy-webpack-plugin": "^6.2.1",
-    "css-loader": "^4.2.2",
-    "cssnano": "^4.1.10",
+    "css-loader": "^5.2.4",
+    "cssnano": "^5.0.2",
     "eslint": "^7.14.0",
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-config-prettier": "^6.15.0",
@@ -46,7 +48,7 @@
     "html-webpack-plugin": "^4.5.0",
     "istanbul-instrumenter-loader": "^3.0.1",
     "jasmine-jquery": "^2.1.1",
-    "karma": "^5.2.3",
+    "karma": "^6.3.2",
     "karma-coverage": "^2.0.3",
     "karma-coverage-istanbul-reporter": "^3.0.3",
     "karma-firefox-launcher": "^1.3.0",

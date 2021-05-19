@@ -1,10 +1,9 @@
+import { boundMethod } from 'autobind-decorator';
 import { IConfig } from '../../slider/MVP/Model/types';
 import './panelController.scss';
 
 class PanelController {
   private container: HTMLElement;
-
-  private panel: HTMLElement | null;
 
   private inputFrom: HTMLInputElement | null;
 
@@ -55,7 +54,7 @@ class PanelController {
 
   private checkConfig(): void {
     this.config = this.$slider.data('sliderData').rangeSlider.getConfig();
-    this.$slider.rangeSlider('getPosition', this.updatePosition.bind(this));
+    this.$slider.rangeSlider('getPosition', this.updatePosition);
   }
 
   private setConfig(): void {
@@ -72,9 +71,10 @@ class PanelController {
   }
 
   private clickPanel(): void {
-    this.container.addEventListener('click', this.onClickPanel.bind(this));
+    this.container.addEventListener('click', this.onClickPanel);
   }
 
+  @boundMethod
   private onClickPanel(e: MouseEvent): void {
     switch (e.target) {
       case this.inputLabel:
@@ -93,19 +93,19 @@ class PanelController {
         this.clickInputDouble();
         break;
       case this.inputMin:
-        this.inputMin?.addEventListener('blur', this.changeMin.bind(this));
+        this.inputMin?.addEventListener('blur', this.changeMin);
         break;
       case this.inputMax:
-        this.inputMax?.addEventListener('blur', this.changeMax.bind(this));
+        this.inputMax?.addEventListener('blur', this.changeMax);
         break;
       case this.inputStep:
-        this.inputStep?.addEventListener('blur', this.changeStep.bind(this));
+        this.inputStep?.addEventListener('blur', this.changeStep);
         break;
       case this.inputFrom:
-        this.inputFrom?.addEventListener('blur', this.changeValueFrom.bind(this));
+        this.inputFrom?.addEventListener('blur', this.changeValueFrom);
         break;
       case this.inputTo:
-        this.inputTo?.addEventListener('blur', this.changeValueTo.bind(this));
+        this.inputTo?.addEventListener('blur', this.changeValueTo);
     }
   }
 
@@ -142,30 +142,35 @@ class PanelController {
     }
   }
 
+  @boundMethod
   private changeMin(): void {
     this.$slider.rangeSlider('setConfig', {
       min: Number(this.inputMin?.value),
     });
   }
 
+  @boundMethod
   private changeMax(): void {
     this.$slider.rangeSlider('setConfig', {
       max: Number(this.inputMax?.value),
     });
   }
 
+  @boundMethod
   private changeStep(): void {
     this.$slider.rangeSlider('setConfig', {
       step: Number(this.inputStep?.value),
     });
   }
 
+  @boundMethod
   private changeValueFrom(): void {
     this.$slider.rangeSlider('setConfig', {
       valueFrom: Number(this.inputFrom?.value),
     });
   }
 
+  @boundMethod
   private changeValueTo(): void {
     this.$slider.rangeSlider('setConfig', {
       valueTo: Number(this.inputTo?.value),
@@ -177,6 +182,7 @@ class PanelController {
     if (disabledBlock) disabledBlock.disabled = !this.config.range;
   }
 
+  @boundMethod
   private updatePosition(data?: IConfig): void {
     this.config = Object.assign(this.config, data);
     this.setConfig();

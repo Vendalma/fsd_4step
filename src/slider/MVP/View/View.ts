@@ -1,3 +1,4 @@
+import { boundMethod } from 'autobind-decorator';
 import Observer from '../../Observer/Observer';
 import ProgressBar from './ProgressBar';
 import Scale from './Scale';
@@ -114,7 +115,7 @@ class View extends Observer<IViewValue> {
   }
 
   private resizeWindow(): void {
-    window.addEventListener('resize', this.updateSliderParams.bind(this));
+    window.addEventListener('resize', this.updateSliderParams);
   }
 
   private getSliderSize(): number {
@@ -128,6 +129,7 @@ class View extends Observer<IViewValue> {
     };
   }
 
+  @boundMethod
   private updateSliderParams(): void {
     const options = { config: this.config };
     this.scale.initScale(Object.assign(options, this.calcSliderOptions()));
@@ -136,9 +138,10 @@ class View extends Observer<IViewValue> {
   }
 
   private mouseDownOnSliderBlock(): void {
-    this.sliderBlock.addEventListener('mousedown', this.onMouseDown.bind(this));
+    this.sliderBlock.addEventListener('mousedown', this.onMouseDown);
   }
 
+  @boundMethod
   private onMouseDown(e: MouseEvent): void {
     if (this.config.vertical) {
       this.checkMouseDownPosition({

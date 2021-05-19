@@ -1,3 +1,4 @@
+import { boundMethod } from 'autobind-decorator';
 import Observer from '../../Observer/Observer';
 import Label from './Label';
 import { IConfigThumb, IMovingThumbValues, IThumbBlockValues, IThumbValue, IUpdatedThumbPosition } from './types';
@@ -98,13 +99,14 @@ class Thumb extends Observer<IThumbValue> {
   }
 
   private clickThumb(): void {
-    this.thumb.addEventListener('mousedown', this.onMouseDown.bind(this));
+    this.thumb.addEventListener('mousedown', this.onMouseDown);
   }
 
-  private onMouseDown = (): void => {
+  @boundMethod
+  private onMouseDown(): void {
     document.addEventListener('mousemove', this.onMouseMove);
     document.addEventListener('mouseup', this.onMouseUp);
-  };
+  }
 
   private onMouseUp = (): void => {
     document.removeEventListener('mousemove', this.onMouseMove);
