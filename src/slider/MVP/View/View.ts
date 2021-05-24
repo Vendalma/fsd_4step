@@ -1,4 +1,5 @@
 import { boundMethod } from 'autobind-decorator';
+
 import Observer from '../../Observer/Observer';
 import ProgressBar from './ProgressBar';
 import Scale from './Scale';

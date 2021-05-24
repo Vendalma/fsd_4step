@@ -6,8 +6,6 @@ import { IConfig, IUpdatedConfig, IUpdatedPosition } from './types';
 class RangeSlider {
   private model: Model;
 
-  private presenter: Presenter;
-
   private view: View;
 
   private settings: IConfig;
@@ -48,7 +46,7 @@ class RangeSlider {
   private init() {
     this.model = new Model();
     this.view = new View(this.container);
-    this.presenter = new Presenter(this.model, this.view);
+    new Presenter(this.model, this.view);
   }
 }
 

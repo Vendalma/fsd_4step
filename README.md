@@ -8,21 +8,25 @@
 
 https://github.com/Vendalma/fsd_4step.git
 
-## NPM
+## Инициализация проекта(совместимо с Node.js 14.x)
 
-`npm install ` - инициализация проекта
+1. Установить необходимые зависимости - `npm install`
 
-`npm run build-dev` - development build
+2. Собрать проект в режиме разработки - `npm run dev`
 
-`npm run build-prod` - production build
+3. Запустить локальный сервер - `npm run start`
 
-`npm run start` - запуск dev-server
+4. Сборка релизной версии проекта - `npm run build`
 
-`npm run test` - запуск тестов
+5. Деплой на GitHub Pages - `npm run deploy`
 
-`npm run lint` - запуск линтера
+---
 
-`npm run deploy` - загрузка проекта на GitHub Pages
+Команда для запуска тестов - `npm run test`
+
+---
+
+Проверка кода с помощью ESlint - `npm run lint`
 
 ## Описание
 

@@ -1,4 +1,5 @@
 import { boundMethod } from 'autobind-decorator';
+
 import Observer from '../../Observer/Observer';
 import Label from './Label';
 import { IConfigThumb, IMovingThumbValues, IThumbBlockValues, IThumbValue, IUpdatedThumbPosition } from './types';
