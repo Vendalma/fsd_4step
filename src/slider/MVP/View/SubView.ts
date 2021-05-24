@@ -35,7 +35,7 @@ class SubView {
   findValue(data: IMovingThumbValues): IPositionValues {
     const { position, dataName } = data;
     const positionMove = this.calcPosition(position);
-    const value = typeof data.value === 'undefined' ? this.calcValue(positionMove) : data.value;
+    const value = data.value ?? this.calcValue(positionMove);
     if (dataName === 'to') {
       return {
         value,

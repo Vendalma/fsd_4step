@@ -67,7 +67,7 @@ class Scale {
         segmentsNumber = Math.trunc(segmentsNumber) + 1;
       }
 
-      if (!(i !== segmentsNumber && scalePosition >= this.sliderSize - 15)) {
+      if (!(i !== Math.trunc(segmentsNumber) && scalePosition >= this.sliderSize - 15)) {
         fragment.append(scaleBlock);
       }
     }
