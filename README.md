@@ -1,6 +1,6 @@
 # Range slider jQuery plugin
 
-Тестовое задание для компании Fullstack Development
+Тестовое задание для компании MetaLamp
 
 [Демо-страница](https://vendalma.github.io/fsd_4step/)
 
