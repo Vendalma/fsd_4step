@@ -1,7 +1,6 @@
 import { boundMethod } from 'autobind-decorator';
 
 import { IConfig } from '../../slider/MVP/Model/types';
-import './panelController.scss';
 
 class PanelController {
   private container: HTMLElement;
