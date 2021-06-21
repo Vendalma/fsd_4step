@@ -79,7 +79,7 @@ class View extends Observer<IViewValue> {
   private checkOrientation(): void {
     if (this.config.vertical) {
       this.sliderBlock.classList.add('slider__block_vertical');
-    } else if (!this.config.vertical) {
+    } else {
       this.sliderBlock.classList.remove('slider__block_vertical');
     }
   }
