@@ -1,4 +1,4 @@
-export interface IConfig {
+interface IConfig {
   min: number;
   max: number;
   range: boolean;
@@ -9,19 +9,21 @@ export interface IConfig {
   label: boolean;
 }
 
-export interface IPositionValues {
+interface IPositionValues {
   value: number;
   leftPointValue: number;
   rightPointValue: number;
   nameState: string;
 }
 
-export interface IUpdatedPosition {
+interface IUpdatedPosition {
   valueFrom?: number;
   valueTo?: number;
 }
 
-export interface ModelValues {
+interface ModelValues {
   value: IConfig;
   type: 'configChanged';
 }
+
+export type { IConfig, IPositionValues, IUpdatedPosition, ModelValues };

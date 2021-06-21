@@ -1,4 +1,4 @@
-export interface IConfig {
+interface IConfig {
   min: number;
   max: number;
   range: boolean;
@@ -9,7 +9,7 @@ export interface IConfig {
   label: boolean;
 }
 
-export interface IConfigThumb {
+interface IConfigThumb {
   range: boolean;
   valueFrom: number;
   valueTo: number;
@@ -17,53 +17,53 @@ export interface IConfigThumb {
   label: boolean;
 }
 
-export interface IMovingThumbValues {
+interface IMovingThumbValues {
   position: number;
   dataName: string;
   value?: number;
 }
 
-export interface IThumbValue {
+interface IThumbValue {
   value: IMovingThumbValues;
 }
 
-export interface IUpdatedThumbPosition {
+interface IUpdatedThumbPosition {
   position: number;
   value: number;
 }
 
-export interface IThumbBlockValues {
+interface IThumbBlockValues {
   distance: number;
   position: number;
 }
 
-export interface IScaleBlockValues {
+interface IScaleBlockValues {
   scalePosition: number;
   scaleBlockValue: number;
 }
 
-export interface IScaleValues {
+interface IScaleValues {
   currentStep: number;
   segmentsNumber: number;
 }
 
-export interface IScaleOptions {
+interface IScaleOptions {
   config: IConfig;
   sliderSize: number;
   pixelSize: number;
 }
 
-export interface IScalePositionParams {
+interface IScalePositionParams {
   value: number;
   currentStep: number;
 }
 
-export interface ISliderOptions {
+interface ISliderOptions {
   sliderSize: number;
   pixelSize: number;
 }
 
-export interface IPositionState {
+interface IPositionState {
   valueFrom: {
     position: number;
     value: number;
@@ -74,19 +74,37 @@ export interface IPositionState {
   };
 }
 
-export interface IPositionValues {
+interface IPositionValues {
   value: number;
   leftPointValue: number;
   rightPointValue: number;
   nameState: string;
 }
 
-export interface ISliderBlockValues {
+interface ISliderBlockValues {
   eventPosition: number;
   value?: number;
 }
 
-export interface IViewValue {
+interface IViewValue {
   value: IPositionValues;
   type: 'viewChanged';
 }
+
+export type {
+  IConfig,
+  IConfigThumb,
+  IMovingThumbValues,
+  IThumbValue,
+  IUpdatedThumbPosition,
+  IThumbBlockValues,
+  IScaleBlockValues,
+  IScaleValues,
+  IScaleOptions,
+  IScalePositionParams,
+  ISliderOptions,
+  IPositionState,
+  IPositionValues,
+  ISliderBlockValues,
+  IViewValue,
+};

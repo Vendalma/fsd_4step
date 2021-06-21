@@ -1,4 +1,4 @@
-export interface IConfig {
+interface IConfig {
   min: number;
   max: number;
   valueFrom: number;
@@ -9,11 +9,13 @@ export interface IConfig {
   vertical: boolean;
 }
 
-export interface IUpdatedConfig {
+interface IUpdatedConfig {
   [key: string]: boolean | number;
 }
 
-export interface IUpdatedPosition {
+interface IUpdatedPosition {
   valueFrom: number;
   valueTo: number;
 }
+
+export type { IConfig, IUpdatedConfig, IUpdatedPosition };
