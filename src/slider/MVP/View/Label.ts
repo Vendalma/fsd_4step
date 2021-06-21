@@ -16,7 +16,7 @@ class Label {
   }
 
   setLabelValue(value: number): void {
-    this.elementLabel.textContent = `${value}`;
+    this.elementLabel.textContent = String(value);
   }
 
   updateConfig(data: IConfigLabel): void {

@@ -58,11 +58,11 @@ class PanelController {
   }
 
   private setConfig(): void {
-    if (this.inputFrom) this.inputFrom.value = `${this.config.valueFrom}`;
-    if (this.inputTo) this.inputTo.value = `${this.config.valueTo}`;
-    if (this.inputMin) this.inputMin.value = `${this.config.min}`;
-    if (this.inputMax) this.inputMax.value = `${this.config.max}`;
-    if (this.inputStep) this.inputStep.value = `${this.config.step}`;
+    if (this.inputFrom) this.inputFrom.value = String(this.config.valueFrom);
+    if (this.inputTo) this.inputTo.value = String(this.config.valueTo);
+    if (this.inputMin) this.inputMin.value = String(this.config.min);
+    if (this.inputMax) this.inputMax.value = String(this.config.max);
+    if (this.inputStep) this.inputStep.value = String(this.config.step);
     if (this.inputLabel) this.inputLabel.checked = !!this.config.label;
     if (this.inputHorizontal && !this.config.vertical) this.inputHorizontal.checked = true;
     if (this.inputVertical && this.config.vertical) this.inputVertical.checked = true;

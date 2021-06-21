@@ -93,7 +93,7 @@ class Scale {
     const { scalePosition, scaleBlockValue } = values;
     const scaleBlock = document.createElement('div');
     scaleBlock.classList.add('slider__scale-block');
-    scaleBlock.textContent = `${scaleBlockValue}`;
+    scaleBlock.textContent = String(scaleBlockValue);
 
     if (this.config.vertical) {
       scaleBlock.classList.add('slider__scale-block_vertical');
