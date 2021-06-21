@@ -25,10 +25,7 @@ import '../styles.scss';
     },
   };
 
-  jQuery.fn.rangeSlider = function (
-    method?: string | IConfig | IUpdatedConfig,
-    settings?: IConfig | IUpdatedConfig | ((data?: IConfig) => void),
-  ) {
+  jQuery.fn.rangeSlider = function (method?: string | IConfig | IUpdatedConfig) {
     if (typeof method === 'string' && methods[method]) {
       return methods[method].apply(this, Array.prototype.slice.call(arguments, 1)); /* eslint-disable-line */
     }
