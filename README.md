@@ -28,6 +28,8 @@ https://github.com/Vendalma/fsd_4step.git
 
 Проверка кода с помощью ESlint - `npm run lint`
 
+Проверка стилей с помощью stylelint - `npm run stylelint`
+
 ## Описание
 
 Архитектура приложения разделена на три слоя:

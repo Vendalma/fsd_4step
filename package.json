@@ -12,7 +12,8 @@
     "start": "webpack-dev-server --mode development --open  --watch",
     "test": "karma start karma.conf.js",
     "lint": "eslint . --fix --ext .ts",
-    "deploy": "gh-pages -b pages -d dist"
+    "deploy": "gh-pages -b pages -d dist",
+    "stylelint": "stylelint '**/*{.css,.scss}' --fix"
   },
   "devDependencies": {
     "@metahub/karma-jasmine-jquery": "^4.0.1",
@@ -43,6 +44,13 @@
     "karma-typescript": "^5.2.0",
     "karma-webpack": "^4.0.2",
     "prettier": "^2.2.1",
+    "stylelint": "^13.13.1",
+    "stylelint-config-prettier": "^8.0.2",
+    "stylelint-config-rational-order": "^0.1.2",
+    "stylelint-config-standard": "^22.0.0",
+    "stylelint-order": "^4.1.0",
+    "stylelint-prettier": "^1.2.0",
+    "stylelint-scss": "^3.19.0",
     "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
