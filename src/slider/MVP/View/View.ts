@@ -144,16 +144,18 @@ class View extends Observer<IViewValue> {
 
   @boundMethod
   private onMouseDown(e: MouseEvent): void {
-    if (this.config.vertical) {
-      this.checkMouseDownPosition({
-        eventPosition: e.clientY - this.sliderBlock.getBoundingClientRect().top,
-        value: this.scale.getScaleValue(e),
-      });
-    } else {
-      this.checkMouseDownPosition({
-        eventPosition: e.clientX - this.sliderBlock.getBoundingClientRect().left,
-        value: this.scale.getScaleValue(e),
-      });
+    const isCurrentTargetOrProgressBar =
+      e.target === e.currentTarget || e.target === this.progressBar.getProgressBarBlock();
+    if (isCurrentTargetOrProgressBar) {
+      this.config.vertical
+        ? this.checkMouseDownPosition({
+            eventPosition: e.clientY - this.sliderBlock.getBoundingClientRect().top,
+            value: this.scale.getScaleValue(e),
+          })
+        : this.checkMouseDownPosition({
+            eventPosition: e.clientX - this.sliderBlock.getBoundingClientRect().left,
+            value: this.scale.getScaleValue(e),
+          });
     }
   }
 

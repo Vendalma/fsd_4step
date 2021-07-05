@@ -32,6 +32,10 @@ class ProgressBar {
     }
   }
 
+  getProgressBarBlock(): HTMLElement {
+    return this.progressBar;
+  }
+
   updateConfig(data: IConfigBar): void {
     this.config = data;
     this.progressBar.removeAttribute('style');
