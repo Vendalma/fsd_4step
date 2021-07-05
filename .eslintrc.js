@@ -49,5 +49,11 @@ module.exports = {
     'max-classes-per-file': ['error', 2],
     'default-case': 0,
     'no-new': 0,
+    "no-unused-expressions": [
+      "error",
+      {
+        "allowTernary": true
+      }
+    ]
   },
 };
