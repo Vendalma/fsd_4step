@@ -266,6 +266,33 @@ describe('Model', () => {
 
         expect(model.config).toEqual(expectedValue);
       });
+
+      it('если valueFrom не входит в позиции шага', () => {
+        const data = {
+          max: 100,
+          min: 10,
+          step: 1,
+          valueFrom: 10.6,
+          valueTo: 17,
+          range: true,
+          label: true,
+          vertical: true,
+        };
+        const expectedValue = {
+          max: 100,
+          min: 10,
+          step: 1,
+          valueFrom: 11,
+          valueTo: 17,
+          range: true,
+          label: true,
+          vertical: true,
+        };
+
+        model.updateConfig(data);
+
+        expect(model.config).toEqual(expectedValue);
+      });
     });
 
     describe('проверка валидации valueTo', () => {
@@ -313,6 +340,33 @@ describe('Model', () => {
           step: 1,
           valueFrom: 10,
           valueTo: 100,
+          range: true,
+          label: true,
+          vertical: true,
+        };
+
+        model.updateConfig(data);
+
+        expect(model.config).toEqual(expectedValue);
+      });
+
+      it('если valueTo не входит в позиции шага', () => {
+        const data = {
+          max: 100,
+          min: 10,
+          step: 1,
+          valueFrom: 10,
+          valueTo: 17.8,
+          range: true,
+          label: true,
+          vertical: true,
+        };
+        const expectedValue = {
+          max: 100,
+          min: 10,
+          step: 1,
+          valueFrom: 10,
+          valueTo: 18,
           range: true,
           label: true,
           vertical: true,

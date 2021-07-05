@@ -76,6 +76,8 @@ class Model extends Observer<ModelValues> {
       this.config.valueFrom = this.config.max;
     } else if (this.config.range && this.config.valueFrom > this.config.max) {
       this.config.valueFrom = this.config.min;
+    } else if (this.checkCurrentPosition(this.config.valueFrom)) {
+      this.config.valueFrom = this.findCurrentPosition(this.config.valueFrom);
     }
   }
 
@@ -85,8 +87,26 @@ class Model extends Observer<ModelValues> {
         this.config.valueTo = this.config.valueFrom;
       } else if (this.config.valueTo > this.config.max) {
         this.config.valueTo = this.config.max;
+      } else if (this.checkCurrentPosition(this.config.valueTo)) {
+        this.config.valueTo = this.findCurrentPosition(this.config.valueTo);
       }
     }
+  }
+
+  private findCurrentPosition(position: number) {
+    return (
+      Math.round(position / this.config.step) * this.config.step +
+      (this.config.min % this.config.step) +
+      Math.round((-this.config.min % this.config.step) / this.config.step) * this.config.step
+    );
+  }
+
+  private checkCurrentPosition(position: number): boolean {
+    return (
+      position !== Math.round(position / this.config.step) * this.config.step + (this.config.min % this.config.step) &&
+      position !== this.config.max &&
+      position !== this.config.min
+    );
   }
 }
 
