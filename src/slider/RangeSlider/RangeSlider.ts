@@ -32,15 +32,12 @@ class RangeSlider {
     return this.settings;
   }
 
-  getPosition(fn: (value?: IUpdatedPosition) => void): void {
-    this.model.subscribe((data) => {
-      if (data.type === 'configChanged') {
-        fn({
-          valueFrom: data.value.valueFrom,
-          valueTo: data.value.valueTo,
-        });
-      }
-    });
+  subscribeModel(fn: () => void): void {
+    this.model.subscribe(fn);
+  }
+
+  unsubscribeModel(fn: () => void): void {
+    this.model.unsubscribe(fn);
   }
 
   private init() {

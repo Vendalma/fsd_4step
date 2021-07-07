@@ -12,9 +12,15 @@ import '../styles.scss';
       });
     },
 
-    getPosition(fn: (data?: IConfig) => void) {
+    subscribe(fn: () => void) {
       return this.each(function (this: HTMLElement) {
-        $(this).data('sliderData').rangeSlider.getPosition(fn);
+        $(this).data('sliderData').rangeSlider.subscribeModel(fn);
+      });
+    },
+
+    unsubscribe(fn: () => void) {
+      return this.each(function (this: HTMLElement) {
+        $(this).data('sliderData').rangeSlider.unsubscribeModel(fn);
       });
     },
 

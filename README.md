@@ -76,20 +76,45 @@ $('#id').rangeSlider({
 $('#id').rangeSlider('setConfig', {min: -100});
 ```
 
-Получение позиций бегунков
+Получение обновленных параметров слайдера
 
 ```
-function fn(value) {
-  console.log(value)
-}
+const fn = ((sliderSettings) => {
+  console.log(changedSettings);
+});
 
-$('#id').rangeSlider('returnPosition', fn);
+$('#id').rangeSlider('subscribe', fn);
 
 /*
 {
-  positionFrom: 0,
-  positionTo : 100
+  "value": {
+    "min": 0,
+    "max": 100,
+    "label": true,
+    "range": true,
+    "step": 1,
+    "vertical": false,
+    "valueFrom": 8,
+    "valueTo": 50
+  },
+  "type": "configChanged"
 }
+*/
+```
+
+Отписка от обновлений слайдера
+
+```
+const fn = ((sliderSettings) => {
+  console.log(changedSettings);
+});
+
+$('#id').rangeSlider('subscribe', fn);
+
+$('#id').rangeSlider('unsubscribe', fn);
+
+/*
+  в консоли ничего не появится, т.к. ф-я fn отписана от обновлений слайдера
 */
 ```
 

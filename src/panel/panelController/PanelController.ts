@@ -54,7 +54,7 @@ class PanelController {
 
   private checkConfig(): void {
     this.config = this.$slider.data('sliderData').rangeSlider.getConfig();
-    this.$slider.rangeSlider('getPosition', this.updatePosition);
+    this.$slider.rangeSlider('subscribe', this.updatePosition);
   }
 
   private setConfig(): void {
@@ -183,8 +183,7 @@ class PanelController {
   }
 
   @boundMethod
-  private updatePosition(data?: IConfig): void {
-    this.config = Object.assign(this.config, data);
+  private updatePosition(): void {
     this.setConfig();
   }
 }
