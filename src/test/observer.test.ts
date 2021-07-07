@@ -34,12 +34,19 @@ describe('Observer', () => {
   });
 
   it('ф-я broadcast передает данные всем подписчикам', () => {
-    classB.observer.subscribe(({ value, type }: valueForBroadcast) => {
-      classB.classA.update({ value, type });
-    });
+    classB.observer.subscribe((classB.classA.update));
 
     classB.observer.broadcast({ value: 10, type: 'test' });
 
     expect(classB.classA.update).toHaveBeenCalledWith({ value: 10, type: 'test' });
+  });
+
+  it('ф-я unsubscribe отписывает от обновлений', () => {
+    classB.observer.subscribe((classB.classA.update));
+    classB.observer.unsubscribe((classB.classA.update));
+
+    classB.observer.broadcast({ value: 10, type: 'test' });
+
+    expect(classB.classA.update).not.toHaveBeenCalledWith({ value: 10, type: 'test' });
   });
 });
