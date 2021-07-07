@@ -93,7 +93,7 @@ class Model extends Observer<ModelValues> {
     }
   }
 
-  private findCurrentPosition(position: number) {
+  private findCurrentPosition(position: number): number {
     return (
       Math.round(position / this.config.step) * this.config.step +
       (this.config.min % this.config.step) +
