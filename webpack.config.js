@@ -10,7 +10,11 @@ const PATHS = {
   assets: 'assets/',
 };
 const config = {
-  entry: `${PATHS.src}/index.ts`,
+  entry: {
+    main: [`${PATHS.src}/index.ts`],
+    slider: [`${PATHS.src}/slider/jquerySlider/slider.ts`],
+  },
+
   output: {
     path: PATHS.dist,
     filename: `${PATHS.assets}js/[name].js`,
