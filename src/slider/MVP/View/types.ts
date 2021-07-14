@@ -16,16 +16,22 @@ interface IConfigThumb {
   vertical: boolean;
   label: boolean;
 }
-
-interface IMovingThumbValues {
+interface IMovingThumbPosition {
   position: number;
   dataName: string;
+  type?: 'thumbMoving';
+  evtType?: string;
   value?: number;
 }
 
-interface IThumbValue {
-  value: IMovingThumbValues;
+interface IThumbStartPosition {
+  position: number;
+  type: 'thumbStart';
 }
+
+type IThumbValue = {
+  value: IMovingThumbPosition | IThumbStartPosition;
+};
 
 interface IUpdatedThumbPosition {
   position: number;
@@ -94,7 +100,6 @@ interface IViewValue {
 export type {
   IConfig,
   IConfigThumb,
-  IMovingThumbValues,
   IThumbValue,
   IUpdatedThumbPosition,
   IThumbBlockValues,
@@ -107,4 +112,6 @@ export type {
   IPositionValues,
   ISliderBlockValues,
   IViewValue,
+  IMovingThumbPosition,
+  IThumbStartPosition,
 };

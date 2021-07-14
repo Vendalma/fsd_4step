@@ -1,8 +1,6 @@
-import { boundMethod } from 'autobind-decorator';
-
 import Observer from '../../Observer/Observer';
 import Label from './Label';
-import { IConfigThumb, IMovingThumbValues, IThumbBlockValues, IThumbValue, IUpdatedThumbPosition } from './types';
+import { IConfigThumb, IThumbBlockValues, IThumbValue, IUpdatedThumbPosition } from './types';
 
 class Thumb extends Observer<IThumbValue> {
   private config: IConfigThumb;
@@ -27,11 +25,8 @@ class Thumb extends Observer<IThumbValue> {
   }
 
   updatePosition(data: IUpdatedThumbPosition): void {
-    if (!this.config.vertical) {
-      this.thumb.style.left = `${data.position}px`;
-    } else {
-      this.thumb.style.top = `${data.position}px`;
-    }
+    const side = this.config.vertical ? 'top' : 'left';
+    this.thumb.style[side] = `${data.position}px`;
     this.setLabelValue(data.value);
   }
 
@@ -55,16 +50,11 @@ class Thumb extends Observer<IThumbValue> {
   }
 
   getThumbBlockValues(value: number): IThumbBlockValues {
-    if (!this.config.vertical) {
-      return {
-        distance: Math.abs(this.thumb.offsetLeft - value),
-        position: this.thumb.offsetLeft,
-      };
-    }
+    const side = this.config.vertical ? 'offsetTop' : 'offsetLeft';
 
     return {
-      distance: Math.abs(this.thumb.offsetTop - value),
-      position: this.thumb.offsetTop,
+      distance: Math.abs(this.thumb[side] - value),
+      position: this.thumb[side],
     };
   }
 
@@ -103,35 +93,34 @@ class Thumb extends Observer<IThumbValue> {
     this.thumb.addEventListener('mousedown', this.onMouseDown);
   }
 
-  @boundMethod
-  private onMouseDown(): void {
-    document.addEventListener('mousemove', this.onMouseMove);
+  private onMouseDown = (e: MouseEvent): void => {
+    document.addEventListener('mousemove', this.handleDocumentMouseMove);
     document.addEventListener('mouseup', this.onMouseUp);
+    this.broadcast({ value: { type: 'thumbStart', position: this.findStartValue(e) } });
+    e.preventDefault();
+  };
+
+  private findStartValue(e: MouseEvent): number {
+    const target = e.target as HTMLElement;
+    const targetLength = this.config.vertical ? target.clientHeight : target.clientWidth;
+    const offset = this.config.vertical ? e.offsetY : e.offsetX;
+    const sliderBound = this.config.vertical
+      ? this.slider.getBoundingClientRect().y
+      : this.slider.getBoundingClientRect().x;
+    const shift = sliderBound + offset - targetLength / 2;
+    return shift;
   }
+
+  private handleDocumentMouseMove = (e: MouseEvent): void => {
+    this.broadcast({
+      value: { type: 'thumbMoving', position: this.config.vertical ? e.clientY : e.clientX, dataName: this.dataName },
+    });
+  };
 
   private onMouseUp = (): void => {
-    document.removeEventListener('mousemove', this.onMouseMove);
+    document.removeEventListener('mousemove', this.handleDocumentMouseMove);
     document.removeEventListener('mouseup', this.onMouseUp);
   };
-
-  private onMouseMove = (e: MouseEvent): void => {
-    e.preventDefault();
-    this.broadcast({ value: this.findPosition(e) });
-  };
-
-  private findPosition(e: MouseEvent): IMovingThumbValues {
-    if (!this.config.vertical) {
-      return {
-        position: e.clientX - this.slider.getBoundingClientRect().left,
-        dataName: this.dataName,
-      };
-    }
-
-    return {
-      position: e.clientY - this.slider.getBoundingClientRect().top,
-      dataName: this.dataName,
-    };
-  }
 }
 
 export default Thumb;

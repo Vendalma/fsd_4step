@@ -1,11 +1,18 @@
 import { boundMethod } from 'autobind-decorator';
-
 import Observer from '../../Observer/Observer';
 import ProgressBar from './ProgressBar';
 import Scale from './Scale';
 import SubView from './SubView';
 import Thumb from './Thumb';
-import { IConfig, IPositionState, IPositionValues, ISliderBlockValues, ISliderOptions, IViewValue } from './types';
+import {
+  IConfig,
+  IMovingThumbPosition,
+  IPositionState,
+  IPositionValues,
+  ISliderBlockValues,
+  ISliderOptions,
+  IViewValue,
+} from './types';
 
 class View extends Observer<IViewValue> {
   private wrapper: HTMLElement;
@@ -96,11 +103,23 @@ class View extends Observer<IViewValue> {
 
   private subscribeOnThumb(): void {
     this.thumbOne.subscribe(({ value }) => {
-      this.broadcastUpdates(this.subView.findValue(value));
+      switch (value.type) {
+        case 'thumbStart':
+          this.subView.setStartPosition(value.position);
+          break;
+        case 'thumbMoving':
+          this.broadcastUpdates(this.subView.findValue(value));
+      }
     });
 
     this.thumbTwo.subscribe(({ value }) => {
-      this.broadcastUpdates(this.subView.findValue(value));
+      switch (value.type) {
+        case 'thumbStart':
+          this.subView.setStartPosition(value.position);
+          break;
+        case 'thumbMoving':
+          this.broadcastUpdates(this.subView.findValue(value));
+      }
     });
   }
 
@@ -144,8 +163,11 @@ class View extends Observer<IViewValue> {
 
   @boundMethod
   private onMouseDown(e: MouseEvent): void {
+    const target = e.target as HTMLElement;
     const isCurrentTargetOrProgressBar =
-      e.target === e.currentTarget || e.target === this.progressBar.getProgressBarBlock();
+      target === e.currentTarget ||
+      target.classList.contains('slider__scale-block') ||
+      target.classList.contains('slider__progress-bar');
     if (isCurrentTargetOrProgressBar) {
       this.config.vertical
         ? this.checkMouseDownPosition({
@@ -170,23 +192,34 @@ class View extends Observer<IViewValue> {
     const isThumbSecondNearest =
       eventPosition > thumbSecondPosition || thumbSecondClickDistance < thumbFirstClickDistance;
 
-    if (!this.config.range || isThumbFirstNearest) {
-      this.broadcastUpdates(
-        this.subView.findValue({
-          position: eventPosition,
-          dataName: 'from',
-          value,
-        }),
-      );
-    } else if (isThumbSecondNearest) {
-      this.broadcastUpdates(
-        this.subView.findValue({
-          position: eventPosition,
-          dataName: 'to',
-          value,
-        }),
-      );
+    const positionFrom = { dataName: 'from', position: eventPosition, value };
+    const positionTo = { dataName: 'to', position: eventPosition, value };
+
+    if (thumbFirstPosition === 0 && thumbSecondPosition === this.getSliderSize()) {
+      if (this.config.range && isThumbFirstNearest) {
+        this.findThumbPosition(positionTo);
+      } else if (isThumbSecondNearest) {
+        this.findThumbPosition(positionFrom);
+      }
     }
+
+    if (!this.config.range || isThumbFirstNearest) {
+      this.findThumbPosition(positionFrom);
+    } else if (isThumbSecondNearest) {
+      this.findThumbPosition(positionTo);
+    }
+  }
+
+  private findThumbPosition(data: IMovingThumbPosition): void {
+    const { position, dataName, value } = data;
+    this.broadcastUpdates(
+      this.subView.findValue({
+        position,
+        dataName,
+        evtType: 'click',
+        value,
+      }),
+    );
   }
 
   private checkThumbOnePosition(value: number): void {
