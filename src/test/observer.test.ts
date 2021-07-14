@@ -34,7 +34,7 @@ describe('Observer', () => {
   });
 
   it('ф-я broadcast передает данные всем подписчикам', () => {
-    classB.observer.subscribe((classB.classA.update));
+    classB.observer.subscribe(classB.classA.update);
 
     classB.observer.broadcast({ value: 10, type: 'test' });
 
@@ -42,8 +42,8 @@ describe('Observer', () => {
   });
 
   it('ф-я unsubscribe отписывает от обновлений', () => {
-    classB.observer.subscribe((classB.classA.update));
-    classB.observer.unsubscribe((classB.classA.update));
+    classB.observer.subscribe(classB.classA.update);
+    classB.observer.unsubscribe(classB.classA.update);
 
     classB.observer.broadcast({ value: 10, type: 'test' });
 
