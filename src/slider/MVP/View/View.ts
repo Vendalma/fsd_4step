@@ -195,7 +195,12 @@ class View extends Observer<IViewValue> {
     const positionFrom = { dataName: 'from', position: eventPosition, value };
     const positionTo = { dataName: 'to', position: eventPosition, value };
 
-    if (thumbFirstPosition === 0 && thumbSecondPosition === this.getSliderSize()) {
+    const isDistanceEqualOneStep =
+      thumbFirstPosition === 0 &&
+      thumbSecondPosition === this.getSliderSize() &&
+      this.config.max - this.config.min === this.config.step;
+
+    if (isDistanceEqualOneStep) {
       if (this.config.range && isThumbFirstNearest) {
         this.findThumbPosition(positionTo);
       } else if (isThumbSecondNearest) {
