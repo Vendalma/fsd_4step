@@ -130,13 +130,14 @@ describe('View', () => {
           range: true,
           min: 0,
           max: 100,
-          valueFrom: 15,
-          valueTo: 30,
+          valueFrom: 10,
+          valueTo: 100,
           label: true,
           vertical: false,
           step: 1,
         });
-        event = new MouseEvent('mousedown', { clientX: 10 });
+
+        event = new MouseEvent('mousedown', { clientX: -300 });
         blockSlider?.dispatchEvent(event);
 
         expect(view.broadcast).toHaveBeenCalled();
@@ -197,10 +198,10 @@ describe('View', () => {
     it('range = true, клик рядом со вторым бегунком, то он передвигается в это место', () => {
       view.setConfig({
         range: true,
-        min: 0,
+        min: 99,
         max: 100,
-        valueFrom: 15,
-        valueTo: 30,
+        valueFrom: 99,
+        valueTo: 100,
         label: true,
         vertical: true,
         step: 1,
@@ -209,6 +210,23 @@ describe('View', () => {
       blockSlider?.dispatchEvent(event);
 
       expect(view.broadcast).toHaveBeenCalled();
+    });
+
+    it('если клик на бегунок, то он не передвигается', () => {
+      view.setConfig({
+        range: true,
+        min: 99,
+        max: 100,
+        valueFrom: 99,
+        valueTo: 100,
+        label: true,
+        vertical: true,
+        step: 1,
+      });
+      event = new MouseEvent('mousedown', { clientY: -400 });
+      thumbFirst?.dispatchEvent(event);
+
+      expect(view.broadcast).not.toHaveBeenCalled();
     });
   });
 });

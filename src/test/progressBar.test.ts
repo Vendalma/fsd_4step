@@ -3,7 +3,7 @@ import { IPositionState } from '../slider/MVP/View/types';
 
 const $block = $('<div>');
 const bar: ProgressBar = new ProgressBar($block[0]);
-const progressBarBlock = $block[0].querySelector('.slider__progress-bar');
+const progressBarBlock = bar.getProgressBarBlock();
 
 describe('ProgressBar', () => {
   it('Инициализация ProgressBar', () => {
@@ -66,5 +66,9 @@ describe('ProgressBar', () => {
     bar.updateConfig(newConf);
 
     expect(progressBarBlock).toHaveClass('slider__progress-bar_vertical');
+  });
+
+  it('метод getProgressBarBlock возвращает эл-т прогресс бара', () => {
+    expect(bar.getProgressBarBlock()).toEqual(progressBarBlock);
   });
 });
