@@ -13,9 +13,10 @@ class TestView extends View {
 
 const view: TestView = new TestView();
 const blockSlider = $block[0].querySelector('.slider__block');
+const sliderWrapper = blockSlider?.parentElement as HTMLElement;
 const progressBar = blockSlider?.querySelector('.slider__progress-bar');
-const thumbFirst = blockSlider?.querySelector('.slider__thumb_type_first');
-const thumbSecond = blockSlider?.querySelector('.slider__thumb_type_second');
+const thumbFirst = blockSlider?.querySelector('.slider__thumb_type_first') as HTMLElement;
+const thumbSecond = blockSlider?.querySelector('.slider__thumb_type_second') as HTMLElement;
 const label = thumbFirst?.querySelector('.slider__label');
 
 describe('View', () => {
@@ -159,6 +160,30 @@ describe('View', () => {
 
         expect(view.broadcast).toHaveBeenCalled();
       });
+
+      it('если позиция 1 бегунка = 0, а позиция 2 бегунка = размеру слайдера, то при клике на минимальное значение перемещается второй бегунок', () => {
+        view.setConfig({
+          range: true,
+          min: 99,
+          max: 100,
+          valueFrom: 99,
+          valueTo: 100,
+          label: true,
+          vertical: false,
+          step: 1,
+        });
+
+        sliderWrapper.style.width = '40px';
+        thumbFirst.style.position = 'absolute';
+        thumbFirst.style.left = '0px';
+        thumbSecond.style.position = 'absolute';
+        thumbSecond.style.left = '40px';
+        event = new MouseEvent('mousedown', { clientX: 0 });
+
+        blockSlider?.dispatchEvent(event);
+
+        expect(view.broadcast).toHaveBeenCalled();
+      });
     });
 
     describe('при vertical = true место клика вычисляется по вертикальной оси', () => {
@@ -207,6 +232,29 @@ describe('View', () => {
         step: 1,
       });
       event = new MouseEvent('mousedown', { clientY: 400 });
+      blockSlider?.dispatchEvent(event);
+
+      expect(view.broadcast).toHaveBeenCalled();
+    });
+
+    it('если позиция 1 бегунка = 0, а позиция 2 бегунка = размеру слайдера, то при клике на максимальное значение перемещается первый бегунок', () => {
+      view.setConfig({
+        range: true,
+        min: -99,
+        max: -98,
+        valueFrom: -99,
+        valueTo: -98,
+        label: true,
+        vertical: true,
+        step: 1,
+      });
+
+      sliderWrapper.style.height = '40px';
+      thumbFirst.style.position = 'absolute';
+      thumbFirst.style.top = '0px';
+      thumbSecond.style.position = 'absolute';
+      thumbSecond.style.top = '40px';
+      event = new MouseEvent('mousedown', { clientY: 40 });
       blockSlider?.dispatchEvent(event);
 
       expect(view.broadcast).toHaveBeenCalled();
