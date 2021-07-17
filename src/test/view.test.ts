@@ -15,8 +15,12 @@ const view: TestView = new TestView();
 const blockSlider = $block[0].querySelector('.slider__block');
 const sliderWrapper = blockSlider?.parentElement as HTMLElement;
 const progressBar = blockSlider?.querySelector('.slider__progress-bar');
-const thumbFirst = blockSlider?.querySelector('.slider__thumb_type_first') as HTMLElement;
-const thumbSecond = blockSlider?.querySelector('.slider__thumb_type_second') as HTMLElement;
+const thumbFirst = blockSlider?.querySelector(
+  '.slider__thumb_type_first',
+) as HTMLElement;
+const thumbSecond = blockSlider?.querySelector(
+  '.slider__thumb_type_second',
+) as HTMLElement;
 const label = thumbFirst?.querySelector('.slider__label');
 
 describe('View', () => {

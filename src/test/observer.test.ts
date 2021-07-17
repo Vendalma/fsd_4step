@@ -38,7 +38,10 @@ describe('Observer', () => {
 
     classB.observer.broadcast({ value: 10, type: 'test' });
 
-    expect(classB.classA.update).toHaveBeenCalledWith({ value: 10, type: 'test' });
+    expect(classB.classA.update).toHaveBeenCalledWith({
+      value: 10,
+      type: 'test',
+    });
   });
 
   it('ф-я unsubscribe отписывает от обновлений', () => {
@@ -47,6 +50,9 @@ describe('Observer', () => {
 
     classB.observer.broadcast({ value: 10, type: 'test' });
 
-    expect(classB.classA.update).not.toHaveBeenCalledWith({ value: 10, type: 'test' });
+    expect(classB.classA.update).not.toHaveBeenCalledWith({
+      value: 10,
+      type: 'test',
+    });
   });
 });

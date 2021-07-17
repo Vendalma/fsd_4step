@@ -28,7 +28,9 @@ class ProgressBar {
       this.progressBar.style[dimension] = `${positionThumbFirst}px`;
     } else {
       this.progressBar.style[side] = `${positionThumbFirst}px`;
-      this.progressBar.style[dimension] = `${positionThumbSecond - positionThumbFirst}px`;
+      this.progressBar.style[dimension] = `${
+        positionThumbSecond - positionThumbFirst
+      }px`;
     }
   }
 

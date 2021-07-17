@@ -1,4 +1,5 @@
 import { boundMethod } from 'autobind-decorator';
+
 import Observer from '../../Observer/Observer';
 import ProgressBar from './ProgressBar';
 import Scale from './Scale';
@@ -44,11 +45,13 @@ class View extends Observer<IViewValue> {
 
   setConfig(config: IConfig): void {
     const params = {};
-    const isVerticalChanged = this.config && this.config.vertical !== config.vertical;
+    const isVerticalChanged =
+      this.config && this.config.vertical !== config.vertical;
     const isMaxChanged = this.config && this.config.max !== config.max;
     const isMinChanged = this.config && this.config.min !== config.min;
     const isStepChanged = this.config && this.config.step !== config.step;
-    const isDefinedParamsChanged = isMaxChanged || isMinChanged || isVerticalChanged || isStepChanged;
+    const isDefinedParamsChanged =
+      isMaxChanged || isMinChanged || isVerticalChanged || isStepChanged;
 
     if (!this.config || isDefinedParamsChanged) {
       this.updateConfig(Object.assign(params, config));
@@ -139,7 +142,9 @@ class View extends Observer<IViewValue> {
   }
 
   private getSliderSize(): number {
-    return this.config.vertical ? this.wrapper.offsetHeight : this.wrapper.offsetWidth;
+    return this.config.vertical
+      ? this.wrapper.offsetHeight
+      : this.wrapper.offsetWidth;
   }
 
   private calcSliderOptions(): ISliderOptions {
@@ -168,29 +173,38 @@ class View extends Observer<IViewValue> {
       target === e.currentTarget ||
       target.classList.contains('slider__scale-block') ||
       target.classList.contains('slider__progress-bar');
-    if (isCurrentTargetOrProgressBar) {
-      this.config.vertical
-        ? this.checkMouseDownPosition({
-            eventPosition: e.clientY - this.sliderBlock.getBoundingClientRect().top,
-            value: this.scale.getScaleValue(e),
-          })
-        : this.checkMouseDownPosition({
-            eventPosition: e.clientX - this.sliderBlock.getBoundingClientRect().left,
-            value: this.scale.getScaleValue(e),
-          });
-    }
+
+    const side = this.config.vertical
+      ? this.sliderBlock.getBoundingClientRect().top
+      : this.sliderBlock.getBoundingClientRect().left;
+
+    const client = this.config.vertical ? e.clientY : e.clientX;
+
+    if (isCurrentTargetOrProgressBar)
+      this.checkMouseDownPosition({
+        eventPosition: client - side,
+        value: this.scale.getScaleValue(e),
+      });
   }
 
   private checkMouseDownPosition(data: ISliderBlockValues): void {
     const { eventPosition, value } = data;
-    const thumbFirstPosition = this.thumbOne.getThumbBlockValues(eventPosition).position;
-    const thumbFirstClickDistance = this.thumbOne.getThumbBlockValues(eventPosition).distance;
-    const thumbSecondPosition = this.thumbTwo.getThumbBlockValues(eventPosition).position;
-    const thumbSecondClickDistance = this.thumbTwo.getThumbBlockValues(eventPosition).distance;
+    const thumbFirstPosition = this.thumbOne.getThumbBlockValues(eventPosition)
+      .position;
+    const thumbFirstClickDistance = this.thumbOne.getThumbBlockValues(
+      eventPosition,
+    ).distance;
+    const thumbSecondPosition = this.thumbTwo.getThumbBlockValues(eventPosition)
+      .position;
+    const thumbSecondClickDistance = this.thumbTwo.getThumbBlockValues(
+      eventPosition,
+    ).distance;
     const isThumbFirstNearest =
-      eventPosition < thumbFirstPosition || thumbFirstClickDistance < thumbSecondClickDistance;
+      eventPosition < thumbFirstPosition ||
+      thumbFirstClickDistance < thumbSecondClickDistance;
     const isThumbSecondNearest =
-      eventPosition > thumbSecondPosition || thumbSecondClickDistance < thumbFirstClickDistance;
+      eventPosition > thumbSecondPosition ||
+      thumbSecondClickDistance < thumbFirstClickDistance;
 
     const positionFrom = { dataName: 'from', position: eventPosition, value };
     const positionTo = { dataName: 'to', position: eventPosition, value };
@@ -230,7 +244,8 @@ class View extends Observer<IViewValue> {
   private checkThumbOnePosition(value: number): void {
     const thumbFirstPosition = value;
     const isThumbsPositionMatched =
-      thumbFirstPosition >= this.getSliderSize() - this.thumbTwo.getThumbBlock().offsetWidth;
+      thumbFirstPosition >=
+      this.getSliderSize() - this.thumbTwo.getThumbBlock().offsetWidth;
     this.thumbOne.changeZIndex(isThumbsPositionMatched && this.config.range);
   }
 }

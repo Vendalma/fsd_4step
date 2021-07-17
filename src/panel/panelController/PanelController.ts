@@ -44,11 +44,21 @@ class PanelController {
     this.inputMin = this.container.querySelector('.js-panel__input_type_min');
     this.inputMax = this.container.querySelector('.js-panel__input_type_max');
     this.inputStep = this.container.querySelector('.js-panel__input_type_step');
-    this.inputLabel = this.container.querySelector('.js-panel__checkbox_type_label');
-    this.inputHorizontal = this.container.querySelector('.js-panel__radio_type_horizontal');
-    this.inputVertical = this.container.querySelector('.js-panel__radio_type_vertical');
-    this.inputSingle = this.container.querySelector('.js-panel__radio_type_single');
-    this.inputDouble = this.container.querySelector('.js-panel__radio_type_double');
+    this.inputLabel = this.container.querySelector(
+      '.js-panel__checkbox_type_label',
+    );
+    this.inputHorizontal = this.container.querySelector(
+      '.js-panel__radio_type_horizontal',
+    );
+    this.inputVertical = this.container.querySelector(
+      '.js-panel__radio_type_vertical',
+    );
+    this.inputSingle = this.container.querySelector(
+      '.js-panel__radio_type_single',
+    );
+    this.inputDouble = this.container.querySelector(
+      '.js-panel__radio_type_double',
+    );
     this.$slider = $(this.container).parent().next('.js-page__slider-app');
   }
 
@@ -64,8 +74,10 @@ class PanelController {
     if (this.inputMax) this.inputMax.value = String(this.config.max);
     if (this.inputStep) this.inputStep.value = String(this.config.step);
     if (this.inputLabel) this.inputLabel.checked = !!this.config.label;
-    if (this.inputHorizontal && !this.config.vertical) this.inputHorizontal.checked = true;
-    if (this.inputVertical && this.config.vertical) this.inputVertical.checked = true;
+    if (this.inputHorizontal && !this.config.vertical)
+      this.inputHorizontal.checked = true;
+    if (this.inputVertical && this.config.vertical)
+      this.inputVertical.checked = true;
     if (this.inputDouble && this.config.range) this.inputDouble.checked = true;
     if (this.inputSingle && !this.config.range) this.inputSingle.checked = true;
   }
@@ -178,7 +190,9 @@ class PanelController {
   }
 
   private checkRange(): void {
-    const disabledBlock = this.container?.querySelector<HTMLInputElement>('.js-panel__input_disabled');
+    const disabledBlock = this.container?.querySelector<HTMLInputElement>(
+      '.js-panel__input_disabled',
+    );
     if (disabledBlock) disabledBlock.disabled = !this.config.range;
   }
 

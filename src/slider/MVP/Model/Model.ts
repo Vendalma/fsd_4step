@@ -1,6 +1,11 @@
 import Observer from '../../Observer/Observer';
 import defaultSettings from './fixture';
-import { IConfig, IPositionValues, IUpdatedPosition, ModelValues } from './types';
+import {
+  IConfig,
+  IPositionValues,
+  IUpdatedPosition,
+  ModelValues,
+} from './types';
 
 class Model extends Observer<ModelValues> {
   private defaultSettings: IConfig;
@@ -19,6 +24,7 @@ class Model extends Observer<ModelValues> {
 
   checkPositionValues(values: IPositionValues): void {
     const { value, leftPointValue, rightPointValue, nameState } = values;
+
     if (value <= leftPointValue) {
       return this.updatePosition({
         [nameState]: leftPointValue,
@@ -82,14 +88,14 @@ class Model extends Observer<ModelValues> {
   }
 
   private validateValueTo(): void {
-    if (this.config.range) {
-      if (this.config.valueTo < this.config.valueFrom) {
-        this.config.valueTo = this.config.valueFrom;
-      } else if (this.config.valueTo > this.config.max) {
-        this.config.valueTo = this.config.max;
-      } else if (this.checkCurrentPosition(this.config.valueTo)) {
-        this.config.valueTo = this.findCurrentPosition(this.config.valueTo);
-      }
+    if (!this.config.range) return;
+
+    if (this.config.valueTo < this.config.valueFrom) {
+      this.config.valueTo = this.config.valueFrom;
+    } else if (this.config.valueTo > this.config.max) {
+      this.config.valueTo = this.config.max;
+    } else if (this.checkCurrentPosition(this.config.valueTo)) {
+      this.config.valueTo = this.findCurrentPosition(this.config.valueTo);
     }
   }
 
@@ -97,13 +103,16 @@ class Model extends Observer<ModelValues> {
     return (
       Math.round(position / this.config.step) * this.config.step +
       (this.config.min % this.config.step) +
-      Math.round((-this.config.min % this.config.step) / this.config.step) * this.config.step
+      Math.round((-this.config.min % this.config.step) / this.config.step) *
+        this.config.step
     );
   }
 
   private checkCurrentPosition(position: number): boolean {
     return (
-      position !== Math.round(position / this.config.step) * this.config.step + (this.config.min % this.config.step) &&
+      position !==
+        Math.round(position / this.config.step) * this.config.step +
+          (this.config.min % this.config.step) &&
       position !== this.config.max &&
       position !== this.config.min
     );

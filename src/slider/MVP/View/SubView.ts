@@ -1,4 +1,10 @@
-import { IConfig, IMovingThumbPosition, IPositionState, IPositionValues, ISliderOptions } from './types';
+import {
+  IConfig,
+  IMovingThumbPosition,
+  IPositionState,
+  IPositionValues,
+  ISliderOptions,
+} from './types';
 
 class SubView {
   private positionState: IPositionState;
@@ -41,8 +47,11 @@ class SubView {
   findValue(data: IMovingThumbPosition): IPositionValues {
     const { position, dataName, evtType } = data;
     const positionMove =
-      evtType === 'click' ? this.calcPosition(position) : this.calcPosition(position - this.startPosition);
+      evtType === 'click'
+        ? this.calcPosition(position)
+        : this.calcPosition(position - this.startPosition);
     const value = data.value ?? this.calcValue(positionMove);
+
     if (dataName === 'to') {
       return {
         value,
@@ -82,8 +91,12 @@ class SubView {
 
   private calcValue(position: number): number {
     const isValuesInteger =
-      Number.isInteger(this.config.step) && Number.isInteger(this.config.min) && Number.isInteger(this.config.max);
+      Number.isInteger(this.config.step) &&
+      Number.isInteger(this.config.min) &&
+      Number.isInteger(this.config.max);
+
     const value = this.config.min + this.pixelSize * position;
+
     return isValuesInteger ? Math.round(value) : Number(value.toFixed(1));
   }
 }

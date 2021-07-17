@@ -33,7 +33,9 @@ describe('Scale', () => {
       const scaleBlocks = container[0].querySelectorAll('.slider__scale-block');
 
       expect(scaleBlocks[0]).toContainText(`${scale.config.min}`);
-      expect(scaleBlocks[scaleBlocks.length - 1]).toContainText(`${scale.config.max}`);
+      expect(scaleBlocks[scaleBlocks.length - 1]).toContainText(
+        `${scale.config.max}`,
+      );
     });
 
     it('vertical = true, позиции эл-тов рассчитываются по вертикальной оси, эл-ты имеют класс slider__step-block_vertical', () => {
@@ -51,7 +53,9 @@ describe('Scale', () => {
       const scaleBlocks = container[0].querySelectorAll('.slider__scale-block');
 
       expect(scaleBlocks[0]).toContainText(`${scale.config.min}`);
-      expect(scaleBlocks[scaleBlocks.length - 1]).toContainText(`${scale.config.max}`);
+      expect(scaleBlocks[scaleBlocks.length - 1]).toContainText(
+        `${scale.config.max}`,
+      );
       for (let i = 0; i < scaleBlocks.length; i += 1) {
         expect(scaleBlocks[i]).toHaveClass('slider__scale-block_vertical');
       }

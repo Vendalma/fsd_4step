@@ -27,7 +27,11 @@ describe('Presenter', () => {
   });
 
   it('При изменений позиций бегунков в Model вызывается ф-я checkPositionValues', () => {
-    const event = new MouseEvent('mousedown', { bubbles: true, clientX: 50, clientY: 100 });
+    const event = new MouseEvent('mousedown', {
+      bubbles: true,
+      clientX: 50,
+      clientY: 100,
+    });
     spyOn(model, 'checkPositionValues');
     sliderBlock?.dispatchEvent(event);
 

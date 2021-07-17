@@ -1,4 +1,10 @@
-import { IConfig, IScaleBlockValues, IScaleOptions, IScalePositionParams, IScaleValues } from './types';
+import {
+  IConfig,
+  IScaleBlockValues,
+  IScaleOptions,
+  IScalePositionParams,
+  IScaleValues,
+} from './types';
 
 class Scale {
   private container: HTMLElement;
@@ -36,6 +42,7 @@ class Scale {
     let stepSize = this.config.step / this.pixelSize;
     let segmentsNumber = this.sliderSize / stepSize;
     let currentStep = this.config.step;
+
     while (segmentsNumber / stepSize > 1) {
       currentStep += this.config.step;
       stepSize = currentStep / this.pixelSize;
@@ -49,6 +56,7 @@ class Scale {
     const fragment = document.createDocumentFragment();
     const { currentStep } = values;
     let { segmentsNumber } = values;
+
     for (let i = 0; i <= segmentsNumber; i += 1) {
       let scalePosition = this.calcScalePosition({ value: i, currentStep });
       let scaleBlockValue = this.calcScaleValue(scalePosition);
@@ -61,18 +69,28 @@ class Scale {
         scalePosition = this.sliderSize;
       }
 
-      const scaleBlock = this.createScaleBlock({ scalePosition, scaleBlockValue });
+      const scaleBlock = this.createScaleBlock({
+        scalePosition,
+        scaleBlockValue,
+      });
 
       if (i === Math.trunc(segmentsNumber) && scalePosition < this.sliderSize) {
         segmentsNumber = Math.trunc(segmentsNumber) + 1;
       }
 
-      if (!(i !== Math.trunc(segmentsNumber) && scalePosition >= this.sliderSize - 15)) {
+      if (
+        !(
+          i !== Math.trunc(segmentsNumber) &&
+          scalePosition >= this.sliderSize - 15
+        )
+      ) {
         fragment.append(scaleBlock);
       }
     }
     this.container.append(fragment);
-    this.scaleItems = this.container.querySelectorAll<HTMLElement>('.slider__scale-block');
+    this.scaleItems = this.container.querySelectorAll<HTMLElement>(
+      '.slider__scale-block',
+    );
   }
 
   private calcScalePosition(values: IScalePositionParams): number {
@@ -82,11 +100,14 @@ class Scale {
 
   private calcScaleValue(value: number): number {
     const isValuesInteger =
-      Number.isInteger(this.config.step) && Number.isInteger(this.config.min) && Number.isInteger(this.config.max);
-    if (!isValuesInteger) {
-      return Number((this.config.min + this.pixelSize * value).toFixed(1));
-    }
-    return Math.round(this.config.min + this.pixelSize * value);
+      Number.isInteger(this.config.step) &&
+      Number.isInteger(this.config.min) &&
+      Number.isInteger(this.config.max);
+    const calcValue = this.config.min + this.pixelSize * value;
+
+    return isValuesInteger
+      ? Math.round(calcValue)
+      : Number(calcValue.toFixed(1));
   }
 
   private createScaleBlock(values: IScaleBlockValues): HTMLElement {
@@ -95,12 +116,12 @@ class Scale {
     scaleBlock.classList.add('slider__scale-block');
     scaleBlock.textContent = String(scaleBlockValue);
 
-    if (this.config.vertical) {
+    const side = this.config.vertical ? 'top' : 'left';
+    scaleBlock.style[side] = `${scalePosition}px`;
+
+    if (this.config.vertical)
       scaleBlock.classList.add('slider__scale-block_vertical');
-      scaleBlock.style.top = `${scalePosition}px`;
-    } else {
-      scaleBlock.style.left = `${scalePosition}px`;
-    }
+
     return scaleBlock;
   }
 

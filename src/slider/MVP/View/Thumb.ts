@@ -1,6 +1,11 @@
 import Observer from '../../Observer/Observer';
 import Label from './Label';
-import { IConfigThumb, IThumbBlockValues, IThumbValue, IUpdatedThumbPosition } from './types';
+import {
+  IConfigThumb,
+  IThumbBlockValues,
+  IThumbValue,
+  IUpdatedThumbPosition,
+} from './types';
 
 class Thumb extends Observer<IThumbValue> {
   private config: IConfigThumb;
@@ -96,13 +101,17 @@ class Thumb extends Observer<IThumbValue> {
   private onMouseDown = (e: MouseEvent): void => {
     document.addEventListener('mousemove', this.handleDocumentMouseMove);
     document.addEventListener('mouseup', this.onMouseUp);
-    this.broadcast({ value: { type: 'thumbStart', position: this.findStartValue(e) } });
+    this.broadcast({
+      value: { type: 'thumbStart', position: this.findStartValue(e) },
+    });
     e.preventDefault();
   };
 
   private findStartValue(e: MouseEvent): number {
     const target = e.target as HTMLElement;
-    const targetLength = this.config.vertical ? target.clientHeight : target.clientWidth;
+    const targetLength = this.config.vertical
+      ? target.clientHeight
+      : target.clientWidth;
     const offset = this.config.vertical ? e.offsetY : e.offsetX;
     const sliderBound = this.config.vertical
       ? this.slider.getBoundingClientRect().y
@@ -113,7 +122,11 @@ class Thumb extends Observer<IThumbValue> {
 
   private handleDocumentMouseMove = (e: MouseEvent): void => {
     this.broadcast({
-      value: { type: 'thumbMoving', position: this.config.vertical ? e.clientY : e.clientX, dataName: this.dataName },
+      value: {
+        type: 'thumbMoving',
+        position: this.config.vertical ? e.clientY : e.clientX,
+        dataName: this.dataName,
+      },
     });
   };
 
