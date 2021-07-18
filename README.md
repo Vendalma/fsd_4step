@@ -44,7 +44,7 @@ https://github.com/Vendalma/fsd_4step.git
 
 ## Подключение плагина
 
-Для работы слайдера необходима библиотека [jQuery](https://jquery.com/) версии ^3.6.0.
+Для работы слайдера необходима библиотека [jQuery](https://jquery.com/) версии ^3.6.0
 
 ```
 $('#id').rangeSlider()
