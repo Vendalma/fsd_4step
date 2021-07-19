@@ -95,13 +95,13 @@ const config = {
           {
             loader: 'css-loader',
             options: {
-              sourceMap: isDev && true,
+              sourceMap: isDev,
             },
           },
           {
             loader: 'postcss-loader',
             options: {
-              sourceMap: isDev && true,
+              sourceMap: isDev,
             },
           },
           {
