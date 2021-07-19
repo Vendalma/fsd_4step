@@ -102,6 +102,9 @@ const config = {
             loader: 'postcss-loader',
             options: {
               sourceMap: isDev,
+              postcssOptions: {
+                config: `./postcss.config.js`,
+              },
             },
           },
           {
