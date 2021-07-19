@@ -1,6 +1,5 @@
 import { IConfig } from '../MVP/Model/types';
 import RangeSlider from '../RangeSlider/RangeSlider';
-import '../styles.scss';
 
 (function ($) {
   const methods: MethodsObject = {
